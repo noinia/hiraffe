@@ -96,6 +96,9 @@ library
   hs-source-dirs: src
   exposed-modules:
     Hiraffe
+    Hiraffe.Graph
+
+    Hiraffe.DFS
 
 
   -- other-modules:
