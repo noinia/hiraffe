@@ -89,7 +89,7 @@ common setup
               , template-haskell
 
 --------------------------------------------------------------------------------
--- * Main HGeometry Library
+-- * Main Hiraffe Library
 
 library
   import: setup

@@ -2,8 +2,10 @@
 module Hiraffe.Graph
   ( HasVertices(..), HasVertices'(..)
   , HasEdges(..), HasEdges'(..)
+  , HasFaces(..), HasFaces'(..)
 
   , Graph_(..)
+  , PlanarGraph_(..)
   ) where
 
 import Control.Lens
@@ -43,6 +45,7 @@ class HasEdges' graph where
   --   :: HasEdges graph graph => IndexedTraversal' (EdgeIx graph) graph (Edge graph)
   -- edges' = edges
 
+  -- | Indexed traversal of a given edge.
   edgeAt :: EdgeIx graph  -> IndexedTraversal' (EdgeIx graph) graph (Edge graph)
 
 
@@ -53,12 +56,34 @@ class HasEdges' graph => HasEdges graph graph' where
 
 --------------------------------------
 
+class HasFaces' graph where
+  type Face   graph
+  type FaceIx graph
+
+  -- | Indexed traversal of a given face.
+  faceAt :: FaceIx graph -> IndexedTraversal' (FaceIx graph) graph (Face graph)
+
+  -- | Traversal of all faces in the graph, non-type chagning
+  -- faces' :: IndexedTraversal' (FaceIx graph) graph (Face graph)
+  -- default faces' :: HasFaces graph graph => IndexedTraversal' (FaceIx graph) graph (Face graph)
+  -- faces' = faces
+
+class HasFaces' graph => HasFaces graph graph' where
+
+  -- | Traversal of all faces in the graph
+  faces :: IndexedTraversal (FaceIx graph) graph graph' (Face graph) (Face graph')
 
 --------------------------------------
 
 class ( HasVertices graph graph
       , HasEdges graph graph
       ) => Graph_ graph where
+
+  -- | Build a graph from its adjacency lists.
+  fromAdjacencyLists :: (Foldable f, Foldable g
+                        , v ~ Vertex graph
+                        , e ~ Edge graph
+                        ) => f (v, g (v, e)) -> graph
 
   -- | All neighbours of a given vertex
   neighboursOf :: VertexIx graph -> IndexedFold (VertexIx graph) graph (Vertex graph)
@@ -78,4 +103,36 @@ class ( HasVertices graph graph
   numEdges :: graph -> Int
   numEdges = lengthOf edges
 
-  {-# MINIMAL neighboursOf, incidentEdges #-}
+  {-# MINIMAL fromAdjacencyLists, neighboursOf, incidentEdges #-}
+
+
+class ( Graph_   graph
+      , HasFaces graph graph
+      ) => PlanarGraph_ graph where
+
+  -- | The number of faces in the Planar graph
+  numFaces :: graph -> Int
+  numFaces = lengthOf faces
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+-- -- | A 'Neighbours' is an indexed fold of vertices
+-- newtype Neighbours graph = Neighbours (IndexedFold (VertexIx graph) graph (Vertex graph))
+
+-- class HasVertices' graph => HasAdjacencies graph where
+--   -- | The neighbours of all vertices in the graph
+--   adjacencyLists :: IndexedFold (VertexIx graph) graph (Neighbours graph)
+--   -- adjacencyLists = vertices . ito neighboursOf
+
+--   -- | The neighbours of a particular vertex u
+--   neighboursOf   :: VertexIx graph -> Neighbours graph
