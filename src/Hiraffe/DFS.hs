@@ -58,3 +58,7 @@ dfsFrom g start bv = go start
 -- | Initialize the vector with visited marks
 intitialize   :: Int -> ST s (UMV.MVector s Bool)
 intitialize n = UMV.replicate n False -- bit vector of marks
+
+
+-- TODO: - I should get rid of the Enum instance, and construct this mapping myself.
+--       - produce edge-labeled trees indicating which edge we are actually taking.
