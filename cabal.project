@@ -1,0 +1,10 @@
+write-ghc-environment-files: always
+tests: true
+packages:
+    .
+
+source-repository-package
+    type: git
+    location: https://github.com/noinia/hgeometry
+    subdir: hgeometry-combinatorial
+    branch: hgeom-1
