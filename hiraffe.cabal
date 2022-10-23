@@ -80,7 +80,7 @@ common setup
               -- , data-clist              >= 0.1.2.3
               , vector-circular         >= 0.1.4
               , nonempty-vector         >= 0.2.0.0
-              , text                    >= 2.0
+              , text                    >= 1.2
               -- , vector-algorithms
               , witherable              >= 0.4
 
