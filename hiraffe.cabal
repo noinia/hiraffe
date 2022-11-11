@@ -3,7 +3,7 @@ name:                hiraffe
 version:             0.1
 synopsis:            Graph algorithms
 description:
-    Graph algos
+    Graph Algorithms based on lenses
 homepage:            https://fstaals.net/software/hiraffe
 license:             BSD-3-Clause
 license-file:        LICENSE
