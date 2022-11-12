@@ -80,15 +80,22 @@ class ( HasVertices graph graph
       ) => Graph_ graph where
 
   -- | Build a graph from its adjacency lists.
+  --
+  -- If the, in the list of neighbours of vertex u we see a vertex v
+  -- that itself does not appear in the adjacencylist, we may drop
+  -- it. In other words if u has a neighbour v, then v better have a
+  -- specification of its neighbours somewhere.
   fromAdjacencyLists :: (Foldable f, Foldable g
                         , v ~ Vertex graph
                         , e ~ Edge graph
                         ) => f (v, g (v, e)) -> graph
 
   -- | All neighbours of a given vertex
+  --
   neighboursOf :: VertexIx graph -> IndexedFold (VertexIx graph) graph (Vertex graph)
 
   -- | All edges incident to a given vertex
+  --
   incidentEdges :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
 
   -- | Number of vertices in the graph.
