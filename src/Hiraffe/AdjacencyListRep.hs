@@ -88,9 +88,15 @@ vertexDataOf i = _GraphIntMap .> iix i
 
 instance HasVertices (GGraph f v e) (GGraph f v' e) where
   -- | running time: \(O(n)\).
-  vertices pvfv' (Graph m) = Graph <$> IntMap.traverseWithKey f m
+  vertices = conjoined traverse' (itraverse' . indexed)
     where
-      f i vd = vd&vData %%~ indexed pvfv' i
+      traverse'  :: Applicative g => (v -> g v') -> GGraph f v e -> g (GGraph f v' e)
+      traverse'  = _GraphIntMap.traversed.vData
+      itraverse'             :: Applicative g
+                             => (Int -> v -> g v') -> GGraph f v e -> g (GGraph f v' e)
+      itraverse' f (Graph m) =
+        Graph <$> IntMap.traverseWithKey (\i vd -> vd&vData %%~ f i) m
+
 
 instance HasEdges' (GGraph f v e) where
   type Edge   (GGraph f v e) = e
@@ -132,6 +138,11 @@ instance (Ord v, HasFromList f) => Graph_ (GGraph f v e) where
   -- that should be faster
 
   numVertices (Graph m) = IntMap.size m
+
+  -- | running time: O(n)
+  --
+  -- TODO: also, this reports all *directed* edges; so I guess for undirected graphs
+  -- this returns twice the number of edges
   numEdges    (Graph m) = getSum . foldMap (Sum . lengthOf neighMap) $ m
 
   neighboursOf u = conjoined asFold asIFold

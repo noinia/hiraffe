@@ -75,6 +75,8 @@ class HasFaces' graph => HasFaces graph graph' where
 
 --------------------------------------
 
+-- TODO: clarify whether or not we are considering directed graphs or undirected graphs.
+
 class ( HasVertices graph graph
       , HasEdges graph graph
       ) => Graph_ graph where

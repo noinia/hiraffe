@@ -103,8 +103,17 @@ library
 
     Hiraffe.DFS
 
+    Hiraffe.PlanarGraph
+    Hiraffe.PlanarGraph.AdjRep
+    Hiraffe.PlanarGraph.IO
+    Hiraffe.PlanarGraph.EdgeOracle
+    Hiraffe.PlanarGraph.Dart
 
-  -- other-modules:
+  other-modules:
+    Hiraffe.PlanarGraph.Core
+    Hiraffe.PlanarGraph.Dual
+    Hiraffe.PlanarGraph.Instance
+
   --   HGeometry.Vector.VectorFamily
 
 --------------------------------------------------------------------------------
@@ -146,6 +155,8 @@ test-suite hspec
 
   build-depends: hiraffe
                , hspec         >= 2.9
+               , QuickCheck    >= 2.14
+
   ghc-options:   -Wall
                  -fno-warn-unticked-promoted-constructors
                  -fno-warn-partial-type-signatures
