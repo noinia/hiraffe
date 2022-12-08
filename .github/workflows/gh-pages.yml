@@ -113,7 +113,7 @@ jobs:
       - name: Haddock Badge
         run: |
           mkdir --parents pages/docs/
-          cabal haddock all --htmldir pages/docs/ > haddock.raw.txt
+          $CABAL haddock all --htmldir pages/docs/ > haddock.raw.txt
           grep ") in " haddock.raw.txt | sort -hr > haddock.txt
           COVERAGE=$(awk '{good += $3; total += $5} END {printf "%.0f", good/total*100}' haddock.text)
           echo "\
