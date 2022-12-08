@@ -13,22 +13,17 @@ import Data.Kind (Type)
 
 --------------------------------------------------------------------------------
 
-
+-- | A class representing types that have vertices.
 class HasVertices' graph where
   type Vertex   graph :: Type
   type VertexIx graph :: Type
-
-  -- -- | Traversal of all vertices in the graph, non type changing.
-  -- vertices' :: IndexedTraversal' (VertexIx graph) graph (Vertex graph)
-  -- default vertices'
-  --   :: HasVertices graph graph => IndexedTraversal' (VertexIx graph) graph (Vertex graph)
-  -- vertices' = vertices
 
   -- | Accessor to a given vertex.
   vertexAt :: VertexIx graph -> IndexedTraversal' (VertexIx graph) graph (Vertex graph)
 
   {-# MINIMAL vertexAt #-}
 
+-- |
 class HasVertices' graph => HasVertices graph graph' where
   -- | Traversal of all vertices in the graph
   vertices :: IndexedTraversal (VertexIx graph) graph graph' (Vertex graph) (Vertex graph')
