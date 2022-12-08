@@ -110,28 +110,28 @@ jobs:
         with:
           path: source
 
-    - name: Haddock Badge
-      run: |
-        mkdir --parents pages/docs/
-        cabal haddock all --htmldir pages/docs/ > haddock.raw.txt
-        grep ") in " haddock.raw.txt | sort -hr > haddock.txt
-        COVERAGE=$(awk '{good += $3; total += $5} END {printf "%.0f", good/total*100}' haddock.text)
-        echo "\
-          { \"schemaVersion\": 1, \
-            \"label\": \"api docs\", \
-            \"message\": \"$COVERAGE%\", \
-            \"color\": \"success\" \
-            }" > haddock_badge.json
+      - name: Haddock Badge
+        run: |
+          mkdir --parents pages/docs/
+          cabal haddock all --htmldir pages/docs/ > haddock.raw.txt
+          grep ") in " haddock.raw.txt | sort -hr > haddock.txt
+          COVERAGE=$(awk '{good += $3; total += $5} END {printf "%.0f", good/total*100}' haddock.text)
+          echo "\
+            { \"schemaVersion\": 1, \
+              \"label\": \"api docs\", \
+              \"message\": \"$COVERAGE%\", \
+              \"color\": \"success\" \
+              }" > haddock_badge.json
 
-        cp haddock.txt pages/docs/
-        cp haddock_badge.json pages/docs/
-        cat haddock.txt
-        cat haddock_badge.json
+          cp haddock.txt pages/docs/
+          cp haddock_badge.json pages/docs/
+          cat haddock.txt
+          cat haddock_badge.json
 
-    - name: Deploy 🚀
-      if: github.ref == 'refs/heads/master'
-      uses: JamesIves/github-pages-deploy-action@3.7.1
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: docs # The branch the action should deploy to.
-        FOLDER: pages # The folder the action should deploy.
+      - name: Deploy 🚀
+        if: github.ref == 'refs/heads/master'
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: docs # The branch the action should deploy to.
+          FOLDER: pages # The folder the action should deploy.
