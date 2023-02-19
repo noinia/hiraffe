@@ -22,17 +22,17 @@ import           Control.Lens
 import           Control.Monad.State.Strict
 import           Data.Aeson
 import           Data.Bifunctor
-import           Data.Ext
-import qualified Data.Foldable               as F
-import           Data.Maybe                  (fromJust)
-import           Data.Permutation
-import           Data.PlanarGraph.AdjRep     (Face (Face), Gr (Gr), Vtx (Vtx))
+import qualified Data.Foldable as F
+import           Data.Maybe (fromJust)
+import qualified Data.Vector as V
+import qualified Data.Vector.Mutable as MV
+import           HGeometry.Ext
+import           HGeometry.Permutation
+import           Hiraffe.PlanarGraph.AdjRep (Face (Face), Gr (Gr), Vtx (Vtx))
 import           Hiraffe.PlanarGraph.Core
 import           Hiraffe.PlanarGraph.Dart
 import           Hiraffe.PlanarGraph.Dual
 import           Hiraffe.PlanarGraph.EdgeOracle
-import qualified Data.Vector                 as V
-import qualified Data.Vector.Mutable         as MV
 
 --------------------------------------------------------------------------------
 

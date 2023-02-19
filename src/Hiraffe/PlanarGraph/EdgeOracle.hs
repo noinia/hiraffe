@@ -16,7 +16,7 @@ import           Control.Lens hiding ((.=))
 import           Control.Monad.ST (ST)
 import           Control.Monad.State.Strict
 import           Data.Bitraversable
-import           Data.Ext
+import           HGeometry.Ext
 import qualified Data.Foldable as F
 import           Data.Maybe (catMaybes, isJust)
 import           Hiraffe.PlanarGraph.Core

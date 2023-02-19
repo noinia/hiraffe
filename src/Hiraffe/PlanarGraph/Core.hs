@@ -13,7 +13,7 @@ import           Control.DeepSeq
 import           Control.Lens hiding ((.=))
 import           Data.Aeson
 import qualified Data.Foldable as F
-import           Data.Permutation
+import           HGeometry.Permutation
 import           Data.Type.Equality (gcastWith)
 import qualified Data.Vector as V
 import qualified Data.Vector.Mutable as MV
