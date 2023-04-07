@@ -13,20 +13,21 @@ module Hiraffe.PlanarGraph.EdgeOracle where
 
 import           Control.Applicative (Alternative(..))
 import           Control.Lens hiding ((.=))
+import           Control.Monad (forM_)
 import           Control.Monad.ST (ST)
 import           Control.Monad.State.Strict
 import           Data.Bitraversable
-import           HGeometry.Ext
 import qualified Data.Foldable as F
 import           Data.Maybe (catMaybes, isJust)
-import           Hiraffe.PlanarGraph.Core
-import           Hiraffe.PlanarGraph.Dart
 import           Data.Traversable (fmapDefault,foldMapDefault)
 import qualified Data.Vector as V
 import qualified Data.Vector.Generic as GV
 import qualified Data.Vector.Mutable as MV
 import qualified Data.Vector.Unboxed as UV
 import qualified Data.Vector.Unboxed.Mutable as UMV
+import           HGeometry.Ext
+import           Hiraffe.PlanarGraph.Core
+import           Hiraffe.PlanarGraph.Dart
 
 --------------------------------------------------------------------------------
 
