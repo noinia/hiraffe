@@ -15,18 +15,28 @@ import Data.Kind (Type)
 
 -- | A class representing types that have vertices.
 class HasVertices' graph where
+  {-# MINIMAL vertexAt #-}
+
+
   type Vertex   graph :: Type
   type VertexIx graph :: Type
 
   -- | Accessor to a given vertex.
   vertexAt :: VertexIx graph -> IndexedTraversal' (VertexIx graph) graph (Vertex graph)
 
-  {-# MINIMAL vertexAt #-}
+  -- | Number of vertices in the graph.
+  --
+  -- running time: O(1)
+  numVertices :: graph -> Int
+  default numVertices :: HasVertices graph graph => graph -> Int
+  numVertices = lengthOf vertices
 
 -- |
 class HasVertices' graph => HasVertices graph graph' where
   -- | Traversal of all vertices in the graph
   vertices :: IndexedTraversal (VertexIx graph) graph graph' (Vertex graph) (Vertex graph')
+
+
 
 --------------------------------------------------------------------------------
 
@@ -43,11 +53,16 @@ class HasEdges' graph where
   -- | Indexed traversal of a given edge.
   edgeAt :: EdgeIx graph  -> IndexedTraversal' (EdgeIx graph) graph (Edge graph)
 
+  -- | Number of edges in the graph.
+  --
+  -- running time: O(1)
+  numEdges :: graph -> Int
+  default numEdges :: HasEdges graph graph => graph -> Int
+  numEdges = lengthOf edges
 
 class HasEdges' graph => HasEdges graph graph' where
   -- | Traversal of all edges in the graph
   edges :: IndexedTraversal (EdgeIx graph) graph graph' (Edge graph) (Edge graph')
-
 
 --------------------------------------
 
@@ -63,10 +78,17 @@ class HasFaces' graph where
   -- default faces' :: HasFaces graph graph => IndexedTraversal' (FaceIx graph) graph (Face graph)
   -- faces' = faces
 
+
+  -- | The number of faces in the Planar graph
+  numFaces :: graph -> Int
+  default numFaces :: HasFaces graph graph => graph -> Int
+  numFaces = lengthOf faces
+
 class HasFaces' graph => HasFaces graph graph' where
 
   -- | Traversal of all faces in the graph
   faces :: IndexedTraversal (FaceIx graph) graph graph' (Face graph) (Face graph')
+
 
 --------------------------------------
 
@@ -95,17 +117,6 @@ class ( HasVertices graph graph
   --
   incidentEdges :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
 
-  -- | Number of vertices in the graph.
-  --
-  -- running time: O(1)
-  numVertices :: graph -> Int
-  numVertices = lengthOf vertices
-
-  -- | Number of edges in the graph.
-  --
-  -- running time: O(1)
-  numEdges :: graph -> Int
-  numEdges = lengthOf edges
 
   {-# MINIMAL fromAdjacencyLists, neighboursOf, incidentEdges #-}
 
@@ -114,9 +125,6 @@ class ( Graph_   graph
       , HasFaces graph graph
       ) => PlanarGraph_ graph where
 
-  -- | The number of faces in the Planar graph
-  numFaces :: graph -> Int
-  numFaces = lengthOf faces
 
 
 

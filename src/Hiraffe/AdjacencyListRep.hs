@@ -78,6 +78,7 @@ instance HasVertices' (GGraph f v e) where
 
   -- | \(O(\log n)\)
   vertexAt i = vertexDataOf i <. vData
+  numVertices (Graph m) = IntMap.size m
 
 vertexDataOf  :: VertexIx (GGraph f v e)
               -> IndexedTraversal' (VertexIx (GGraph f v e))
@@ -105,6 +106,13 @@ instance HasEdges' (GGraph f v e) where
 
   -- | running time: \(O(\log m)\)
   edgeAt (u,v) = vertexDataOf u <.> neighMap .> iix v
+
+  -- | running time: O(n)
+  --
+  -- TODO: also, this reports all *directed* edges; so I guess for undirected graphs
+  -- this returns twice the number of edges
+  numEdges    (Graph m) = getSum . foldMap (Sum . lengthOf neighMap) $ m
+
 
 instance HasEdges (GGraph f v e) (GGraph f v e') where
   -- | running time: \(O(m)\)
@@ -136,14 +144,6 @@ instance (Ord v, HasFromList f) => Graph_ (GGraph f v e) where
                           in (i, VertexData v (IntMap.fromList adjs') (fromList $ map fst adjs'))
   -- TODO: make a version specific for when v is int, we can then use an intmap directly
   -- that should be faster
-
-  numVertices (Graph m) = IntMap.size m
-
-  -- | running time: O(n)
-  --
-  -- TODO: also, this reports all *directed* edges; so I guess for undirected graphs
-  -- this returns twice the number of edges
-  numEdges    (Graph m) = getSum . foldMap (Sum . lengthOf neighMap) $ m
 
   neighboursOf u = conjoined asFold asIFold
     where

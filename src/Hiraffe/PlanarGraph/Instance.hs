@@ -15,6 +15,7 @@ instance HasVertices' (PlanarGraph s w v e f) where
   type VertexIx (PlanarGraph s w v e f) = (VertexId s w)
 
   vertexAt v = ilens (\g -> (v, g^.Core.dataOf v)) (\g x -> g&Core.dataOf v .~ x)
+  numVertices = Core.numVertices
 
 instance HasVertices (PlanarGraph s w v e f) (PlanarGraph s w v' e f) where
   vertices = conjoined traverse' (itraverse' . indexed)
@@ -32,6 +33,7 @@ instance HasEdges' (PlanarGraph s w v e f) where
   type Edge   (PlanarGraph s w v e f) = e
   type EdgeIx (PlanarGraph s w v e f) = Dart s
   edgeAt d = ilens (\g -> (d, g^.Core.dataOf d)) (\g x -> g&Core.dataOf d .~ x)
+  numEdges = Core.numEdges
 
 
 instance HasEdges (PlanarGraph s w v e f) (PlanarGraph s w v e' f) where
@@ -50,6 +52,7 @@ instance HasFaces' (PlanarGraph s w v e f) where
   type Face   (PlanarGraph s w v e f) = f
   type FaceIx (PlanarGraph s w v e f) = FaceId s w
   faceAt fi = ilens (\g -> (fi, g^.Core.dataOf fi)) (\g x -> g&Core.dataOf fi .~ x)
+  numFaces = Core.numFaces
 
 instance HasFaces (PlanarGraph s w v e f) (PlanarGraph s w v e f') where
   faces = conjoined traverse' (itraverse' . indexed)
@@ -78,9 +81,6 @@ instance Graph_ (PlanarGraph s w v e f) where
       asFold  = folding  $ \g -> (\d ->     g^?! edgeAt d)  <$> Core.incomingEdges u g
       asIFold = ifolding $ \g -> (\d -> (d, g^?! edgeAt d)) <$> Core.incomingEdges u g
 
-  numEdges = Core.numEdges
-  numVertices = Core.numVertices
 
 
 instance PlanarGraph_ (PlanarGraph s w v e f) where
-  numFaces = Core.numFaces
