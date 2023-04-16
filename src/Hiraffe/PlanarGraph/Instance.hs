@@ -12,7 +12,7 @@ import           Hiraffe.PlanarGraph.Dart (Dart)
 
 instance HasVertices' (PlanarGraph s w v e f) where
   type Vertex   (PlanarGraph s w v e f) = v
-  type VertexIx (PlanarGraph s w v e f) = (VertexId s w)
+  type VertexIx (PlanarGraph s w v e f) = VertexId s w
 
   vertexAt v = ilens (\g -> (v, g^.Core.dataOf v)) (\g x -> g&Core.dataOf v .~ x)
   numVertices = Core.numVertices
@@ -67,7 +67,15 @@ instance HasFaces (PlanarGraph s w v e f) (PlanarGraph s w v e f') where
 
 
 instance Graph_ (PlanarGraph s w v e f) where
-  fromAdjacencyLists = undefined
+
+-- IO.fromAdjacencyLists      :: forall s w h. (Foldable h, Functor h)
+--                         => [(VertexId s w, h (VertexId s w))]
+--                         -> PlanarGraph s w () () ()
+-- vertices need to be in CCW order ; no self-lopos and no multie-dges
+
+  fromAdjacencyLists = error "PlanarGraph.fromAdjacencylists not implementedy yet"
+    -- IO.fromAdjacencyLists
+
 
   neighboursOf u = conjoined asFold asIFold
     where

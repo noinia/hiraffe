@@ -92,8 +92,14 @@ class HasFaces' graph => HasFaces graph graph' where
 
 --------------------------------------
 
--- TODO: clarify whether or not we are considering directed graphs or undirected graphs.
 
+-- | A class representing directed graphs
+class ( HasVertices graph graph
+      , HasEdges graph graph
+      ) => DirGraph_ graph where
+
+
+-- | A graph representing undirected graphs
 class ( HasVertices graph graph
       , HasEdges graph graph
       ) => Graph_ graph where

@@ -8,65 +8,88 @@
 --
 -- Data type for representing connected planar graphs
 --------------------------------------------------------------------------------
-module Hiraffe.PlanarGraph( -- $setup
-                         -- * The Planar Graph type
-                         PlanarGraph
-                       , embedding, vertexData, dartData, faceData, rawDartData
-                       , edgeData
+module Hiraffe.PlanarGraph
+  ( -- $setup
+    -- * The Planar Graph type
+    PlanarGraph
+  , Core.embedding, Core.vertexData, Core.dartData, Core.faceData, Core.rawDartData
+  , Core.edgeData
 
-                       , World(..)
-                       , DualOf
+  , World(..)
+  , DualOf
 
-                       -- * Representing edges: Arcs and Darts
-                       , Arc(..)
-                       , Direction(..), rev
+    -- * Representing edges: Arcs and Darts
+  , Arc(..)
+  , Direction(..), rev
 
-                       , Dart(..), arc, direction
-                       , twin, isPositive
+  , Dart(..), arc, direction
+  , twin, isPositive
 
-                       -- * Vertices
+  -- * Vertices
 
-                       , VertexId(..), VertexId'
+  , VertexId(..), VertexId'
 
-                       -- * Building a planar graph
+  -- * Building a planar graph
 
-                       , planarGraph, planarGraph', fromAdjacencyLists
-                       , toAdjacencyLists
-                       , fromAdjRep, toAdjRep
+  , Core.planarGraph, Core.planarGraph'
+  , fromAdjacencyLists
+  , Core.toAdjacencyLists
+  , fromAdjRep
+  , toAdjRep
 
-                       -- , buildFromJSON
+  -- , buildFromJSON
 
-                       -- * Quering a planar graph
+  -- * Quering a planar graph
+  , Core.numDarts
+  , darts
+  -- , darts', darts
+  -- , edges', edges
+  -- , vertices', vertices
+  -- , faces', faces
+  -- , traverseVertices
+  -- , traverseDarts
+  -- , traverseFaces
 
-                       , numVertices, numDarts, numEdges, numFaces
-                       , darts', darts, edges', edges, vertices', vertices, faces', faces
-                       , traverseVertices, traverseDarts, traverseFaces
+  , Core.tailOf, Core.headOf, Core.endPoints
+  , Core.incidentEdges
+  , Core.incomingEdges
+  , Core.outgoingEdges
+  , Core.neighboursOf
+  , Core.nextIncidentEdge, Core.prevIncidentEdge
+  , Core.nextIncidentEdgeFrom, Core.prevIncidentEdgeFrom
 
-                       , tailOf, headOf, endPoints
-                       , incidentEdges, incomingEdges, outgoingEdges, neighboursOf
-                       , nextIncidentEdge, prevIncidentEdge
-                       , nextIncidentEdgeFrom, prevIncidentEdgeFrom
+  -- * Associated Data
 
-                       -- * Associated Data
+  , HasDataOf(..), Core.endPointDataOf, Core.endPointData
 
-                       , HasDataOf(..), endPointDataOf, endPointData
+  , Core.dual
 
-                       , dual
+  -- * Faces
 
-                       -- * Faces
-
-                       , FaceId(..), FaceId'
-                       , leftFace, rightFace
-                       , boundaryDart, boundary, boundary', boundaryVertices
-                       , nextEdge, prevEdge
-
-                       ) where
+  , FaceId(..), FaceId'
+  , leftFace, rightFace
+  , boundaryDart, boundary, boundary', boundaryVertices
+  , nextEdge, prevEdge
 
 
-import Hiraffe.PlanarGraph.Core
-import Hiraffe.PlanarGraph.Dart
-import Hiraffe.PlanarGraph.Dual
-import Hiraffe.PlanarGraph.IO
+  , HasVertices(..), HasEdges(..)
+  ) where
+
+import           Control.Lens
+import           Hiraffe.Graph (HasVertices(..),HasEdges(..))
+import           Hiraffe.PlanarGraph.Core ( PlanarGraph
+                                          , DualOf
+                                          , World(..)
+                                          , VertexId(..), VertexId'
+                                          , FaceId(..), FaceId'
+                                          , HasDataOf(..)
+
+                                          )
+import qualified Hiraffe.PlanarGraph.Core as Core
+import           Hiraffe.PlanarGraph.Dart
+import           Hiraffe.PlanarGraph.Dual
+import           Hiraffe.PlanarGraph.IO
+import           Hiraffe.PlanarGraph.Instance ()
 
 --------------------------------------------------------------------------------
 -- $setup
@@ -157,3 +180,16 @@ import Hiraffe.PlanarGraph.IO
 
 
 --------------------------------------------------------------------------------
+
+-- | Indexed traversal of all darts in the planar graph.
+darts :: forall s w v e e' f.
+         IndexedTraversal (Dart s) (PlanarGraph s w v e f) (PlanarGraph s w v e' f) e e'
+darts = conjoined traverse' (itraverse' . indexed)
+    where
+      traverse' :: Applicative g
+                => (e -> g e') -> PlanarGraph s w v e f -> g (PlanarGraph s w v e' f)
+      traverse' = Core.rawDartData.traversed
+      itraverse' :: Applicative g
+                 => (Dart s -> e -> g e')
+                 -> PlanarGraph s w v e f -> g (PlanarGraph s w v e' f)
+      itraverse' = Core.traverseDarts
