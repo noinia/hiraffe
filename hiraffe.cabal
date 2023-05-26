@@ -63,6 +63,7 @@ common setup
               -- , bifunctors              >= 4.1
               , bytestring              >= 0.10
               , containers              >= 0.5.9
+              , array                   >= 0.5.4
               -- , dlist                   >= 0.7
               , lens                    >= 4.2
               -- , semigroupoids           >= 5

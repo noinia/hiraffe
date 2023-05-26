@@ -8,8 +8,11 @@ module Hiraffe.Graph
   , PlanarGraph_(..)
   ) where
 
-import Control.Lens
-import Data.Kind (Type)
+import           Control.Lens
+import qualified Data.Array as Array
+import qualified Data.Foldable as F
+import qualified Data.Graph as Containers
+import           Data.Kind (Type)
 
 --------------------------------------------------------------------------------
 
@@ -31,15 +34,14 @@ class HasVertices' graph where
   default numVertices :: HasVertices graph graph => graph -> Int
   numVertices = lengthOf vertices
 
--- |
+-- | Class for types that support type changing traversals of all vertices.
 class HasVertices' graph => HasVertices graph graph' where
   -- | Traversal of all vertices in the graph
   vertices :: IndexedTraversal (VertexIx graph) graph graph' (Vertex graph) (Vertex graph')
 
-
-
 --------------------------------------------------------------------------------
 
+-- | Class for types that have edges. The edges may be directed.
 class HasEdges' graph where
   type Edge   graph :: Type
   type EdgeIx graph :: Type
@@ -60,9 +62,39 @@ class HasEdges' graph where
   default numEdges :: HasEdges graph graph => graph -> Int
   numEdges = lengthOf edges
 
+-- | Class for types that have a type changing traversla of all edges
 class HasEdges' graph => HasEdges graph graph' where
-  -- | Traversal of all edges in the graph
+  -- | Traversal of all edges in the graph.
+  --
+  -- If the graph is directed, this lists all *directed* edges.
   edges :: IndexedTraversal (EdgeIx graph) graph graph' (Edge graph) (Edge graph')
+
+--------------------------------------
+-- * Darts
+
+-- | Class for types that have darts; a dart is a directed
+-- half-edge. Moreover, each dart has a corresponding twin dart in the
+-- other direction.
+class HasDarts' graph where
+  type Dart   graph :: Type
+  type DartIx graph :: Type
+
+  -- | Indexed traversal of a given dart.
+  dartAt :: DartIx graph  -> IndexedTraversal' (DartIx graph) graph (Dart graph)
+
+  -- | Number of edges in the graph.
+  --
+  -- running time: O(1)
+  numDarts :: graph -> Int
+  default numDarts :: HasDarts graph graph => graph -> Int
+  numDarts = lengthOf darts
+
+-- | Class for types that have a type changing traversal of all darts
+class HasDarts' graph => HasDarts graph graph' where
+  -- | Traversal of all edges in the graph.
+  --
+  -- If the graph is directed, this lists all *directed* edges.
+  darts :: IndexedTraversal (DartIx graph) graph graph' (Dart graph) (Dart graph')
 
 --------------------------------------
 
@@ -91,7 +123,6 @@ class HasFaces' graph => HasFaces graph graph' where
 
 
 --------------------------------------
-
 
 -- | A class representing directed graphs
 class ( HasVertices graph graph
@@ -126,7 +157,13 @@ class ( HasVertices graph graph
 
   {-# MINIMAL fromAdjacencyLists, neighboursOf, incidentEdges #-}
 
+-- instance Graph_ Containers.Graph where
+--   fromAdjacencyLists = undefined
+--   neighboursOf u = iix u .> traverse . selfIndex . united
+--   incidentEdges u = undefined
 
+
+-- | Class representing undirected planar graphs.
 class ( Graph_   graph
       , HasFaces graph graph
       ) => PlanarGraph_ graph where
@@ -154,3 +191,31 @@ class ( Graph_   graph
 
 --   -- | The neighbours of a particular vertex u
 --   neighboursOf   :: VertexIx graph -> Neighbours graph
+
+
+  --------------------------------------------------------------------------------
+  -- Instances for Data.Graph
+
+instance HasVertices' Containers.Graph where
+  type Vertex Containers.Graph = ()
+  type VertexIx Containers.Graph = Containers.Vertex
+  vertexAt u = iix u <. united
+  numVertices = F.length
+
+instance HasVertices Containers.Graph Containers.Graph where
+  vertices = itraversed <. lens (const ()) (\xs _ -> xs)
+
+instance HasEdges' Containers.Graph where
+  type Edge Containers.Graph = ()
+  type EdgeIx Containers.Graph  = (Containers.Vertex, Containers.Vertex)
+  -- | Running time of traversing an edge (u,v): O(degree(u))
+  edgeAt (u,v) = iix u <.> neighs
+    where
+      neighs :: IndexedTraversal' Containers.Vertex [Containers.Vertex] ()
+      neighs = traversed . filtered (== v) .> selfIndex <. united
+
+instance HasEdges Containers.Graph Containers.Graph where
+  edges = itraversed <.> neighs
+    where
+      neighs :: IndexedTraversal' a [a] ()
+      neighs = traversed .> selfIndex <. united
