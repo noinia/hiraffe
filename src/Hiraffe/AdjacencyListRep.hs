@@ -10,8 +10,7 @@ import           Data.Bitraversable
 import qualified Data.Foldable as F
 import           Data.Functor.Classes
 import qualified Data.IntMap as IntMap
-import qualified Data.Map as Map
-import           Data.Maybe (mapMaybe, fromMaybe)
+import           Data.Maybe (fromMaybe)
 import           Data.Monoid
 import qualified Data.Sequence as Seq
 import           GHC.Generics (Generic)
@@ -123,11 +122,6 @@ instance HasEdges' (GGraph f v e) where
   edgeAt e@(u',v') = let (u,v) = if u' <= v' then e else (v',u')
                      in vertexDataOf u <.> neighMap .> iix v
 
-  -- -- | running time: O(n)
-  -- --
-  -- numEdges (Graph m) = (`div` 2 ) . getSum . foldMap (Sum . lengthOf neighMap) $ m
-  -- -- FIXME; this may still be incorrect
-
 instance HasEdges (GGraph f v e) (GGraph f v e') where
   -- | running time: \(O(m)\)
   edges pefe' = fmap linkNegatives . darts (Indexed h)
@@ -143,8 +137,8 @@ instance HasEdges (GGraph f v e) (GGraph f v e') where
 -- | for each negative edge (v,u) look up the value stored at (u,v)
 -- and store it here.
 linkNegatives   :: GGraph f v (Maybe e') -> GGraph f v e'
-linkNegatives g = g&darts %@~ \e@(u,v) x -> if u <= v then fromJust' x
-                                                      else fromJust' $ g^?!dartAt (v,u)
+linkNegatives g = g&darts %@~ \(u,v) x -> if u <= v then fromJust' x
+                                                    else fromJust' $ g^?!dartAt (v,u)
   where
     fromJust' = fromMaybe (error "Hiraffe.AdjacencyListRep.edges: absurd ; fromJust")
 
@@ -185,11 +179,3 @@ incidentEdges'  :: VertexIx (GGraph f v e)
 -- incidentEdges'  :: (Indexable (VertexIx (GGraph f v e)) p, Applicative g)
 --                 => VertexIx (GGraph f v e) -> p e (g e) -> GGraph f v e -> g (GGraph f v e)
 incidentEdges' u = vertexDataOf u.neighMap.itraversed
-
-
--- | some test graph
-test :: Graph Int String
-test = fromAdjacencyLists [ (0, 0, [ (1, "01"), (2, "02") ])
-                          , (1, 1, [ (0, "10"), (2, "12") ])
-                          , (2, 2, [ (1, "21"), (0, "20") ])
-                          ]
