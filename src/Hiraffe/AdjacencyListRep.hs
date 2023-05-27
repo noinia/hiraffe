@@ -109,16 +109,16 @@ instance HasEdges' (GGraph f v e) where
 
   -- | running time: O(n)
   --
-  -- TODO: also, this reports all *directed* edges; so I guess for undirected graphs
-  -- this returns twice the number of edges
-  numEdges    (Graph m) = getSum . foldMap (Sum . lengthOf neighMap) $ m
-
+  numEdges (Graph m) = (`div` 2 ) . getSum . foldMap (Sum . lengthOf neighMap) $ m
+  -- FIXME; this may still be incorrect
 
 instance HasEdges (GGraph f v e) (GGraph f v e') where
   -- | running time: \(O(m)\)
   edges pefe' (Graph m) = Graph <$> IntMap.traverseWithKey f m
     where
       f u vd = vd&neighMap.itraversed %%@~ \v e -> indexed pefe' (u,v) e
+
+
 
 
 class HasFromList t where

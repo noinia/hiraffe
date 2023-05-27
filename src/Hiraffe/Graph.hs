@@ -20,9 +20,10 @@ import           Data.Kind (Type)
 class HasVertices' graph where
   {-# MINIMAL vertexAt #-}
 
-
-  type Vertex   graph :: Type
+  -- | Index of a vertex
   type VertexIx graph :: Type
+  -- | The data associated with a vertex
+  type Vertex   graph :: Type
 
   -- | Accessor to a given vertex.
   vertexAt :: VertexIx graph -> IndexedTraversal' (VertexIx graph) graph (Vertex graph)
@@ -40,49 +41,20 @@ class HasVertices' graph => HasVertices graph graph' where
   vertices :: IndexedTraversal (VertexIx graph) graph graph' (Vertex graph) (Vertex graph')
 
 --------------------------------------------------------------------------------
-
--- | Class for types that have edges. The edges may be directed.
-class HasEdges' graph where
-  type Edge   graph :: Type
-  type EdgeIx graph :: Type
-
-  -- | Traversal of all edges in the graph, non type changing
-  -- edges' :: IndexedTraversal' (EdgeIx graph) graph (Edge graph)
-  -- default edges'
-  --   :: HasEdges graph graph => IndexedTraversal' (EdgeIx graph) graph (Edge graph)
-  -- edges' = edges
-
-  -- | Indexed traversal of a given edge.
-  edgeAt :: EdgeIx graph  -> IndexedTraversal' (EdgeIx graph) graph (Edge graph)
-
-  -- | Number of edges in the graph.
-  --
-  -- running time: O(1)
-  numEdges :: graph -> Int
-  default numEdges :: HasEdges graph graph => graph -> Int
-  numEdges = lengthOf edges
-
--- | Class for types that have a type changing traversla of all edges
-class HasEdges' graph => HasEdges graph graph' where
-  -- | Traversal of all edges in the graph.
-  --
-  -- If the graph is directed, this lists all *directed* edges.
-  edges :: IndexedTraversal (EdgeIx graph) graph graph' (Edge graph) (Edge graph')
-
---------------------------------------
--- * Darts
+-- * Darts / Directed edges
 
 -- | Class for types that have darts; a dart is a directed
--- half-edge. Moreover, each dart has a corresponding twin dart in the
--- other direction.
+-- edge.
 class HasDarts' graph where
-  type Dart   graph :: Type
+  -- | Type to index a dart with
   type DartIx graph :: Type
+  -- | The data of a dart
+  type Dart   graph :: Type
 
   -- | Indexed traversal of a given dart.
   dartAt :: DartIx graph  -> IndexedTraversal' (DartIx graph) graph (Dart graph)
 
-  -- | Number of edges in the graph.
+  -- | Number of darts in the graph.
   --
   -- running time: O(1)
   numDarts :: graph -> Int
@@ -91,12 +63,38 @@ class HasDarts' graph where
 
 -- | Class for types that have a type changing traversal of all darts
 class HasDarts' graph => HasDarts graph graph' where
-  -- | Traversal of all edges in the graph.
-  --
-  -- If the graph is directed, this lists all *directed* edges.
+  -- | Traversal of all darts in the graph.
   darts :: IndexedTraversal (DartIx graph) graph graph' (Dart graph) (Dart graph')
 
+--------------------------------------------------------------------------------
+-- * Edges
+
+-- | Class for types that have edges. In case of directed graphs,
+-- edges are in 1-1 correspondence with the darts. In case of
+-- undirected graphs there may be discrepancies; typically every
+-- undirected edge is represented by a pair of darts.
+class HasEdges' graph where
+  -- | Type to index an edge with
+  type EdgeIx graph :: Type
+  -- | Data associated with an edge
+  type Edge   graph :: Type
+
+  -- | Indexed traversal of a given edge.
+  edgeAt :: EdgeIx graph  -> IndexedTraversal' (EdgeIx graph) graph (Edge graph)
+
+  -- | Number of edges in the graph.
+  numEdges :: graph -> Int
+  default numEdges :: HasEdges graph graph => graph -> Int
+  numEdges = lengthOf edges
+
+-- | Class for types that have a type changing traversla of all edges
+class HasEdges' graph => HasEdges graph graph' where
+  -- | Traversal of all edges in the graph.
+  edges :: IndexedTraversal (EdgeIx graph) graph graph' (Edge graph) (Edge graph')
+
+
 --------------------------------------
+-- * Faces
 
 class HasFaces' graph where
   type Face   graph
@@ -104,12 +102,6 @@ class HasFaces' graph where
 
   -- | Indexed traversal of a given face.
   faceAt :: FaceIx graph -> IndexedTraversal' (FaceIx graph) graph (Face graph)
-
-  -- | Traversal of all faces in the graph, non-type chagning
-  -- faces' :: IndexedTraversal' (FaceIx graph) graph (Face graph)
-  -- default faces' :: HasFaces graph graph => IndexedTraversal' (FaceIx graph) graph (Face graph)
-  -- faces' = faces
-
 
   -- | The number of faces in the Planar graph
   numFaces :: graph -> Int
@@ -121,14 +113,13 @@ class HasFaces' graph => HasFaces graph graph' where
   -- | Traversal of all faces in the graph
   faces :: IndexedTraversal (FaceIx graph) graph graph' (Face graph) (Face graph')
 
-
 --------------------------------------
 
 -- | A class representing directed graphs
 class ( HasVertices graph graph
       , HasEdges graph graph
+      , HasDarts graph graph
       ) => DirGraph_ graph where
-
 
 -- | A graph representing undirected graphs
 class ( HasVertices graph graph
@@ -141,10 +132,11 @@ class ( HasVertices graph graph
   -- that itself does not appear in the adjacencylist, we may drop
   -- it. In other words if u has a neighbour v, then v better have a
   -- specification of its neighbours somewhere.
-  fromAdjacencyLists :: (Foldable f, Foldable g
+  fromAdjacencyLists :: ( Foldable f, Foldable h
                         , v ~ Vertex graph
                         , e ~ Edge graph
-                        ) => f (v, g (v, e)) -> graph
+                        ) => f (v, h (v, e)) -> graph
+  -- FIXME: this type signature is not good enough, e.g. in the Containers.Graph case
 
   -- | All neighbours of a given vertex
   --
@@ -152,15 +144,10 @@ class ( HasVertices graph graph
 
   -- | All edges incident to a given vertex
   --
-  incidentEdges :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
-
+  incidentEdges   :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
 
   {-# MINIMAL fromAdjacencyLists, neighboursOf, incidentEdges #-}
 
--- instance Graph_ Containers.Graph where
---   fromAdjacencyLists = undefined
---   neighboursOf u = iix u .> traverse . selfIndex . united
---   incidentEdges u = undefined
 
 
 -- | Class representing undirected planar graphs.
@@ -200,22 +187,50 @@ instance HasVertices' Containers.Graph where
   type Vertex Containers.Graph = ()
   type VertexIx Containers.Graph = Containers.Vertex
   vertexAt u = iix u <. united
+  {-# INLINE vertexAt #-}
   numVertices = F.length
+  {-# INLINE numVertices #-}
 
 instance HasVertices Containers.Graph Containers.Graph where
   vertices = itraversed <. lens (const ()) (\xs _ -> xs)
+  {-# INLINE vertices #-}
 
-instance HasEdges' Containers.Graph where
-  type Edge Containers.Graph = ()
-  type EdgeIx Containers.Graph  = (Containers.Vertex, Containers.Vertex)
+instance HasDarts' Containers.Graph where
+  type Dart Containers.Graph = ()
+  type DartIx Containers.Graph  = (Containers.Vertex, Containers.Vertex)
   -- | Running time of traversing an edge (u,v): O(degree(u))
-  edgeAt (u,v) = iix u <.> neighs
+  dartAt (u,v) = iix u <.> neighs
     where
       neighs :: IndexedTraversal' Containers.Vertex [Containers.Vertex] ()
       neighs = traversed . filtered (== v) .> selfIndex <. united
+  {-# INLINE dartAt #-}
 
-instance HasEdges Containers.Graph Containers.Graph where
-  edges = itraversed <.> neighs
+instance HasDarts Containers.Graph Containers.Graph where
+  darts = itraversed <.> neighs
     where
       neighs :: IndexedTraversal' a [a] ()
       neighs = traversed .> selfIndex <. united
+  {-# INLINE darts #-}
+
+-- instance HasEdges' Containers.Graph where
+--   type Edge Containers.Graph = ()
+--   type EdgeIx Containers.Graph  = (Containers.Vertex, Containers.Vertex)
+--   -- | Running time of traversing an edge (u,v): O(degree(u))
+--   edgeAt (u,v) = iix u <.> neighs
+--     where
+--       neighs :: IndexedTraversal' Containers.Vertex [Containers.Vertex] ()
+--       neighs = traversed . filtered (== v) .> selfIndex <. united
+--   {-# INLINE edgeAt #-}
+
+-- instance HasEdges Containers.Graph Containers.Graph where
+--   edges = itraversed <.> neighs
+--     where
+--       neighs :: IndexedTraversal' a [a] ()
+--       neighs = traversed .> selfIndex <. united
+--   {-# INLINE edges #-}
+
+-- instance Graph_ Containers.Graph where
+--   fromAdjacencyLists = undefined
+--   -- Containers.graphFromEdges
+--   neighboursOf u = iix u .> traverse .> selfIndex <. united
+--   incidentEdges u = reindexed (u,) (neighboursOf u)
