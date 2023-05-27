@@ -11,7 +11,7 @@ import qualified Data.Foldable as F
 import           Data.Functor.Classes
 import qualified Data.IntMap as IntMap
 import qualified Data.Map as Map
-import           Data.Maybe (mapMaybe)
+import           Data.Maybe (mapMaybe, fromMaybe)
 import           Data.Monoid
 import qualified Data.Sequence as Seq
 import           GHC.Generics (Generic)
@@ -98,28 +98,55 @@ instance HasVertices (GGraph f v e) (GGraph f v' e) where
       itraverse' f (Graph m) =
         Graph <$> IntMap.traverseWithKey (\i vd -> vd&vData %%~ f i) m
 
-
-instance HasEdges' (GGraph f v e) where
-  type Edge   (GGraph f v e) = e
-  type EdgeIx (GGraph f v e) = (VertexIx (GGraph f v e), VertexIx (GGraph f v e))
+instance HasDarts' (GGraph f v e) where
+  type Dart   (GGraph f v e) = e
+  type DartIx (GGraph f v e) = (VertexIx (GGraph f v e), VertexIx (GGraph f v e))
                           -- lexicographical index
 
   -- | running time: \(O(\log m)\)
-  edgeAt (u,v) = vertexDataOf u <.> neighMap .> iix v
+  dartAt (u,v) = vertexDataOf u <.> neighMap .> iix v
 
   -- | running time: O(n)
-  --
-  numEdges (Graph m) = (`div` 2 ) . getSum . foldMap (Sum . lengthOf neighMap) $ m
-  -- FIXME; this may still be incorrect
+  numDarts (Graph m) = getSum . foldMap (Sum . lengthOf neighMap) $ m
 
-instance HasEdges (GGraph f v e) (GGraph f v e') where
+instance HasDarts (GGraph f v e) (GGraph f v e') where
   -- | running time: \(O(m)\)
-  edges pefe' (Graph m) = Graph <$> IntMap.traverseWithKey f m
+  darts pefe' (Graph m) = Graph <$> IntMap.traverseWithKey f m
     where
       f u vd = vd&neighMap.itraversed %%@~ \v e -> indexed pefe' (u,v) e
 
+instance HasEdges' (GGraph f v e) where
+  type Edge   (GGraph f v e) = Dart   (GGraph f v e)
+  type EdgeIx (GGraph f v e) = DartIx (GGraph f v e)
 
+  -- | running time: \(O(\log m)\)
+  edgeAt e@(u',v') = let (u,v) = if u' <= v' then e else (v',u')
+                     in vertexDataOf u <.> neighMap .> iix v
 
+  -- -- | running time: O(n)
+  -- --
+  -- numEdges (Graph m) = (`div` 2 ) . getSum . foldMap (Sum . lengthOf neighMap) $ m
+  -- -- FIXME; this may still be incorrect
+
+instance HasEdges (GGraph f v e) (GGraph f v e') where
+  -- | running time: \(O(m)\)
+  edges pefe' = fmap linkNegatives . darts (Indexed h)
+    where
+      h e@(u,v) x | u <= v    = Just <$> indexed pefe' e x
+                  | otherwise = pure Nothing
+      -- we compute the value only for the positive edges (i.e. u <=
+      -- v), and wrap them in a Just. For the negative values we just
+      -- store Nothings. We then use linkNegatives to, for each
+      -- negative edge look up the value stored at the postiive edge.
+  {-# INLINE edges #-}
+
+-- | for each negative edge (v,u) look up the value stored at (u,v)
+-- and store it here.
+linkNegatives   :: GGraph f v (Maybe e') -> GGraph f v e'
+linkNegatives g = g&darts %@~ \e@(u,v) x -> if u <= v then fromJust' x
+                                                      else fromJust' $ g^?!dartAt (v,u)
+  where
+    fromJust' = fromMaybe (error "Hiraffe.AdjacencyListRep.edges: absurd ; fromJust")
 
 class HasFromList t where
   fromList :: [a] -> t a

@@ -5,7 +5,13 @@ module Hiraffe.PlanarGraph.Instance
   ) where
 
 import           Control.Lens
-import           Hiraffe.Graph
+import qualified Hiraffe.Graph as Graph
+import           Hiraffe.Graph ( HasVertices'(..),HasVertices(..)
+                               , HasEdges(..), HasEdges'(..)
+                               , HasFaces(..), HasFaces'(..)
+                               , Graph_(..)
+                               , PlanarGraph_(..)
+                               )
 import           Hiraffe.PlanarGraph.Core (PlanarGraph, VertexId, FaceId)
 import qualified Hiraffe.PlanarGraph.Core as Core
 import           Hiraffe.PlanarGraph.Dart (Dart)
@@ -28,6 +34,10 @@ instance HasVertices (PlanarGraph s w v e f) (PlanarGraph s w v' e f) where
                  -> PlanarGraph s w v e f -> g (PlanarGraph s w v' e f)
       itraverse' = Core.traverseVertices
 
+-- instance Graph.HasDarts' (PlanarGraph s w v e f) where
+--   type Graph.Dart   (PlanarGraph s w v e f) = ()
+--   type Graph.DartIx (PlanarGraph s w v e f) = Dart s
+--   dartAt d =
 
 instance HasEdges' (PlanarGraph s w v e f) where
   type Edge   (PlanarGraph s w v e f) = e

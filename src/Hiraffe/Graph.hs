@@ -2,6 +2,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Hiraffe.Graph
   ( HasVertices(..), HasVertices'(..)
+  , HasDarts(..), HasDarts'(..)
   , HasEdges(..), HasEdges'(..)
   , HasFaces(..), HasFaces'(..)
 
@@ -70,10 +71,7 @@ class HasDarts' graph => HasDarts graph graph' where
 --------------------------------------------------------------------------------
 -- * Edges
 
--- | Class for types that have edges. In case of directed graphs,
--- edges are in 1-1 correspondence with the darts. In case of
--- undirected graphs there may be discrepancies; typically every
--- undirected edge is represented by a pair of darts.
+-- | Class for types that have edges. Edges are considered undirected.
 class HasEdges' graph where
   -- | Type to index an edge with
   type EdgeIx graph :: Type
@@ -118,7 +116,6 @@ class HasFaces' graph => HasFaces graph graph' where
 
 -- | A class representing directed graphs
 class ( HasVertices graph graph
-      , HasEdges graph graph
       , HasDarts graph graph
       ) => DirGraph_ graph where
 
@@ -221,7 +218,6 @@ instance HasEdges' Containers.Graph where
   {-# INLINE edgeAt #-}
 
 instance HasEdges Containers.Graph Containers.Graph where
-  -- | This implementations considers edges to be undirected!
   edges = darts . ifiltered (\(u,v) _ -> u <= v)
   {-# INLINE edges #-}
 
@@ -232,7 +228,10 @@ instance Graph_ Containers.Graph where
       ds = concatMap (\(u, _, neighs) -> (\(v,_) -> (u,v)) <$> F.toList neighs
                      ) $ F.toList ajs
       n = F.foldl' (\a (u,v) -> a `max` u `max` v) 0 ds
+  {-# INLINE fromAdjacencyLists #-}
 
       -- Containers.graphFromEdges
   neighboursOf u = iix u .> traverse .> selfIndex <. united
+  {-# INLINE neighboursOf #-}
   incidentEdges u = reindexed (u,) (neighboursOf u)
+  {-# INLINE incidentEdges #-}
