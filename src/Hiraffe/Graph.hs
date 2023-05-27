@@ -1,4 +1,5 @@
 {-# LANGUAGE DefaultSignatures #-}
+{-# LANGUAGE UndecidableInstances #-}
 module Hiraffe.Graph
   ( HasVertices(..), HasVertices'(..)
   , HasEdges(..), HasEdges'(..)
@@ -133,10 +134,10 @@ class ( HasVertices graph graph
   -- it. In other words if u has a neighbour v, then v better have a
   -- specification of its neighbours somewhere.
   fromAdjacencyLists :: ( Foldable f, Foldable h
+                        , vi ~ VertexIx graph
                         , v ~ Vertex graph
                         , e ~ Edge graph
-                        ) => f (v, h (v, e)) -> graph
-  -- FIXME: this type signature is not good enough, e.g. in the Containers.Graph case
+                        ) => f (vi, v, h (vi, e)) -> graph
 
   -- | All neighbours of a given vertex
   --
@@ -180,8 +181,8 @@ class ( Graph_   graph
 --   neighboursOf   :: VertexIx graph -> Neighbours graph
 
 
-  --------------------------------------------------------------------------------
-  -- Instances for Data.Graph
+--------------------------------------------------------------------------------
+-- Instances for Data.Graph
 
 instance HasVertices' Containers.Graph where
   type Vertex Containers.Graph = ()
@@ -212,25 +213,26 @@ instance HasDarts Containers.Graph Containers.Graph where
       neighs = traversed .> selfIndex <. united
   {-# INLINE darts #-}
 
--- instance HasEdges' Containers.Graph where
---   type Edge Containers.Graph = ()
---   type EdgeIx Containers.Graph  = (Containers.Vertex, Containers.Vertex)
---   -- | Running time of traversing an edge (u,v): O(degree(u))
---   edgeAt (u,v) = iix u <.> neighs
---     where
---       neighs :: IndexedTraversal' Containers.Vertex [Containers.Vertex] ()
---       neighs = traversed . filtered (== v) .> selfIndex <. united
---   {-# INLINE edgeAt #-}
+instance HasEdges' Containers.Graph where
+  type Edge Containers.Graph = Dart Containers.Graph
+  type EdgeIx Containers.Graph  = DartIx Containers.Graph
+  -- | Running time of traversing an edge (u,v): O(degree(u))
+  edgeAt = dartAt
+  {-# INLINE edgeAt #-}
 
--- instance HasEdges Containers.Graph Containers.Graph where
---   edges = itraversed <.> neighs
---     where
---       neighs :: IndexedTraversal' a [a] ()
---       neighs = traversed .> selfIndex <. united
---   {-# INLINE edges #-}
+instance HasEdges Containers.Graph Containers.Graph where
+  -- | This implementations considers edges to be undirected!
+  edges = darts . ifiltered (\(u,v) _ -> u <= v)
+  {-# INLINE edges #-}
 
--- instance Graph_ Containers.Graph where
---   fromAdjacencyLists = undefined
---   -- Containers.graphFromEdges
---   neighboursOf u = iix u .> traverse .> selfIndex <. united
---   incidentEdges u = reindexed (u,) (neighboursOf u)
+instance Graph_ Containers.Graph where
+  -- | pre: vertex Id's are in the range 0..n
+  fromAdjacencyLists ajs = Containers.buildG (0,n) ds
+    where
+      ds = concatMap (\(u, _, neighs) -> (\(v,_) -> (u,v)) <$> F.toList neighs
+                     ) $ F.toList ajs
+      n = F.foldl' (\a (u,v) -> a `max` u `max` v) 0 ds
+
+      -- Containers.graphFromEdges
+  neighboursOf u = iix u .> traverse .> selfIndex <. united
+  incidentEdges u = reindexed (u,) (neighboursOf u)

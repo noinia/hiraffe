@@ -132,25 +132,21 @@ instance Monoid c => HasFromList (Const c) where
   fromList _ = Const mempty
 
 
-instance (Ord v, HasFromList f) => Graph_ (GGraph f v e) where
-  fromAdjacencyLists = fromMap . Map.fromList . zipWith f [0..] . F.toList
+instance HasFromList f => Graph_ (GGraph f v e) where
+  fromAdjacencyLists =
+    Graph . foldMap (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
+                                    in IntMap.singleton i vd
+                    )
     where
-      f i (v,adjs) = (v, (i, F.toList adjs))
-
-      fromMap   :: Map.Map v (Int, [ (v, e) ] ) -> GGraph f v e
-      fromMap m = Graph . IntMap.fromList . Map.elems . Map.mapWithKey g $ m
-        where
-          g v (i, adjs) = let adjs' = mapMaybe (\(u,e) -> (, e) <$> m ^? ix u ._1) adjs
-                          in (i, VertexData v (IntMap.fromList adjs') (fromList $ map fst adjs'))
-  -- TODO: make a version specific for when v is int, we can then use an intmap directly
-  -- that should be faster
+      mkNeighMap   = foldMap (uncurry IntMap.singleton)
+      mkNeighOrder = fromList . map fst . F.toList
 
   neighboursOf u = conjoined asFold asIFold
     where
       asFold  :: Fold (GGraph f v e) v
       asFold  = folding  $ \g -> g^..incidentEdges' u.asIndex.to (\v -> g^?! vertexAt v)
       asIFold = ifolding $ \g -> g^..incidentEdges' u.asIndex.to (\v -> (v, g^?! vertexAt v))
-
+  {-# INLINE neighboursOf #-}
 
   incidentEdges u = reindexed (u,) (incidentEdges' u)
 
@@ -166,7 +162,7 @@ incidentEdges' u = vertexDataOf u.neighMap.itraversed
 
 -- | some test graph
 test :: Graph Int String
-test = fromAdjacencyLists [ (0, [ (1, "01"), (2, "02") ] )
-                          , (1, [ (0, "10"), (2, "12") ] )
-                          , (2, [ (1, "21"), (0, "20") ])
+test = fromAdjacencyLists [ (0, 0, [ (1, "01"), (2, "02") ])
+                          , (1, 1, [ (0, "10"), (2, "12") ])
+                          , (2, 2, [ (1, "21"), (0, "20") ])
                           ]
