@@ -25,6 +25,7 @@ import           Data.Maybe (mapMaybe)
 import           Data.Monoid
 import qualified Data.Sequence as Seq
 import           GHC.Generics (Generic)
+import           HGeometry.Foldable.Util
 import           Hiraffe.Graph
 
 --------------------------------------------------------------------------------
@@ -77,7 +78,7 @@ newtype GGraph f v e = Graph (IntMap.IntMap (VertexData f v e))
                     deriving (Show,Eq,Generic,Functor,Foldable,Traversable)
 type Graph = GGraph Seq.Seq
 
-
+-- | Iso for accessing the underling int-map representing the adjacencies
 _GraphIntMap :: Iso (GGraph f v e)                     (GGraph f' v' e')
                     (IntMap.IntMap (VertexData f v e)) (IntMap.IntMap (VertexData f' v' e'))
 _GraphIntMap = iso (\(Graph m) -> m) Graph
@@ -90,6 +91,7 @@ instance HasVertices' (GGraph f v e) where
   vertexAt i = vertexDataOf i <. vData
   numVertices (Graph m) = IntMap.size m
 
+-- | Access the vertex data
 vertexDataOf  :: VertexIx (GGraph f v e)
               -> IndexedTraversal' (VertexIx (GGraph f v e))
                                    (GGraph f v e)
@@ -130,19 +132,7 @@ instance HasEdges (GGraph f v e) (GGraph f v e') where
     where
       f u vd = vd&neighMap.itraversed %%@~ \v e -> indexed pefe' (u,v) e
 
-
-class HasFromList t where
-  fromList :: [a] -> t a
-
-instance HasFromList [] where
-  fromList = id
-instance HasFromList Seq.Seq where
-  fromList = Seq.fromList
-instance Monoid c => HasFromList (Const c) where
-  fromList _ = Const mempty
-
-
-instance (Ord v, HasFromList f) => Graph_ (GGraph f v e) where
+instance (Ord v, HasFromFoldable f) => Graph_ (GGraph f v e) where
   fromAdjacencyLists = fromMap . Map.fromList . zipWith f [0..] . F.toList
     where
       f i (v,adjs) = (v, (i, F.toList adjs))

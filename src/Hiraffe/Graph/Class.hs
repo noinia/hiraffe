@@ -15,7 +15,8 @@ module Hiraffe.Graph.Class
   , HasFaces(..), HasFaces'(..)
 
   , Graph_(..)
-  , PlanarGraph_(..)
+  , DirGraph_
+  , PlanarGraph_ -- (..)
   ) where
 
 import Control.Lens

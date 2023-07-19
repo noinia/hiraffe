@@ -15,7 +15,8 @@ module Hiraffe.Graph
   , HasFaces(..), HasFaces'(..)
 
   , Graph_(..)
-  , PlanarGraph_(..)
+  , DirGraph_
+  , PlanarGraph_
   ) where
 
 import Hiraffe.Graph.Class
