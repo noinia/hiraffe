@@ -4,7 +4,10 @@ packages:
     .
 
 allow-newer:
-    vector-circular:vector,base,template-haskell,
+    vector-circular:vector,
+    vector-circular:base,
+    vector-circular:template-haskell,
+    vector-circular:semigroupoids,
 
 source-repository-package
     type: git

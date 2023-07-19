@@ -1,4 +1,14 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
+--------------------------------------------------------------------------------
+-- |
+-- Module      :  Hiraffe.PlanarGraph.Instance
+-- Copyright   :  (C) Frank Staals
+-- License     :  see the LICENSE file
+-- Maintainer  :  Frank Staals
+--
+-- The instances of the various classes for our planar grpah implementation.
+--
+--------------------------------------------------------------------------------
 module Hiraffe.PlanarGraph.Instance
   (
 

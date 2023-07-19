@@ -1,3 +1,13 @@
+--------------------------------------------------------------------------------
+-- |
+-- Module      :  Hiraffe.DFS
+-- Copyright   :  (C) Frank Staals
+-- License     :  see the LICENSE file
+-- Maintainer  :  Frank Staals
+--
+-- Implementation of depth first search.
+--
+--------------------------------------------------------------------------------
 module Hiraffe.DFS
   ( dfs
   , dff
