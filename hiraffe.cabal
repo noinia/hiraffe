@@ -63,20 +63,12 @@ common setup
               , bytestring              >= 0.10      &&  < 1
               , containers              >= 0.5.9     &&  < 1
               , lens                    >= 5.0       &&  < 6
-              , semigroups              >= 0.18      &&  < 1
-              , linear                  >= 1.10      &&  < 2
-              , fixed-vector            >= 1.0       &&  < 2
-              , array                   >= 0.5       &&  < 1
-              , vector-builder          >= 0.3.7     &&  < 1
+              -- , vector-builder          >= 0.3.7     &&  < 1
               , deepseq                 >= 1.1       &&  < 2
-              , MonadRandom             >= 0.5       &&  < 1
-              , random                  >= 1.2       &&  < 2
-              , reflection              >= 2.1       &&  < 3
-              , primitive               >= 0.6.3.0   &&  < 1
               , vector                  >= 0.11      &&  < 1
-              , vector-circular         >= 0.1.4     &&  < 1
-              , nonempty-vector         >= 0.2.0.0   &&  < 1
-              , text                    >= 2         &&  < 3
+              -- , vector-circular         >= 0.1.4     &&  < 1
+              -- , nonempty-vector         >= 0.2.0.0   &&  < 1
+              -- , text                    >= 2         &&  < 3
               , witherable              >= 0.4       &&  < 1
 
               , aeson                   >= 2.0       &&  < 3
@@ -109,8 +101,6 @@ library
     Hiraffe.PlanarGraph.Core
     Hiraffe.PlanarGraph.Dual
     Hiraffe.PlanarGraph.Instance
-
-  --   HGeometry.Vector.VectorFamily
 
 --------------------------------------------------------------------------------
 -- * Benchmarks

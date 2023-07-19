@@ -22,7 +22,6 @@ module Hiraffe.Graph.Class
   ) where
 
 import           Control.Lens
-import qualified Data.Array as Array
 import qualified Data.Foldable as F
 import qualified Data.Graph as Containers
 import           Data.Kind (Type)
