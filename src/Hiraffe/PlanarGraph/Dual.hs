@@ -1,13 +1,12 @@
 --------------------------------------------------------------------------------
 -- |
--- Module      :  Hiraffe.PlanarGraph
+-- Module      :  Hiraffe.PlanarGraph.Dual
 -- Copyright   :  (C) Frank Staals
 -- License     :  see the LICENSE file
 -- Maintainer  :  Frank Staals
 --
--- Data type for representing connected planar graphs. This module contains
--- everything that has to do with the dual graph (i.e. computing it/ operations
--- on faces etc.)
+-- Stuff related to the dual of a planar graph
+--
 --------------------------------------------------------------------------------
 module Hiraffe.PlanarGraph.Dual where
 

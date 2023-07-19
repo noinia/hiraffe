@@ -103,6 +103,7 @@ library
   exposed-modules:
     Hiraffe
     Hiraffe.Graph
+    Hiraffe.Graph.Class
     Hiraffe.AdjacencyListRep
 
     Hiraffe.DFS

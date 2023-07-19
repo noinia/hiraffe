@@ -1,5 +1,15 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE TemplateHaskell #-}
+--------------------------------------------------------------------------------
+-- |
+-- Module      :  Hiraffe.AdjacencyListRep
+-- Copyright   :  (C) Frank Staals
+-- License     :  see the LICENSE file
+-- Maintainer  :  Frank Staals
+--
+-- A Representation of graphs using adjacency lists.
+--
+--------------------------------------------------------------------------------
 module Hiraffe.AdjacencyListRep
   ( Graph
   ) where
