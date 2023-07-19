@@ -17,6 +17,7 @@ import           Data.Bifunctor (second)
 import           Data.Bitraversable
 import           Data.Bifoldable
 import           GHC.Generics   (Generic)
+-- import           Hiraffe.Graph
 
 --------------------------------------------------------------------------------
 
@@ -93,3 +94,11 @@ instance FromJSON f => FromJSON (Face f)
 
 
 --------------------------------------------------------------------------------
+
+-- instance HasVertices' (Gr (Vtx v e) f) where
+--   type Vertex   (Gr (Vtx v e) f) = v
+--   type VertexIx (Gr (Vtx v e) f) = Int
+--   vertexAt u =
+
+-- instance HasVertices (Gr (Vtx v e) f) (Gr (Vtx v' e) f) where
+--   vertices = adjacencies

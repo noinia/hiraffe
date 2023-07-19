@@ -16,6 +16,12 @@ import           Hiraffe.PlanarGraph.Core (PlanarGraph, VertexId, FaceId)
 import qualified Hiraffe.PlanarGraph.Core as Core
 import           Hiraffe.PlanarGraph.Dart (Dart)
 
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+
 instance HasVertices' (PlanarGraph s w v e f) where
   type Vertex   (PlanarGraph s w v e f) = v
   type VertexIx (PlanarGraph s w v e f) = VertexId s w
