@@ -11,16 +11,14 @@
 --------------------------------------------------------------------------------
 module Hiraffe.PlanarGraph.Instance
   (
-
   ) where
 
 import           Control.Lens
-import qualified Hiraffe.Graph as Graph
 import           Hiraffe.Graph ( HasVertices'(..),HasVertices(..)
                                , HasEdges(..), HasEdges'(..)
                                , HasFaces(..), HasFaces'(..)
                                , Graph_(..)
-                               , PlanarGraph_(..)
+                               , PlanarGraph_
                                )
 import           Hiraffe.PlanarGraph.Core (PlanarGraph, VertexId, FaceId)
 import qualified Hiraffe.PlanarGraph.Core as Core
