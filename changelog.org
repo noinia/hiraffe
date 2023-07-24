@@ -1,4 +1,5 @@
+#+title: Revision history for Hiraffe
 
-* Unreleased
+* 0.1 [Unreleased] -- YYYY-mm-dd
 
 - First version :)

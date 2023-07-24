@@ -1,4 +1,3 @@
-{-# LANGUAGE ScopedTypeVariables #-}
 --------------------------------------------------------------------------------
 -- |
 -- Module      :  Hiraffe.PlanarGraph
@@ -12,45 +11,35 @@ module Hiraffe.PlanarGraph
   ( -- $setup
     -- * The Planar Graph type
     PlanarGraph
-  , Core.embedding, Core.vertexData, Core.dartData, Core.faceData, Core.rawDartData
-  , Core.edgeData
+  , Core.embedding -- , Core.vertexData, Core.dartData, Core.faceData, Core.rawDartData
 
   , World(..)
   , DualOf
 
     -- * Representing edges: Arcs and Darts
+  , Dart(Dart), arc, direction
+  , twin, isPositive, asPositive
   , Arc(..)
   , Direction(..), rev
 
-  , Dart(..), arc, direction
-  , twin, isPositive
-
-  -- * Vertices
-
-  , VertexId(..), VertexId'
-
   -- * Building a planar graph
-
   , Core.planarGraph, Core.planarGraph'
-  , fromAdjacencyLists
-  , Core.toAdjacencyLists
   , fromAdjRep
+
+  -- * Exporting a planar graph
+  , Core.toAdjacencyLists
   , toAdjRep
 
-  -- , buildFromJSON
-
-  -- * Quering a planar graph
-  , Core.numDarts
-  , darts
-  -- , darts', darts
-  -- , edges', edges
-  -- , vertices', vertices
-  -- , faces', faces
-  -- , traverseVertices
-  -- , traverseDarts
-  -- , traverseFaces
-
+  -- * Darts
+  , HasDarts'(..), HasDarts(..)
   , Core.tailOf, Core.headOf, Core.endPoints
+
+  -- * Edges
+  , HasEdges'(..), HasEdges(..)
+
+  -- * Vertices
+  , VertexIdIn, VertexId
+  , HasVertices'(..), HasVertices(..)
   , Core.incidentEdges
   , Core.incomingEdges
   , Core.outgoingEdges
@@ -58,30 +47,28 @@ module Hiraffe.PlanarGraph
   , Core.nextIncidentEdge, Core.prevIncidentEdge
   , Core.nextIncidentEdgeFrom, Core.prevIncidentEdgeFrom
 
-  -- * Associated Data
-
-  , HasDataOf(..), Core.endPointDataOf, Core.endPointData
-
-  , Core.dual
-
   -- * Faces
-
-  , FaceId(..), FaceId'
+  , HasFaces'(..), HasFaces(..)
+  , FaceIdIn(..), FaceId
   , leftFace, rightFace
   , boundaryDart, boundary, boundary', boundaryVertices
   , nextEdge, prevEdge
 
+  -- * Dual Graph
+  , Core.dual
 
-  , HasVertices(..), HasEdges(..)
+  -- * Associated Data
+  -- , HasDataOf(..)
+  , Core.endPointDataOf
   ) where
 
 import           Control.Lens
-import           Hiraffe.Graph (HasVertices(..),HasEdges(..))
+import           Hiraffe.Graph
 import           Hiraffe.PlanarGraph.Core ( PlanarGraph
                                           , DualOf
                                           , World(..)
-                                          , VertexId(..), VertexId'
-                                          , FaceId(..), FaceId'
+                                          , VertexIdIn(..), VertexId
+                                          , FaceIdIn(..), FaceId
                                           , HasDataOf(..)
 
                                           )
@@ -181,15 +168,15 @@ import           Hiraffe.PlanarGraph.Instance ()
 
 --------------------------------------------------------------------------------
 
--- | Indexed traversal of all darts in the planar graph.
-darts :: forall s w v e e' f.
-         IndexedTraversal (Dart s) (PlanarGraph s w v e f) (PlanarGraph s w v e' f) e e'
-darts = conjoined traverse' (itraverse' . indexed)
-    where
-      traverse' :: Applicative g
-                => (e -> g e') -> PlanarGraph s w v e f -> g (PlanarGraph s w v e' f)
-      traverse' = Core.rawDartData.traversed
-      itraverse' :: Applicative g
-                 => (Dart s -> e -> g e')
-                 -> PlanarGraph s w v e f -> g (PlanarGraph s w v e' f)
-      itraverse' = Core.traverseDarts
+-- -- | Indexed traversal of all darts in the planar graph.
+-- darts :: forall s w v e e' f.
+--          IndexedTraversal (Dart s) (PlanarGraph s w v e f) (PlanarGraph s w v e' f) e e'
+-- darts = conjoined traverse' (itraverse' . indexed)
+--     where
+--       traverse' :: Applicative g
+--                 => (e -> g e') -> PlanarGraph s w v e f -> g (PlanarGraph s w v e' f)
+--       traverse' = Core.dartData.traversed
+--       itraverse' :: Applicative g
+--                  => (Dart s -> e -> g e')
+--                  -> PlanarGraph s w v e f -> g (PlanarGraph s w v e' f)
+--       itraverse' = Core.traverseDarts

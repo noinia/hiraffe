@@ -15,7 +15,6 @@ import           Control.Applicative (Alternative(..))
 import           Control.Lens hiding ((.=))
 import           Control.Monad (forM_)
 import           Control.Monad.ST (ST)
-import           Control.Monad.State.Strict
 import           Data.Bitraversable
 import qualified Data.Foldable as F
 import           Data.Maybe (catMaybes, isJust)
@@ -39,7 +38,7 @@ import           Hiraffe.PlanarGraph.Dart
 --
 -- note: Every edge is stored exactly once (i.e. either at u or at v, but not both)
 newtype EdgeOracle s w a =
-  EdgeOracle { _unEdgeOracle :: V.Vector (V.Vector (VertexId s w :+ a)) }
+  EdgeOracle { _unEdgeOracle :: V.Vector (V.Vector (VertexIdIn w s :+ a)) }
                          deriving (Show,Eq)
 
 instance Functor (EdgeOracle s w) where
@@ -77,7 +76,7 @@ edgeOracle g = buildEdgeOracle [ (v, mkAdjacency v <$> incidentEdges v g)
 --
 -- running time: \(O(n)\)
 buildEdgeOracle        :: forall f s w e. (Foldable f)
-                       => [(VertexId s w, f (VertexId s w :+ e))] -> EdgeOracle s w e
+                       => [(VertexIdIn w s, f (VertexIdIn w s :+ e))] -> EdgeOracle s w e
 buildEdgeOracle inAdj' = EdgeOracle $ V.create $ do
                           counts <- UV.thaw initCounts
                           marks  <- UMV.replicate (UMV.length counts) False
@@ -103,13 +102,13 @@ buildEdgeOracle inAdj' = EdgeOracle $ V.create $ do
     -- | Construct the adjacencylist for vertex i. I.e. by retaining only adjacent
     -- vertices that have not been processed yet.
     extractAdj         :: UMV.MVector s' Bool -> Int
-                       -> ST s' (V.Vector (VertexId s w :+ e))
+                       -> ST s' (V.Vector (VertexIdIn w s :+ e))
     extractAdj marks i = let p = fmap not . UMV.read marks . (^.core.unVertexId)
                          in GV.filterM  p $ inAdj V.! i
 
     -- | Decreases the number of adjacencies that vertex j has
     -- if it has <= 6 adjacencies left it has become available for processing
-    decrease                          :: UMV.MVector s' Int -> (VertexId s w :+ e')
+    decrease                          :: UMV.MVector s' Int -> (VertexIdIn w s :+ e')
                                       -> ST s' (Maybe Int)
     decrease counts (VertexId j :+ _) = do k <- UMV.read counts j
                                            let k'  = k - 1
@@ -118,7 +117,7 @@ buildEdgeOracle inAdj' = EdgeOracle $ V.create $ do
 
     -- The actual algorithm that builds the items
     build :: UMV.MVector s' Int -> UMV.MVector s' Bool
-          -> MV.MVector s' (V.Vector (VertexId s w :+ e)) -> [Int] -> ST s' ()
+          -> MV.MVector s' (V.Vector (VertexIdIn w s :+ e)) -> [Int] -> ST s' ()
     build _      _     _    []    = pure ()
     build counts marks outV (i:q) = do
              b <- UMV.read marks i
@@ -135,14 +134,14 @@ buildEdgeOracle inAdj' = EdgeOracle $ V.create $ do
 -- | Test if u and v are connected by an edge.
 --
 -- running time: \(O(1)\)
-hasEdge     :: VertexId s w -> VertexId s w -> EdgeOracle s w a -> Bool
+hasEdge     :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle s w a -> Bool
 hasEdge u v = isJust . findEdge u v
 
 
 -- | Find the edge data corresponding to edge (u,v) if such an edge exists
 --
 -- running time: \(O(1)\)
-findEdge :: VertexId s w -> VertexId s w -> EdgeOracle s w a -> Maybe a
+findEdge :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle s w a -> Maybe a
 findEdge  (VertexId u) (VertexId v) (EdgeOracle os) = find' u v <|> find' v u
   where
     find' j i = fmap (^.extra) . F.find (\(VertexId k :+ _) -> j == k) $ os V.! i
@@ -151,7 +150,7 @@ findEdge  (VertexId u) (VertexId v) (EdgeOracle os) = find' u v <|> find' v u
 -- corresponding to these vertices.
 --
 -- running time: \(O(1)\)
-findDart :: VertexId s w -> VertexId s w -> EdgeOracle s w (Dart s) -> Maybe (Dart s)
+findDart :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle s w (Dart s) -> Maybe (Dart s)
 findDart (VertexId u) (VertexId v) (EdgeOracle os) = find' twin u v <|> find' id v u
   where
     -- looks up j in the adjacencylist of i and applies f to the result

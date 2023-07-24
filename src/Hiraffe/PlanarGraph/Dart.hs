@@ -7,7 +7,14 @@
 --
 -- Data type for representing Darts (edges) in a planar graph.
 --------------------------------------------------------------------------------
-module Hiraffe.PlanarGraph.Dart where
+module Hiraffe.PlanarGraph.Dart
+  ( Dart(Dart), arc, direction
+  , twin
+  , isPositive, asPositive
+  , allDarts
+  , Arc(Arc)
+  , Direction(..), rev
+  ) where
 
 import Control.DeepSeq
 import Control.Lens hiding ((.=))
@@ -22,10 +29,7 @@ import GHC.Generics (Generic)
 
 -- | An Arc is a directed edge in a planar graph. The type s is used to tie
 -- this arc to a particular graph.
-newtype Arc s = Arc { _unArc :: Int } deriving (Eq,Ord,Enum,Bounded,Generic,NFData)
-
-instance Show (Arc s) where
-  show (Arc i) = "Arc " ++ show i
+newtype Arc s = Arc Int deriving (Eq,Ord,Enum,Bounded,Generic,NFData,Show)
 
 
 -- | Darts have a direction which is either Positive or Negative (shown as +1
@@ -58,7 +62,7 @@ data Dart s = Dart { _arc       :: !(Arc s)
 
 -- | Arc lens.
 arc :: Lens' (Dart s) (Arc s)
-arc = lens _arc (\d a -> d{_arc = a})
+arc = lens _arc (\d a -> d {_arc = a})
 
 -- | Direction lens.
 direction :: Lens' (Dart s) Direction
@@ -85,6 +89,9 @@ twin (Dart a d) = Dart a (rev d)
 isPositive   :: Dart s -> Bool
 isPositive d = d^.direction == Positive
 
+-- | Returrns the psoitive version of this this ard.
+asPositive            :: Dart s -> Dart s
+asPositive (Dart a _) = Dart a Positive
 
 instance Enum (Dart s) where
   toEnum x

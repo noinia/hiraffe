@@ -8,7 +8,13 @@
 -- Stuff related to the dual of a planar graph
 --
 --------------------------------------------------------------------------------
-module Hiraffe.PlanarGraph.Dual where
+module Hiraffe.PlanarGraph.Dual
+  ( faces', faces
+  , leftFace, rightFace
+  , nextEdge, prevEdge
+  , boundaryDart, boundary, boundary'
+  , boundaryVertices
+  ) where
 
 import           Control.Lens hiding ((.=))
 import           Hiraffe.PlanarGraph.Core
@@ -54,11 +60,11 @@ import           Data.Maybe (fromMaybe)
 
 
 -- | Enumerate all faces in the planar graph
-faces' :: PlanarGraph s w v e f -> V.Vector (FaceId s w)
-faces' = fmap FaceId . vertices' . _dual
+faces' :: PlanarGraph s w v e f -> V.Vector (FaceIdIn w s)
+faces' = fmap FaceId . vertices' . view dual
 
 -- | All faces with their face data.
-faces   :: PlanarGraph s w v e f -> V.Vector (FaceId s w, f)
+faces   :: PlanarGraph s w v e f -> V.Vector (FaceIdIn w s, f)
 faces g = V.zip (faces' g) (g^.faceData)
 
 -- | The face to the left of the dart
@@ -76,8 +82,8 @@ faces g = V.zip (faces' g) (g^.faceData)
 -- (FaceId 0,"f_3")
 --
 -- running time: \(O(1)\).
-leftFace     :: Dart s -> PlanarGraph s w v e f -> FaceId s w
-leftFace d g = FaceId . headOf d $ _dual g
+leftFace     :: Dart s -> PlanarGraph s w v e f -> FaceIdIn w s
+leftFace d g = FaceId . headOf d $ view dual g
 
 
 -- | The face to the right of the dart
@@ -95,8 +101,8 @@ leftFace d g = FaceId . headOf d $ _dual g
 -- (FaceId 1,"f_infty")
 --
 -- running time: \(O(1)\).
-rightFace     :: Dart s -> PlanarGraph s w v e f -> FaceId s w
-rightFace d g = FaceId . tailOf d $ _dual g
+rightFace     :: Dart s -> PlanarGraph s w v e f -> FaceIdIn w s
+rightFace d g = FaceId . tailOf d $ view dual g
 
 
 -- | Get the next edge (in clockwise order) along the face that is to
@@ -109,8 +115,8 @@ rightFace d g = FaceId . tailOf d $ _dual g
 --
 -- running time: \(O(1)\).
 nextEdge   :: Dart s -> PlanarGraph s w v e f -> Dart s
-nextEdge d = nextIncidentEdgeFrom d . _dual
-  -- prevIncidentEdge (twin d) (_dual g)
+nextEdge d = nextIncidentEdgeFrom d . view dual
+  -- prevIncidentEdge (twin d) (view dual g)
   -- where
   --   f = rightFace d g
 
@@ -124,7 +130,7 @@ nextEdge d = nextIncidentEdgeFrom d . _dual
 --
 -- running time: \(O(1)\).
 prevEdge   :: Dart s -> PlanarGraph s w v e f -> Dart s
-prevEdge d = prevIncidentEdgeFrom d . _dual
+prevEdge d = prevIncidentEdgeFrom d . view dual
 
 -- | Gets a dart bounding this face. I.e. a dart d such that the face lies to
 -- the right of the dart.
@@ -135,7 +141,7 @@ prevEdge d = prevIncidentEdgeFrom d . _dual
 -- (Dart (Arc 1) +1,"b+")
 -- >>> showWithData myGraph $ boundaryDart (FaceId $ VertexId 1) myGraph
 -- (Dart (Arc 2) +1,"c+")
-boundaryDart   :: FaceId s w -> PlanarGraph s w v e f -> Dart s
+boundaryDart   :: FaceIdIn w s -> PlanarGraph s w v e f -> Dart s
 boundaryDart f = V.head . boundary f
 
 -- | The darts bounding this face. The darts are reported in order
@@ -158,8 +164,8 @@ boundaryDart f = V.head . boundary f
 -- (Dart (Arc 0) +1,"a+")
 --
 -- running time: \(O(k)\), where \(k\) is the output size.
-boundary              :: FaceId s w -> PlanarGraph s w v e f -> V.Vector (Dart s)
-boundary (FaceId v) g = incidentEdges v $ _dual g
+boundary            :: FaceIdIn w s -> PlanarGraph s w v e f -> V.Vector (Dart s)
+boundary (FaceId v) = incidentEdges v . view dual
 
 -- | Given a dart d, generates the darts bounding the face that is to
 -- the right of the given dart. The darts are reported in order along
@@ -196,7 +202,7 @@ boundary' d g = fromMaybe (error "boundary'")  . rotateTo d $ boundary (rightFac
 -- (VertexId 0,"u")
 --
 -- running time: \(O(k)\), where \(k\) is the output size.
-boundaryVertices     :: FaceId s w -> PlanarGraph s w v e f -> V.Vector (VertexId s w)
+boundaryVertices     :: FaceIdIn w s -> PlanarGraph s w v e f -> V.Vector (VertexIdIn w s)
 boundaryVertices f g = flip tailOf g <$> boundary f g
 
 -- -- | Gets the next dart along the face

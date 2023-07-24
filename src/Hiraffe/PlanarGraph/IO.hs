@@ -108,7 +108,7 @@ fromAdjRep' = fst . fromAdjRep''
 fromAdjRep''    :: forall s v e. [Vtx v e]
                 -> (PlanarGraph s Primal v e (), EdgeOracle s Primal (Dart s))
 fromAdjRep'' as = (g&vertexData .~ reorder vs' _unVertexId
-                    &dartData   .~ ds
+                    &dartVector .~ ds
                   , oracle
                   )
   where
@@ -154,7 +154,7 @@ reorder v f = V.create $ do
 --
 -- running time: \(O(n)\).
 fromAdjacencyLists      :: forall s w h. (Foldable h, Functor h)
-                        => [(VertexId s w, h (VertexId s w))]
+                        => [(VertexIdIn w s, h (VertexIdIn w s))]
                         -> PlanarGraph s w () () ()
 fromAdjacencyLists adjM = planarGraph' . toCycleRep n $ perm
   where
