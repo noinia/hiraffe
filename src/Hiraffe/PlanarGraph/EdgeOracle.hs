@@ -75,8 +75,8 @@ edgeOracle g = buildEdgeOracle [ (v, mkAdjacency v <$> incidentEdges v g)
 -- are connected by an edge.
 --
 -- running time: \(O(n)\)
-buildEdgeOracle        :: forall f s w e. (Foldable f)
-                       => [(VertexIdIn w s, f (VertexIdIn w s :+ e))] -> EdgeOracle s w e
+buildEdgeOracle        :: forall s w e f g. (Foldable f, Foldable g)
+                       => f (VertexIdIn w s, g (VertexIdIn w s :+ e)) -> EdgeOracle s w e
 buildEdgeOracle inAdj' = EdgeOracle $ V.create $ do
                           counts <- UV.thaw initCounts
                           marks  <- UMV.replicate (UMV.length counts) False
