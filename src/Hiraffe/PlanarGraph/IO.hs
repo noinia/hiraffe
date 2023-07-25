@@ -153,26 +153,21 @@ reorder v f = V.create $ do
 -- pre: No self-loops, and no multi-edges
 --
 -- running time: \(O(n)\).
-fromAdjacencyLists      :: forall s w h. (Foldable h, Functor h)
-                        => [(VertexIdIn w s, h (VertexIdIn w s))]
+fromAdjacencyLists      :: forall s w g h. (Functor g, Foldable g, Foldable h, Functor h)
+                        => g (VertexIdIn w s, h (VertexIdIn w s))
                         -> PlanarGraph s w () () ()
 fromAdjacencyLists adjM = planarGraph' . toCycleRep n $ perm
   where
     n    = sum . fmap length $ perm
-    perm = map toOrbit adjM'
-
-    adjM' = fmap (second F.toList) adjM
-
-    -- -- | Assign Arcs
-    -- adjM' = (^._1) . foldr assignArcs (SP [] 0) $ adjM
+    perm = F.toList . fmap toOrbit $ adjM
 
     -- Build an edgeOracle, so that we can query the arcId assigned to
     -- an edge in O(1) time.
     oracle :: EdgeOracle s w Int
     oracle = fmap (^.core) . assignArcs . buildEdgeOracle
-           . map (second $ map ext)  $ adjM'
+           . fmap (second $ fmap ext)  $ adjM
 
-    toOrbit (u,adjU) = concatMap (toDart u) adjU
+    toOrbit (u,adjU) = foldMap (toDart u) adjU
 
     -- if u = v we have a self-loop, so we add both a positive and a negative dart
     toDart u v = let a = case findEdge u v oracle of
