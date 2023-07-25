@@ -9,16 +9,21 @@
 -- Data structure to represent a planar graph with which we can test in
 -- \(O(1)\) time if an edge between a pair of vertices exists.
 --------------------------------------------------------------------------------
-module Hiraffe.PlanarGraph.EdgeOracle where
+module Hiraffe.PlanarGraph.EdgeOracle
+  ( EdgeOracle
+  , edgeOracle
+  , buildEdgeOracle
+  , hasEdge
+  , findEdge
+  , findDart
+  ) where
 
 import           Control.Applicative (Alternative(..))
 import           Control.Lens hiding ((.=))
 import           Control.Monad (forM_)
 import           Control.Monad.ST (ST)
-import           Data.Bitraversable
 import qualified Data.Foldable as F
 import           Data.Maybe (catMaybes, isJust)
-import           Data.Traversable (fmapDefault,foldMapDefault)
 import qualified Data.Vector as V
 import qualified Data.Vector.Generic as GV
 import qualified Data.Vector.Mutable as MV
@@ -37,22 +42,15 @@ import           Hiraffe.PlanarGraph.Dart
 -- lists have length at most 6.
 --
 -- note: Every edge is stored exactly once (i.e. either at u or at v, but not both)
-newtype EdgeOracle s w a =
-  EdgeOracle { _unEdgeOracle :: V.Vector (V.Vector (VertexIdIn w s :+ a)) }
-                         deriving (Show,Eq)
+newtype EdgeOracle s w e = EdgeOracle (V.Vector (V.Vector (VertexIdIn w s :+ e)))
+                         deriving (Show,Eq,Functor,Foldable,Traversable)
 
-instance Functor (EdgeOracle s w) where
-  fmap = fmapDefault
-
-instance Foldable (EdgeOracle s w) where
-  foldMap = foldMapDefault
-
-instance Traversable (EdgeOracle s w) where
-  traverse f (EdgeOracle v) = EdgeOracle <$> traverse g v
-    where
-      -- g   :: V.Vector (VertexId :+ a) -> f (V.Vector (VertexId :+ b))
-      g = traverse (bitraverse pure f)
-
+-- data DartData e = UToVOnly e
+--                 | VToUOnlly e
+--                 | Both { uToV :: e -- ^ the data associated with the dart in this direction
+--                        , vToU :: e -- ^ the data associated with the reverse direction
+--                        }
+--                 deriving (Show,Eq,Functor,Foldable,Traversable)
 
 -- | Given a planar graph, construct an edge oracle. Given a pair of vertices
 -- this allows us to efficiently find the dart representing this edge in the
@@ -70,7 +68,6 @@ edgeOracle g = buildEdgeOracle [ (v, mkAdjacency v <$> incidentEdges v g)
     otherVtx v d = let u = tailOf d g in if u == v then headOf d g else u
 
 
-
 -- | Builds an edge oracle that can be used to efficiently test if two vertices
 -- are connected by an edge.
 --
@@ -86,7 +83,7 @@ buildEdgeOracle inAdj' = EdgeOracle $ V.create $ do
     -- main idea: maintain a vector with counts; i.e. how many unprocessed
     -- vertices are adjacent to u, and a bit vector with marks to keep track if
     -- a vertex has been processed yet. When we process a vertex, we keep only
-    -- the adjacencies of unprocessed verticese.
+    -- the adjacencies of unprocessed vertices.
   where
     -- Convert to a vector representation
     inAdj = V.create $ do
@@ -105,10 +102,13 @@ buildEdgeOracle inAdj' = EdgeOracle $ V.create $ do
                        -> ST s' (V.Vector (VertexIdIn w s :+ e))
     extractAdj marks i = let p = fmap not . UMV.read marks . (^.core.unVertexId)
                          in GV.filterM  p $ inAdj V.! i
+      -- seems that here we should make sure to remember the data in the other direction
+      -- as well
 
     -- | Decreases the number of adjacencies that vertex j has
     -- if it has <= 6 adjacencies left it has become available for processing
-    decrease                          :: UMV.MVector s' Int -> (VertexIdIn w s :+ e')
+    decrease                          :: UMV.MVector s' Int
+                                      -> (VertexIdIn w s :+ e')
                                       -> ST s' (Maybe Int)
     decrease counts (VertexId j :+ _) = do k <- UMV.read counts j
                                            let k'  = k - 1
@@ -116,8 +116,12 @@ buildEdgeOracle inAdj' = EdgeOracle $ V.create $ do
                                            pure $ if k' <= 6 then Just j else Nothing
 
     -- The actual algorithm that builds the items
-    build :: UMV.MVector s' Int -> UMV.MVector s' Bool
-          -> MV.MVector s' (V.Vector (VertexIdIn w s :+ e)) -> [Int] -> ST s' ()
+    build :: UMV.MVector s' Int -- ^ counts vector
+          -> UMV.MVector s' Bool -- ^ Marks vector
+          -> MV.MVector s' (V.Vector (VertexIdIn w s :+ e))
+          -- ^ the output vector we are building
+          -> [Int] -- ^ queue of vertices to process
+          -> ST s' ()
     build _      _     _    []    = pure ()
     build counts marks outV (i:q) = do
              b <- UMV.read marks i
@@ -138,7 +142,8 @@ hasEdge     :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle s w a -> Bool
 hasEdge u v = isJust . findEdge u v
 
 
--- | Find the edge data corresponding to edge (u,v) if such an edge exists
+-- | Find the edge data corresponding to edge (u,v) if such an edge exists.
+--
 --
 -- running time: \(O(1)\)
 findEdge :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle s w a -> Maybe a
