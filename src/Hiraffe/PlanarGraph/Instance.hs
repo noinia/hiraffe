@@ -36,15 +36,15 @@ instance HasVertices' (PlanarGraph s w v e f) where
   numVertices = Core.numVertices
 
 instance HasVertices (PlanarGraph s w v e f) (PlanarGraph s w v' e f) where
-  vertices = conjoined traverse' (itraverse' . indexed)
+  vertices = conjoined traverse' (itraverseV . indexed)
     where
       traverse' :: Applicative g
                 => (v -> g v') -> PlanarGraph s w v e f -> g (PlanarGraph s w v' e f)
       traverse' = Core.vertexData.traversed
-      itraverse' :: Applicative g
+      itraverseV :: Applicative g
                  => (VertexIdIn w s -> v -> g v')
                  -> PlanarGraph s w v e f -> g (PlanarGraph s w v' e f)
-      itraverse' = Core.traverseVertices
+      itraverseV = Core.traverseVertices
 
 ----------------------------------------
 
@@ -68,19 +68,19 @@ instance HasEdges' (PlanarGraph s w v e f) where
 -- | Edge at lens, note that it actually modifies *both* the data associated with both the
 -- positive and the negative occurance of the given dart.
 edgeAtLens   :: Dart.Dart s -> IndexedLens' (Dart.Dart s) (PlanarGraph s w v e f) e
-edgeAtLens d = ilens (\g -> (d, get g)) set
+edgeAtLens d = ilens (\g -> (d, get'' g)) set''
   where
     d' = Dart.asPositive d
-    get g   = g^?!dartAt d'
-    set g e = g&dartAt d' .~ e
-               &dartAt d  .~ e
+    get'' g   = g^?!dartAt d'
+    set'' g e = g&dartAt d' .~ e
+                 &dartAt d  .~ e
 
 instance HasEdges (PlanarGraph s w v e f) (PlanarGraph s w v e' f) where
   edges = itraverse'.indexed
 
 
-mapDarts   :: (Dart.Dart s -> e -> e') -> PlanarGraph s w v e f -> PlanarGraph s w v e' f
-mapDarts f = runIdentity . Core.traverseDarts (\i e -> Identity $ f i e)
+-- mapDarts   :: (Dart.Dart s -> e -> e') -> PlanarGraph s w v e f -> PlanarGraph s w v e' f
+-- mapDarts f = runIdentity . Core.traverseDarts (\i e -> Identity $ f i e)
 
 sequenceDarts    :: Applicative g => PlanarGraph s w v (g e) f -> g (PlanarGraph s w v e f)
 sequenceDarts pg = pg&Core.dartData %%~ sequenceA
@@ -113,11 +113,22 @@ instance HasFaces (PlanarGraph s w v e f) (PlanarGraph s w v e f') where
 
 instance Graph_ (PlanarGraph s w v e f) where
 
+  -- fromAdjacencyLists :: ( Foldable f, Foldable h
+  --                       , vi ~ VertexIx graph
+  --                       , v ~ Vertex graph
+  --                       , e ~ Edge graph
+  --                       ) => f (vi, v, h (vi, e)) -> graph
+
+
+
 -- IO.fromAdjacencyLists      :: forall s w h. (Foldable h, Functor h)
 --                         => [(VertexId s w, h (VertexId s w))]
 --                         -> PlanarGraph s w () () ()
 -- vertices need to be in CCW order ; no self-lopos and no multie-dges
 
+  fromAdjacencyLists :: (Foldable g, Foldable h)
+                     => g (VertexIdIn w s, v, h (VertexIdIn w s, e))
+                     -> PlanarGraph s w v e f
   fromAdjacencyLists = error "PlanarGraph.fromAdjacencylists not implementedy yet"
     -- IO.fromAdjacencyLists
 

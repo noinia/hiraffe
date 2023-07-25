@@ -17,10 +17,10 @@ module Hiraffe.PlanarGraph
   , DualOf
 
     -- * Representing edges: Arcs and Darts
-  , Dart(Dart), arc, direction
-  , twin, isPositive, asPositive
-  , Arc(..)
-  , Direction(..), rev
+  , Core.DartId, Dart.arc, Dart.direction
+  , Dart.twin, Dart.isPositive, Dart.asPositive
+  , Dart.Arc
+  , Dart.Direction(..), Dart.rev
 
   -- * Building a planar graph
   , Core.planarGraph, Core.planarGraph'
@@ -58,22 +58,18 @@ module Hiraffe.PlanarGraph
   , Core.dual
 
   -- * Associated Data
-  -- , HasDataOf(..)
   , Core.endPointDataOf
   ) where
 
-import           Control.Lens
 import           Hiraffe.Graph
 import           Hiraffe.PlanarGraph.Core ( PlanarGraph
                                           , DualOf
                                           , World(..)
                                           , VertexIdIn(..), VertexId
                                           , FaceIdIn(..), FaceId
-                                          , HasDataOf(..)
-
                                           )
 import qualified Hiraffe.PlanarGraph.Core as Core
-import           Hiraffe.PlanarGraph.Dart
+import qualified Hiraffe.PlanarGraph.Dart as Dart
 import           Hiraffe.PlanarGraph.Dual
 import           Hiraffe.PlanarGraph.IO
 import           Hiraffe.PlanarGraph.Instance ()
@@ -82,6 +78,7 @@ import           Hiraffe.PlanarGraph.Instance ()
 -- $setup
 -- >>> import qualified Data.Vector as V
 -- >>> import Control.Lens
+-- >>> import Hiraffe.PlanarGraph.Dart(Dart(Dart))
 -- >>> :{
 -- let dart i s = Dart (Arc i) (read s)
 --     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]

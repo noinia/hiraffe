@@ -12,6 +12,7 @@ module Hiraffe.PlanarGraph.Core
   , DualOf, dualDualIdentity
   , VertexIdIn(..), VertexId, unVertexId
   , FaceIdIn(..), FaceId
+  , DartId
 
   , PlanarGraph
   , embedding, vertexData, dartData, faceData, dual
@@ -45,7 +46,7 @@ import qualified Data.Vector as V
 import qualified Data.Vector.Mutable as MV
 import           GHC.Generics (Generic)
 import           HGeometry.Permutation
-import           Hiraffe.PlanarGraph.Dart
+import qualified Hiraffe.PlanarGraph.Dart as Dart
 import           Unsafe.Coerce (unsafeCoerce)
 
 --------------------------------------------------------------------------------
@@ -138,6 +139,11 @@ instance Show (FaceIdIn w s) where
 
 
 --------------------------------------------------------------------------------
+
+-- | Type alias to prevent confusion with the Dart type from the HasDart' typeclass.
+type DartId s = Dart.Dart s
+
+--------------------------------------------------------------------------------
 -- * The graph type itself
 
 -- | A *connected* Planar graph with bidirected edges. I.e. the edges (darts) are
@@ -150,7 +156,7 @@ instance Show (FaceIdIn w s) where
 -- The orbits in the embedding are assumed to be in counterclockwise
 -- order. Therefore, every dart directly bounds the face to its right.
 data PlanarGraph s (w :: World) v e f =
-  PlanarGraph { _embedding   :: Permutation (Dart s)
+  PlanarGraph { _embedding   :: Permutation (DartId s)
               , _vertexData  :: V.Vector v
               , _dartData    :: V.Vector e
               -- ^ For every dart (so both negative and positive) we can store some data.
@@ -178,7 +184,7 @@ instance (Eq v, Eq e, Eq f) => Eq (PlanarGraph s w v e f) where
 
 -- | Get the embedding, represented as a permutation of the darts, of this
 -- graph.
-embedding :: Getter (PlanarGraph s w v e f) (Permutation (Dart s))
+embedding :: Getter (PlanarGraph s w v e f) (Permutation (DartId s))
 embedding = to _embedding
 
 -- | \(O(1)\) access, \( O(n) \) update.
@@ -201,18 +207,18 @@ faceData = lens _faceData (\g fD -> updateData id id (const fD) g)
 dual :: Getter (PlanarGraph s w v e f) (PlanarGraph s (DualOf w) f e v)
 dual = to _dual
 
--- | lens to access the vector with Dart s with their data. This function makes sure that
+-- | lens to access the vector with DartId s with their data. This function makes sure that
 -- if you somehow reorder the edge data it is assigned correctly again.
 --
 -- \(O(1)\) access, \( O(n) \) update.
 dartVector :: Lens (PlanarGraph s w v e f) (PlanarGraph s w v e' f)
-                   (V.Vector (Dart s, e))  (V.Vector (Dart s, e'))
+                   (V.Vector (DartId s, e))  (V.Vector (DartId s, e'))
 dartVector = lens darts (\g dD -> updateData id (const $ reorderEdgeData dD) id g)
 {-# INLINE dartVector #-}
 
 -- -- | edgeData is just an alias for 'dartVector'
 -- edgeData :: Lens (PlanarGraph s w v e f) (PlanarGraph s w v e' f)
---                  (V.Vector (Dart s, e)) (V.Vector (Dart s, e'))
+--                  (V.Vector (DartId s, e)) (V.Vector (DartId s, e'))
 -- edgeData = dartVector
 
 -- | Helper function to update the data in a planar graph. Takes care to update
@@ -250,7 +256,7 @@ updateData' fv fe ff (PlanarGraph em vtxData dData fData dg) = g'
 
 
 -- | Reorders the edge data to be in the right order to set dartData
-reorderEdgeData    :: Foldable f => f (Dart s, e) -> V.Vector e
+reorderEdgeData    :: Foldable f => f (DartId s, e) -> V.Vector e
 reorderEdgeData ds = V.create $ do
                                   v <- MV.new (F.length ds)
                                   F.forM_ ds $ \(d,x) ->
@@ -288,7 +294,7 @@ traverseVertices f = itraverseOf (vertexData.itraversed) (f . VertexId)
 -- (Dart (Arc 5) +1,"g+")
 -- (Dart (Arc 5) -1,"g-")
 traverseDarts   :: Applicative m
-                => (Dart s -> e -> m e')
+                => (DartId s -> e -> m e')
                 -> PlanarGraph s w v e f
                 -> m (PlanarGraph s w v e' f)
 traverseDarts f = itraverseOf (dartData.itraversed) (f . toEnum)
@@ -312,7 +318,7 @@ traverseFaces f = itraverseOf (faceData.itraversed) (\i -> f (FaceId $ VertexId 
 -- | Construct a planar graph
 --
 -- running time: \(O(n)\).
-planarGraph'      :: Permutation (Dart s) -> PlanarGraph s w () () ()
+planarGraph'      :: Permutation (DartId s) -> PlanarGraph s w () () ()
 planarGraph' perm = pg
   where
     pg = PlanarGraph perm vData eData fData (computeDual pg)
@@ -330,7 +336,7 @@ planarGraph' perm = pg
 -- vertex.
 --
 -- running time: \(O(n)\).
-planarGraph    :: [[(Dart s,e)]] -> PlanarGraph s Primal () e ()
+planarGraph    :: [[(DartId s,e)]] -> PlanarGraph s Primal () e ()
 planarGraph ds = planarGraph' perm & dartVector .~ (V.fromList . concat $ ds)
   where
     n     = sum . map length $ ds
@@ -398,7 +404,7 @@ vertices g = V.zip (vertices' g) (g^.vertexData)
 
 
 -- | Enumerate all darts
-darts' :: PlanarGraph s w v e f -> V.Vector (Dart s)
+darts' :: PlanarGraph s w v e f -> V.Vector (DartId s)
 darts' = elems . _embedding
 
 -- | Get all darts together with their data
@@ -416,12 +422,12 @@ darts' = elems . _embedding
 -- (Dart (Arc 3) +1,"d+")
 -- (Dart (Arc 2) -1,"c-")
 -- (Dart (Arc 5) -1,"g-")
-darts   :: PlanarGraph s w v e f -> V.Vector (Dart s, e)
+darts   :: PlanarGraph s w v e f -> V.Vector (DartId s, e)
 darts g = (\d -> (d,g^.dataOf d)) <$> darts' g
 
 -- | Enumerate all edges. We report only the Positive darts
-edges' :: PlanarGraph s w v e f -> V.Vector (Dart s)
-edges' = V.filter isPositive . darts'
+edges' :: PlanarGraph s w v e f -> V.Vector (DartId s)
+edges' = V.filter Dart.isPositive . darts'
 
 -- | Enumerate all edges with their edge data. We report only the Positive
 -- darts.
@@ -433,8 +439,8 @@ edges' = V.filter isPositive . darts'
 -- (Dart (Arc 5) +1,"g+")
 -- (Dart (Arc 4) +1,"e+")
 -- (Dart (Arc 3) +1,"d+")
-edges :: PlanarGraph s w v e f -> V.Vector (Dart s, e)
-edges = V.filter (isPositive . fst) . darts
+edges :: PlanarGraph s w v e f -> V.Vector (DartId s, e)
+edges = V.filter (Dart.isPositive . fst) . darts
 
 
 -- | The tail of a dart, i.e. the vertex this dart is leaving from
@@ -443,7 +449,7 @@ edges = V.filter (isPositive . fst) . darts
 -- (VertexId 2,"w")
 --
 -- running time: \(O(1)\)
-tailOf     :: Dart s -> PlanarGraph s w v e f -> VertexIdIn w s
+tailOf     :: DartId s -> PlanarGraph s w v e f -> VertexIdIn w s
 tailOf d g = VertexId . fst $ lookupIdx (g^.embedding) d
 
 -- | The vertex this dart is heading in to
@@ -452,8 +458,8 @@ tailOf d g = VertexId . fst $ lookupIdx (g^.embedding) d
 -- (VertexId 1,"v")
 --
 -- running time: \(O(1)\)
-headOf   :: Dart s -> PlanarGraph s w v e f -> VertexIdIn w s
-headOf d = tailOf (twin d)
+headOf   :: DartId s -> PlanarGraph s w v e f -> VertexIdIn w s
+headOf d = tailOf (Dart.twin d)
 
 -- | endPoints d g = (tailOf d g, headOf d g)
 --
@@ -461,7 +467,7 @@ headOf d = tailOf (twin d)
 -- (VertexId 2,VertexId 1)
 --
 -- running time: \(O(1)\)
-endPoints :: Dart s -> PlanarGraph s w v e f -> (VertexIdIn w s, VertexIdIn w s)
+endPoints :: DartId s -> PlanarGraph s w v e f -> (VertexIdIn w s, VertexIdIn w s)
 endPoints d g = (tailOf d g, headOf d g)
 
 -- | All edges incident to vertex v, in counterclockwise order around v.
@@ -478,7 +484,7 @@ endPoints d g = (tailOf d g, headOf d g)
 --
 -- running time: \(O(k)\), where \(k\) is the output size
 incidentEdges                :: VertexIdIn w s -> PlanarGraph s w v e f
-                             -> V.Vector (Dart s)
+                             -> V.Vector (DartId s)
 incidentEdges (VertexId v) g = g^?!embedding.orbits.ix v
 
 -- | All edges incident to vertex v in incoming direction
@@ -493,19 +499,19 @@ incidentEdges (VertexId v) g = g^?!embedding.orbits.ix v
 -- (Dart (Arc 5) -1,"g-")
 --
 -- running time: \(O(k)\), where \(k) is the total number of incident edges of v
-incomingEdges     :: VertexIdIn w s -> PlanarGraph s w v e f -> V.Vector (Dart s)
+incomingEdges     :: VertexIdIn w s -> PlanarGraph s w v e f -> V.Vector (DartId s)
 incomingEdges v g = orient <$> incidentEdges v g
   where
-    orient d = if headOf d g == v then d else twin d
+    orient d = if headOf d g == v then d else Dart.twin d
 
 -- | All edges incident to vertex v in outgoing direction
 -- (i.e. pointing away from v) in counterclockwise order around v.
 --
 -- running time: \(O(k)\), where \(k) is the total number of incident edges of v
-outgoingEdges     :: VertexIdIn w s -> PlanarGraph s w v e f -> V.Vector (Dart s)
+outgoingEdges     :: VertexIdIn w s -> PlanarGraph s w v e f -> V.Vector (DartId s)
 outgoingEdges v g = orient <$> incidentEdges v g
   where
-    orient d = if tailOf d g == v then d else twin d
+    orient d = if tailOf d g == v then d else Dart.twin d
 
 
 -- | Gets the neighbours of a particular vertex, in counterclockwise order
@@ -534,8 +540,8 @@ neighboursOf v g = flip tailOf g <$> incomingEdges v g
 -- (Dart (Arc 3) -1,"d-")
 --
 -- running time: \(O(1)\)
-nextIncidentEdge   :: Dart s -> PlanarGraph s w v e f -> Dart s
-nextIncidentEdge d = nextIncidentEdgeFrom (twin d)
+nextIncidentEdge   :: DartId s -> PlanarGraph s w v e f -> DartId s
+nextIncidentEdge d = nextIncidentEdgeFrom (Dart.twin d)
 
 -- | Given a dart d that points into some vertex v, report the previous dart in the
 -- cyclic (counterclockwise) order around v.
@@ -546,8 +552,8 @@ nextIncidentEdge d = nextIncidentEdgeFrom (twin d)
 -- (Dart (Arc 1) -1,"b-")
 --
 -- running time: \(O(1)\)
-prevIncidentEdge   :: Dart s -> PlanarGraph s w v e f -> Dart s
-prevIncidentEdge d = prevIncidentEdgeFrom (twin d)
+prevIncidentEdge   :: DartId s -> PlanarGraph s w v e f -> DartId s
+prevIncidentEdge d = prevIncidentEdgeFrom (Dart.twin d)
 
 
 -- | Given a dart d that points away from some vertex v, report the
@@ -561,7 +567,7 @@ prevIncidentEdge d = prevIncidentEdgeFrom (twin d)
 -- (Dart (Arc 0) +1,"a+")
 --
 -- running time: \(O(1)\)
-nextIncidentEdgeFrom     :: Dart s -> PlanarGraph s w v e f -> Dart s
+nextIncidentEdgeFrom     :: DartId s -> PlanarGraph s w v e f -> DartId s
 nextIncidentEdgeFrom d g = let perm  = g^.embedding
                                (i,j) = lookupIdx perm d
                            in next (perm^?!orbits.ix i) j
@@ -578,7 +584,7 @@ nextIncidentEdgeFrom d g = let perm  = g^.embedding
 -- (Dart (Arc 2) +1,"c+")
 --
 -- running time: \(O(1)\)
-prevIncidentEdgeFrom     :: Dart s -> PlanarGraph s w v e f -> Dart s
+prevIncidentEdgeFrom     :: DartId s -> PlanarGraph s w v e f -> DartId s
 prevIncidentEdgeFrom d g = let perm  = g^.embedding
                                (i,j) = lookupIdx perm d
                            in previous (perm^?!orbits.ix i) j
@@ -599,8 +605,8 @@ instance HasDataOf (PlanarGraph s w v e f) (VertexIdIn w s) where
   type DataOf (PlanarGraph s w v e f) (VertexIdIn w s) = v
   dataOf vi@(VertexId i) = reindexed (const vi) $ vertexData.singular (iix i)
 
-instance HasDataOf (PlanarGraph s w v e f) (Dart s) where
-  type DataOf (PlanarGraph s w v e f) (Dart s) = e
+instance HasDataOf (PlanarGraph s w v e f) (DartId s) where
+  type DataOf (PlanarGraph s w v e f) (DartId s) = e
   dataOf d = reindexed (const d) $ dartData.singular (iix $ fromEnum d)
 
 instance HasDataOf (PlanarGraph s w v e f) (FaceIdIn w s) where
@@ -611,14 +617,14 @@ instance HasDataOf (PlanarGraph s w v e f) (FaceIdIn w s) where
 --
 -- >>> myGraph^.endPointDataOf (Dart (Arc 3) Positive)
 -- ("w","v")
-endPointDataOf   :: Dart s -> Getter (PlanarGraph s w v e f) (v,v)
+endPointDataOf   :: DartId s -> Getter (PlanarGraph s w v e f) (v,v)
 endPointDataOf d = to $ endPointData d
 
 
 -- | Data corresponding to the endpoints of the dart
 --
 -- running time: \(O(1)\)
-endPointData     :: Dart s -> PlanarGraph s w v e f -> (v,v)
+endPointData     :: DartId s -> PlanarGraph s w v e f -> (v,v)
 endPointData d g = let (u,v) = endPoints d g in (g^.dataOf u, g^.dataOf v)
 
 
@@ -651,7 +657,7 @@ computeDual'   :: (DualOf (DualOf w) ~ w)
 computeDual' g = dualG
   where
     perm  = g^.embedding
-    dualG = PlanarGraph (cycleRep (elems perm) (apply perm . twin))
+    dualG = PlanarGraph (cycleRep (elems perm) (apply perm . Dart.twin))
                         (g^.faceData)
                         (g^.dartData)
                         (g^.vertexData)

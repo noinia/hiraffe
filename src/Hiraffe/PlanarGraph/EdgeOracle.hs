@@ -61,7 +61,7 @@ instance Traversable (EdgeOracle s w) where
 -- pre: No self-loops and no multi-edges!!!
 --
 -- running time: \(O(n)\)
-edgeOracle   :: PlanarGraph s w v e f -> EdgeOracle s w (Dart s)
+edgeOracle   :: PlanarGraph s w v e f -> EdgeOracle s w (DartId s)
 edgeOracle g = buildEdgeOracle [ (v, mkAdjacency v <$> incidentEdges v g)
                                | v <- F.toList $ vertices' g
                                ]
@@ -150,7 +150,7 @@ findEdge  (VertexId u) (VertexId v) (EdgeOracle os) = find' u v <|> find' v u
 -- corresponding to these vertices.
 --
 -- running time: \(O(1)\)
-findDart :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle s w (Dart s) -> Maybe (Dart s)
+findDart :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle s w (DartId s) -> Maybe (DartId s)
 findDart (VertexId u) (VertexId v) (EdgeOracle os) = find' twin u v <|> find' id v u
   where
     -- looks up j in the adjacencylist of i and applies f to the result
