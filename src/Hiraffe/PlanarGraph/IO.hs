@@ -21,7 +21,6 @@ module Hiraffe.PlanarGraph.IO
 import           Control.Lens
 import           Control.Monad.State.Strict
 import           Data.Aeson
-import           Data.Bifunctor
 import qualified Data.Foldable as F
 import           Data.Maybe (fromJust)
 import qualified Data.Vector as V
@@ -132,7 +131,7 @@ fromAdjRep'' as = (g&vertexData .~ reorder vs' _unVertexId
 buildGraph     :: forall s v e. [Vtx v e] -> PlanarGraph s Primal () () ()
 buildGraph as' = fromAdjacencyLists as
   where
-    as = [ (VertexId vi, V.fromList [VertexId ui | (ui,_) <- us])
+    as = [ (VertexId vi, [(VertexId ui, e) | (ui,e) <- us])
          | Vtx vi us _ <- as'
          ]
 
@@ -153,8 +152,8 @@ reorder v f = V.create $ do
 -- pre: No self-loops, and no multi-edges
 --
 -- running time: \(O(n)\).
-fromAdjacencyLists      :: forall s w g h. (Functor g, Foldable g, Foldable h, Functor h)
-                        => g (VertexIdIn w s, h (VertexIdIn w s))
+fromAdjacencyLists      :: forall s w e g h. (Functor g, Foldable g, Foldable h, Functor h)
+                        => g (VertexIdIn w s, h (VertexIdIn w s, e))
                         -> PlanarGraph s w () () ()
 fromAdjacencyLists adjM = planarGraph' . toCycleRep n $ perm
   where
@@ -163,20 +162,21 @@ fromAdjacencyLists adjM = planarGraph' . toCycleRep n $ perm
 
     -- Build an edgeOracle, so that we can query the arcId assigned to
     -- an edge in O(1) time.
-    oracle :: EdgeOracle s w Int
-    oracle = fmap (^.core) . assignArcs . buildEdgeOracle
-           . fmap (second $ fmap ext)  $ adjM
+    oracle :: EdgeOracle s w (Int :+ e)
+    oracle = assignArcs
+           . buildEdgeOracle
+           . fmap (fmap $ fmap (uncurry (:+))) $ adjM
 
     toOrbit (u,adjU) = foldMap (toDart u) adjU
 
     -- if u = v we have a self-loop, so we add both a positive and a negative dart
-    toDart u v = let a = case findEdge u v oracle of
-                           Nothing -> error $ "edge not found? " <> show (u,v)
-                           Just a' -> a'
-                 in case u `compare` v of
-                      LT -> [Dart (Arc a) Positive]
-                      EQ -> [Dart (Arc a) Positive, Dart (Arc a) Negative]
-                      GT -> [Dart (Arc a) Negative]
+    toDart u (v,_) = let a = case findEdge u v oracle of
+                               Nothing        -> error $ "edge not found? " <> show (u,v)
+                               Just (a' :+ _) -> a'
+                     in case u `compare` v of
+                          LT -> [Dart (Arc a) Positive]
+                          EQ -> [Dart (Arc a) Positive, Dart (Arc a) Negative]
+                          GT -> [Dart (Arc a) Negative]
 
 
 assignArcs   :: EdgeOracle s w e -> EdgeOracle s w (Int :+ e)
