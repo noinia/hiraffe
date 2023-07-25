@@ -155,17 +155,17 @@ reorder v f = V.create $ do
 fromAdjacencyLists      :: forall s w e g h. (Functor g, Foldable g, Foldable h, Functor h)
                         => g (VertexIdIn w s, h (VertexIdIn w s, e))
                         -> PlanarGraph s w () () ()
-fromAdjacencyLists adjM = planarGraph' . toCycleRep n $ perm
+fromAdjacencyLists adjM = gr
   where
+    gr   = planarGraph' . toCycleRep n $ perm
+
     n    = sum . fmap length $ perm
     perm = F.toList . fmap toOrbit $ adjM
 
     -- Build an edgeOracle, so that we can query the arcId assigned to
     -- an edge in O(1) time.
     oracle :: EdgeOracle s w (Int :+ e)
-    oracle = assignArcs
-           . buildEdgeOracle
-           . fmap (fmap $ fmap (uncurry (:+))) $ adjM
+    oracle = assignArcs . buildEdgeOracle . fmap (fmap $ fmap (uncurry (:+))) $ adjM
 
     toOrbit (u,adjU) = foldMap (toDart u) adjU
 
