@@ -30,7 +30,6 @@ import qualified Data.Vector.Generic as GV
 import qualified Data.Vector.Mutable as MV
 import qualified Data.Vector.Unboxed as UV
 import qualified Data.Vector.Unboxed.Mutable as UMV
-import           HGeometry.Ext
 import           Hiraffe.PlanarGraph.Core
 
 --------------------------------------------------------------------------------
@@ -45,14 +44,14 @@ newtype EdgeOracle s w e = MkEdgeOracle (EdgeOracle' s w (DartData e))
                          deriving (Show,Eq,Functor,Foldable,Traversable)
 
 -- | Pattern to get to the underlying vector
-pattern EdgeOracle     :: (V.Vector (V.Vector (VertexIdIn w s :+ DartData e)))
+pattern EdgeOracle     :: (V.Vector (V.Vector (VertexIdIn w s, DartData e)))
                        -> EdgeOracle s w e
 pattern EdgeOracle out = MkEdgeOracle (EdgeOracle' out)
 {-# COMPLETE EdgeOracle #-}
 
 -- | Implementation of the EdgeOracle. the type ue here essentially models the data
 -- associated with an unidrected edge.
-newtype EdgeOracle' s w ue = EdgeOracle' (V.Vector (V.Vector (VertexIdIn w s :+ ue)))
+newtype EdgeOracle' s w ue = EdgeOracle' (V.Vector (V.Vector (VertexIdIn w s, ue)))
                           deriving (Show,Eq,Functor,Foldable,Traversable)
 
 --------------------------------------------------------------------------------
@@ -95,12 +94,12 @@ edgeOracle g = buildEdgeOracle [ (v, mkAdjacency v <$> incidentEdges v g)
                                | v <- F.toList $ vertices' g
                                ]
   where
-    mkAdjacency v d = otherVtx v d :+ d
+    mkAdjacency v d = (otherVtx v d, d)
     otherVtx v d = let u = tailOf d g in if u == v then headOf d g else u
 
 -- | Make sure that we can find the data of both (u,v) and (v,u)
 withBothData              :: forall s w e.
-                             V.Vector (V.Vector (VertexIdIn w s :+ e))
+                             V.Vector (V.Vector (VertexIdIn w s, e))
                              -- ^ the original adjacency lists that have the data from
                              -- both (u,v) and (v,u).
                           -> EdgeOracle' s w e -> EdgeOracle s w e
@@ -110,7 +109,7 @@ withBothData inAdj oracle = EdgeOracle oOut
     (EdgeOracle' os) = UToV <$> oracle
     -- | Finds the index of v in the adjacencylist of u
     find'     :: VertexIdIn w s -> VertexIdIn w s -> Maybe Int
-    find' u v = V.findIndex ((== v) . (^.core)) $ os V.! (coerce u)
+    find' u v = V.findIndex ((== v) . fst) $ os V.! (coerce u)
 
     -- this builds the actual vector that has both the ssociated data.  the main idea is
     -- to traverse over all edges from inAdj, and just look up the edge in the oracle. If
@@ -119,7 +118,7 @@ withBothData inAdj oracle = EdgeOracle oOut
            do out <- mapM V.thaw os
               V.iforM_ inAdj $ \ui adjU -> do
                 let u = VertexId ui
-                forM_ adjU $ \(v :+ eUV) ->
+                forM_ adjU $ \(v, eUV) ->
                   case find' u v of
                     Nothing -> case find' v u of
                       Just i  -> assign' out v i eUV -- (u,v) is stored at u
@@ -144,7 +143,7 @@ withBothData inAdj oracle = EdgeOracle oOut
 --
 -- running time: \(O(n)\)
 buildEdgeOracle        :: forall s w e f g. (Foldable f, Foldable g)
-                       => f (VertexIdIn w s, g (VertexIdIn w s :+ e)) -> EdgeOracle s w e
+                       => f (VertexIdIn w s, g (VertexIdIn w s, e)) -> EdgeOracle s w e
 buildEdgeOracle inAdj' = withBothData inAdj oracle
     -- main idea: maintain a vector with counts; i.e. how many unprocessed
     -- vertices are adjacent to u, and a bit vector with marks to keep track if
@@ -159,7 +158,7 @@ buildEdgeOracle inAdj' = withBothData inAdj oracle
                pure outV
 
     -- Convert to a vector representation
-    inAdj :: V.Vector (V.Vector (VertexIdIn w s :+ e))
+    inAdj :: V.Vector (V.Vector (VertexIdIn w s, e))
     inAdj = V.create $ do
               mv <- MV.new (length inAdj')
               forM_ inAdj' $ \(VertexId i,adjI) ->
@@ -173,24 +172,24 @@ buildEdgeOracle inAdj' = withBothData inAdj oracle
     -- | Construct the adjacencylist for vertex i. I.e. by retaining only adjacent
     -- vertices that have not been processed yet.
     extractAdj         :: UMV.MVector s' Bool -> Int
-                       -> ST s' (V.Vector (VertexIdIn w s :+ e))
-    extractAdj marks i = let p = fmap not . UMV.read marks . (^.core.unVertexId)
+                       -> ST s' (V.Vector (VertexIdIn w s, e))
+    extractAdj marks i = let p = fmap not . UMV.read marks . (^._1.unVertexId)
                          in GV.filterM  p $ inAdj V.! i
 
     -- | Decreases the number of adjacencies that vertex j has
     -- if it has <= 6 adjacencies left it has become available for processing
     decrease                          :: UMV.MVector s' Int
-                                      -> (VertexIdIn w s :+ e')
+                                      -> (VertexIdIn w s, e')
                                       -> ST s' (Maybe Int)
-    decrease counts (VertexId j :+ _) = do k <- UMV.read counts j
-                                           let k'  = k - 1
-                                           UMV.write counts j k'
-                                           pure $ if k' <= 6 then Just j else Nothing
+    decrease counts (VertexId j, _) = do k <- UMV.read counts j
+                                         let k'  = k - 1
+                                         UMV.write counts j k'
+                                         pure $ if k' <= 6 then Just j else Nothing
 
     -- The actual algorithm that builds the items
     build :: UMV.MVector s' Int -- ^ counts vector
           -> UMV.MVector s' Bool -- ^ Marks vector
-          -> MV.MVector s' (V.Vector (VertexIdIn w s :+ e))
+          -> MV.MVector s' (V.Vector (VertexIdIn w s, e))
           -- ^ the output vector we are building
           -> [Int] -- ^ queue of vertices to process
           -> ST s' ()
@@ -220,12 +219,8 @@ findEdge :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle s w a -> Maybe a
 findEdge u v (EdgeOracle os) = find' uToV u v <|> find' vToU v u
   where
     -- looks up j in the adjacencylist of i and applies f to the result
-    find' f j i = do (_ :+ x) <- V.find ((== j) . (^.core)) $ os V.! (coerce i)
+    find' f j i = do (_, x) <- V.find ((== j) . fst) $ os V.! (coerce i)
                      f x
-
--- findEdge  (VertexId u) (VertexId v) (EdgeOracle os) = find' u v <|> find' v u
---   where
---     find' j i = fmap (^.extra) . F.find (\(VertexId k :+ _) -> j == k) $ os V.! i
 
 -- | Given a pair of vertices (u,v) returns the dart, oriented from u to v,
 -- corresponding to these vertices.

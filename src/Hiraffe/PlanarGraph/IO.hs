@@ -169,7 +169,7 @@ fromAdjacencyLists adjM = gr&dartVector .~ theDartData
     -- Build an edgeOracle, so that we can query the arcId assigned to
     -- an edge in O(1) time.
     oracle :: EdgeOracle s w (Int :+ e)
-    oracle = assignArcs . buildEdgeOracle . fmap (fmap $ fmap (uncurry (:+))) $ adjM
+    oracle = assignArcs $ buildEdgeOracle adjM
 
     toOrbit (u,adjU) = foldMap (toDart u) adjU
 
