@@ -25,6 +25,7 @@ import           Hiraffe.Graph ( HasVertices'(..),HasVertices(..)
 import           Hiraffe.PlanarGraph.Core (PlanarGraph, VertexIdIn, FaceIdIn)
 import qualified Hiraffe.PlanarGraph.Core as Core
 import qualified Hiraffe.PlanarGraph.Dart as Dart
+import qualified Hiraffe.PlanarGraph.IO as IO
 
 --------------------------------------------------------------------------------
 
@@ -129,8 +130,7 @@ instance Graph_ (PlanarGraph s w v e f) where
   fromAdjacencyLists :: (Foldable g, Foldable h)
                      => g (VertexIdIn w s, v, h (VertexIdIn w s, e))
                      -> PlanarGraph s w v e f
-  fromAdjacencyLists = error "PlanarGraph.fromAdjacencylists not implementedy yet"
-    -- IO.fromAdjacencyLists
+  fromAdjacencyLists = undefined --- IO.fromAdjacencyLists
 
 
   neighboursOf u = conjoined asFold asIFold
