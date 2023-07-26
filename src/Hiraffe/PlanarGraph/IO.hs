@@ -24,6 +24,7 @@ import qualified Data.Foldable as F
 import           Data.Maybe (fromJust)
 import qualified Data.Vector as V
 import qualified Data.Vector.Mutable as MV
+import           Data.YAML
 import           HGeometry.Ext
 import           HGeometry.Foldable.Util
 import           HGeometry.Permutation
@@ -34,6 +35,12 @@ import           Hiraffe.PlanarGraph.Dual
 import           Hiraffe.PlanarGraph.EdgeOracle
 
 --------------------------------------------------------------------------------
+
+instance (ToYAML v, ToYAML e, ToYAML f) => ToYAML (PlanarGraph s w v e f) where
+  toYAML = toYAML . toAdjRep
+
+instance (FromYAML v, FromYAML e, FromYAML f) => FromYAML (PlanarGraph s Primal v e f) where
+  parseYAML n = fromAdjRep @s <$> parseYAML n
 
 instance (ToJSON v, ToJSON e, ToJSON f) => ToJSON (PlanarGraph s w v e f) where
   toEncoding = toEncoding . toAdjRep

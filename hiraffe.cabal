@@ -70,14 +70,34 @@ common setup
               , vector                  >= 0.11      &&  < 1
               -- , vector-circular         >= 0.1.4     &&  < 1
               -- , nonempty-vector         >= 0.2.0.0   &&  < 1
-              -- , text                    >= 2         &&  < 3
+              , text                    >= 2         &&  < 3
               , witherable              >= 0.4       &&  < 1
-
               , aeson                   >= 2.0       &&  < 3
-              , yaml                    >= 0.8       &&  < 1
-
+              , HsYAML                  >= 0.2       &&  < 1
+              -- , HsYAML-aeson            >= 0.2       &&  < 1
               , mtl                     >= 2.2       &&  < 3
               , template-haskell        >= 2.10      &&  < 3
+              , filepath                >= 1.4.100   &&  < 2
+              , file-io                 >= 0.1       &&  < 1
+
+
+common quickcheck-setup
+    build-depends:
+        QuickCheck                      >= 2.10    && < 3
+      , quickcheck-instances            >= 0.3     && < 1
+
+common test-setup
+    import: quickcheck-setup
+    ghc-options:
+         -Wall
+         -fno-warn-unticked-promoted-constructors
+         -fno-warn-partial-type-signatures
+         -fno-warn-missing-signatures
+         -fno-warn-type-defaults
+         -fno-warn-orphans
+    build-depends:
+        hspec                 >= 2.9      && < 3
+      , hiraffe:quickcheck
 
 --------------------------------------------------------------------------------
 -- * Main Hiraffe Library
@@ -105,6 +125,18 @@ library
     Hiraffe.PlanarGraph.Instance
 
 --------------------------------------------------------------------------------
+-- * Helper Libraries
+
+library quickcheck
+    import: setup, quickcheck-setup
+    visibility: public
+    hs-source-dirs: src-quickcheck
+    exposed-modules:
+      Hiraffe.Instances
+    build-depends:
+         hiraffe
+
+--------------------------------------------------------------------------------
 -- * Benchmarks
 
 -- benchmark benchmarks
@@ -125,7 +157,7 @@ library
 -- * Test Suites
 
 test-suite hiraffe-doctest
-    import:           setup
+    import:           setup, test-setup
     type:             exitcode-stdio-1.0
     main-is:          doctests.hs
     build-tool-depends:  doctest-driver-gen:doctest-driver-gen
@@ -135,17 +167,16 @@ test-suite hiraffe-doctest
      , quickcheck-instances >= 0.1  && < 1
 
 test-suite hiraffe-hspec
-  import: setup
+  import: setup, test-setup
   type:                 exitcode-stdio-1.0
   hs-source-dirs:       test
   main-is:              Main.hs
   build-tool-depends: hspec-discover:hspec-discover
   build-depends:
       hiraffe
-    , hspec         >= 2.9     && < 3
-    , QuickCheck    >= 2.14    && < 3
 
   other-modules:
     Spec
     Hiraffe.AdjacencyListRepSpec
     Hiraffe.PlanarGraph.EdgeOracleSpec
+    Hiraffe.PlanarGraphSpec
