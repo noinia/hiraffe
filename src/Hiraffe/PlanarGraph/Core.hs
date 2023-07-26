@@ -51,6 +51,7 @@ import           Unsafe.Coerce (unsafeCoerce)
 
 --------------------------------------------------------------------------------
 -- $setup
+-- >>> import Hiraffe.PlanarGraph.Dart(Dart(Dart),Arc(Arc),Direction(..))
 -- >>> :{
 -- let dart i s = Dart (Arc i) (read s)
 --     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]

@@ -11,7 +11,7 @@ module Hiraffe.PlanarGraph
   ( -- $setup
     -- * The Planar Graph type
     PlanarGraph
-  , Core.embedding -- , Core.vertexData, Core.dartData, Core.faceData, Core.rawDartData
+  , Core.embedding, vertexData, dartData, faceData
 
   , World(..)
   , DualOf
@@ -23,7 +23,7 @@ module Hiraffe.PlanarGraph
   , Dart.Direction(..), Dart.rev
 
   -- * Building a planar graph
-  , Core.planarGraph, Core.planarGraph'
+  , planarGraph, Core.planarGraph'
   , fromAdjRep
 
   -- * Exporting a planar graph
@@ -69,6 +69,7 @@ import           Hiraffe.PlanarGraph.Core ( PlanarGraph
                                           , FaceIdIn(..), FaceId
                                           )
 import qualified Hiraffe.PlanarGraph.Core as Core
+import           Hiraffe.PlanarGraph.Core (planarGraph, vertexData, faceData, dartData)
 import qualified Hiraffe.PlanarGraph.Dart as Dart
 import           Hiraffe.PlanarGraph.Dual
 import           Hiraffe.PlanarGraph.IO
@@ -78,7 +79,7 @@ import           Hiraffe.PlanarGraph.Instance ()
 -- $setup
 -- >>> import qualified Data.Vector as V
 -- >>> import Control.Lens
--- >>> import Hiraffe.PlanarGraph.Dart(Dart(Dart))
+-- >>> import Hiraffe.PlanarGraph.Dart(Dart(Dart),Arc(Arc),Direction(..))
 -- >>> :{
 -- let dart i s = Dart (Arc i) (read s)
 --     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]
@@ -101,8 +102,6 @@ import           Hiraffe.PlanarGraph.Instance ()
 --                             ]
 --                           ] & vertexData .~ V.fromList ["u","v","w","x"]
 --                             & faceData   .~ V.fromList ["f_3", "f_infty","f_1","f_2"]
---     showWithData     :: HasDataOf s i => s -> i -> (i, DataOf s i)
---     showWithData g i = (i, g^.dataOf i)
 -- :}
 --
 --
