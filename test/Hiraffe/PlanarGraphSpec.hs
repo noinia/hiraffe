@@ -42,7 +42,6 @@ instance FromYAML () where
 missingAdjacencies     :: PlanarGraph s w v e f -> PlanarGraph s w v e f
                        -> [(VertexIdIn w s , VertexIdIn w s)]
 missingAdjacencies g h = ifoldMapOf vertices f g
-  -- concatMap f $ g^..vertices.traverse.index
   where
     f u _ = let adjUh = S.fromList . F.toList $ neighboursOf u h
             in F.toList . fmap (u,) . V.filter (`S.notMember` adjUh) $ neighboursOf u g
@@ -70,15 +69,18 @@ spec = describe "PlanarGraph spec" $ do
       (Right $ fromAdjacencyLists testEdges)
 
 
+myGraph :: PlanarGraph TestG PlanarGraph.Primal Int Text.Text ()
+myGraph = fromAdjacencyLists testEdges
+
 testEdges :: [(Vertex, Int, [(Vertex, Text.Text ) ])]
 testEdges = map (\(i,vs) -> (VertexId i, i,
                               map (\j -> (VertexId j, Text.pack $ "edge" <> show (i,j))) vs))
-            [ (0, [1])
-            , (1, [0,2,4])
-            , (2, [1,3,4])
-            , (3, [2,5])
-            , (4, [1,2,5])
-            , (5, [3,4])
+            [ (0, [1])           -- 1
+            , (1, [0,2,4])       -- 3
+            , (2, [1,3,4])       -- 3
+            , (3, [2,5])         -- 2
+            , (4, [1,2,5])       -- 3
+            , (5, [3,4])         -- 2
             ]
 
 -- testGraph = fromAdjacencyLists testEdges

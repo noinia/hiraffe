@@ -16,6 +16,9 @@ module Hiraffe.PlanarGraph.EdgeOracle
   , hasEdge
   , findEdge
   , findDart
+
+  , itraverseUndirected
+  , DartData(..)
   ) where
 
 import           Control.Applicative (Alternative(..))
@@ -43,16 +46,56 @@ import           Hiraffe.PlanarGraph.Core
 newtype EdgeOracle s w e = MkEdgeOracle (EdgeOracle' s w (DartData e))
                          deriving (Show,Eq,Functor,Foldable,Traversable)
 
+-- | Implementation of the EdgeOracle. the type ue here essentially models the data
+-- associated with an unidrected edge.
+newtype EdgeOracle' s w ue = EdgeOracle' (V.Vector (V.Vector (VertexIdIn w s, ue)))
+                          deriving (Show,Eq,Functor,Foldable,Traversable)
+
+
 -- | Pattern to get to the underlying vector
 pattern EdgeOracle     :: (V.Vector (V.Vector (VertexIdIn w s, DartData e)))
                        -> EdgeOracle s w e
 pattern EdgeOracle out = MkEdgeOracle (EdgeOracle' out)
 {-# COMPLETE EdgeOracle #-}
 
--- | Implementation of the EdgeOracle. the type ue here essentially models the data
--- associated with an unidrected edge.
-newtype EdgeOracle' s w ue = EdgeOracle' (V.Vector (V.Vector (VertexIdIn w s, ue)))
-                          deriving (Show,Eq,Functor,Foldable,Traversable)
+
+type instance Index   (EdgeOracle' s w e) = (VertexIdIn w s, VertexIdIn w s)
+type instance IxValue (EdgeOracle' s w e) = e
+
+instance FunctorWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle' s w) where
+  imap f (EdgeOracle' os) = EdgeOracle' $ V.imap (\u -> fmap (g u)) os
+    where
+      g u (v,x) = (v, f (coerce u, v) x)
+
+instance FoldableWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle' s w) where
+  ifoldMap f (EdgeOracle' os) = ifoldMap (\u -> foldMap (g u)) os
+    where
+      g u (v,x) = f (coerce u, v) x
+
+instance TraversableWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle' s w) where
+  itraverse f (EdgeOracle' os) = EdgeOracle' <$> itraverse (\u -> traverse (g u)) os
+    where
+      g u (v,x) = (v,) <$> f (coerce u, v) x
+
+type instance Index   (EdgeOracle s w e) = (VertexIdIn w s, VertexIdIn w s)
+type instance IxValue (EdgeOracle s w e) = e
+
+instance FunctorWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle s w) where
+  imap f (MkEdgeOracle eo) = MkEdgeOracle $ imap (mapWith f) eo
+
+instance FoldableWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle s w) where
+  ifoldMap f (MkEdgeOracle eo) = ifoldMap (foldMapWith f) eo
+
+instance TraversableWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle s w) where
+  itraverse f (MkEdgeOracle eo) =
+    MkEdgeOracle <$> itraverse (traverseWith f) eo
+
+-- | Traverse the undirected edges stored in the edge oracle
+itraverseUndirected  :: Applicative f
+                     => ((VertexIdIn w s, VertexIdIn w s) -> DartData e -> f (DartData e'))
+                     -> EdgeOracle s w e
+                     -> f (EdgeOracle s w e')
+itraverseUndirected f (MkEdgeOracle eo) = MkEdgeOracle <$> itraverse f eo
 
 --------------------------------------------------------------------------------
 -- * Helper data type that allows us to distinguish between the data of (u,v) and (v,u)
@@ -79,6 +122,19 @@ vToU = \case
   VToU e   -> Just e
   Both _ e -> Just e
   _        -> Nothing
+
+mapWith        :: ((i,i) -> e -> e') -> (i,i) -> DartData e -> DartData e'
+mapWith f ii x = runIdentity $ traverseWith (\i -> Identity . f i) ii x
+
+foldMapWith        :: Monoid m => ((i,i) -> e -> m) -> (i,i) -> DartData e -> m
+foldMapWith f ii x = getConst $ traverseWith (\i -> Const . f i) ii x
+
+traverseWith         :: Applicative f
+                     => ((i,i) -> e -> f e') -> (i,i) -> DartData e -> f (DartData e')
+traverseWith f (u,v) = \case
+  UToV e    -> UToV <$> f (u,v) e
+  VToU e    -> VToU <$> f (v,u) e
+  Both e e' -> Both <$> f (u,v) e <*> f (v,u) e'
 
 --------------------------------------------------------------------------------
 

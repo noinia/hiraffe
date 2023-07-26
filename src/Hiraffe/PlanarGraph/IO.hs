@@ -161,8 +161,8 @@ fromAdjacencyLists adjM = gr&dartVector .~ theDartData
                           GT -> [(Dart (Arc a) Negative, e)]
 
 
-assignArcs   :: EdgeOracle s w e -> EdgeOracle s w (Int :+ e)
-assignArcs o = evalState (traverse f o) 0
+assignArcs   :: forall s w e. EdgeOracle s w e -> EdgeOracle s w (Int :+ e)
+assignArcs o = evalState (itraverseUndirected f o) 0
   where
-    f   :: e -> State Int (Int :+ e)
-    f e = do i <- get ; put (i+1) ; pure (i :+ e)
+    f     :: (VertexIdIn w s, VertexIdIn w s) -> DartData e -> State Int (DartData (Int :+ e))
+    f _ e = do i <- get ; put (i+1) ; pure ((i :+) <$> e)
