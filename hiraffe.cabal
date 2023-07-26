@@ -122,15 +122,15 @@ library
 --------------------------------------------------------------------------------
 -- * Test Suites
 
-test-suite hiraffe-doctests
-  type:          exitcode-stdio-1.0
-  ghc-options:   -threaded
-  main-is:       doctests.hs
-  build-depends: base
-               , doctest             >= 0.8
-               , doctest-discover
-               , QuickCheck
-               , quickcheck-instances
+test-suite hiraffe-doctest
+    import:           setup
+    type:             exitcode-stdio-1.0
+    main-is:          doctests.hs
+    build-tool-depends:  doctest-driver-gen:doctest-driver-gen
+    build-depends:
+       doctest              >= 0.8  && < 1
+     , QuickCheck           >= 2.14 && < 3
+     , quickcheck-instances >= 0.1  && < 1
 
 test-suite hiraffe-hspec
   import: setup
@@ -140,8 +140,8 @@ test-suite hiraffe-hspec
   build-tool-depends: hspec-discover:hspec-discover
   build-depends:
       hiraffe
-    , hspec         >= 2.9
-    , QuickCheck    >= 2.14
+    , hspec         >= 2.9     && < 3
+    , QuickCheck    >= 2.14    && < 3
 
   other-modules:
     Spec
