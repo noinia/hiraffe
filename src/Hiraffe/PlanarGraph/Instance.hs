@@ -112,25 +112,9 @@ instance HasFaces (PlanarGraph s w v e f) (PlanarGraph s w v e f') where
 
 --------------------------------------------------------------------------------
 
-instance Graph_ (PlanarGraph s w v e f) where
-
-  -- fromAdjacencyLists :: ( Foldable f, Foldable h
-  --                       , vi ~ VertexIx graph
-  --                       , v ~ Vertex graph
-  --                       , e ~ Edge graph
-  --                       ) => f (vi, v, h (vi, e)) -> graph
-
-
-
--- IO.fromAdjacencyLists      :: forall s w h. (Foldable h, Functor h)
---                         => [(VertexId s w, h (VertexId s w))]
---                         -> PlanarGraph s w () () ()
--- vertices need to be in CCW order ; no self-lopos and no multie-dges
-
-  fromAdjacencyLists :: (Foldable g, Foldable h)
-                     => g (VertexIdIn w s, v, h (VertexIdIn w s, e))
-                     -> PlanarGraph s w v e f
-  fromAdjacencyLists = undefined --- IO.fromAdjacencyLists
+instance Graph_ (PlanarGraph s w v e ()) where
+  -- | The vertices are expected to have their adjacencies in CCW order.
+  fromAdjacencyLists = IO.fromAdjacencyLists
 
 
   neighboursOf u = conjoined asFold asIFold
@@ -147,4 +131,4 @@ instance Graph_ (PlanarGraph s w v e f) where
 
 
 
-instance PlanarGraph_ (PlanarGraph s w v e f) where
+instance PlanarGraph_ (PlanarGraph s w v e ()) where

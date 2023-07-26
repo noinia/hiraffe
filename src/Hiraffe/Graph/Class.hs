@@ -149,7 +149,7 @@ class ( HasVertices graph graph
   -- that itself does not appear in the adjacencylist, we may drop
   -- it. In other words if u has a neighbour v, then v better have a
   -- specification of its neighbours somewhere.
-  fromAdjacencyLists :: ( Foldable f, Foldable h
+  fromAdjacencyLists :: ( Foldable f, Functor f, Foldable h, Functor h
                         , vi ~ VertexIx graph
                         , v ~ Vertex graph
                         , e ~ Edge graph

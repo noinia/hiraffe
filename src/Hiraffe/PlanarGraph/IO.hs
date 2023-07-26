@@ -26,6 +26,7 @@ import           Data.Maybe (fromJust)
 import qualified Data.Vector as V
 import qualified Data.Vector.Mutable as MV
 import           HGeometry.Ext
+import           HGeometry.Foldable.Util
 import           HGeometry.Permutation
 import           Hiraffe.PlanarGraph.AdjRep (Face (Face), Gr (Gr), Vtx (Vtx))
 import           Hiraffe.PlanarGraph.Core
@@ -87,7 +88,7 @@ fromAdjRep (Gr as fs) = g&faceData   .~ reorder fs' (_unVertexId._unFaceId)
     findEdge' u v = fromJust $ findDart u v oracle
     -- faces are right of oriented darts
     findFace ui vi = let d = findEdge' (VertexId ui) (VertexId vi) in rightFace d g
-    fs' = V.fromList [ findFace ui vi :+ f | Face (ui,vi) f <- fs ]
+    fs' = V.fromList [ (findFace ui vi, f) | Face (ui,vi) f <- fs ]
 
 -- | Read a planar graph, given by its adjacencylists in counter clockwise order.
 --
@@ -119,26 +120,26 @@ fromAdjRep'' as = (g&vertexData .~ reorder vs' _unVertexId
     -- function to lookup a given dart
     findEdge' u v = fromJust $ findDart u v oracle
 
-    vs' = V.fromList [ VertexId vi :+ v     | Vtx vi _ v <- as ]
+    vs' = V.fromList [ (VertexId vi, v)     | Vtx vi _ v <- as ]
     ds = V.fromList $ concatMap (\(Vtx vi us _) ->
                                    [(findEdge' (VertexId vi) (VertexId ui), x) | (ui,x) <- us]
                                 ) as
   -- TODO: I think we can simplify this now
 
 -- | Builds the graph from the adjacency lists (but ignores all associated data)
-buildGraph     :: forall s v e. [Vtx v e] -> PlanarGraph s Primal () e ()
+buildGraph     :: forall s v e. [Vtx v e] -> PlanarGraph s Primal v e ()
 buildGraph as' = fromAdjacencyLists as
   where
-    as = [ (VertexId vi, [(VertexId ui, e) | (ui,e) <- us])
-         | Vtx vi us _ <- as'
+    as = [ (VertexId vi, x, [(VertexId ui, e) | (ui,e) <- us])
+         | Vtx vi us x <- as'
          ]
 
 
 -- make sure we order the data values appropriately
-reorder     :: V.Vector (i :+ a) -> (i -> Int) -> V.Vector a
+reorder     :: V.Vector (i, a) -> (i -> Int) -> V.Vector a
 reorder v f = V.create $ do
                            v' <- MV.new (V.length v)
-                           F.forM_ v $ \(i :+ x) ->
+                           F.forM_ v $ \(i, x) ->
                              MV.write v' (f i) x
                            pure v'
 
@@ -150,10 +151,11 @@ reorder v f = V.create $ do
 -- pre: No self-loops, and no multi-edges
 --
 -- running time: \(O(n)\).
-fromAdjacencyLists      :: forall s w e g h. (Functor g, Foldable g, Foldable h, Functor h)
-                        => g (VertexIdIn w s, h (VertexIdIn w s, e))
-                        -> PlanarGraph s w () e ()
+fromAdjacencyLists      :: forall s w v e g h. (Functor g, Foldable g, Foldable h, Functor h)
+                        => g (VertexIdIn w s, v, h (VertexIdIn w s, e))
+                        -> PlanarGraph s w v e ()
 fromAdjacencyLists adjM = gr&dartVector .~ theDartData
+                            &vertexData .~ reorder theVertexData _unVertexId
   where
     gr = planarGraph' . toCycleRep n $ perm
     n  = V.length theDartData
@@ -164,14 +166,16 @@ fromAdjacencyLists adjM = gr&dartVector .~ theDartData
     perm  :: [[DartId s]]
     perm  = fmap (fmap (^._1)) . F.toList $ perm'
 
-    theDartData = V.fromList . foldMap id $ perm' -- todo, we can use a vectorbuilder here.
+    theDartData   = V.fromList . foldMap id $ perm' -- todo, we can use a vectorbuilder here.
+
+    theVertexData = fromFoldable . fmap (\(vi,v,_) -> (vi,v)) $ adjM
 
     -- Build an edgeOracle, so that we can query the arcId assigned to
     -- an edge in O(1) time.
     oracle :: EdgeOracle s w (Int :+ e)
-    oracle = assignArcs $ buildEdgeOracle adjM
+    oracle = assignArcs . buildEdgeOracle . fmap (\(u,_,adj) -> (u,adj)) $ adjM
 
-    toOrbit (u,adjU) = foldMap (toDart u) adjU
+    toOrbit (u,_,adjU) = foldMap (toDart u) adjU
 
     -- if u = v we have a self-loop, so we add both a positive and a negative dart
     toDart u (v,_) = let (a :+ e) = case findEdge u v oracle of
