@@ -32,29 +32,56 @@ import qualified Data.Vector.Unboxed as UV
 import qualified Data.Vector.Unboxed.Mutable as UMV
 import           HGeometry.Ext
 import           Hiraffe.PlanarGraph.Core
-import           Hiraffe.PlanarGraph.Dart
 
 --------------------------------------------------------------------------------
 
--- | Edge Oracle:
+-- | An Edge Oracle, that lets us efficiently query the data associated with any edge.
 --
--- main idea: store adjacency lists in such a way that we store an edge (u,v)
--- either in u's adjacency list or in v's. This can be done s.t. all adjacency
--- lists have length at most 6.
---
--- pre: the edges are considerd undirectional; i.e. the data stored at (u,v) is supposed
--- to be the same as at (v,u). find may arbitrarily return only one of the two values.
---
--- note: Every edge is stored exactly once (i.e. either at u or at v, but not both)
-newtype EdgeOracle s w e = EdgeOracle (V.Vector (V.Vector (VertexIdIn w s :+ e)))
+-- main idea: store adjacency lists in such a way that we store an edge (u,v) either in
+-- u's adjacency list or in v's. This can be done s.t. all adjacency lists have length at
+-- most 6. So every edge, as considered as an undirected edge, would be stored exactly
+-- once. (i.e. either at u or at v, but not both)
+newtype EdgeOracle s w e = MkEdgeOracle (EdgeOracle' s w (DartData e))
                          deriving (Show,Eq,Functor,Foldable,Traversable)
 
+-- | Pattern to get to the underlying vector
+pattern EdgeOracle     :: (V.Vector (V.Vector (VertexIdIn w s :+ DartData e)))
+                       -> EdgeOracle s w e
+pattern EdgeOracle out = MkEdgeOracle (EdgeOracle' out)
+{-# COMPLETE EdgeOracle #-}
+
+-- | Implementation of the EdgeOracle. the type ue here essentially models the data
+-- associated with an unidrected edge.
+newtype EdgeOracle' s w ue = EdgeOracle' (V.Vector (V.Vector (VertexIdIn w s :+ ue)))
+                          deriving (Show,Eq,Functor,Foldable,Traversable)
+
+--------------------------------------------------------------------------------
+-- * Helper data type that allows us to distinguish between the data of (u,v) and (v,u)
+
+-- | At an (undirected) edge (u,v) we may store either the data of the directed edge
+-- (u,v), the data of the directed edge (v,u), or both.
 data DartData e = UToV e
                 | VToU e
-                | Both { uToV :: e -- ^ the data associated with the dart in this direction
-                       , vToU :: e -- ^ the data associated with the reverse direction
+                | Both { uToV' :: e -- ^ the data associated with the dart in this direction
+                       , vToU' :: e -- ^ the data associated with the reverse direction
                        }
                 deriving (Show,Eq,Functor,Foldable,Traversable)
+
+-- | Extract the dart data
+uToV :: DartData e -> Maybe e
+uToV = \case
+  UToV e   -> Just e
+  Both e _ -> Just e
+  _        -> Nothing
+
+-- | Extract the dart data
+vToU :: DartData e -> Maybe e
+vToU = \case
+  VToU e   -> Just e
+  Both _ e -> Just e
+  _        -> Nothing
+
+--------------------------------------------------------------------------------
 
 -- | Given a planar graph, construct an edge oracle. Given a pair of vertices
 -- this allows us to efficiently find the dart representing this edge in the
@@ -71,17 +98,23 @@ edgeOracle g = buildEdgeOracle [ (v, mkAdjacency v <$> incidentEdges v g)
     mkAdjacency v d = otherVtx v d :+ d
     otherVtx v d = let u = tailOf d g in if u == v then headOf d g else u
 
-
-withBothData              :: forall s w e. V.Vector (V.Vector (VertexIdIn w s :+ e))
-                          -> EdgeOracle s w e
-                          -> EdgeOracle s w (DartData e)
+-- | Make sure that we can find the data of both (u,v) and (v,u)
+withBothData              :: forall s w e.
+                             V.Vector (V.Vector (VertexIdIn w s :+ e))
+                             -- ^ the original adjacency lists that have the data from
+                             -- both (u,v) and (v,u).
+                          -> EdgeOracle' s w e -> EdgeOracle s w e
 withBothData inAdj oracle = EdgeOracle oOut
   where
-    (EdgeOracle os) = UToV <$> oracle
+    -- in the current oracle, we only have the data from (u,v) edges.
+    (EdgeOracle' os) = UToV <$> oracle
     -- | Finds the index of v in the adjacencylist of u
     find'     :: VertexIdIn w s -> VertexIdIn w s -> Maybe Int
     find' u v = V.findIndex ((== v) . (^.core)) $ os V.! (coerce u)
 
+    -- this builds the actual vector that has both the ssociated data.  the main idea is
+    -- to traverse over all edges from inAdj, and just look up the edge in the oracle. If
+    -- we store an edge (u,v) at (v,u), we attach the data of the edge (v,u) to this entry.
     oOut = runST $
            do out <- mapM V.thaw os
               V.iforM_ inAdj $ \ui adjU -> do
@@ -95,6 +128,7 @@ withBothData inAdj oracle = EdgeOracle oOut
                     Just _  -> pure () -- (u,v) is stored at v, so eUV is already stored there
               mapM V.unsafeFreeze out
 
+    -- Helper function that assigns the new edge data
     assign' out u i eVU = let adjU = out V.! (coerce u)
                           in MV.modify adjU (fmap (combine eVU)) i
 
@@ -111,17 +145,19 @@ withBothData inAdj oracle = EdgeOracle oOut
 -- running time: \(O(n)\)
 buildEdgeOracle        :: forall s w e f g. (Foldable f, Foldable g)
                        => f (VertexIdIn w s, g (VertexIdIn w s :+ e)) -> EdgeOracle s w e
-buildEdgeOracle inAdj' = EdgeOracle $ V.create $ do
-                          counts <- UV.thaw initCounts
-                          marks  <- UMV.replicate (UMV.length counts) False
-                          outV   <- MV.new (UMV.length counts)
-                          build counts marks outV initQ
-                          pure outV
+buildEdgeOracle inAdj' = withBothData inAdj oracle
     -- main idea: maintain a vector with counts; i.e. how many unprocessed
     -- vertices are adjacent to u, and a bit vector with marks to keep track if
     -- a vertex has been processed yet. When we process a vertex, we keep only
     -- the adjacencies of unprocessed vertices.
   where
+    oracle = EdgeOracle' $ V.create $ do
+               counts <- UV.thaw initCounts
+               marks  <- UMV.replicate (UMV.length counts) False
+               outV   <- MV.new (UMV.length counts)
+               build counts marks outV initQ
+               pure outV
+
     -- Convert to a vector representation
     inAdj :: V.Vector (V.Vector (VertexIdIn w s :+ e))
     inAdj = V.create $ do
@@ -169,8 +205,6 @@ buildEdgeOracle inAdj' = EdgeOracle $ V.create $ do
                           V.toList <$> mapM (decrease counts) adjI
              build counts marks outV (catMaybes nq <> q)
 
-
-
 -- | Test if u and v are connected by an edge.
 --
 -- running time: \(O(1)\)
@@ -183,16 +217,19 @@ hasEdge u v = isJust . findEdge u v
 --
 -- running time: \(O(1)\)
 findEdge :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle s w a -> Maybe a
-findEdge  (VertexId u) (VertexId v) (EdgeOracle os) = find' u v <|> find' v u
+findEdge u v (EdgeOracle os) = find' uToV u v <|> find' vToU v u
   where
-    find' j i = fmap (^.extra) . F.find (\(VertexId k :+ _) -> j == k) $ os V.! i
+    -- looks up j in the adjacencylist of i and applies f to the result
+    find' f j i = do (_ :+ x) <- V.find ((== j) . (^.core)) $ os V.! (coerce i)
+                     f x
+
+-- findEdge  (VertexId u) (VertexId v) (EdgeOracle os) = find' u v <|> find' v u
+--   where
+--     find' j i = fmap (^.extra) . F.find (\(VertexId k :+ _) -> j == k) $ os V.! i
 
 -- | Given a pair of vertices (u,v) returns the dart, oriented from u to v,
 -- corresponding to these vertices.
 --
 -- running time: \(O(1)\)
 findDart :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle s w (DartId s) -> Maybe (DartId s)
-findDart (VertexId u) (VertexId v) (EdgeOracle os) = find' twin u v <|> find' id v u
-  where
-    -- looks up j in the adjacencylist of i and applies f to the result
-    find' f j i = fmap (f . (^.extra)) . F.find (\(VertexId k :+ _) -> j == k) $ os V.! i
+findDart = findEdge
