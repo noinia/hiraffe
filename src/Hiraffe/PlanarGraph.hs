@@ -38,7 +38,7 @@ module Hiraffe.PlanarGraph
   , HasEdges'(..), HasEdges(..)
 
   -- * Vertices
-  , VertexIdIn, VertexId
+  , VertexIdIn(..), VertexId
   , HasVertices'(..), HasVertices(..)
   , Core.incidentEdges
   , Core.incomingEdges

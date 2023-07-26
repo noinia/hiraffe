@@ -1,9 +1,8 @@
 module Hiraffe.PlanarGraph.EdgeOracleSpec where
 
 import           Control.Arrow
-import           Data.Semigroup
 import qualified Data.Set as S
-import           Hiraffe.PlanarGraph
+import           Hiraffe.PlanarGraph (VertexIdIn(..), World(..))
 import           Hiraffe.PlanarGraph.EdgeOracle
 import           Test.Hspec
 
@@ -11,8 +10,7 @@ import           Test.Hspec
 
 data TestG
 
-type Vertex = VertexId TestG Primal
-
+type Vertex = VertexIdIn Primal TestG
 
 testEdges :: [(Vertex,[Vertex])]
 testEdges = map (\(i,vs) -> (VertexId i, map VertexId vs))
@@ -25,7 +23,7 @@ testEdges = map (\(i,vs) -> (VertexId i, map VertexId vs))
             ]
 
 buildEdgeOracle'  :: [(Vertex,[Vertex])] -> EdgeOracle TestG Primal ()
-buildEdgeOracle' = buildEdgeOracle . map (second $ fmap ext)
+buildEdgeOracle' = buildEdgeOracle . map (second $ fmap (,()) )
 
 -- | Flattens an adjacencylist representation into a set of edges
 flattenEdges :: [(t, [a])] -> [(t, a)]
