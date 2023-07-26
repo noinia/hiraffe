@@ -13,7 +13,6 @@ module Hiraffe.PlanarGraph.IO
   ( toAdjRep
 
   , fromAdjRep
-  , fromAdjRep'
   , buildGraph
   , fromAdjacencyLists
   ) where
@@ -44,7 +43,6 @@ instance (FromJSON v, FromJSON e, FromJSON f) => FromJSON (PlanarGraph s Primal 
   parseJSON v = fromAdjRep @s <$> parseJSON v
 
 --------------------------------------------------------------------------------
-
 
 -- | Transforms the planar graph into a format that can be easily converted
 -- into JSON format. For every vertex, the adjacent vertices are given in
@@ -83,7 +81,10 @@ toAdjRep g = Gr vs fs
 fromAdjRep            :: forall s v e f. Gr (Vtx v e) (Face f) -> PlanarGraph s Primal v e f
 fromAdjRep (Gr as fs) = g&faceData   .~ reorder fs' (_unVertexId._unFaceId)
   where
-    (g, oracle) = fromAdjRep'' as
+    -- build the actual graph using the adjacencies
+    g = buildGraph as
+    -- build an edge oracle so we an look up the darts
+    oracle = edgeOracle g
     -- function to lookup a given dart
     findEdge' u v = fromJust $ findDart u v oracle
     -- faces are right of oriented darts
@@ -96,46 +97,12 @@ fromAdjRep (Gr as fs) = g&faceData   .~ reorder fs' (_unVertexId._unFaceId)
 --      - no self-loops and no multi-edges
 --
 -- running time: \(O(n)\)
-fromAdjRep' :: forall s v e. [Vtx v e] -> PlanarGraph s Primal v e ()
-fromAdjRep' = fst . fromAdjRep''
+buildGraph    :: forall s v e. [Vtx v e] -> PlanarGraph s Primal v e ()
+buildGraph as = fromAdjacencyLists [ (VertexId vi, x, [(VertexId ui, e) | (ui,e) <- us])
+                                   | Vtx vi us x <- as
+                                   ]
 
--- | implementation of fromAdjRep'. Returns the oracle used to build the graph as well.
---
--- pre: - the id's are consecutive from 0 to n (where is the number of vertices)
---      - no self-loops and no multi-edges
---
--- running time: \(O(n)\)
-fromAdjRep''    :: forall s v e. [Vtx v e]
-                -> (PlanarGraph s Primal v e (), EdgeOracle s Primal (Dart s))
-fromAdjRep'' as = (g&vertexData .~ reorder vs' _unVertexId
-                    &dartVector .~ ds
-                  , oracle
-                  )
-  where
-    -- build the actual graph using the adjacencies
-    g = buildGraph as
-    -- build an edge oracle so that we can quickly lookup the dart corresponding to a
-    -- pair of vertices.
-    oracle = edgeOracle g
-    -- function to lookup a given dart
-    findEdge' u v = fromJust $ findDart u v oracle
-
-    vs' = V.fromList [ (VertexId vi, v)     | Vtx vi _ v <- as ]
-    ds = V.fromList $ concatMap (\(Vtx vi us _) ->
-                                   [(findEdge' (VertexId vi) (VertexId ui), x) | (ui,x) <- us]
-                                ) as
-  -- TODO: I think we can simplify this now
-
--- | Builds the graph from the adjacency lists (but ignores all associated data)
-buildGraph     :: forall s v e. [Vtx v e] -> PlanarGraph s Primal v e ()
-buildGraph as' = fromAdjacencyLists as
-  where
-    as = [ (VertexId vi, x, [(VertexId ui, e) | (ui,e) <- us])
-         | Vtx vi us x <- as'
-         ]
-
-
--- make sure we order the data values appropriately
+-- | make sure we order the data values appropriately
 reorder     :: V.Vector (i, a) -> (i -> Int) -> V.Vector a
 reorder v f = V.create $ do
                            v' <- MV.new (V.length v)

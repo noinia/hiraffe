@@ -1,11 +1,10 @@
-module Data.EdgeOracleSpec where
+module Hiraffe.PlanarGraph.EdgeOracleSpec where
 
 import           Control.Arrow
-import           Data.Ext
-import           Data.PlanarGraph.EdgeOracle
-import           Data.PlanarGraph
 import           Data.Semigroup
 import qualified Data.Set as S
+import           Hiraffe.PlanarGraph
+import           Hiraffe.PlanarGraph.EdgeOracle
 import           Test.Hspec
 
 --------------------------------------------------------------------------------
@@ -34,15 +33,15 @@ flattenEdges = concatMap (\(i,vs) -> map (i,) vs)
 
 -- | Given a set of edges, generates all non-edges, i.e. all pairs of vertices
 -- that do not form an edge
-nonEdges    :: [(VertexId s w, [VertexId s w])] -> [(VertexId s w, VertexId s w)]
+nonEdges    :: [(VertexIdIn w s , [VertexIdIn w s ])] -> [(VertexIdIn w s , VertexIdIn w s )]
 nonEdges es = flattenEdges . map (second $ f . S.fromList) $ es
   where
     f vs  = filter (`S.notMember` vs) allVs
     allVs = map fst es
 
 -- | Retains only the edges in the graph
-hasEdges         :: EdgeOracle s w a -> [(VertexId s w, VertexId s w)]
-                 -> [(VertexId s w, VertexId s w)]
+hasEdges         :: EdgeOracle s w a -> [(VertexIdIn w s , VertexIdIn w s )]
+                 -> [(VertexIdIn w s , VertexIdIn w s )]
 oracle `hasEdges` es = filter (\(u,v) -> hasEdge u v oracle) es
 
 
