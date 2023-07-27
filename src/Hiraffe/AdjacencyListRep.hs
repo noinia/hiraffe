@@ -75,6 +75,8 @@ instance Bitraversable (VertexData f) where
 -- | A graph in which the vertices themselves are indices
 newtype GGraph f v e = Graph (IntMap.IntMap (VertexData f v e))
                     deriving (Show,Eq,Generic,Functor,Foldable,Traversable)
+
+-- | A graph in which the adjacency lists are stored using Data.Sequence
 type Graph = GGraph Seq.Seq
 
 -- | Iso for accessing the underling int-map representing the adjacencies

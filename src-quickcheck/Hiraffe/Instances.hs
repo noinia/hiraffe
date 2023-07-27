@@ -1,4 +1,14 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
+--------------------------------------------------------------------------------
+-- |
+-- Module      :  Hiraffe.Instances
+-- Copyright   :  (C) Frank Staals
+-- License     :  see the LICENSE file
+-- Maintainer  :  Frank Staals
+--
+-- QuickCheck Instances
+--
+--------------------------------------------------------------------------------
 module Hiraffe.Instances
   () where
 
