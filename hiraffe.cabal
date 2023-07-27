@@ -20,7 +20,6 @@ build-type:          Simple
 
 extra-doc-files:
     README.md
-    changelog
     changelog.org
 
 -- extra-doc-files:     docs/**/*.png
