@@ -133,7 +133,7 @@ newtype FaceIdIn w s = FaceId { _unFaceId :: VertexIdIn (DualOf w) s }
                      deriving (Eq,Ord,Enum,ToJSON,FromJSON)
 
 -- | Shorthand for FaceId's in the primal.
-type FaceId s = FaceIdIn Primal
+type FaceId = FaceIdIn Primal
 
 instance Show (FaceIdIn w s) where
   show (FaceId (VertexId i)) = "FaceId " ++ show i
