@@ -15,6 +15,8 @@ module Hiraffe.PlanarGraph.IO
   , fromAdjRep
   , buildGraph
   , fromAdjacencyLists
+
+  , reorder
   ) where
 
 import           Control.Lens

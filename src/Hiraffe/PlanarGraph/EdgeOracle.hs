@@ -275,7 +275,7 @@ findEdge :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle s w a -> Maybe a
 findEdge u v (EdgeOracle os) = find' uToV u v <|> find' vToU v u
   where
     -- looks up j in the adjacencylist of i and applies f to the result
-    find' f j i = do (_, x) <- V.find ((== j) . fst) $ os V.! (coerce i)
+    find' f i j = do (_, x) <- V.find ((== j) . fst) $ os V.! (coerce i)
                      f x
 
 -- | Given a pair of vertices (u,v) returns the dart, oriented from u to v,

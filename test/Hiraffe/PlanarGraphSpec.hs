@@ -3,7 +3,6 @@
 module Hiraffe.PlanarGraphSpec where
 
 import           Control.Lens (view,_3,ifoldMapOf)
-import           Data.Bifunctor
 import qualified Data.Foldable as F
 import qualified Data.Map.Strict as SM
 import qualified Data.Set as S
@@ -39,7 +38,8 @@ instance FromYAML () where
                   _             -> fail "parse () failed"
 
 -- | Report all adjacnecies from g missing in h
-missingAdjacencies     :: PlanarGraph s w v e f -> PlanarGraph s w v e f
+missingAdjacencies     :: PlanarGraph s w v e f
+                       -> PlanarGraph s w v' e' f'
                        -> [(VertexIdIn w s , VertexIdIn w s)]
 missingAdjacencies g h = ifoldMapOf vertices f g
   where
@@ -52,10 +52,13 @@ sameGraphs s g h = do
           (missingAdjacencies g h) `shouldBe` []
       it "Missing edges from h in g" $
           (missingAdjacencies h g) `shouldBe` []
+      -- it "same embedding" $
+      --   (g^.embedding) `shouldBe` (h^.embedding) -- apparently this is not true
+
 
 spec :: Spec
 spec = describe "PlanarGraph spec" $ do
-    -- sameGraphs "testEdges" (fromAdjacencyLists testEdges) (fromAdjacencyListsOld testEdges)
+    sameGraphs "testEdges" (fromAdjacencyLists testEdges) (fromAdjacencyListsOld $ simplify testEdges)
     prop "quickheck Dart:  (toEnum (fromEnum d)) = d" $
       \(d :: DartId TestG) -> toEnum (fromEnum d) `shouldBe` d
     prop "quickheck Dart: fromEnum (toEnum i) = i" $
@@ -64,13 +67,21 @@ spec = describe "PlanarGraph spec" $ do
       b <- File.readFile' [osp|data/PlanarGraph/myGraph.yaml|]
       encodeYAML (fromAdjacencyLists testEdges) `shouldBe` b
     it "decode yaml test" $ do
-      (first show <$> decodeYAMLFile [osp|Data/PlanarGraph/myGraph.yaml|])
+      (decodeYAMLFile [osp|data/PlanarGraph/myGraph.yaml|])
       `shouldReturn`
       (Right $ fromAdjacencyLists testEdges)
 
 
-myGraph :: PlanarGraph TestG PlanarGraph.Primal Int Text.Text ()
-myGraph = fromAdjacencyLists testEdges
+-- test :: IO (PlanarGraph TestG PlanarGraph.Primal Int Text.Text ())
+-- test = buildGraph . adjacencies <$> testGr
+
+
+-- testGr :: IO (Gr (Vtx Int Text.Text) (Face ()))
+-- testGr = do Right x <- decodeYAMLFile [osp|data/PlanarGraph/myGraph.yaml|]
+--             pure x
+
+-- myGraph :: PlanarGraph TestG PlanarGraph.Primal Int Text.Text ()
+-- myGraph = fromAdjacencyLists testEdges
 
 testEdges :: [(Vertex, Int, [(Vertex, Text.Text ) ])]
 testEdges = map (\(i,vs) -> (VertexId i, i,
@@ -82,6 +93,9 @@ testEdges = map (\(i,vs) -> (VertexId i, i,
             , (4, [1,2,5])       -- 3
             , (5, [3,4])         -- 2
             ]
+
+simplify :: [(Vertex, Int, [(Vertex, Text.Text ) ])] -> [(Vertex, [Vertex])]
+simplify = fmap (\(u,_,adjs) -> (u, fmap fst adjs))
 
 -- testGraph = fromAdjacencyLists testEdges
 
