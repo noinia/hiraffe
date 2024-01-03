@@ -17,7 +17,7 @@ module Hiraffe.Graph.Class
   , HasFaces(..), HasFaces'(..)
 
   , Graph_(..)
-  , DirGraph_
+  , DirGraph_(..)
   , PlanarGraph_ -- (..)
   ) where
 
@@ -25,6 +25,7 @@ import           Control.Lens
 import qualified Data.Foldable as F
 import qualified Data.Graph as Containers
 import           Data.Kind (Type)
+
 
 --------------------------------------------------------------------------------
 -- * Vertices
@@ -99,6 +100,7 @@ class HasEdges' graph where
   default numEdges :: HasEdges graph graph => graph -> Int
   numEdges = lengthOf edges
 
+
 -- | Class for types that have a type changing traversal of the edges
 class HasEdges' graph => HasEdges graph graph' where
   -- | Traversal of all edges in the graph
@@ -131,16 +133,126 @@ class HasFaces' graph => HasFaces graph graph' where
 
 --------------------------------------
 
+-- pEFe              :: forall graph p v vi f e.
+--                      ( Indexable vi p, Contravariant f, Applicative f
+--                      )
+--                    => graph -> vi -> p v (f v) -> p e (f e)
+-- pEFe graph u pVFv = dimap eToV fVToFe pVFv
+--   where
+--     eiToV = undefined -- snd . endPoints graph
+--     eToV :: e -> v
+--     eToV = undefined -- endPoints graph e
+--     fVToFe :: f v -> f e
+--     fVToFe = undefined
+
+-- theFold' =       theFold            :: forall p v vi ei f e.
+--                             ( v ~ Vertex graph, vi ~ VertexIx graph
+--                             , ei ~ EdgeIx graph, e ~ Edge graph
+--                             , Indexable ei p
+--                             , Indexable vi p, Contravariant f, Applicative f
+--                             )
+--                          => p v (f v) -> graph -> f graph
+--       theFold pVFv graph = fGraph
+--         where
+--           fGraph :: f graph
+--           fGraph = outgoingEdgesOf pEFe graph
+--           pEFe :: p e (f e)
+--           pEFe = dimap vToE fVToFe pVFv
+--             where
+--               vToE :: v ->
+--               vToE = undefined
+--               fVToFe = undefined
+
+-- test ::
 
 -- | A class representing directed graphs
 class ( HasVertices graph graph
       , HasEdges graph graph
       ) => DirGraph_ graph where
 
+  -- | Get the endpoints (origin, destination) of an edge
+  endPoints :: graph -> EdgeIx graph -> (VertexIx graph, VertexIx graph)
 
--- | A graph representing undirected graphs
+
+ -- IndexedFold i s a = forall p f. (Indexable i p, Contravariant f, Applicative f) => p a (f a) -> s -> f s
+
+  -- | All outgoing neighbours of a given vertex
+  --
+  outNeighboursOf   :: VertexIx graph -> IndexedFold (VertexIx graph) graph (Vertex graph)
+  outNeighboursOf u = theFold
+    where
+      theFold            :: forall p f.
+                            ( Indexable (VertexIx graph) p
+                            , Contravariant f, Applicative f
+                            )
+                         => p (Vertex graph) (f (Vertex graph))
+                         -> graph
+                         -> f graph
+      theFold pVFv graph = fGraph
+        where
+          fGraph :: f graph
+          fGraph = outgoingEdgesOf u pEFe graph
+            where
+              pEFe :: Indexed (EdgeIx graph) (Edge graph) (f (Edge graph))
+              pEFe = Indexed go
+
+              go      :: EdgeIx graph -> Edge graph -> f (Edge graph)
+              go ei e = fE
+                where
+                  vi = eiToVi ei
+                  fE = contramap eToV $ indexed pVFv vi (graph^?!vertexAt vi)
+
+                  eToV :: Edge graph -> Vertex graph
+                  eToV = undefined
+
+              -- get the other endpoints of the outgoing edge
+              eiToVi :: EdgeIx graph -> VertexIx graph
+              eiToVi = snd . endPoints graph
+
+
+                --                  dimap eiToV fVToFe pVFv
+
+                -- undefined
+
+                --
+
+                -- undefined
+
+
+          --
+
+          -- eiToV :: EdgeIx graph -> VertexIx graph
+          -- eiToV = undefined
+
+
+
+          -- fVToFe :: f (Vertex graph) -> f (EdgeIx graph)
+          -- fVToFe = undefined
+
+    -- outgoingEdgesOf u pAfA
+
+  -- | All edges incident to a given vertex
+  --
+  outgoingEdgesOf :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
+
+
+  -- -- | All incoming neighbours of a given vertex
+  -- --
+  -- inNeighboursOf :: VertexIx graph -> IndexedFold (VertexIx graph) graph (Vertex graph)
+
+  -- -- | All edges incident to a given vertex
+  -- --
+  -- incomingEdgesOf :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
+
+
+
+
+
+-- | A graph representing undirected graphs. Note that every undirected graph is also a
+-- directed graph.
 class ( HasVertices graph graph
       , HasEdges graph graph
+      , DirGraph_ graph
       ) => Graph_ graph where
 
   -- | Build a graph from its adjacency lists.
@@ -213,6 +325,9 @@ instance HasEdges' Containers.Graph where
 instance HasEdges Containers.Graph Containers.Graph where
   edges = darts . ifiltered (\(u,v) _ -> u <= v)
   {-# INLINE edges #-}
+
+instance DirGraph_ Containers.Graph
+
 
 instance Graph_ Containers.Graph where
   -- | pre: vertex Id's are in the range 0..n

@@ -110,6 +110,7 @@ library
     Hiraffe.Graph.Class
     Hiraffe.AdjacencyListRep
 
+    Hiraffe.BFS
     Hiraffe.DFS
 
     Hiraffe.PlanarGraph
@@ -117,6 +118,8 @@ library
     Hiraffe.PlanarGraph.IO
     Hiraffe.PlanarGraph.EdgeOracle
     Hiraffe.PlanarGraph.Dart
+
+    Hiraffe.Tree
 
   other-modules:
     Hiraffe.PlanarGraph.Core
@@ -179,3 +182,4 @@ test-suite hiraffe-hspec
     Hiraffe.AdjacencyListRepSpec
     Hiraffe.PlanarGraph.EdgeOracleSpec
     Hiraffe.PlanarGraphSpec
+    Hiraffe.BFSSpec
