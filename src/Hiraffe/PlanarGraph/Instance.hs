@@ -19,6 +19,7 @@ import           Hiraffe.Graph ( HasVertices'(..),HasVertices(..)
                                , HasDarts(..), HasDarts'(..)
                                , HasEdges(..), HasEdges'(..)
                                , HasFaces(..), HasFaces'(..)
+                               , DirGraph_(..)
                                , Graph_(..)
                                , PlanarGraph_
                                )
@@ -112,23 +113,41 @@ instance HasFaces (PlanarGraph s w v e f) (PlanarGraph s w v e f') where
 
 --------------------------------------------------------------------------------
 
+instance DirGraph_ (PlanarGraph s w v e ()) where
+  endPoints = flip Core.endPoints
+
+  outNeighboursOf u = conjoined asFold asIFold
+    where
+      asFold  :: Fold (PlanarGraph s w v e f) v
+      asFold  = folding  $ \g -> (\v ->     g^?! vertexAt v)  <$> Core.neighboursOf u g
+      asIFold = ifolding $ \g -> (\v -> (v, g^?! vertexAt v)) <$> Core.neighboursOf u g
+  {-# INLINE outNeighboursOf #-}
+
+  outgoingEdgesOf u = conjoined asFold asIFold
+    where
+      asFold  :: Fold (PlanarGraph s w v e f) e
+      asFold  = folding  $ \g -> (\d ->     g^?! edgeAt d)  <$> Core.outgoingEdges u g
+      asIFold = ifolding $ \g -> (\d -> (d, g^?! edgeAt d)) <$> Core.outgoingEdges u g
+  {-# INLINE outgoingEdgesOf#-}
+
+
 instance Graph_ (PlanarGraph s w v e ()) where
   -- | The vertices are expected to have their adjacencies in CCW order.
   fromAdjacencyLists = IO.fromAdjacencyLists
-
 
   neighboursOf u = conjoined asFold asIFold
     where
       asFold  :: Fold (PlanarGraph s w v e f) v
       asFold  = folding  $ \g -> (\v ->     g^?! vertexAt v)  <$> Core.neighboursOf u g
       asIFold = ifolding $ \g -> (\v -> (v, g^?! vertexAt v)) <$> Core.neighboursOf u g
+  {-# INLINE neighboursOf #-}
 
-  incidentEdges u = conjoined asFold asIFold
+  incidentEdgesOf u = conjoined asFold asIFold
     where
       asFold  :: Fold (PlanarGraph s w v e f) e
-      asFold  = folding  $ \g -> (\d ->     g^?! edgeAt d)  <$> Core.incomingEdges u g
-      asIFold = ifolding $ \g -> (\d -> (d, g^?! edgeAt d)) <$> Core.incomingEdges u g
-
+      asFold  = folding  $ \g -> (\d ->     g^?! edgeAt d)  <$> Core.outgoingEdges u g
+      asIFold = ifolding $ \g -> (\d -> (d, g^?! edgeAt d)) <$> Core.outgoingEdges u g
+  {-# INLINE incidentEdgesOf #-}
 
 
 instance PlanarGraph_ (PlanarGraph s w v e ()) where

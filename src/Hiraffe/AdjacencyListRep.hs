@@ -25,7 +25,7 @@ import           Data.Monoid
 import qualified Data.Sequence as Seq
 import           GHC.Generics (Generic)
 import           HGeometry.Foldable.Util
-import           Hiraffe.Graph
+import           Hiraffe.Graph.Class
 
 --------------------------------------------------------------------------------
 
@@ -156,6 +156,16 @@ linkNegatives g = g&darts %@~ \(u,v) x -> if u <= v then fromJust' x
   where
     fromJust' = fromMaybe (error "Hiraffe.AdjacencyListRep.edges: absurd ; fromJust")
 
+
+instance HasFromFoldable f => DirGraph_ (GGraph f v e) where
+  endPoints _ = id
+  outNeighboursOf u = conjoined asFold asIFold
+    where
+      asFold  :: Fold (GGraph f v e) v
+      asFold  = folding  $ \g -> g^..incidentEdges' u.asIndex.to (\v -> g^?! vertexAt v)
+      asIFold = ifolding $ \g -> g^..incidentEdges' u.asIndex.to (\v -> (v, g^?! vertexAt v))
+  {-# INLINE outNeighboursOf #-}
+
 instance HasFromFoldable f => Graph_ (GGraph f v e) where
   fromAdjacencyLists =
     Graph . foldMap (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
@@ -172,7 +182,7 @@ instance HasFromFoldable f => Graph_ (GGraph f v e) where
       asIFold = ifolding $ \g -> g^..incidentEdges' u.asIndex.to (\v -> (v, g^?! vertexAt v))
   {-# INLINE neighboursOf #-}
 
-  incidentEdges u = reindexed (u,) (incidentEdges' u)
+  incidentEdgesOf u = reindexed (u,) (incidentEdges' u)
 
 
 

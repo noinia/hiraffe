@@ -130,117 +130,53 @@ class HasFaces' graph => HasFaces graph graph' where
   -- | Traversal of all faces in the graph
   faces :: IndexedTraversal (FaceIx graph) graph graph' (Face graph) (Face graph')
 
-
 --------------------------------------
-
--- pEFe              :: forall graph p v vi f e.
---                      ( Indexable vi p, Contravariant f, Applicative f
---                      )
---                    => graph -> vi -> p v (f v) -> p e (f e)
--- pEFe graph u pVFv = dimap eToV fVToFe pVFv
---   where
---     eiToV = undefined -- snd . endPoints graph
---     eToV :: e -> v
---     eToV = undefined -- endPoints graph e
---     fVToFe :: f v -> f e
---     fVToFe = undefined
-
--- theFold' =       theFold            :: forall p v vi ei f e.
---                             ( v ~ Vertex graph, vi ~ VertexIx graph
---                             , ei ~ EdgeIx graph, e ~ Edge graph
---                             , Indexable ei p
---                             , Indexable vi p, Contravariant f, Applicative f
---                             )
---                          => p v (f v) -> graph -> f graph
---       theFold pVFv graph = fGraph
---         where
---           fGraph :: f graph
---           fGraph = outgoingEdgesOf pEFe graph
---           pEFe :: p e (f e)
---           pEFe = dimap vToE fVToFe pVFv
---             where
---               vToE :: v ->
---               vToE = undefined
---               fVToFe = undefined
-
--- test ::
 
 -- | A class representing directed graphs
 class ( HasVertices graph graph
       , HasEdges graph graph
       ) => DirGraph_ graph where
+  {-# MINIMAL endPoints, (outNeighboursOf | outgoingEdgesOf) #-}
 
   -- | Get the endpoints (origin, destination) of an edge
   endPoints :: graph -> EdgeIx graph -> (VertexIx graph, VertexIx graph)
-
-
- -- IndexedFold i s a = forall p f. (Indexable i p, Contravariant f, Applicative f) => p a (f a) -> s -> f s
+  default endPoints :: (EdgeIx graph ~ (VertexIx graph, VertexIx graph))
+              => graph -> EdgeIx graph -> (VertexIx graph, VertexIx graph)
+  endPoints _ = id
+  {-# INLINE endPoints #-}
 
   -- | All outgoing neighbours of a given vertex
   --
   outNeighboursOf   :: VertexIx graph -> IndexedFold (VertexIx graph) graph (Vertex graph)
   outNeighboursOf u = theFold
     where
-      theFold            :: forall p f.
-                            ( Indexable (VertexIx graph) p
-                            , Contravariant f, Applicative f
-                            )
-                         => p (Vertex graph) (f (Vertex graph))
-                         -> graph
-                         -> f graph
-      theFold pVFv graph = (outgoingEdgesOf u . asIndex) pEFe graph
+      theFold paFa graph = (outgoingEdgesOf u . asIndex) otherVtx graph
         where
-          pEFe    :: EdgeIx graph -> f (EdgeIx graph)
-          pEFe ei = fE
-            where
-              vi = eiToVi ei
-              fE = contramap eToV $ indexed pVFv vi (graph^?!vertexAt vi)
-
-              eToV    :: EdgeIx graph -> Vertex graph
-              eToV ej = graph ^?! vertexAt (eiToVi ej)
-
-          -- pEFe :: Indexed (EdgeIx graph) (EdgeIx graph) (f (EdgeIx graph))
-          -- pEFe = Indexed go
-
-          -- go      :: EdgeIx graph -> EdgeIx graph -> f (EdgeIx graph)
-          -- go ei _ = fE
-          --   where
-          --     vi = eiToVi ei
-          --     fE = contramap eToV $ indexed pVFv vi (graph^?!vertexAt vi)
-
-          --     eToV    :: EdgeIx graph -> Vertex graph
-          --     eToV ej = graph ^?! vertexAt (eiToVi ej)
-
-          -- get the other endpoints of the outgoing edge
-          eiToVi :: EdgeIx graph -> VertexIx graph
-          eiToVi = snd . endPoints graph
-
-
-                --                  dimap eiToV fVToFe pVFv
-
-                -- undefined
-
-                --
-
-                -- undefined
-
-
-          --
-
-          -- eiToV :: EdgeIx graph -> VertexIx graph
-          -- eiToV = undefined
-
-
-
-          -- fVToFe :: f (Vertex graph) -> f (EdgeIx graph)
-          -- fVToFe = undefined
-
-    -- outgoingEdgesOf u pAfA
+          otherVtx e = let v = otherVertexIx e
+                       in contramap otherVertex $ indexed paFa v (graph^?!vertexAt v)
+          -- otherVertexIx  :: EdgeIx graph -> VertexIx graph
+          otherVertexIx  = snd . endPoints graph
+          -- otherVertex    :: EdgeIx graph -> Vertex graph
+          otherVertex e = graph^?!vertexAt (otherVertexIx e)
+  {-# INLINE outNeighboursOf #-}
 
   -- | All edges incident to a given vertex
   --
-  outgoingEdgesOf :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
+  outgoingEdgesOf   :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
+  default outgoingEdgesOf :: (EdgeIx graph ~ (VertexIx graph, VertexIx graph))
+                    => VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
+  outgoingEdgesOf u = theFold
+    where
+      theFold peFe graph = (outNeighboursOf u . asIndex) outEdge graph
+        where
+          -- outEdge :: VertexIx graph -> f (VertexIx graph)
+          outEdge v = let e = toEdgeIx v
+                      in contramap toEdge $ indexed peFe e (toEdge v)
 
+          toEdgeIx = (u,)
+          -- toEdge   :: VertexIx graph -> Edge graph
+          toEdge v = graph^?!edgeAt (toEdgeIx v)
+  {-# INLINE outgoingEdgesOf#-}
 
   -- -- | All incoming neighbours of a given vertex
   -- --
@@ -279,10 +215,10 @@ class ( HasVertices graph graph
 
   -- | All edges incident to a given vertex
   --
-  incidentEdges :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
+  incidentEdgesOf :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
 
 
-  {-# MINIMAL fromAdjacencyLists, neighboursOf, incidentEdges #-}
+  {-# MINIMAL fromAdjacencyLists, neighboursOf, incidentEdgesOf #-}
 
 -- | A class representing planar graphs
 class ( Graph_   graph
@@ -332,8 +268,11 @@ instance HasEdges Containers.Graph Containers.Graph where
   edges = darts . ifiltered (\(u,v) _ -> u <= v)
   {-# INLINE edges #-}
 
-instance DirGraph_ Containers.Graph
-
+instance DirGraph_ Containers.Graph where
+  endPoints _ = id
+  {-# INLINE endPoints #-}
+  outNeighboursOf u = iix u .> traverse .> selfIndex <. united
+  {-# INLINE outNeighboursOf #-}
 
 instance Graph_ Containers.Graph where
   -- | pre: vertex Id's are in the range 0..n
@@ -347,5 +286,5 @@ instance Graph_ Containers.Graph where
       -- Containers.graphFromEdges
   neighboursOf u = iix u .> traverse .> selfIndex <. united
   {-# INLINE neighboursOf #-}
-  incidentEdges u = reindexed (u,) (neighboursOf u)
-  {-# INLINE incidentEdges #-}
+  incidentEdgesOf u = reindexed (u,) (neighboursOf u)
+  {-# INLINE incidentEdgesOf #-}
