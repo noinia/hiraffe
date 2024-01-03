@@ -188,26 +188,32 @@ class ( HasVertices graph graph
                          => p (Vertex graph) (f (Vertex graph))
                          -> graph
                          -> f graph
-      theFold pVFv graph = fGraph
+      theFold pVFv graph = (outgoingEdgesOf u . asIndex) pEFe graph
         where
-          fGraph :: f graph
-          fGraph = outgoingEdgesOf u pEFe graph
+          pEFe    :: EdgeIx graph -> f (EdgeIx graph)
+          pEFe ei = fE
             where
-              pEFe :: Indexed (EdgeIx graph) (Edge graph) (f (Edge graph))
-              pEFe = Indexed go
+              vi = eiToVi ei
+              fE = contramap eToV $ indexed pVFv vi (graph^?!vertexAt vi)
 
-              go      :: EdgeIx graph -> Edge graph -> f (Edge graph)
-              go ei e = fE
-                where
-                  vi = eiToVi ei
-                  fE = contramap eToV $ indexed pVFv vi (graph^?!vertexAt vi)
+              eToV    :: EdgeIx graph -> Vertex graph
+              eToV ej = graph ^?! vertexAt (eiToVi ej)
 
-                  eToV :: Edge graph -> Vertex graph
-                  eToV = undefined
+          -- pEFe :: Indexed (EdgeIx graph) (EdgeIx graph) (f (EdgeIx graph))
+          -- pEFe = Indexed go
 
-              -- get the other endpoints of the outgoing edge
-              eiToVi :: EdgeIx graph -> VertexIx graph
-              eiToVi = snd . endPoints graph
+          -- go      :: EdgeIx graph -> EdgeIx graph -> f (EdgeIx graph)
+          -- go ei _ = fE
+          --   where
+          --     vi = eiToVi ei
+          --     fE = contramap eToV $ indexed pVFv vi (graph^?!vertexAt vi)
+
+          --     eToV    :: EdgeIx graph -> Vertex graph
+          --     eToV ej = graph ^?! vertexAt (eiToVi ej)
+
+          -- get the other endpoints of the outgoing edge
+          eiToVi :: EdgeIx graph -> VertexIx graph
+          eiToVi = snd . endPoints graph
 
 
                 --                  dimap eiToV fVToFe pVFv
