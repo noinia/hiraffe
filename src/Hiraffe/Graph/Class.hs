@@ -134,14 +134,14 @@ class HasFaces' graph => HasFaces graph graph' where
 
 -- | A class representing directed graphs
 class ( HasVertices graph graph
-      , HasEdges graph graph
+      , HasDarts graph graph
       ) => DirGraph_ graph where
-  {-# MINIMAL endPoints, (outNeighboursOf | outgoingEdgesOf) #-}
+  {-# MINIMAL endPoints, (outNeighboursOf | outgoingDartsOf) #-}
 
   -- | Get the endpoints (origin, destination) of an edge
-  endPoints :: graph -> EdgeIx graph -> (VertexIx graph, VertexIx graph)
-  default endPoints :: (EdgeIx graph ~ (VertexIx graph, VertexIx graph))
-              => graph -> EdgeIx graph -> (VertexIx graph, VertexIx graph)
+  endPoints :: graph -> DartIx graph -> (VertexIx graph, VertexIx graph)
+  default endPoints :: (DartIx graph ~ (VertexIx graph, VertexIx graph))
+              => graph -> DartIx graph -> (VertexIx graph, VertexIx graph)
   endPoints _ = id
   {-# INLINE endPoints #-}
 
@@ -150,33 +150,33 @@ class ( HasVertices graph graph
   outNeighboursOf   :: VertexIx graph -> IndexedFold (VertexIx graph) graph (Vertex graph)
   outNeighboursOf u = theFold
     where
-      theFold paFa graph = (outgoingEdgesOf u . asIndex) otherVtx graph
+      theFold paFa graph = (outgoingDartsOf u . asIndex) otherVtx graph
         where
           otherVtx e = let v = otherVertexIx e
                        in contramap otherVertex $ indexed paFa v (graph^?!vertexAt v)
-          -- otherVertexIx  :: EdgeIx graph -> VertexIx graph
+          -- otherVertexIx  :: DartIx graph -> VertexIx graph
           otherVertexIx  = snd . endPoints graph
-          -- otherVertex    :: EdgeIx graph -> Vertex graph
+          -- otherVertex    :: DartIx graph -> Vertex graph
           otherVertex e = graph^?!vertexAt (otherVertexIx e)
   {-# INLINE outNeighboursOf #-}
 
-  -- | All edges incident to a given vertex
+  -- | All outgoing darts incident to a given vertex
   --
-  outgoingEdgesOf   :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
-  default outgoingEdgesOf :: (EdgeIx graph ~ (VertexIx graph, VertexIx graph))
-                    => VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
-  outgoingEdgesOf u = theFold
+  outgoingDartsOf   :: VertexIx graph -> IndexedFold (DartIx graph) graph (Dart graph)
+  default outgoingDartsOf :: (DartIx graph ~ (VertexIx graph, VertexIx graph))
+                    => VertexIx graph -> IndexedFold (DartIx graph) graph (Dart graph)
+  outgoingDartsOf u = theFold
     where
-      theFold peFe graph = (outNeighboursOf u . asIndex) outEdge graph
+      theFold peFe graph = (outNeighboursOf u . asIndex) outDart graph
         where
-          -- outEdge :: VertexIx graph -> f (VertexIx graph)
-          outEdge v = let e = toEdgeIx v
-                      in contramap toEdge $ indexed peFe e (toEdge v)
+          -- outDart :: VertexIx graph -> f (VertexIx graph)
+          outDart v = let e = toDartIx v
+                      in contramap toDart $ indexed peFe e (toDart v)
 
-          toEdgeIx = (u,)
-          -- toEdge   :: VertexIx graph -> Edge graph
-          toEdge v = graph^?!edgeAt (toEdgeIx v)
-  {-# INLINE outgoingEdgesOf#-}
+          toDartIx = (u,)
+          -- toDart   :: VertexIx graph -> Dart graph
+          toDart v = graph^?!dartAt (toDartIx v)
+  {-# INLINE outgoingDartsOf#-}
 
   -- -- | All incoming neighbours of a given vertex
   -- --

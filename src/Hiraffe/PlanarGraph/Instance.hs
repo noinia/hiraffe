@@ -123,12 +123,12 @@ instance DirGraph_ (PlanarGraph s w v e ()) where
       asIFold = ifolding $ \g -> (\v -> (v, g^?! vertexAt v)) <$> Core.neighboursOf u g
   {-# INLINE outNeighboursOf #-}
 
-  outgoingEdgesOf u = conjoined asFold asIFold
+  outgoingDartsOf u = conjoined asFold asIFold
     where
       asFold  :: Fold (PlanarGraph s w v e f) e
       asFold  = folding  $ \g -> (\d ->     g^?! edgeAt d)  <$> Core.outgoingEdges u g
       asIFold = ifolding $ \g -> (\d -> (d, g^?! edgeAt d)) <$> Core.outgoingEdges u g
-  {-# INLINE outgoingEdgesOf#-}
+  {-# INLINE outgoingDartsOf#-}
 
 
 instance Graph_ (PlanarGraph s w v e ()) where
