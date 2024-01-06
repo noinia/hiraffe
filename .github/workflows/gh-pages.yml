@@ -109,11 +109,31 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: source
-      - name: copy cabal.project
+
+      - name: generate cabal.project
         run: |
+          PKGDIR_hiraffe="$(find "$GITHUB_WORKSPACE/unpacked" -maxdepth 1 -type d -regex '.*/hiraffe-[0-9.]*')"
+          echo "PKGDIR_hiraffe=${PKGDIR_hiraffe}" >> "$GITHUB_ENV"
+          rm -f cabal.project cabal.project.local
           touch cabal.project
-          echo "packages: $GITHUB_WORKSPACE/source/." >> cabal.project
+          touch cabal.project.local
+          echo "packages: ${PKGDIR_hiraffe}" >> cabal.project
+          echo "package hiraffe" >> cabal.project
+          echo "    ghc-options: -Werror=missing-methods" >> cabal.project
+          cat >> cabal.project <<EOF
+          allow-newer: vector-circular:vector
+          allow-newer: base
+          allow-newer: template-haskell
+
+          source-repository-package
+            type:     git
+            location: https://github.com/noinia/hgeometry
+            tag:      caed0eed5244da54ba44b064a077f47ca9ce50c6
+            subdir:   hgeometry-combinatorial
+          EOF
+          $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(hiraffe)$/; }' >> cabal.project.local
           cat cabal.project
+          cat cabal.project.local
 
       - name: install dependencies
         run: |
