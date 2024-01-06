@@ -121,9 +121,13 @@ jobs:
           echo "package hiraffe" >> cabal.project
           echo "    ghc-options: -Werror=missing-methods" >> cabal.project
           cat >> cabal.project <<EOF
-          allow-newer: vector-circular:vector
-          allow-newer: base
-          allow-newer: template-haskell
+          allow-newer: vector-circular:vector,
+          allow-newer: vector-circular:base,
+          allow-newer: vector-circular:template-haskell,
+          allow-newer: vector-circular:semigroupoids,
+          allow-newer: miso:servant,
+          allow-newer: servant-lucid:servant,
+          allow-newer: lucid-svg:transformers,
 
           source-repository-package
             type:     git
