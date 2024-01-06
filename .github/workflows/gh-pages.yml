@@ -45,6 +45,8 @@ jobs:
             subdir:   hgeometry-combinatorial
           EOF
           cat cabal.project
+          pwd
+          ls
 
       - name: restore cache
         uses: actions/cache/restore@v3
