@@ -53,6 +53,7 @@ jobs:
           restore-keys: ${{ runner.os }}-${{ matrix.compiler }}-
       - name: build
         run: |
+          cabal update
           cabal build hiraffe
       - name: haddock
         run: |
