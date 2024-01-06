@@ -20,8 +20,9 @@ jobs:
     steps:
       - name: Setup toolchain
         run: |
-        ghcup install cabal --set recommended
-        ghcup install ghc --set ${{ matrix.ghc }}
+          ghcup install cabal --set recommended
+          ghcup install ghc --set ${{ matrix.ghc }}
+
       - name: generate cabal.project
         run: |
           rm -f cabal.project cabal.project.local
