@@ -1,15 +1,10 @@
-name: GitHub Page
-
+name: GH-Pages
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
+  - push
 jobs:
   linux:
-    name: Github-page - Linux - ${{ matrix.compiler }}
-    runs-on: ubuntu-latest
+    name: GH-Pages - Linux - ${{ matrix.compiler }}
+    runs-on: ubuntu-20.04
     timeout-minutes:
       60
     container:
@@ -30,10 +25,10 @@ jobs:
           apt-get update
           apt-get install -y --no-install-recommends gnupg ca-certificates dirmngr curl git software-properties-common libtinfo5
           mkdir -p "$HOME/.ghcup/bin"
-          curl -sL https://downloads.haskell.org/ghcup/0.1.17.5/x86_64-linux-ghcup-0.1.17.5 > "$HOME/.ghcup/bin/ghcup"
+          curl -sL https://downloads.haskell.org/ghcup/0.1.19.2/x86_64-linux-ghcup-0.1.19.2 > "$HOME/.ghcup/bin/ghcup"
           chmod a+x "$HOME/.ghcup/bin/ghcup"
-          "$HOME/.ghcup/bin/ghcup" install ghc "$HCVER"
-          "$HOME/.ghcup/bin/ghcup" install cabal 3.10.1.0
+          "$HOME/.ghcup/bin/ghcup" install ghc "$HCVER" || (cat "$HOME"/.ghcup/logs/*.* && false)
+          "$HOME/.ghcup/bin/ghcup" install cabal 3.10.1.0 || (cat "$HOME"/.ghcup/logs/*.* && false)
         env:
           HCKIND: ${{ matrix.compilerKind }}
           HCNAME: ${{ matrix.compiler }}
@@ -99,17 +94,29 @@ jobs:
       - name: install cabal-plan
         run: |
           mkdir -p $HOME/.cabal/bin
-          curl -sL https://github.com/haskell-hvr/cabal-plan/releases/download/v0.6.2.0/cabal-plan-0.6.2.0-x86_64-linux.xz > cabal-plan.xz
-          echo 'de73600b1836d3f55e32d80385acc055fd97f60eaa0ab68a755302685f5d81bc  cabal-plan.xz' | sha256sum -c -
+          curl -sL https://github.com/haskell-hvr/cabal-plan/releases/download/v0.7.3.0/cabal-plan-0.7.3.0-x86_64-linux.xz > cabal-plan.xz
+          echo 'f62ccb2971567a5f638f2005ad3173dba14693a45154c1508645c52289714cb2  cabal-plan.xz' | sha256sum -c -
           xz -d < cabal-plan.xz > $HOME/.cabal/bin/cabal-plan
           rm -f cabal-plan.xz
           chmod a+x $HOME/.cabal/bin/cabal-plan
           cabal-plan --version
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: source
-
+      - name: initial cabal.project for sdist
+        run: |
+          touch cabal.project
+          echo "packages: $GITHUB_WORKSPACE/source/." >> cabal.project
+          cat cabal.project
+      - name: sdist
+        run: |
+          mkdir -p sdist
+          $CABAL sdist all --output-dir $GITHUB_WORKSPACE/sdist
+      - name: unpack
+        run: |
+          mkdir -p unpacked
+          find sdist -maxdepth 1 -type f -name '*.tar.gz' -exec tar -C $GITHUB_WORKSPACE/unpacked -xzvf {} \;
       - name: generate cabal.project
         run: |
           PKGDIR_hiraffe="$(find "$GITHUB_WORKSPACE/unpacked" -maxdepth 1 -type d -regex '.*/hiraffe-[0-9.]*')"
@@ -138,16 +145,33 @@ jobs:
           $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(hiraffe)$/; }' >> cabal.project.local
           cat cabal.project
           cat cabal.project.local
-
+      - name: dump install plan
+        run: |
+          $CABAL v2-build $ARG_COMPILER $ARG_TESTS $ARG_BENCH --dry-run all
+          cabal-plan
+      - name: restore cache
+        uses: actions/cache/restore@v3
+        with:
+          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ github.sha }}
+          path: ~/.cabal/store
+          restore-keys: ${{ runner.os }}-${{ matrix.compiler }}-
       - name: install dependencies
         run: |
           $CABAL v2-build $ARG_COMPILER --disable-tests --disable-benchmarks --dependencies-only -j2 all
           $CABAL v2-build $ARG_COMPILER $ARG_TESTS $ARG_BENCH --dependencies-only -j2 all
-
-      - name: Haddock Badge
+      - name: build w/o tests
         run: |
-          mkdir --parents pages/docs/
-          $CABAL v2-haddock $ARG_COMPILER --with-haddock $HADDOCK --htmldir pages/docs/ all > haddock.raw.txt
+          $CABAL v2-build $ARG_COMPILER --disable-tests --disable-benchmarks all
+
+      - name: haddock
+        run: |
+          $CABAL haddock --haddock-all $ARG_COMPILER $ARG_TESTS $ARG_BENCH --with-haddock $HADDOCK all > haddock.raw.txt
+          "$HOME/.ghcup/bin/ghcup" set ghc "$HCVER"
+          $CABAL haddock-project --with-haddock=$HADDOCK
+        env:
+          HCVER: ${{ matrix.compilerVersion }}
+      - name: haddock-badge
+        run: |
           grep ") in " haddock.raw.txt | sort -hr > haddock.txt
           COVERAGE=$(awk '{good += $3; total += $5} END {printf "%.0f", good/total*100}' haddock.txt)
           echo "\
@@ -155,17 +179,25 @@ jobs:
               \"label\": \"api docs\", \
               \"message\": \"$COVERAGE%\", \
               \"color\": \"success\" \
-              }" > haddock_badge.json
-
-          cp haddock.txt pages/docs/
-          cp haddock_badge.json pages/docs/
+            }" > haddock_badge.json
           cat haddock.txt
-          cat haddock_badge.json
+      - name: copy-to-pages
+        run: |
+          mkdir --parents ../pages/docs/
+          cp -r haddocks ../pages/docs/
+          cp haddock.txt ../pages/docs/
+          cp haddock_badge.json ../pages/docs/
 
       - name: Deploy 🚀
-        if: github.ref == 'refs/heads/master'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: docs # The branch the action should deploy to.
-          FOLDER: pages # The folder the action should deploy.
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: docs # The branch the action should deploy to.
+          folder: pages # The folder the action should deploy.
+
+      - name: save cache
+        uses: actions/cache/save@v3
+        if: always()
+        with:
+          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ github.sha }}
+          path: ~/.cabal/store
