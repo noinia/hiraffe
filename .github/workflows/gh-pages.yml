@@ -22,7 +22,7 @@ jobs:
       - name: Setup toolchain
         run: |
           ghcup install cabal --set recommended
-          ghcup install ghc --set ${{ matrix.ghc }}
+          ghcup install ghc --set ${{ matrix.compilerVersion }}
 
       - name: restore cache
         uses: actions/cache/restore@v3
