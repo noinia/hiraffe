@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- |</span><span>
+</span><span id="line-3"></span><span class="hs-comment">-- Module      :  Hiraffe.BFS</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- Copyright   :  (C) Frank Staals</span><span>
+</span><span id="line-5"></span><span class="hs-comment">-- License     :  see the LICENSE file</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- Maintainer  :  Frank Staals</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Hiraffe.Tree</span><span>
+</span><span id="line-9"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Hiraffe.Tree.html#pathsTo"><span class="hs-identifier">pathsTo</span></a></span><span>
+</span><span id="line-10"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.Tree.html#findPaths"><span class="hs-identifier">findPaths</span></a></span><span>
+</span><span id="line-11"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.Tree.html#labelPrefixWith"><span class="hs-identifier">labelPrefixWith</span></a></span><span>
+</span><span id="line-12"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-13"></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.List.NonEmpty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">NonEmpty</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.List.NonEmpty</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">NonEmpty</span></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Tree</span></span><span>
+</span><span id="line-17"></span><span>
+</span><span id="line-18"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
+</span><span id="line-19"></span><span>
+</span><span id="line-20"></span><span class="annot"><span class="hs-comment">-- | Get all paths to the particular element in the tree.</span></span><span>
+</span><span id="line-21"></span><span id="local-6989586621679170737"><span class="annot"><a href="Hiraffe.Tree.html#pathsTo"><span class="hs-identifier hs-type">pathsTo</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621679170737"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679170737"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Tree</span></span><span> </span><span class="annot"><a href="#local-6989586621679170737"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">NonEmpty</span></span><span> </span><span class="annot"><a href="#local-6989586621679170737"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span>
+</span><span id="line-22"></span><span id="pathsTo"><span class="annot"><span class="annottext">pathsTo :: forall a. Eq a =&gt; a -&gt; Tree a -&gt; [NonEmpty a]
+</span><a href="Hiraffe.Tree.html#pathsTo"><span class="hs-identifier hs-var hs-var">pathsTo</span></a></span></span><span> </span><span id="local-6989586621679170761"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679170761"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(a -&gt; Bool) -&gt; Tree a -&gt; [NonEmpty a]
+forall a. (a -&gt; Bool) -&gt; Tree a -&gt; [NonEmpty a]
+</span><a href="Hiraffe.Tree.html#findPaths"><span class="hs-identifier hs-var">findPaths</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; a -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679170761"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span>
+</span><span id="line-24"></span><span class="annot"><span class="hs-comment">-- | All paths to the nodes satisfying the predicate.</span></span><span>
+</span><span id="line-25"></span><span id="local-6989586621679170740"><span class="annot"><a href="Hiraffe.Tree.html#findPaths"><span class="hs-identifier hs-type">findPaths</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679170740"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Tree</span></span><span> </span><span class="annot"><a href="#local-6989586621679170740"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">NonEmpty</span></span><span> </span><span class="annot"><a href="#local-6989586621679170740"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span>
+</span><span id="line-26"></span><span id="findPaths"><span class="annot"><span class="annottext">findPaths :: forall a. (a -&gt; Bool) -&gt; Tree a -&gt; [NonEmpty a]
+</span><a href="Hiraffe.Tree.html#findPaths"><span class="hs-identifier hs-var hs-var">findPaths</span></a></span></span><span> </span><span id="local-6989586621679170766"><span class="annot"><span class="annottext">a -&gt; Bool
+</span><a href="#local-6989586621679170766"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Tree a -&gt; [NonEmpty a]
+</span><a href="#local-6989586621679170767"><span class="hs-identifier hs-var">go</span></a></span><span>
+</span><span id="line-27"></span><span>  </span><span class="hs-keyword">where</span><span>
+</span><span id="line-28"></span><span>    </span><span id="local-6989586621679170767"><span class="annot"><span class="annottext">go :: Tree a -&gt; [NonEmpty a]
+</span><a href="#local-6989586621679170767"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Node</span></span><span> </span><span id="local-6989586621679170769"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679170769"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679170770"><span class="annot"><span class="annottext">[Tree a]
+</span><a href="#local-6989586621679170770"><span class="hs-identifier hs-var">chs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">(Tree a -&gt; [NonEmpty a]) -&gt; [Tree a] -&gt; [NonEmpty a]
+forall m a. Monoid m =&gt; (a -&gt; m) -&gt; [a] -&gt; m
+forall (t :: * -&gt; *) m a.
+(Foldable t, Monoid m) =&gt;
+(a -&gt; m) -&gt; t a -&gt; m
+</span><span class="hs-identifier hs-var">foldMap</span></span><span> </span><span class="annot"><span class="annottext">Tree a -&gt; [NonEmpty a]
+</span><a href="#local-6989586621679170767"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">[Tree a]
+</span><a href="#local-6989586621679170770"><span class="hs-identifier hs-var">chs</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-29"></span><span>                        </span><span class="hs-special">[</span><span class="hs-special">]</span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">a -&gt; Bool
+</span><a href="#local-6989586621679170766"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679170769"><span class="hs-identifier hs-var">x</span></a></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679170769"><span class="hs-identifier hs-var">x</span></a></span><span class="annot"><span class="annottext">a -&gt; [a] -&gt; NonEmpty a
+forall a. a -&gt; [a] -&gt; NonEmpty a
+</span><span class="hs-operator hs-var">:|</span></span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">]</span><span>
+</span><span id="line-30"></span><span>                              </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-31"></span><span>                        </span><span id="local-6989586621679170773"><span class="annot"><span class="annottext">[NonEmpty a]
+</span><a href="#local-6989586621679170773"><span class="hs-identifier hs-var">paths</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">a -&gt; Bool
+</span><a href="#local-6989586621679170766"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679170769"><span class="hs-identifier hs-var">x</span></a></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679170769"><span class="hs-identifier hs-var">x</span></a></span><span class="annot"><span class="annottext">a -&gt; [a] -&gt; NonEmpty a
+forall a. a -&gt; [a] -&gt; NonEmpty a
+</span><span class="hs-operator hs-var">:|</span></span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">NonEmpty a -&gt; [NonEmpty a] -&gt; [NonEmpty a]
+forall a. a -&gt; [a] -&gt; [a]
+</span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">(NonEmpty a -&gt; NonEmpty a) -&gt; [NonEmpty a] -&gt; [NonEmpty a]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679170769"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-operator">NonEmpty.&lt;|</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[NonEmpty a]
+</span><a href="#local-6989586621679170773"><span class="hs-identifier hs-var">paths</span></a></span><span>
+</span><span id="line-32"></span><span>                              </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>           </span><span class="annot"><span class="annottext">(NonEmpty a -&gt; NonEmpty a) -&gt; [NonEmpty a] -&gt; [NonEmpty a]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679170769"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-operator">NonEmpty.&lt;|</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[NonEmpty a]
+</span><a href="#local-6989586621679170773"><span class="hs-identifier hs-var">paths</span></a></span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- -- |</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- foldTree   :: (a -&gt; [r] -&gt; r) -&gt; Tree a -&gt; r</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- foldTree f = go</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--   where</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--     go (Node x chs) = f x (map go chs)</span><span>
+</span><span id="line-39"></span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- -- distances :: Tree a -&gt; [(a,Int)]</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- -- distances = mconcat . zipWith (\d lvl -&gt; (,d) &lt;$&gt; lvl) [0..] . levels</span><span>
+</span><span id="line-42"></span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- -- | Label all nodes with their distances from the root.</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- labelWithDistances :: Integral i =&gt; Tree a -&gt; Tree (a, i)</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- labelWithDistances = labelPrefixWith 0 (const (1 + ))</span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span>
+</span><span id="line-48"></span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- | Label all nodes with their &quot;distances&quot; from the root.</span><span>
+</span><span id="line-50"></span><span class="hs-comment">--</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- &gt;&gt;&gt; labelPrefixWith 0 (const succ) $ Node &quot;r&quot; [Node &quot;a&quot; [], Node &quot;b&quot; [Node &quot;foo&quot; []], Node &quot;c&quot; []]</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- Node {rootLabel = (&quot;r&quot;,0), subForest = [Node {rootLabel = (&quot;a&quot;,1), subForest = []},Node {rootLabel = (&quot;b&quot;,1), subForest = [Node {rootLabel = (&quot;foo&quot;,2), subForest = []}]},Node {rootLabel = (&quot;c&quot;,1), subForest = []}]}</span><span>
+</span><span id="line-53"></span><span id="local-6989586621679170751"><span id="local-6989586621679170752"><span class="annot"><a href="Hiraffe.Tree.html#labelPrefixWith"><span class="hs-identifier hs-type">labelPrefixWith</span></a></span><span>     </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679170751"><span class="hs-identifier hs-type">d</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679170752"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679170751"><span class="hs-identifier hs-type">d</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679170751"><span class="hs-identifier hs-type">d</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Tree</span></span><span> </span><span class="annot"><a href="#local-6989586621679170752"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Tree</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679170752"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679170751"><span class="hs-identifier hs-type">d</span></a></span><span class="hs-special">)</span></span></span><span>
+</span><span id="line-54"></span><span id="labelPrefixWith"><span class="annot"><span class="annottext">labelPrefixWith :: forall d a. d -&gt; (a -&gt; d -&gt; d) -&gt; Tree a -&gt; Tree (a, d)
+</span><a href="Hiraffe.Tree.html#labelPrefixWith"><span class="hs-identifier hs-var hs-var">labelPrefixWith</span></a></span></span><span> </span><span id="local-6989586621679170774"><span class="annot"><span class="annottext">d
+</span><a href="#local-6989586621679170774"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span id="local-6989586621679170775"><span class="annot"><span class="annottext">a -&gt; d -&gt; d
+</span><a href="#local-6989586621679170775"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">d -&gt; Tree a -&gt; Tree (a, d)
+</span><a href="#local-6989586621679170776"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">d
+</span><a href="#local-6989586621679170774"><span class="hs-identifier hs-var">z</span></a></span><span>
+</span><span id="line-55"></span><span>  </span><span class="hs-keyword">where</span><span>
+</span><span id="line-56"></span><span>    </span><span id="local-6989586621679170776"><span class="annot"><span class="annottext">go :: d -&gt; Tree a -&gt; Tree (a, d)
+</span><a href="#local-6989586621679170776"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679170777"><span class="annot"><span class="annottext">d
+</span><a href="#local-6989586621679170777"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Node</span></span><span> </span><span id="local-6989586621679170778"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679170778"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679170779"><span class="annot"><span class="annottext">[Tree a]
+</span><a href="#local-6989586621679170779"><span class="hs-identifier hs-var">chs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(a, d) -&gt; [Tree (a, d)] -&gt; Tree (a, d)
+forall a. a -&gt; [Tree a] -&gt; Tree a
+</span><span class="hs-identifier hs-var">Node</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679170778"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">d
+</span><a href="#local-6989586621679170777"><span class="hs-identifier hs-var">d</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">d -&gt; Tree a -&gt; Tree (a, d)
+</span><a href="#local-6989586621679170776"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; d -&gt; d
+</span><a href="#local-6989586621679170775"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679170778"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">d
+</span><a href="#local-6989586621679170777"><span class="hs-identifier hs-var">d</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Tree a
+</span><a href="#local-6989586621679170780"><span class="hs-identifier hs-var">ch</span></a></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="local-6989586621679170780"><span class="annot"><span class="annottext">Tree a
+</span><a href="#local-6989586621679170780"><span class="hs-identifier hs-var">ch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">[Tree a]
+</span><a href="#local-6989586621679170779"><span class="hs-identifier hs-var">chs</span></a></span><span> </span><span class="hs-special">]</span><span>
+</span><span id="line-57"></span></pre></body></html>
