@@ -18,6 +18,7 @@ jobs:
             allow-failure: false
       fail-fast: false
     steps:
+      - uses: actions/checkout@v3
       - name: Setup toolchain
         run: |
           ghcup install cabal --set recommended
