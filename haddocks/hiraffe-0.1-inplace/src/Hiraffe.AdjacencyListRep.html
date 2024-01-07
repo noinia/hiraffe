@@ -14,7 +14,7 @@
 </span><span id="line-14"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#Graph"><span class="hs-identifier">Graph</span></a></span><span>
 </span><span id="line-15"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-16"></span><span>
-</span><span id="line-17"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.html"><span class="hs-identifier">Control.Lens</span></a></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.html"><span class="hs-identifier">Control.Lens</span></a></span><span>
 </span><span id="line-18"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Bifoldable</span></span><span>
 </span><span id="line-19"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Bitraversable</span></span><span>
 </span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Foldable</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">F</span></span><span>
@@ -24,7 +24,7 @@
 </span><span id="line-24"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Monoid</span></span><span>
 </span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Sequence</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Seq</span></span><span>
 </span><span id="line-26"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
-</span><span id="line-27"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-9530a2df041c51e2634378693ad99859a96a62ec4b89cf5648ae0df4c2919599/share/doc/html/src/HGeometry.Foldable.Util.html"><span class="hs-identifier">HGeometry.Foldable.Util</span></a></span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-9530a2df041c51e2634378693ad99859a96a62ec4b89cf5648ae0df4c2919599/share/doc/html/src/HGeometry.Foldable.Util.html"><span class="hs-identifier">HGeometry.Foldable.Util</span></a></span><span>
 </span><span id="line-28"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.Graph.Class.html"><span class="hs-identifier">Hiraffe.Graph.Class</span></a></span><span>
 </span><span id="line-29"></span><span>
 </span><span id="line-30"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
@@ -725,7 +725,7 @@ GGraph f v (m a) -&gt; m (GGraph f v a)
 </span><span id="line-80"></span><span class="hs-keyword">type</span><span> </span><span id="Graph"><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#Graph"><span class="hs-identifier hs-var">Graph</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Seq.Seq</span></span><span>
 </span><span id="line-81"></span><span>
 </span><span id="line-82"></span><span class="annot"><span class="hs-comment">-- | Iso for accessing the underling int-map representing the adjacencies</span></span><span>
-</span><span id="line-83"></span><span id="local-6989586621679162050"><span id="local-6989586621679162051"><span id="local-6989586621679162052"><span id="local-6989586621679162053"><span id="local-6989586621679162054"><span id="local-6989586621679162055"><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#_GraphIntMap"><span class="hs-identifier hs-type">_GraphIntMap</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Type.html#Iso"><span class="hs-identifier hs-type">Iso</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162050"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162051"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162052"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span>                     </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162053"><span class="hs-identifier hs-type">f'</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162054"><span class="hs-identifier hs-type">v'</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162055"><span class="hs-identifier hs-type">e'</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-83"></span><span id="local-6989586621679162050"><span id="local-6989586621679162051"><span id="local-6989586621679162052"><span id="local-6989586621679162053"><span id="local-6989586621679162054"><span id="local-6989586621679162055"><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#_GraphIntMap"><span class="hs-identifier hs-type">_GraphIntMap</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Type.html#Iso"><span class="hs-identifier hs-type">Iso</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162050"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162051"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162052"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span>                     </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162053"><span class="hs-identifier hs-type">f'</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162054"><span class="hs-identifier hs-type">v'</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162055"><span class="hs-identifier hs-type">e'</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-84"></span><span>                    </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">IntMap.IntMap</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#VertexData"><span class="hs-identifier hs-type">VertexData</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162050"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162051"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162052"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">IntMap.IntMap</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#VertexData"><span class="hs-identifier hs-type">VertexData</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162053"><span class="hs-identifier hs-type">f'</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162054"><span class="hs-identifier hs-type">v'</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162055"><span class="hs-identifier hs-type">e'</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span></span></span></span></span></span></span><span>
 </span><span id="line-85"></span><span id="_GraphIntMap"><span class="annot"><span class="annottext">_GraphIntMap :: forall (f :: * -&gt; *) v e (f' :: * -&gt; *) v' e' (p :: * -&gt; * -&gt; *)
        (f :: * -&gt; *).
@@ -740,7 +740,7 @@ p (IntMap (VertexData f v e)) (f (IntMap (VertexData f' v' e')))
      (IntMap (VertexData f v e))
      (IntMap (VertexData f' v' e'))
 forall s a b t. (s -&gt; a) -&gt; (b -&gt; t) -&gt; Iso s t a b
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Iso.html#iso"><span class="hs-identifier hs-var">iso</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#Graph"><span class="hs-identifier hs-type">Graph</span></a></span><span> </span><span id="local-6989586621679162830"><span class="annot"><span class="annottext">IntMap (VertexData f v e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Iso.html#iso"><span class="hs-identifier hs-var">iso</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#Graph"><span class="hs-identifier hs-type">Graph</span></a></span><span> </span><span id="local-6989586621679162830"><span class="annot"><span class="annottext">IntMap (VertexData f v e)
 </span><a href="#local-6989586621679162830"><span class="hs-identifier hs-var">m</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">IntMap (VertexData f v e)
 </span><a href="#local-6989586621679162830"><span class="hs-identifier hs-var">m</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">IntMap (VertexData f' v' e') -&gt; GGraph f' v' e'
 forall (f :: * -&gt; *) v e. IntMap (VertexData f v e) -&gt; GGraph f v e
@@ -772,7 +772,7 @@ VertexIx (GGraph f v e)
 forall i (p :: * -&gt; * -&gt; *) s t r a b.
 Indexable i p =&gt;
 (Indexed i s t -&gt; r) -&gt; ((a -&gt; b) -&gt; s -&gt; t) -&gt; p a b -&gt; r
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#%3C."><span class="hs-operator hs-var">&lt;.</span></a></span><span> </span><span class="annot"><span class="annottext">(v -&gt; f v) -&gt; VertexData f v e -&gt; f (VertexData f v e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#%3C."><span class="hs-operator hs-var">&lt;.</span></a></span><span> </span><span class="annot"><span class="annottext">(v -&gt; f v) -&gt; VertexData f v e -&gt; f (VertexData f v e)
 forall (f :: * -&gt; *) v e v (f :: * -&gt; *).
 Functor f =&gt;
 (v -&gt; f v) -&gt; VertexData f v e -&gt; f (VertexData f v e)
@@ -786,7 +786,7 @@ forall a. IntMap a -&gt; Int
 </span><span id="line-94"></span><span>
 </span><span id="line-95"></span><span class="annot"><span class="hs-comment">-- | Access the vertex data</span></span><span>
 </span><span id="line-96"></span><span id="local-6989586621679162089"><span id="local-6989586621679162090"><span id="local-6989586621679162091"><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#vertexDataOf"><span class="hs-identifier hs-type">vertexDataOf</span></a></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162089"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162090"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162091"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-97"></span><span>              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Type.html#IndexedTraversal%27"><span class="hs-identifier hs-type">IndexedTraversal'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162089"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162090"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162091"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-97"></span><span>              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Type.html#IndexedTraversal%27"><span class="hs-identifier hs-type">IndexedTraversal'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162089"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162090"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162091"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-98"></span><span>                                   </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162089"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162090"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162091"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-99"></span><span>                                   </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#VertexData"><span class="hs-identifier hs-type">VertexData</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162089"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162090"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162091"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span></span></span><span>
 </span><span id="line-100"></span><span id="vertexDataOf"><span class="annot"><span class="annottext">vertexDataOf :: forall (f :: * -&gt; *) v e.
@@ -809,7 +809,7 @@ p (IntMap (VertexData f v e)) (f (IntMap (VertexData f' v' e')))
 -&gt; GGraph f v e
 -&gt; f (GGraph f v e)
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#.%3E"><span class="hs-operator hs-var">.&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">Index (IntMap (VertexData f v e))
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#.%3E"><span class="hs-operator hs-var">.&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">Index (IntMap (VertexData f v e))
 -&gt; IndexedTraversal'
      (Index (IntMap (VertexData f v e)))
      (IntMap (VertexData f v e))
@@ -817,7 +817,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall m.
 Ixed m =&gt;
 Index m -&gt; IndexedTraversal' (Index m) m (IxValue m)
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.At.html#iix"><span class="hs-identifier hs-var">iix</span></a></span><span> </span><span class="annot"><span class="annottext">Index (IntMap (VertexData f v e))
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.At.html#iix"><span class="hs-identifier hs-var">iix</span></a></span><span> </span><span class="annot"><span class="annottext">Index (IntMap (VertexData f v e))
 VertexIx (GGraph f v e)
 </span><a href="#local-6989586621679162866"><span class="hs-identifier hs-var">i</span></a></span><span>
 </span><span id="line-101"></span><span>
@@ -840,7 +840,7 @@ Conjoined p =&gt;
 ((p ~ (-&gt;)) =&gt; q (a -&gt; b) r) -&gt; q (p a b) r -&gt; q (p a b) r
 forall (q :: * -&gt; * -&gt; *) a b r.
 ((p ~ (-&gt;)) =&gt; q (a -&gt; b) r) -&gt; q (p a b) r -&gt; q (p a b) r
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#conjoined"><span class="hs-identifier hs-var">conjoined</span></a></span><span> </span><span class="annot"><span class="annottext">(p ~ (-&gt;)) =&gt; (v -&gt; f v') -&gt; GGraph f v e -&gt; f (GGraph f v' e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#conjoined"><span class="hs-identifier hs-var">conjoined</span></a></span><span> </span><span class="annot"><span class="annottext">(p ~ (-&gt;)) =&gt; (v -&gt; f v') -&gt; GGraph f v e -&gt; f (GGraph f v' e)
 (v -&gt; f v') -&gt; GGraph f v e -&gt; f (GGraph f v' e)
 forall (g :: * -&gt; *).
 Applicative g =&gt;
@@ -860,7 +860,7 @@ forall a b. p a b -&gt; Int -&gt; a -&gt; b
 forall i (p :: * -&gt; * -&gt; *) a b.
 Indexable i p =&gt;
 p a b -&gt; i -&gt; a -&gt; b
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#indexed"><span class="hs-identifier hs-var">indexed</span></a></span><span class="hs-special">)</span><span>
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#indexed"><span class="hs-identifier hs-var">indexed</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-106"></span><span>    </span><span class="hs-keyword">where</span><span>
 </span><span id="line-107"></span><span>      </span><span id="local-6989586621679162132"><span class="annot"><a href="#local-6989586621679162885"><span class="hs-identifier hs-type">traverse'</span></a></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679162132"><span class="hs-identifier hs-type">g</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679162119"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679162132"><span class="hs-identifier hs-type">g</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162121"><span class="hs-identifier hs-type">v'</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162118"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162119"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162120"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679162132"><span class="hs-identifier hs-type">g</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162118"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162121"><span class="hs-identifier hs-type">v'</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162120"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span><span>
 </span><span id="line-108"></span><span>      </span><span id="local-6989586621679162885"><span class="annot"><span class="annottext">traverse' :: forall (g :: * -&gt; *).
@@ -892,7 +892,7 @@ IndexedTraversal
   (IntMap (VertexData f v' e))
   (VertexData f v e)
   (VertexData f v' e)
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Traversal.html#traversed"><span class="hs-identifier hs-var">traversed</span></a></span><span class="annot"><span class="annottext">((VertexData f v e -&gt; g (VertexData f v' e))
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Traversal.html#traversed"><span class="hs-identifier hs-var">traversed</span></a></span><span class="annot"><span class="annottext">((VertexData f v e -&gt; g (VertexData f v' e))
  -&gt; IntMap (VertexData f v e) -&gt; g (IntMap (VertexData f v' e)))
 -&gt; ((v -&gt; g v') -&gt; VertexData f v e -&gt; g (VertexData f v' e))
 -&gt; (v -&gt; g v')
@@ -937,7 +937,7 @@ Functor f =&gt;
 -&gt; (v -&gt; g v') -&gt; VertexData f v e -&gt; g (VertexData f v' e)
 forall {k} (f :: k -&gt; *) s (t :: k) a (b :: k).
 LensLike f s t a b -&gt; LensLike f s t a b
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Lens.html#%25%25~"><span class="hs-operator hs-var">%%~</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; v -&gt; g v'
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Lens.html#%25%25~"><span class="hs-operator hs-var">%%~</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; v -&gt; g v'
 </span><a href="#local-6989586621679162905"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><a href="#local-6989586621679162908"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">IntMap (VertexData f v e)
 </span><a href="#local-6989586621679162906"><span class="hs-identifier hs-var">m</span></a></span><span>
@@ -972,7 +972,7 @@ VertexIx (GGraph f v e)
 forall i j (p :: * -&gt; * -&gt; *) s t r a b.
 Indexable (i, j) p =&gt;
 (Indexed i s t -&gt; r) -&gt; (Indexed j a b -&gt; s -&gt; t) -&gt; p a b -&gt; r
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#%3C.%3E"><span class="hs-operator hs-var">&lt;.&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">(IntMap e -&gt; f (IntMap e))
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#%3C.%3E"><span class="hs-operator hs-var">&lt;.&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">(IntMap e -&gt; f (IntMap e))
 -&gt; VertexData f v e -&gt; f (VertexData f v e)
 forall (f :: * -&gt; *) v e e (f :: * -&gt; *).
 Functor f =&gt;
@@ -985,13 +985,13 @@ Functor f =&gt;
 -&gt; VertexData f v e
 -&gt; f (VertexData f v e)
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#.%3E"><span class="hs-operator hs-var">.&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">Index (IntMap e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#.%3E"><span class="hs-operator hs-var">.&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">Index (IntMap e)
 -&gt; IndexedTraversal'
      (Index (IntMap e)) (IntMap e) (IxValue (IntMap e))
 forall m.
 Ixed m =&gt;
 Index m -&gt; IndexedTraversal' (Index m) m (IxValue m)
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.At.html#iix"><span class="hs-identifier hs-var">iix</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.At.html#iix"><span class="hs-identifier hs-var">iix</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 Index (IntMap e)
 </span><a href="#local-6989586621679162934"><span class="hs-identifier hs-var">v</span></a></span><span>
 </span><span id="line-121"></span><span>
@@ -1019,7 +1019,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Getting (Endo (Endo Int)) (VertexData f v e) (IntMap e)
 -&gt; VertexData f v e -&gt; Int
 forall s a. Getting (Endo (Endo Int)) s a -&gt; s -&gt; Int
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#lengthOf"><span class="hs-identifier hs-var">lengthOf</span></a></span><span> </span><span class="annot"><span class="annottext">Getting (Endo (Endo Int)) (VertexData f v e) (IntMap e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#lengthOf"><span class="hs-identifier hs-var">lengthOf</span></a></span><span> </span><span class="annot"><span class="annottext">Getting (Endo (Endo Int)) (VertexData f v e) (IntMap e)
 forall (f :: * -&gt; *) v e e (f :: * -&gt; *).
 Functor f =&gt;
 (IntMap e -&gt; f (IntMap e))
@@ -1080,18 +1080,18 @@ forall i (t :: * -&gt; *) a b.
 TraversableWithIndex i t =&gt;
 IndexedTraversal i (t a) (t b) a b
 IndexedTraversal Int (IntMap e) (IntMap e') e e'
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#itraversed"><span class="hs-identifier hs-var">itraversed</span></a></span><span> </span><span class="annot"><span class="annottext">(Indexed Int e (f e') -&gt; VertexData f v e -&gt; f (VertexData f v e'))
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#itraversed"><span class="hs-identifier hs-var">itraversed</span></a></span><span> </span><span class="annot"><span class="annottext">(Indexed Int e (f e') -&gt; VertexData f v e -&gt; f (VertexData f v e'))
 -&gt; (Int -&gt; e -&gt; f e') -&gt; VertexData f v e -&gt; f (VertexData f v e')
 forall {k1} i (f :: k1 -&gt; *) s (t :: k1) a (b :: k1).
 Over (Indexed i) f s t a b -&gt; (i -&gt; a -&gt; f b) -&gt; s -&gt; f t
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Lens.html#%25%25%40~"><span class="hs-operator hs-var">%%@~</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679162975"><span class="annot"><span class="annottext">Int
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Lens.html#%25%25%40~"><span class="hs-operator hs-var">%%@~</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679162975"><span class="annot"><span class="annottext">Int
 </span><a href="#local-6989586621679162975"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span id="local-6989586621679162976"><span class="annot"><span class="annottext">e
 </span><a href="#local-6989586621679162976"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">p e (f e') -&gt; (Int, Int) -&gt; e -&gt; f e'
 forall a b. p a b -&gt; (Int, Int) -&gt; a -&gt; b
 forall i (p :: * -&gt; * -&gt; *) a b.
 Indexable i p =&gt;
 p a b -&gt; i -&gt; a -&gt; b
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#indexed"><span class="hs-identifier hs-var">indexed</span></a></span><span> </span><span class="annot"><span class="annottext">p e (f e')
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#indexed"><span class="hs-identifier hs-var">indexed</span></a></span><span> </span><span class="annot"><span class="annottext">p e (f e')
 p (Dart (GGraph f v e)) (f (Dart (GGraph f v e')))
 </span><a href="#local-6989586621679162968"><span class="hs-identifier hs-var">pefe'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
 </span><a href="#local-6989586621679162971"><span class="hs-identifier hs-var">u</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Int
@@ -1138,7 +1138,7 @@ VertexIx (GGraph f v e)
 forall i j (p :: * -&gt; * -&gt; *) s t r a b.
 Indexable (i, j) p =&gt;
 (Indexed i s t -&gt; r) -&gt; (Indexed j a b -&gt; s -&gt; t) -&gt; p a b -&gt; r
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#%3C.%3E"><span class="hs-operator hs-var">&lt;.&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">(IntMap e -&gt; f (IntMap e))
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#%3C.%3E"><span class="hs-operator hs-var">&lt;.&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">(IntMap e -&gt; f (IntMap e))
 -&gt; VertexData f v e -&gt; f (VertexData f v e)
 forall (f :: * -&gt; *) v e e (f :: * -&gt; *).
 Functor f =&gt;
@@ -1151,13 +1151,13 @@ Functor f =&gt;
 -&gt; VertexData f v e
 -&gt; f (VertexData f v e)
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#.%3E"><span class="hs-operator hs-var">.&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">Index (IntMap e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#.%3E"><span class="hs-operator hs-var">.&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">Index (IntMap e)
 -&gt; IndexedTraversal'
      (Index (IntMap e)) (IntMap e) (IxValue (IntMap e))
 forall m.
 Ixed m =&gt;
 Index m -&gt; IndexedTraversal' (Index m) m (IxValue m)
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.At.html#iix"><span class="hs-identifier hs-var">iix</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.At.html#iix"><span class="hs-identifier hs-var">iix</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 Index (IntMap e)
 </span><a href="#local-6989586621679163007"><span class="hs-identifier hs-var">v</span></a></span><span>
 </span><span id="line-138"></span><span>
@@ -1197,7 +1197,7 @@ IndexedTraversal
 </span><a href="Hiraffe.Graph.Class.html#darts"><span class="hs-identifier hs-var">darts</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">((Int, Int) -&gt; e -&gt; f (Maybe e'))
 -&gt; Indexed (Int, Int) e (f (Maybe e'))
 forall i a b. (i -&gt; a -&gt; b) -&gt; Indexed i a b
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#Indexed"><span class="hs-identifier hs-var">Indexed</span></a></span><span> </span><span class="annot"><span class="annottext">(Int, Int) -&gt; e -&gt; f (Maybe e')
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#Indexed"><span class="hs-identifier hs-var">Indexed</span></a></span><span> </span><span class="annot"><span class="annottext">(Int, Int) -&gt; e -&gt; f (Maybe e')
 </span><a href="#local-6989586621679163032"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-142"></span><span>    </span><span class="hs-keyword">where</span><span>
 </span><span id="line-143"></span><span>      </span><span id="local-6989586621679163032"><span class="annot"><span class="annottext">h :: (Int, Int) -&gt; e -&gt; f (Maybe e')
@@ -1218,7 +1218,7 @@ forall a b. p a b -&gt; (Int, Int) -&gt; a -&gt; b
 forall i (p :: * -&gt; * -&gt; *) a b.
 Indexable i p =&gt;
 p a b -&gt; i -&gt; a -&gt; b
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#indexed"><span class="hs-identifier hs-var">indexed</span></a></span><span> </span><span class="annot"><span class="annottext">p e (f e')
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#indexed"><span class="hs-identifier hs-var">indexed</span></a></span><span> </span><span class="annot"><span class="annottext">p e (f e')
 p (Edge (GGraph f v e)) (f (Edge (GGraph f v e')))
 </span><a href="#local-6989586621679163029"><span class="hs-identifier hs-var">pefe'</span></a></span><span> </span><span class="annot"><span class="annottext">(Int, Int)
 </span><a href="#local-6989586621679163033"><span class="hs-identifier hs-var">e</span></a></span><span> </span><span class="annot"><span class="annottext">e
@@ -1269,7 +1269,7 @@ IndexedTraversal
 -&gt; GGraph f v e'
 forall i s t a b.
 AnIndexedSetter i s t a b -&gt; (i -&gt; a -&gt; b) -&gt; s -&gt; t
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Setter.html#%25%40~"><span class="hs-operator hs-var">%@~</span></a></span><span> </span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679163055"><span class="annot"><span class="annottext">Int
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Setter.html#%25%40~"><span class="hs-operator hs-var">%@~</span></a></span><span> </span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679163055"><span class="annot"><span class="annottext">Int
 </span><a href="#local-6989586621679163055"><span class="hs-identifier hs-var">u</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679163056"><span class="annot"><span class="annottext">Int
 </span><a href="#local-6989586621679163056"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679163057"><span class="annot"><span class="annottext">Maybe e'
 </span><a href="#local-6989586621679163057"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Int
@@ -1289,7 +1289,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 -&gt; Getting (Endo (Maybe e')) (GGraph f v (Maybe e')) (Maybe e')
 -&gt; Maybe e'
 forall s a. HasCallStack =&gt; s -&gt; Getting (Endo a) s a -&gt; a
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E%3F%21"><span class="hs-operator hs-var">^?!</span></a></span><span class="annot"><span class="annottext">DartIx (GGraph f v (Maybe e'))
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E%3F%21"><span class="hs-operator hs-var">^?!</span></a></span><span class="annot"><span class="annottext">DartIx (GGraph f v (Maybe e'))
 -&gt; IndexedTraversal'
      (DartIx (GGraph f v (Maybe e')))
      (GGraph f v (Maybe e'))
@@ -1310,7 +1310,7 @@ forall a. HasCallStack =&gt; String -&gt; a
 </span><span class="hs-string">&quot;Hiraffe.AdjacencyListRep.edges: absurd ; fromJust&quot;</span></span><span class="hs-special">)</span><span>
 </span><span id="line-158"></span><span>
 </span><span id="line-159"></span><span>
-</span><span id="line-160"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679162271"><span id="local-6989586621679162272"><span id="local-6989586621679162273"><span id="local-6989586621679163071"><span class="annot"><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-9530a2df041c51e2634378693ad99859a96a62ec4b89cf5648ae0df4c2919599/share/doc/html/src/HGeometry.Foldable.Util.html#HasFromFoldable"><span class="hs-identifier hs-type">HasFromFoldable</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162271"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#DirGraph_"><span class="hs-identifier hs-type">DirGraph_</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162271"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162272"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162273"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-160"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679162271"><span id="local-6989586621679162272"><span id="local-6989586621679162273"><span id="local-6989586621679163071"><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-9530a2df041c51e2634378693ad99859a96a62ec4b89cf5648ae0df4c2919599/share/doc/html/src/HGeometry.Foldable.Util.html#HasFromFoldable"><span class="hs-identifier hs-type">HasFromFoldable</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162271"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#DirGraph_"><span class="hs-identifier hs-type">DirGraph_</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162271"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162272"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162273"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-161"></span><span>  </span><span id="local-6989586621679163077"><span class="annot"><span class="annottext">endPoints :: GGraph f v e
 -&gt; DartIx (GGraph f v e)
 -&gt; (VertexIx (GGraph f v e), VertexIx (GGraph f v e))
@@ -1334,24 +1334,24 @@ Conjoined p =&gt;
 ((p ~ (-&gt;)) =&gt; q (a -&gt; b) r) -&gt; q (p a b) r -&gt; q (p a b) r
 forall (q :: * -&gt; * -&gt; *) a b r.
 ((p ~ (-&gt;)) =&gt; q (a -&gt; b) r) -&gt; q (p a b) r -&gt; q (p a b) r
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#conjoined"><span class="hs-identifier hs-var">conjoined</span></a></span><span> </span><span class="annot"><span class="annottext">(p ~ (-&gt;)) =&gt; (v -&gt; f v) -&gt; GGraph f v e -&gt; f (GGraph f v e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#conjoined"><span class="hs-identifier hs-var">conjoined</span></a></span><span> </span><span class="annot"><span class="annottext">(p ~ (-&gt;)) =&gt; (v -&gt; f v) -&gt; GGraph f v e -&gt; f (GGraph f v e)
 (v -&gt; f v) -&gt; GGraph f v e -&gt; f (GGraph f v e)
 Fold (GGraph f v e) v
 </span><a href="#local-6989586621679163111"><span class="hs-identifier hs-var">asFold</span></a></span><span> </span><span class="annot"><span class="annottext">p v (f v) -&gt; GGraph f v e -&gt; f (GGraph f v e)
 </span><a href="#local-6989586621679163115"><span class="hs-identifier hs-var">asIFold</span></a></span><span>
 </span><span id="line-163"></span><span>    </span><span class="hs-keyword">where</span><span>
-</span><span id="line-164"></span><span>      </span><span class="annot"><a href="#local-6989586621679163111"><span class="hs-identifier hs-type">asFold</span></a></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Type.html#Fold"><span class="hs-identifier hs-type">Fold</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162271"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162272"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162273"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679162272"><span class="hs-identifier hs-type">v</span></a></span><span>
+</span><span id="line-164"></span><span>      </span><span class="annot"><a href="#local-6989586621679163111"><span class="hs-identifier hs-type">asFold</span></a></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Type.html#Fold"><span class="hs-identifier hs-type">Fold</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162271"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162272"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162273"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679162272"><span class="hs-identifier hs-type">v</span></a></span><span>
 </span><span id="line-165"></span><span>      </span><span id="local-6989586621679163111"><span class="annot"><span class="annottext">asFold :: Fold (GGraph f v e) v
 </span><a href="#local-6989586621679163111"><span class="hs-identifier hs-var hs-var">asFold</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(GGraph f v e -&gt; [v]) -&gt; Fold (GGraph f v e) v
 forall (f :: * -&gt; *) s a. Foldable f =&gt; (s -&gt; f a) -&gt; Fold s a
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#folding"><span class="hs-identifier hs-var">folding</span></a></span><span>  </span><span class="annot"><span class="annottext">((GGraph f v e -&gt; [v]) -&gt; Fold (GGraph f v e) v)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#folding"><span class="hs-identifier hs-var">folding</span></a></span><span>  </span><span class="annot"><span class="annottext">((GGraph f v e -&gt; [v]) -&gt; Fold (GGraph f v e) v)
 -&gt; (GGraph f v e -&gt; [v]) -&gt; Fold (GGraph f v e) v
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679163135"><span class="annot"><span class="annottext">GGraph f v e
 </span><a href="#local-6989586621679163135"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">GGraph f v e
 </span><a href="#local-6989586621679163135"><span class="hs-identifier hs-var">g</span></a></span><span class="annot"><span class="annottext">GGraph f v e -&gt; Getting (Endo [v]) (GGraph f v e) v -&gt; [v]
 forall s a. s -&gt; Getting (Endo [a]) s a -&gt; [a]
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E.."><span class="hs-operator hs-var">^..</span></a></span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E.."><span class="hs-operator hs-var">^..</span></a></span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
 -&gt; IndexedTraversal' (VertexIx (GGraph f v e)) (GGraph f v e) e
 forall (f :: * -&gt; *) v e.
 VertexIx (GGraph f v e)
@@ -1367,7 +1367,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall i (p :: * -&gt; * -&gt; *) (f :: * -&gt; *) s.
 (Indexable i p, Contravariant f, Functor f) =&gt;
 p i (f i) -&gt; Indexed i s (f s)
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span class="annot"><span class="annottext">((Int -&gt; Const (Endo [v]) Int)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span class="annot"><span class="annottext">((Int -&gt; Const (Endo [v]) Int)
  -&gt; Indexed Int e (Const (Endo [v]) e))
 -&gt; ((v -&gt; Const (Endo [v]) v) -&gt; Int -&gt; Const (Endo [v]) Int)
 -&gt; (v -&gt; Const (Endo [v]) v)
@@ -1378,11 +1378,11 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall (p :: * -&gt; * -&gt; *) (f :: * -&gt; *) s a.
 (Profunctor p, Contravariant f) =&gt;
 (s -&gt; a) -&gt; Optic' p f s a
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Getter.html#to"><span class="hs-identifier hs-var">to</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679163140"><span class="annot"><span class="annottext">Int
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Getter.html#to"><span class="hs-identifier hs-var">to</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679163140"><span class="annot"><span class="annottext">Int
 </span><a href="#local-6989586621679163140"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">GGraph f v e
 </span><a href="#local-6989586621679163135"><span class="hs-identifier hs-var">g</span></a></span><span class="annot"><span class="annottext">GGraph f v e -&gt; Getting (Endo v) (GGraph f v e) v -&gt; v
 forall s a. HasCallStack =&gt; s -&gt; Getting (Endo a) s a -&gt; a
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E%3F%21"><span class="hs-operator hs-var">^?!</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E%3F%21"><span class="hs-operator hs-var">^?!</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
 -&gt; IndexedTraversal'
      (VertexIx (GGraph f v e)) (GGraph f v e) (Vertex (GGraph f v e))
 forall graph.
@@ -1398,7 +1398,7 @@ VertexIx (GGraph f v e)
 forall (f :: * -&gt; *) i (p :: * -&gt; * -&gt; *) (g :: * -&gt; *) s a t b.
 (Foldable f, Indexable i p, Contravariant g, Applicative g) =&gt;
 (s -&gt; f (i, a)) -&gt; Over p g s t a b
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#ifolding"><span class="hs-identifier hs-var">ifolding</span></a></span><span> </span><span class="annot"><span class="annottext">((GGraph f v e -&gt; [(Int, v)])
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#ifolding"><span class="hs-identifier hs-var">ifolding</span></a></span><span> </span><span class="annot"><span class="annottext">((GGraph f v e -&gt; [(Int, v)])
  -&gt; p v (f v) -&gt; GGraph f v e -&gt; f (GGraph f v e))
 -&gt; (GGraph f v e -&gt; [(Int, v)])
 -&gt; p v (f v)
@@ -1410,7 +1410,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="#local-6989586621679163142"><span class="hs-identifier hs-var">g</span></a></span><span class="annot"><span class="annottext">GGraph f v e
 -&gt; Getting (Endo [(Int, v)]) (GGraph f v e) (Int, v) -&gt; [(Int, v)]
 forall s a. s -&gt; Getting (Endo [a]) s a -&gt; [a]
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E.."><span class="hs-operator hs-var">^..</span></a></span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E.."><span class="hs-operator hs-var">^..</span></a></span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
 -&gt; IndexedTraversal' (VertexIx (GGraph f v e)) (GGraph f v e) e
 forall (f :: * -&gt; *) v e.
 VertexIx (GGraph f v e)
@@ -1427,7 +1427,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall i (p :: * -&gt; * -&gt; *) (f :: * -&gt; *) s.
 (Indexable i p, Contravariant f, Functor f) =&gt;
 p i (f i) -&gt; Indexed i s (f s)
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span class="annot"><span class="annottext">((Int -&gt; Const (Endo [(Int, v)]) Int)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span class="annot"><span class="annottext">((Int -&gt; Const (Endo [(Int, v)]) Int)
  -&gt; Indexed Int e (Const (Endo [(Int, v)]) e))
 -&gt; (((Int, v) -&gt; Const (Endo [(Int, v)]) (Int, v))
     -&gt; Int -&gt; Const (Endo [(Int, v)]) Int)
@@ -1441,12 +1441,12 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall (p :: * -&gt; * -&gt; *) (f :: * -&gt; *) s a.
 (Profunctor p, Contravariant f) =&gt;
 (s -&gt; a) -&gt; Optic' p f s a
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Getter.html#to"><span class="hs-identifier hs-var">to</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679163143"><span class="annot"><span class="annottext">Int
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Getter.html#to"><span class="hs-identifier hs-var">to</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679163143"><span class="annot"><span class="annottext">Int
 </span><a href="#local-6989586621679163143"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
 </span><a href="#local-6989586621679163143"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">GGraph f v e
 </span><a href="#local-6989586621679163142"><span class="hs-identifier hs-var">g</span></a></span><span class="annot"><span class="annottext">GGraph f v e -&gt; Getting (Endo v) (GGraph f v e) v -&gt; v
 forall s a. HasCallStack =&gt; s -&gt; Getting (Endo a) s a -&gt; a
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E%3F%21"><span class="hs-operator hs-var">^?!</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E%3F%21"><span class="hs-operator hs-var">^?!</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
 -&gt; IndexedTraversal'
      (VertexIx (GGraph f v e)) (GGraph f v e) (Vertex (GGraph f v e))
 forall graph.
@@ -1458,7 +1458,7 @@ VertexIx (GGraph f v e)
 </span><a href="#local-6989586621679163143"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-167"></span><span>  </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#outNeighboursOf"><span class="hs-pragma hs-type">outNeighboursOf</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-168"></span><span>
-</span><span id="line-169"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679162316"><span id="local-6989586621679162317"><span id="local-6989586621679162318"><span class="annot"><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-9530a2df041c51e2634378693ad99859a96a62ec4b89cf5648ae0df4c2919599/share/doc/html/src/HGeometry.Foldable.Util.html#HasFromFoldable"><span class="hs-identifier hs-type">HasFromFoldable</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162316"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#Graph_"><span class="hs-identifier hs-type">Graph_</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162316"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162317"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162318"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-169"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679162316"><span id="local-6989586621679162317"><span id="local-6989586621679162318"><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-9530a2df041c51e2634378693ad99859a96a62ec4b89cf5648ae0df4c2919599/share/doc/html/src/HGeometry.Foldable.Util.html#HasFromFoldable"><span class="hs-identifier hs-type">HasFromFoldable</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162316"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#Graph_"><span class="hs-identifier hs-type">Graph_</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162316"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162317"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162318"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-170"></span><span>  </span><span id="local-6989586621679163172"><span class="annot"><span class="annottext">fromAdjacencyLists :: forall (f :: * -&gt; *) (h :: * -&gt; *) vi v e.
 (Foldable f, Functor f, Foldable h, Functor h,
  vi ~ VertexIx (GGraph f v e), v ~ Vertex (GGraph f v e),
@@ -1519,7 +1519,7 @@ forall a. Int -&gt; a -&gt; IntMap a
 </span><a href="#local-6989586621679163179"><span class="hs-identifier hs-var hs-var">mkNeighOrder</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[a] -&gt; f a
 forall a. [a] -&gt; f a
 forall (f :: * -&gt; *) a. HasFromFoldable f =&gt; [a] -&gt; f a
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-9530a2df041c51e2634378693ad99859a96a62ec4b89cf5648ae0df4c2919599/share/doc/html/src/HGeometry.Foldable.Util.html#fromList"><span class="hs-identifier hs-var">fromList</span></a></span><span> </span><span class="annot"><span class="annottext">([a] -&gt; f a) -&gt; (h (a, b) -&gt; [a]) -&gt; h (a, b) -&gt; f a
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-9530a2df041c51e2634378693ad99859a96a62ec4b89cf5648ae0df4c2919599/share/doc/html/src/HGeometry.Foldable.Util.html#fromList"><span class="hs-identifier hs-var">fromList</span></a></span><span> </span><span class="annot"><span class="annottext">([a] -&gt; f a) -&gt; (h (a, b) -&gt; [a]) -&gt; h (a, b) -&gt; f a
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">((a, b) -&gt; a) -&gt; [(a, b)] -&gt; [a]
 forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
@@ -1546,24 +1546,24 @@ Conjoined p =&gt;
 ((p ~ (-&gt;)) =&gt; q (a -&gt; b) r) -&gt; q (p a b) r -&gt; q (p a b) r
 forall (q :: * -&gt; * -&gt; *) a b r.
 ((p ~ (-&gt;)) =&gt; q (a -&gt; b) r) -&gt; q (p a b) r -&gt; q (p a b) r
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#conjoined"><span class="hs-identifier hs-var">conjoined</span></a></span><span> </span><span class="annot"><span class="annottext">(p ~ (-&gt;)) =&gt; (v -&gt; f v) -&gt; GGraph f v e -&gt; f (GGraph f v e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#conjoined"><span class="hs-identifier hs-var">conjoined</span></a></span><span> </span><span class="annot"><span class="annottext">(p ~ (-&gt;)) =&gt; (v -&gt; f v) -&gt; GGraph f v e -&gt; f (GGraph f v e)
 (v -&gt; f v) -&gt; GGraph f v e -&gt; f (GGraph f v e)
 Fold (GGraph f v e) v
 </span><a href="#local-6989586621679163218"><span class="hs-identifier hs-var">asFold</span></a></span><span> </span><span class="annot"><span class="annottext">p v (f v) -&gt; GGraph f v e -&gt; f (GGraph f v e)
 </span><a href="#local-6989586621679163222"><span class="hs-identifier hs-var">asIFold</span></a></span><span>
 </span><span id="line-179"></span><span>    </span><span class="hs-keyword">where</span><span>
-</span><span id="line-180"></span><span>      </span><span class="annot"><a href="#local-6989586621679163218"><span class="hs-identifier hs-type">asFold</span></a></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Type.html#Fold"><span class="hs-identifier hs-type">Fold</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162316"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162317"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162318"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679162317"><span class="hs-identifier hs-type">v</span></a></span><span>
+</span><span id="line-180"></span><span>      </span><span class="annot"><a href="#local-6989586621679163218"><span class="hs-identifier hs-type">asFold</span></a></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Type.html#Fold"><span class="hs-identifier hs-type">Fold</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162316"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162317"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162318"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679162317"><span class="hs-identifier hs-type">v</span></a></span><span>
 </span><span id="line-181"></span><span>      </span><span id="local-6989586621679163218"><span class="annot"><span class="annottext">asFold :: Fold (GGraph f v e) v
 </span><a href="#local-6989586621679163218"><span class="hs-identifier hs-var hs-var">asFold</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(GGraph f v e -&gt; [v]) -&gt; Fold (GGraph f v e) v
 forall (f :: * -&gt; *) s a. Foldable f =&gt; (s -&gt; f a) -&gt; Fold s a
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#folding"><span class="hs-identifier hs-var">folding</span></a></span><span>  </span><span class="annot"><span class="annottext">((GGraph f v e -&gt; [v]) -&gt; Fold (GGraph f v e) v)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#folding"><span class="hs-identifier hs-var">folding</span></a></span><span>  </span><span class="annot"><span class="annottext">((GGraph f v e -&gt; [v]) -&gt; Fold (GGraph f v e) v)
 -&gt; (GGraph f v e -&gt; [v]) -&gt; Fold (GGraph f v e) v
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679163241"><span class="annot"><span class="annottext">GGraph f v e
 </span><a href="#local-6989586621679163241"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">GGraph f v e
 </span><a href="#local-6989586621679163241"><span class="hs-identifier hs-var">g</span></a></span><span class="annot"><span class="annottext">GGraph f v e -&gt; Getting (Endo [v]) (GGraph f v e) v -&gt; [v]
 forall s a. s -&gt; Getting (Endo [a]) s a -&gt; [a]
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E.."><span class="hs-operator hs-var">^..</span></a></span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E.."><span class="hs-operator hs-var">^..</span></a></span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
 -&gt; IndexedTraversal' (VertexIx (GGraph f v e)) (GGraph f v e) e
 forall (f :: * -&gt; *) v e.
 VertexIx (GGraph f v e)
@@ -1579,7 +1579,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall i (p :: * -&gt; * -&gt; *) (f :: * -&gt; *) s.
 (Indexable i p, Contravariant f, Functor f) =&gt;
 p i (f i) -&gt; Indexed i s (f s)
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span class="annot"><span class="annottext">((Int -&gt; Const (Endo [v]) Int)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span class="annot"><span class="annottext">((Int -&gt; Const (Endo [v]) Int)
  -&gt; Indexed Int e (Const (Endo [v]) e))
 -&gt; ((v -&gt; Const (Endo [v]) v) -&gt; Int -&gt; Const (Endo [v]) Int)
 -&gt; (v -&gt; Const (Endo [v]) v)
@@ -1590,11 +1590,11 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall (p :: * -&gt; * -&gt; *) (f :: * -&gt; *) s a.
 (Profunctor p, Contravariant f) =&gt;
 (s -&gt; a) -&gt; Optic' p f s a
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Getter.html#to"><span class="hs-identifier hs-var">to</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679163242"><span class="annot"><span class="annottext">Int
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Getter.html#to"><span class="hs-identifier hs-var">to</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679163242"><span class="annot"><span class="annottext">Int
 </span><a href="#local-6989586621679163242"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">GGraph f v e
 </span><a href="#local-6989586621679163241"><span class="hs-identifier hs-var">g</span></a></span><span class="annot"><span class="annottext">GGraph f v e -&gt; Getting (Endo v) (GGraph f v e) v -&gt; v
 forall s a. HasCallStack =&gt; s -&gt; Getting (Endo a) s a -&gt; a
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E%3F%21"><span class="hs-operator hs-var">^?!</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E%3F%21"><span class="hs-operator hs-var">^?!</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
 -&gt; IndexedTraversal'
      (VertexIx (GGraph f v e)) (GGraph f v e) (Vertex (GGraph f v e))
 forall graph.
@@ -1610,7 +1610,7 @@ VertexIx (GGraph f v e)
 forall (f :: * -&gt; *) i (p :: * -&gt; * -&gt; *) (g :: * -&gt; *) s a t b.
 (Foldable f, Indexable i p, Contravariant g, Applicative g) =&gt;
 (s -&gt; f (i, a)) -&gt; Over p g s t a b
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#ifolding"><span class="hs-identifier hs-var">ifolding</span></a></span><span> </span><span class="annot"><span class="annottext">((GGraph f v e -&gt; [(Int, v)])
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#ifolding"><span class="hs-identifier hs-var">ifolding</span></a></span><span> </span><span class="annot"><span class="annottext">((GGraph f v e -&gt; [(Int, v)])
  -&gt; p v (f v) -&gt; GGraph f v e -&gt; f (GGraph f v e))
 -&gt; (GGraph f v e -&gt; [(Int, v)])
 -&gt; p v (f v)
@@ -1622,7 +1622,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="#local-6989586621679163243"><span class="hs-identifier hs-var">g</span></a></span><span class="annot"><span class="annottext">GGraph f v e
 -&gt; Getting (Endo [(Int, v)]) (GGraph f v e) (Int, v) -&gt; [(Int, v)]
 forall s a. s -&gt; Getting (Endo [a]) s a -&gt; [a]
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E.."><span class="hs-operator hs-var">^..</span></a></span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E.."><span class="hs-operator hs-var">^..</span></a></span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
 -&gt; IndexedTraversal' (VertexIx (GGraph f v e)) (GGraph f v e) e
 forall (f :: * -&gt; *) v e.
 VertexIx (GGraph f v e)
@@ -1639,7 +1639,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall i (p :: * -&gt; * -&gt; *) (f :: * -&gt; *) s.
 (Indexable i p, Contravariant f, Functor f) =&gt;
 p i (f i) -&gt; Indexed i s (f s)
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span class="annot"><span class="annottext">((Int -&gt; Const (Endo [(Int, v)]) Int)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span class="annot"><span class="annottext">((Int -&gt; Const (Endo [(Int, v)]) Int)
  -&gt; Indexed Int e (Const (Endo [(Int, v)]) e))
 -&gt; (((Int, v) -&gt; Const (Endo [(Int, v)]) (Int, v))
     -&gt; Int -&gt; Const (Endo [(Int, v)]) Int)
@@ -1653,12 +1653,12 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall (p :: * -&gt; * -&gt; *) (f :: * -&gt; *) s a.
 (Profunctor p, Contravariant f) =&gt;
 (s -&gt; a) -&gt; Optic' p f s a
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Getter.html#to"><span class="hs-identifier hs-var">to</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679163244"><span class="annot"><span class="annottext">Int
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Getter.html#to"><span class="hs-identifier hs-var">to</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679163244"><span class="annot"><span class="annottext">Int
 </span><a href="#local-6989586621679163244"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
 </span><a href="#local-6989586621679163244"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">GGraph f v e
 </span><a href="#local-6989586621679163243"><span class="hs-identifier hs-var">g</span></a></span><span class="annot"><span class="annottext">GGraph f v e -&gt; Getting (Endo v) (GGraph f v e) v -&gt; v
 forall s a. HasCallStack =&gt; s -&gt; Getting (Endo a) s a -&gt; a
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E%3F%21"><span class="hs-operator hs-var">^?!</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Fold.html#%5E%3F%21"><span class="hs-operator hs-var">^?!</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
 -&gt; IndexedTraversal'
      (VertexIx (GGraph f v e)) (GGraph f v e) (Vertex (GGraph f v e))
 forall graph.
@@ -1682,7 +1682,7 @@ VertexIx (GGraph f v e)
 forall j (p :: * -&gt; * -&gt; *) i a b r.
 Indexable j p =&gt;
 (i -&gt; j) -&gt; (Indexed i a b -&gt; r) -&gt; p a b -&gt; r
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#reindexed"><span class="hs-identifier hs-var">reindexed</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#reindexed"><span class="hs-identifier hs-var">reindexed</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
 VertexIx (GGraph f v e)
 </span><a href="#local-6989586621679163256"><span class="hs-identifier hs-var">u</span></a></span><span class="hs-special">,</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VertexIx (GGraph f v e)
 -&gt; IndexedTraversal' (VertexIx (GGraph f v e)) (GGraph f v e) e
@@ -1696,7 +1696,7 @@ VertexIx (GGraph f v e)
 </span><span id="line-188"></span><span>
 </span><span id="line-189"></span><span class="annot"><span class="hs-comment">-- | A traversal of the edges incident to vertex u as an intexed by the other vertex</span></span><span>
 </span><span id="line-190"></span><span id="local-6989586621679162286"><span id="local-6989586621679162287"><span id="local-6989586621679162288"><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#incidentEdges%27"><span class="hs-identifier hs-type">incidentEdges'</span></a></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162286"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162287"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162288"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-191"></span><span>                </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Type.html#IndexedTraversal%27"><span class="hs-identifier hs-type">IndexedTraversal'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162286"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162287"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162288"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162286"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162287"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162288"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679162288"><span class="hs-identifier hs-type">e</span></a></span></span></span></span><span>
+</span><span id="line-191"></span><span>                </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Type.html#IndexedTraversal%27"><span class="hs-identifier hs-type">IndexedTraversal'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162286"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162287"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162288"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162286"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162287"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679162288"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679162288"><span class="hs-identifier hs-type">e</span></a></span></span></span></span><span>
 </span><span id="line-192"></span><span class="hs-comment">-- incidentEdges'  :: (Indexable (VertexIx (GGraph f v e)) p, Applicative g)</span><span>
 </span><span id="line-193"></span><span class="hs-comment">--                 =&gt; VertexIx (GGraph f v e) -&gt; p e (g e) -&gt; GGraph f v e -&gt; g (GGraph f v e)</span><span>
 </span><span id="line-194"></span><span id="incidentEdges%27"><span class="annot"><span class="annottext">incidentEdges' :: forall (f :: * -&gt; *) v e.
@@ -1736,5 +1736,5 @@ forall i (t :: * -&gt; *) a b.
 TraversableWithIndex i t =&gt;
 IndexedTraversal i (t a) (t b) a b
 IndexedTraversal Int (IntMap e) (IntMap e) e e
-</span><a href="file:///home/runner/.local/state/cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#itraversed"><span class="hs-identifier hs-var">itraversed</span></a></span><span>
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Indexed.html#itraversed"><span class="hs-identifier hs-var">itraversed</span></a></span><span>
 </span><span id="line-195"></span></pre></body></html>
