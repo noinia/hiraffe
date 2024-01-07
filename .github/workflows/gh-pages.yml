@@ -18,6 +18,9 @@ jobs:
             allow-failure: false
       fail-fast: false
     steps:
+      - name: env
+        run: |
+          env
       - uses: actions/checkout@v3
       - name: Setup toolchain
         run: |
@@ -39,6 +42,7 @@ jobs:
           ./haddock.sh
       - name: copy-to-pages
         run: |
+          mkdir --parents pages
           cp -r haddocks pages
           cp haddock.txt pages/
           cp haddock_badge.json pages/
@@ -46,7 +50,6 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: docs # The branch the action should deploy to.
           folder: pages # The folder the action should deploy.
 
