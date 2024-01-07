@@ -21,7 +21,6 @@ jobs:
       - name: Set environment variables
         run: |
           echo "CABAL_DIR=$HOME/.cabal" >> "$GITHUB_ENV"
-          echo "CABAL_CONFIG=$HOME/.cabal/config" >> "$GITHUB_ENV"
       - name: env
         run: |
           env
