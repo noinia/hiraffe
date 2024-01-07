@@ -39,7 +39,7 @@ jobs:
           ./haddock.sh
       - name: copy-to-pages
         run: |
-          cp -r haddocks pages/haddocks
+          cp -r haddocks pages
           cp haddock.txt pages/
           cp haddock_badge.json pages/
 
