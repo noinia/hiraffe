@@ -28,7 +28,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: Setup toolchain
         run: |
-          ghcup install cabal --set ${{ matrix.cabalVersion }}
+          # ghcup install cabal --set ${{ matrix.cabalVersion }}
+          ghcup install cabal -u https://github.com/haskell/cabal/releases/download/cabal-head/cabal-head-Linux-x86_64.tar.gz head
           ghcup install ghc --set ${{ matrix.compilerVersion }}
 
       - name: restore cache
