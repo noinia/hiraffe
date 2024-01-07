@@ -16,6 +16,7 @@ jobs:
             compilerVersion: 9.6.1
             setup-method: ghcup
             allow-failure: false
+            cabalVersion: 3.10.2.1
       fail-fast: false
     steps:
       - name: Set environment variables
@@ -27,7 +28,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Setup toolchain
         run: |
-          ghcup install cabal --set recommended
+          ghcup install cabal --set ${{ matrix.cabalVersion }}
           ghcup install ghc --set ${{ matrix.compilerVersion }}
 
       - name: restore cache
