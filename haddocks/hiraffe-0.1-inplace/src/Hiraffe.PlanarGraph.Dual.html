@@ -16,52 +16,53 @@
 </span><span id="line-16"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#boundaryVertices"><span class="hs-identifier">boundaryVertices</span></a></span><span>
 </span><span id="line-17"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-18"></span><span>
-</span><span id="line-19"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.html"><span class="hs-identifier">Control.Lens</span></a></span><span> </span><span class="hs-keyword">hiding</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Setter.html#.%3D"><span class="hs-operator">(.=)</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-20"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Core</span></a></span><span>
-</span><span id="line-21"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Dart</span></a></span><span>
-</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-3ec09fa1937239e1ee0add061bcf83941d530f9fdf40abc7380204fd69f3cb74/share/doc/html/src/Data.Vector.html"><span class="hs-identifier">Data.Vector</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">V</span></span><span>
-</span><span id="line-23"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">fromMaybe</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-e0202ed71092f553056cdd62278fe0243d8fd74d90d853831fdbf5ca045657ce/share/doc/html/src/Control.Lens.html"><span class="hs-identifier">Control.Lens</span></a></span><span> </span><span class="hs-keyword">hiding</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-e0202ed71092f553056cdd62278fe0243d8fd74d90d853831fdbf5ca045657ce/share/doc/html/src/Control.Lens.Setter.html#.%3D"><span class="hs-operator">(.=)</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">fromMaybe</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.html"><span class="hs-identifier">Data.Vector</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">V</span></span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Core</span></a></span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Dart</span></a></span><span>
 </span><span id="line-24"></span><span>
 </span><span id="line-25"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
 </span><span id="line-26"></span><span>
 </span><span id="line-27"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
 </span><span id="line-28"></span><span class="hs-comment">-- $setup</span><span>
-</span><span id="line-29"></span><span class="hs-comment">-- &gt;&gt;&gt; :{</span><span>
-</span><span id="line-30"></span><span class="hs-comment">-- let dart i s = Dart (Arc i) (read s)</span><span>
-</span><span id="line-31"></span><span class="hs-comment">--     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]</span><span>
-</span><span id="line-32"></span><span class="hs-comment">--     myGraph :: PlanarGraph () Primal String String String</span><span>
-</span><span id="line-33"></span><span class="hs-comment">--     myGraph = planarGraph [ [ (Dart aA Negative, &quot;a-&quot;)</span><span>
-</span><span id="line-34"></span><span class="hs-comment">--                             , (Dart aC Positive, &quot;c+&quot;)</span><span>
-</span><span id="line-35"></span><span class="hs-comment">--                             , (Dart aB Positive, &quot;b+&quot;)</span><span>
-</span><span id="line-36"></span><span class="hs-comment">--                             , (Dart aA Positive, &quot;a+&quot;)</span><span>
-</span><span id="line-37"></span><span class="hs-comment">--                             ]</span><span>
-</span><span id="line-38"></span><span class="hs-comment">--                           , [ (Dart aE Negative, &quot;e-&quot;)</span><span>
-</span><span id="line-39"></span><span class="hs-comment">--                             , (Dart aB Negative, &quot;b-&quot;)</span><span>
-</span><span id="line-40"></span><span class="hs-comment">--                             , (Dart aD Negative, &quot;d-&quot;)</span><span>
-</span><span id="line-41"></span><span class="hs-comment">--                             , (Dart aG Positive, &quot;g+&quot;)</span><span>
-</span><span id="line-42"></span><span class="hs-comment">--                             ]</span><span>
-</span><span id="line-43"></span><span class="hs-comment">--                           , [ (Dart aE Positive, &quot;e+&quot;)</span><span>
-</span><span id="line-44"></span><span class="hs-comment">--                             , (Dart aD Positive, &quot;d+&quot;)</span><span>
-</span><span id="line-45"></span><span class="hs-comment">--                             , (Dart aC Negative, &quot;c-&quot;)</span><span>
-</span><span id="line-46"></span><span class="hs-comment">--                             ]</span><span>
-</span><span id="line-47"></span><span class="hs-comment">--                           , [ (Dart aG Negative, &quot;g-&quot;)</span><span>
-</span><span id="line-48"></span><span class="hs-comment">--                             ]</span><span>
-</span><span id="line-49"></span><span class="hs-comment">--                           ] &amp; vertexData .~ V.fromList [&quot;u&quot;,&quot;v&quot;,&quot;w&quot;,&quot;x&quot;]</span><span>
-</span><span id="line-50"></span><span class="hs-comment">--                             &amp; faceData   .~ V.fromList [&quot;f_3&quot;, &quot;f_infty&quot;,&quot;f_1&quot;,&quot;f_2&quot;]</span><span>
-</span><span id="line-51"></span><span class="hs-comment">--     showWithData     :: HasDataOf s i =&gt; s -&gt; i -&gt; (i, DataOf s i)</span><span>
-</span><span id="line-52"></span><span class="hs-comment">--     showWithData g i = (i, g^.dataOf i)</span><span>
-</span><span id="line-53"></span><span class="hs-comment">-- :}</span><span>
-</span><span id="line-54"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- &gt;&gt;&gt; import Hiraffe.PlanarGraph.World</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- &gt;&gt;&gt; :{</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- let dart i s = Dart (Arc i) (read s)</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--     myGraph :: PlanarGraph () Primal String String String</span><span>
+</span><span id="line-34"></span><span class="hs-comment">--     myGraph = planarGraph [ [ (Dart aA Negative, &quot;a-&quot;)</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--                             , (Dart aC Positive, &quot;c+&quot;)</span><span>
+</span><span id="line-36"></span><span class="hs-comment">--                             , (Dart aB Positive, &quot;b+&quot;)</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--                             , (Dart aA Positive, &quot;a+&quot;)</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--                             ]</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--                           , [ (Dart aE Negative, &quot;e-&quot;)</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--                             , (Dart aB Negative, &quot;b-&quot;)</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--                             , (Dart aD Negative, &quot;d-&quot;)</span><span>
+</span><span id="line-42"></span><span class="hs-comment">--                             , (Dart aG Positive, &quot;g+&quot;)</span><span>
+</span><span id="line-43"></span><span class="hs-comment">--                             ]</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--                           , [ (Dart aE Positive, &quot;e+&quot;)</span><span>
+</span><span id="line-45"></span><span class="hs-comment">--                             , (Dart aD Positive, &quot;d+&quot;)</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--                             , (Dart aC Negative, &quot;c-&quot;)</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--                             ]</span><span>
+</span><span id="line-48"></span><span class="hs-comment">--                           , [ (Dart aG Negative, &quot;g-&quot;)</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--                             ]</span><span>
+</span><span id="line-50"></span><span class="hs-comment">--                           ] &amp; vertexData .~ V.fromList [&quot;u&quot;,&quot;v&quot;,&quot;w&quot;,&quot;x&quot;]</span><span>
+</span><span id="line-51"></span><span class="hs-comment">--                             &amp; faceData   .~ V.fromList [&quot;f_3&quot;, &quot;f_infty&quot;,&quot;f_1&quot;,&quot;f_2&quot;]</span><span>
+</span><span id="line-52"></span><span class="hs-comment">--     showWithData     :: HasDataOf s i =&gt; s -&gt; i -&gt; (i, DataOf s i)</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--     showWithData g i = (i, g^.dataOf i)</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- :}</span><span>
 </span><span id="line-55"></span><span class="hs-comment">--</span><span>
-</span><span id="line-56"></span><span class="hs-comment">-- This represents the following graph. Note that the graph is undirected, the</span><span>
-</span><span id="line-57"></span><span class="hs-comment">-- arrows are just to indicate what the Positive direction of the darts is.</span><span>
-</span><span id="line-58"></span><span class="hs-comment">--</span><span>
-</span><span id="line-59"></span><span class="hs-comment">-- ![myGraph](docs/Data/PlanarGraph/testG.png)</span><span>
-</span><span id="line-60"></span><span>
+</span><span id="line-56"></span><span class="hs-comment">--</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- This represents the following graph. Note that the graph is undirected, the</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- arrows are just to indicate what the Positive direction of the darts is.</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- ![myGraph](docs/Data/PlanarGraph/testG.png)</span><span>
 </span><span id="line-61"></span><span>
-</span><span id="line-62"></span><span class="annot"><span class="hs-comment">-- | Enumerate all faces in the planar graph</span></span><span>
-</span><span id="line-63"></span><span id="local-6989586621679167353"><span id="local-6989586621679167354"><span id="local-6989586621679167355"><span id="local-6989586621679167356"><span id="local-6989586621679167357"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#faces%27"><span class="hs-identifier hs-type">faces'</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167353"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167354"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167355"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167356"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167357"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-3ec09fa1937239e1ee0add061bcf83941d530f9fdf40abc7380204fd69f3cb74/share/doc/html/src/Data.Vector.html#Vector"><span class="hs-identifier hs-type">V.Vector</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier hs-type">FaceIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167354"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167353"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span></span></span></span></span></span><span>
-</span><span id="line-64"></span><span id="faces%27"><span class="annot"><span class="annottext">faces' :: forall {k} (s :: k) (w :: World) v e f.
+</span><span id="line-62"></span><span>
+</span><span id="line-63"></span><span class="annot"><span class="hs-comment">-- | Enumerate all faces in the planar graph</span></span><span>
+</span><span id="line-64"></span><span id="local-6989586621679172262"><span id="local-6989586621679172263"><span id="local-6989586621679172264"><span id="local-6989586621679172265"><span id="local-6989586621679172266"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#faces%27"><span class="hs-identifier hs-type">faces'</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172262"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172263"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172264"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172265"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172266"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.html#Vector"><span class="hs-identifier hs-type">V.Vector</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier hs-type">FaceIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172263"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172262"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span></span></span></span></span></span><span>
+</span><span id="line-65"></span><span id="faces%27"><span class="annot"><span class="annottext">faces' :: forall {k} (s :: k) (w :: World) v e f.
 PlanarGraph s w v e f -&gt; Vector (FaceIdIn w s)
 </span><a href="Hiraffe.PlanarGraph.Dual.html#faces%27"><span class="hs-identifier hs-var hs-var">faces'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(VertexIdIn (DualOf w) s -&gt; FaceIdIn w s)
 -&gt; Vector (VertexIdIn (DualOf w) s) -&gt; Vector (FaceIdIn w s)
@@ -90,7 +91,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
   (PlanarGraph s (DualOf w) f e v)
 -&gt; PlanarGraph s w v e f -&gt; PlanarGraph s (DualOf w) f e v
 forall s (m :: * -&gt; *) a. MonadReader s m =&gt; Getting a s a -&gt; m a
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Getter.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">Getting
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-e0202ed71092f553056cdd62278fe0243d8fd74d90d853831fdbf5ca045657ce/share/doc/html/src/Control.Lens.Getter.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">Getting
   (PlanarGraph s (DualOf w) f e v)
   (PlanarGraph s w v e f)
   (PlanarGraph s (DualOf w) f e v)
@@ -100,51 +101,57 @@ forall {k} (s :: k) (w :: World) v e f1 (f2 :: * -&gt; *).
  -&gt; f2 (PlanarGraph s (DualOf w) f1 e v))
 -&gt; PlanarGraph s w v e f1 -&gt; f2 (PlanarGraph s w v e f1)
 </span><a href="Hiraffe.PlanarGraph.Core.html#dual"><span class="hs-identifier hs-var">dual</span></a></span><span>
-</span><span id="line-65"></span><span>
-</span><span id="line-66"></span><span class="annot"><span class="hs-comment">-- | All faces with their face data.</span></span><span>
-</span><span id="line-67"></span><span id="local-6989586621679167402"><span id="local-6989586621679167403"><span id="local-6989586621679167404"><span id="local-6989586621679167405"><span id="local-6989586621679167406"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#faces"><span class="hs-identifier hs-type">faces</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167402"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167403"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167404"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167405"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167406"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-3ec09fa1937239e1ee0add061bcf83941d530f9fdf40abc7380204fd69f3cb74/share/doc/html/src/Data.Vector.html#Vector"><span class="hs-identifier hs-type">V.Vector</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier hs-type">FaceIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167403"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167402"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679167406"><span class="hs-identifier hs-type">f</span></a></span><span class="hs-special">)</span></span></span></span></span></span><span>
-</span><span id="line-68"></span><span id="faces"><span class="annot"><span class="annottext">faces :: forall {k} (s :: k) (w :: World) v e f.
+</span><span id="line-66"></span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- | All faces with their face data.</span><span>
+</span><span id="line-68"></span><span class="hs-comment">--</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- &gt;&gt;&gt; mapM_ print $ faces myGraph</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- (FaceId 0,&quot;f_3&quot;)</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- (FaceId 1,&quot;f_infty&quot;)</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- (FaceId 2,&quot;f_1&quot;)</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- (FaceId 3,&quot;f_2&quot;)</span><span>
+</span><span id="line-74"></span><span id="local-6989586621679172311"><span id="local-6989586621679172312"><span id="local-6989586621679172313"><span id="local-6989586621679172314"><span id="local-6989586621679172315"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#faces"><span class="hs-identifier hs-type">faces</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172311"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172312"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172313"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172314"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172315"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.html#Vector"><span class="hs-identifier hs-type">V.Vector</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier hs-type">FaceIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172312"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172311"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679172315"><span class="hs-identifier hs-type">f</span></a></span><span class="hs-special">)</span></span></span></span></span></span><span>
+</span><span id="line-75"></span><span id="faces"><span class="annot"><span class="annottext">faces :: forall {k} (s :: k) (w :: World) v e f.
 PlanarGraph s w v e f -&gt; Vector (FaceIdIn w s, f)
-</span><a href="Hiraffe.PlanarGraph.Dual.html#faces"><span class="hs-identifier hs-var hs-var">faces</span></a></span></span><span> </span><span id="local-6989586621679167574"><span class="annot"><span class="annottext">PlanarGraph s w v e f
-</span><a href="#local-6989586621679167574"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Vector (FaceIdIn w s) -&gt; Vector f -&gt; Vector (FaceIdIn w s, f)
+</span><a href="Hiraffe.PlanarGraph.Dual.html#faces"><span class="hs-identifier hs-var hs-var">faces</span></a></span></span><span> </span><span id="local-6989586621679172483"><span class="annot"><span class="annottext">PlanarGraph s w v e f
+</span><a href="#local-6989586621679172483"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Vector (FaceIdIn w s) -&gt; Vector f -&gt; Vector (FaceIdIn w s, f)
 forall a b. Vector a -&gt; Vector b -&gt; Vector (a, b)
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-3ec09fa1937239e1ee0add061bcf83941d530f9fdf40abc7380204fd69f3cb74/share/doc/html/src/Data.Vector.html#zip"><span class="hs-identifier hs-var">V.zip</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PlanarGraph s w v e f -&gt; Vector (FaceIdIn w s)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.html#zip"><span class="hs-identifier hs-var">V.zip</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PlanarGraph s w v e f -&gt; Vector (FaceIdIn w s)
 forall {k} (s :: k) (w :: World) v e f.
 PlanarGraph s w v e f -&gt; Vector (FaceIdIn w s)
 </span><a href="Hiraffe.PlanarGraph.Dual.html#faces%27"><span class="hs-identifier hs-var">faces'</span></a></span><span> </span><span class="annot"><span class="annottext">PlanarGraph s w v e f
-</span><a href="#local-6989586621679167574"><span class="hs-identifier hs-var">g</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PlanarGraph s w v e f
-</span><a href="#local-6989586621679167574"><span class="hs-identifier hs-var">g</span></a></span><span class="annot"><span class="annottext">PlanarGraph s w v e f
+</span><a href="#local-6989586621679172483"><span class="hs-identifier hs-var">g</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PlanarGraph s w v e f
+</span><a href="#local-6989586621679172483"><span class="hs-identifier hs-var">g</span></a></span><span class="annot"><span class="annottext">PlanarGraph s w v e f
 -&gt; Getting (Vector f) (PlanarGraph s w v e f) (Vector f)
 -&gt; Vector f
 forall s a. s -&gt; Getting a s a -&gt; a
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Getter.html#%5E."><span class="hs-operator hs-var">^.</span></a></span><span class="annot"><span class="annottext">Getting (Vector f) (PlanarGraph s w v e f) (Vector f)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-e0202ed71092f553056cdd62278fe0243d8fd74d90d853831fdbf5ca045657ce/share/doc/html/src/Control.Lens.Getter.html#%5E."><span class="hs-operator hs-var">^.</span></a></span><span class="annot"><span class="annottext">Getting (Vector f) (PlanarGraph s w v e f) (Vector f)
 forall {k} (s :: k) (w :: World) v e f1 f' (f2 :: * -&gt; *).
 Functor f2 =&gt;
 (Vector f1 -&gt; f2 (Vector f'))
 -&gt; PlanarGraph s w v e f1 -&gt; f2 (PlanarGraph s w v e f')
 </span><a href="Hiraffe.PlanarGraph.Core.html#faceData"><span class="hs-identifier hs-var">faceData</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-69"></span><span>
-</span><span id="line-70"></span><span class="hs-comment">-- | The face to the left of the dart</span><span>
-</span><span id="line-71"></span><span class="hs-comment">--</span><span>
-</span><span id="line-72"></span><span class="hs-comment">--</span><span>
-</span><span id="line-73"></span><span class="hs-comment">-- &gt;&gt;&gt; leftFace (dart 1 &quot;+1&quot;) myGraph</span><span>
-</span><span id="line-74"></span><span class="hs-comment">-- FaceId 1</span><span>
-</span><span id="line-75"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ leftFace (dart 1 &quot;+1&quot;) myGraph</span><span>
-</span><span id="line-76"></span><span class="hs-comment">-- (FaceId 1,&quot;f_infty&quot;)</span><span>
-</span><span id="line-77"></span><span class="hs-comment">-- &gt;&gt;&gt; leftFace (dart 1 &quot;-1&quot;) myGraph</span><span>
-</span><span id="line-78"></span><span class="hs-comment">-- FaceId 2</span><span>
-</span><span id="line-79"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ leftFace (dart 1 &quot;-1&quot;) myGraph</span><span>
-</span><span id="line-80"></span><span class="hs-comment">-- (FaceId 2,&quot;f_1&quot;)</span><span>
-</span><span id="line-81"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ leftFace (dart 0 &quot;+1&quot;) myGraph</span><span>
-</span><span id="line-82"></span><span class="hs-comment">-- (FaceId 0,&quot;f_3&quot;)</span><span>
-</span><span id="line-83"></span><span class="hs-comment">--</span><span>
-</span><span id="line-84"></span><span class="hs-comment">-- running time: \(O(1)\).</span><span>
-</span><span id="line-85"></span><span id="local-6989586621679167426"><span id="local-6989586621679167428"><span id="local-6989586621679167429"><span id="local-6989586621679167430"><span id="local-6989586621679167431"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#leftFace"><span class="hs-identifier hs-type">leftFace</span></a></span><span>     </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167426"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167426"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167428"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167429"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167430"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167431"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier hs-type">FaceIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167428"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167426"><span class="hs-identifier hs-type">s</span></a></span></span></span></span></span></span><span>
-</span><span id="line-86"></span><span id="leftFace"><span class="annot"><span class="annottext">leftFace :: forall {k} (s :: k) (w :: World) v e f.
+</span><span id="line-76"></span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- | The face to the left of the dart</span><span>
+</span><span id="line-78"></span><span class="hs-comment">--</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- &gt;&gt;&gt; leftFace (dart 1 &quot;+1&quot;) myGraph</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- FaceId 1</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ leftFace (dart 1 &quot;+1&quot;) myGraph</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- (FaceId 1,&quot;f_infty&quot;)</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- &gt;&gt;&gt; leftFace (dart 1 &quot;-1&quot;) myGraph</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- FaceId 2</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ leftFace (dart 1 &quot;-1&quot;) myGraph</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- (FaceId 2,&quot;f_1&quot;)</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ leftFace (dart 0 &quot;+1&quot;) myGraph</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- (FaceId 0,&quot;f_3&quot;)</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- running time: \(O(1)\).</span><span>
+</span><span id="line-92"></span><span id="local-6989586621679172335"><span id="local-6989586621679172337"><span id="local-6989586621679172338"><span id="local-6989586621679172339"><span id="local-6989586621679172340"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#leftFace"><span class="hs-identifier hs-type">leftFace</span></a></span><span>     </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172335"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172335"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172337"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172338"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172339"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172340"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier hs-type">FaceIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172337"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172335"><span class="hs-identifier hs-type">s</span></a></span></span></span></span></span></span><span>
+</span><span id="line-93"></span><span id="leftFace"><span class="annot"><span class="annottext">leftFace :: forall {k} (s :: k) (w :: World) v e f.
 Dart s -&gt; PlanarGraph s w v e f -&gt; FaceIdIn w s
-</span><a href="Hiraffe.PlanarGraph.Dual.html#leftFace"><span class="hs-identifier hs-var hs-var">leftFace</span></a></span></span><span> </span><span id="local-6989586621679167587"><span class="annot"><span class="annottext">Dart s
-</span><a href="#local-6989586621679167587"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span id="local-6989586621679167588"><span class="annot"><span class="annottext">PlanarGraph s w v e f
-</span><a href="#local-6989586621679167588"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">VertexIdIn (DualOf w) s -&gt; FaceIdIn w s
+</span><a href="Hiraffe.PlanarGraph.Dual.html#leftFace"><span class="hs-identifier hs-var hs-var">leftFace</span></a></span></span><span> </span><span id="local-6989586621679172496"><span class="annot"><span class="annottext">Dart s
+</span><a href="#local-6989586621679172496"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span id="local-6989586621679172497"><span class="annot"><span class="annottext">PlanarGraph s w v e f
+</span><a href="#local-6989586621679172497"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">VertexIdIn (DualOf w) s -&gt; FaceIdIn w s
 forall {k} (w :: World) (s :: k).
 VertexIdIn (DualOf w) s -&gt; FaceIdIn w s
 </span><a href="Hiraffe.PlanarGraph.Core.html#FaceId"><span class="hs-identifier hs-var">FaceId</span></a></span><span> </span><span class="annot"><span class="annottext">(VertexIdIn (DualOf w) s -&gt; FaceIdIn w s)
@@ -156,7 +163,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall {k} (s :: k) (w :: World) v e f.
 DartId s -&gt; PlanarGraph s w v e f -&gt; VertexIdIn w s
 </span><a href="Hiraffe.PlanarGraph.Core.html#headOf"><span class="hs-identifier hs-var">headOf</span></a></span><span> </span><span class="annot"><span class="annottext">Dart s
-</span><a href="#local-6989586621679167587"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">(PlanarGraph s (DualOf w) f e v -&gt; FaceIdIn w s)
+</span><a href="#local-6989586621679172496"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">(PlanarGraph s (DualOf w) f e v -&gt; FaceIdIn w s)
 -&gt; PlanarGraph s (DualOf w) f e v -&gt; FaceIdIn w s
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Getting
@@ -165,7 +172,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
   (PlanarGraph s (DualOf w) f e v)
 -&gt; PlanarGraph s w v e f -&gt; PlanarGraph s (DualOf w) f e v
 forall s (m :: * -&gt; *) a. MonadReader s m =&gt; Getting a s a -&gt; m a
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Getter.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">Getting
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-e0202ed71092f553056cdd62278fe0243d8fd74d90d853831fdbf5ca045657ce/share/doc/html/src/Control.Lens.Getter.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">Getting
   (PlanarGraph s (DualOf w) f e v)
   (PlanarGraph s w v e f)
   (PlanarGraph s (DualOf w) f e v)
@@ -175,30 +182,30 @@ forall {k} (s :: k) (w :: World) v e f1 (f2 :: * -&gt; *).
  -&gt; f2 (PlanarGraph s (DualOf w) f1 e v))
 -&gt; PlanarGraph s w v e f1 -&gt; f2 (PlanarGraph s w v e f1)
 </span><a href="Hiraffe.PlanarGraph.Core.html#dual"><span class="hs-identifier hs-var">dual</span></a></span><span> </span><span class="annot"><span class="annottext">PlanarGraph s w v e f
-</span><a href="#local-6989586621679167588"><span class="hs-identifier hs-var">g</span></a></span><span>
-</span><span id="line-87"></span><span>
-</span><span id="line-88"></span><span>
-</span><span id="line-89"></span><span class="hs-comment">-- | The face to the right of the dart</span><span>
-</span><span id="line-90"></span><span class="hs-comment">--</span><span>
-</span><span id="line-91"></span><span class="hs-comment">--</span><span>
-</span><span id="line-92"></span><span class="hs-comment">-- &gt;&gt;&gt; rightFace (dart 1 &quot;+1&quot;) myGraph</span><span>
-</span><span id="line-93"></span><span class="hs-comment">-- FaceId 2</span><span>
-</span><span id="line-94"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ rightFace (dart 1 &quot;+1&quot;) myGraph</span><span>
-</span><span id="line-95"></span><span class="hs-comment">-- (FaceId 2,&quot;f_1&quot;)</span><span>
-</span><span id="line-96"></span><span class="hs-comment">-- &gt;&gt;&gt; rightFace (dart 1 &quot;-1&quot;) myGraph</span><span>
-</span><span id="line-97"></span><span class="hs-comment">-- FaceId 1</span><span>
-</span><span id="line-98"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ rightFace (dart 1 &quot;-1&quot;) myGraph</span><span>
-</span><span id="line-99"></span><span class="hs-comment">-- (FaceId 1,&quot;f_infty&quot;)</span><span>
-</span><span id="line-100"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ rightFace (dart 0 &quot;+1&quot;) myGraph</span><span>
-</span><span id="line-101"></span><span class="hs-comment">-- (FaceId 1,&quot;f_infty&quot;)</span><span>
-</span><span id="line-102"></span><span class="hs-comment">--</span><span>
-</span><span id="line-103"></span><span class="hs-comment">-- running time: \(O(1)\).</span><span>
-</span><span id="line-104"></span><span id="local-6989586621679167590"><span id="local-6989586621679167591"><span id="local-6989586621679167592"><span id="local-6989586621679167593"><span id="local-6989586621679167594"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#rightFace"><span class="hs-identifier hs-type">rightFace</span></a></span><span>     </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167590"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167590"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167591"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167592"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167593"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167594"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier hs-type">FaceIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167591"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167590"><span class="hs-identifier hs-type">s</span></a></span></span></span></span></span></span><span>
-</span><span id="line-105"></span><span id="rightFace"><span class="annot"><span class="annottext">rightFace :: forall {k} (s :: k) (w :: World) v e f.
+</span><a href="#local-6989586621679172497"><span class="hs-identifier hs-var">g</span></a></span><span>
+</span><span id="line-94"></span><span>
+</span><span id="line-95"></span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- | The face to the right of the dart</span><span>
+</span><span id="line-97"></span><span class="hs-comment">--</span><span>
+</span><span id="line-98"></span><span class="hs-comment">--</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- &gt;&gt;&gt; rightFace (dart 1 &quot;+1&quot;) myGraph</span><span>
+</span><span id="line-100"></span><span class="hs-comment">-- FaceId 2</span><span>
+</span><span id="line-101"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ rightFace (dart 1 &quot;+1&quot;) myGraph</span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- (FaceId 2,&quot;f_1&quot;)</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- &gt;&gt;&gt; rightFace (dart 1 &quot;-1&quot;) myGraph</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- FaceId 1</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ rightFace (dart 1 &quot;-1&quot;) myGraph</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- (FaceId 1,&quot;f_infty&quot;)</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ rightFace (dart 0 &quot;+1&quot;) myGraph</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- (FaceId 1,&quot;f_infty&quot;)</span><span>
+</span><span id="line-109"></span><span class="hs-comment">--</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- running time: \(O(1)\).</span><span>
+</span><span id="line-111"></span><span id="local-6989586621679172499"><span id="local-6989586621679172500"><span id="local-6989586621679172501"><span id="local-6989586621679172502"><span id="local-6989586621679172503"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#rightFace"><span class="hs-identifier hs-type">rightFace</span></a></span><span>     </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172499"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172499"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172500"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172501"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172502"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172503"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier hs-type">FaceIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172500"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172499"><span class="hs-identifier hs-type">s</span></a></span></span></span></span></span></span><span>
+</span><span id="line-112"></span><span id="rightFace"><span class="annot"><span class="annottext">rightFace :: forall {k} (s :: k) (w :: World) v e f.
 Dart s -&gt; PlanarGraph s w v e f -&gt; FaceIdIn w s
-</span><a href="Hiraffe.PlanarGraph.Dual.html#rightFace"><span class="hs-identifier hs-var hs-var">rightFace</span></a></span></span><span> </span><span id="local-6989586621679167601"><span class="annot"><span class="annottext">Dart s
-</span><a href="#local-6989586621679167601"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span id="local-6989586621679167602"><span class="annot"><span class="annottext">PlanarGraph s w v e f
-</span><a href="#local-6989586621679167602"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">VertexIdIn (DualOf w) s -&gt; FaceIdIn w s
+</span><a href="Hiraffe.PlanarGraph.Dual.html#rightFace"><span class="hs-identifier hs-var hs-var">rightFace</span></a></span></span><span> </span><span id="local-6989586621679172510"><span class="annot"><span class="annottext">Dart s
+</span><a href="#local-6989586621679172510"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span id="local-6989586621679172511"><span class="annot"><span class="annottext">PlanarGraph s w v e f
+</span><a href="#local-6989586621679172511"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">VertexIdIn (DualOf w) s -&gt; FaceIdIn w s
 forall {k} (w :: World) (s :: k).
 VertexIdIn (DualOf w) s -&gt; FaceIdIn w s
 </span><a href="Hiraffe.PlanarGraph.Core.html#FaceId"><span class="hs-identifier hs-var">FaceId</span></a></span><span> </span><span class="annot"><span class="annottext">(VertexIdIn (DualOf w) s -&gt; FaceIdIn w s)
@@ -210,7 +217,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall {k} (s :: k) (w :: World) v e f.
 DartId s -&gt; PlanarGraph s w v e f -&gt; VertexIdIn w s
 </span><a href="Hiraffe.PlanarGraph.Core.html#tailOf"><span class="hs-identifier hs-var">tailOf</span></a></span><span> </span><span class="annot"><span class="annottext">Dart s
-</span><a href="#local-6989586621679167601"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">(PlanarGraph s (DualOf w) f e v -&gt; FaceIdIn w s)
+</span><a href="#local-6989586621679172510"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">(PlanarGraph s (DualOf w) f e v -&gt; FaceIdIn w s)
 -&gt; PlanarGraph s (DualOf w) f e v -&gt; FaceIdIn w s
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Getting
@@ -219,7 +226,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
   (PlanarGraph s (DualOf w) f e v)
 -&gt; PlanarGraph s w v e f -&gt; PlanarGraph s (DualOf w) f e v
 forall s (m :: * -&gt; *) a. MonadReader s m =&gt; Getting a s a -&gt; m a
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Getter.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">Getting
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-e0202ed71092f553056cdd62278fe0243d8fd74d90d853831fdbf5ca045657ce/share/doc/html/src/Control.Lens.Getter.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">Getting
   (PlanarGraph s (DualOf w) f e v)
   (PlanarGraph s w v e f)
   (PlanarGraph s (DualOf w) f e v)
@@ -229,69 +236,30 @@ forall {k} (s :: k) (w :: World) v e f1 (f2 :: * -&gt; *).
  -&gt; f2 (PlanarGraph s (DualOf w) f1 e v))
 -&gt; PlanarGraph s w v e f1 -&gt; f2 (PlanarGraph s w v e f1)
 </span><a href="Hiraffe.PlanarGraph.Core.html#dual"><span class="hs-identifier hs-var">dual</span></a></span><span> </span><span class="annot"><span class="annottext">PlanarGraph s w v e f
-</span><a href="#local-6989586621679167602"><span class="hs-identifier hs-var">g</span></a></span><span>
-</span><span id="line-106"></span><span>
-</span><span id="line-107"></span><span>
-</span><span id="line-108"></span><span class="hs-comment">-- | Get the next edge (in clockwise order) along the face that is to</span><span>
-</span><span id="line-109"></span><span class="hs-comment">-- the right of this dart.</span><span>
-</span><span id="line-110"></span><span class="hs-comment">--</span><span>
-</span><span id="line-111"></span><span class="hs-comment">-- &gt;&gt; showWithData myGraph $ nextEdge (dart 1 &quot;+1&quot;) myGraph</span><span>
-</span><span id="line-112"></span><span class="hs-comment">-- (Dart (Arc 3) -1,&quot;d-&quot;)</span><span>
-</span><span id="line-113"></span><span class="hs-comment">-- &gt;&gt; showWithData myGraph $ nextEdge (dart 2 &quot;+1&quot;) myGraph</span><span>
-</span><span id="line-114"></span><span class="hs-comment">-- (Dart (Arc 4) +1,&quot;e+&quot;)</span><span>
-</span><span id="line-115"></span><span class="hs-comment">--</span><span>
-</span><span id="line-116"></span><span class="hs-comment">-- running time: \(O(1)\).</span><span>
-</span><span id="line-117"></span><span id="local-6989586621679167458"><span id="local-6989586621679167459"><span id="local-6989586621679167460"><span id="local-6989586621679167461"><span id="local-6989586621679167462"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#nextEdge"><span class="hs-identifier hs-type">nextEdge</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167458"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167458"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167459"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167460"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167461"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167462"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167458"><span class="hs-identifier hs-type">s</span></a></span></span></span></span></span></span><span>
-</span><span id="line-118"></span><span id="nextEdge"><span class="annot"><span class="annottext">nextEdge :: forall {k} (s :: k) (w :: World) v e f.
+</span><a href="#local-6989586621679172511"><span class="hs-identifier hs-var">g</span></a></span><span>
+</span><span id="line-113"></span><span>
+</span><span id="line-114"></span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- | Get the next edge in order along the face (so ccw for internal faces, and cw for</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- external faces ) that is to the left of this dart.</span><span>
+</span><span id="line-117"></span><span class="hs-comment">--</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- &gt;&gt; showWithData myGraph $ nextEdge (dart 1 &quot;+1&quot;) myGraph</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- (Dart (Arc 4) -1,&quot;e-&quot;)</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- &gt;&gt; showWithData myGraph $ nextEdge (dart 2 &quot;+1&quot;) myGraph</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- (Dart (Arc 3) +1,&quot;d+&quot;)</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- &gt;&gt; showWithData myGraph $ nextEdge (dart 3 &quot;-1&quot;) myGraph</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- (Dart (Arc 4) +1,&quot;e+&quot;)</span><span>
+</span><span id="line-124"></span><span class="hs-comment">--</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- running time: \(O(1)\).</span><span>
+</span><span id="line-126"></span><span>
+</span><span id="line-127"></span><span id="local-6989586621679172367"><span id="local-6989586621679172368"><span id="local-6989586621679172369"><span id="local-6989586621679172370"><span id="local-6989586621679172371"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#nextEdge"><span class="hs-identifier hs-type">nextEdge</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172367"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172367"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172368"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172369"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172370"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172371"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172367"><span class="hs-identifier hs-type">s</span></a></span></span></span></span></span></span><span>
+</span><span id="line-128"></span><span id="nextEdge"><span class="annot"><span class="annottext">nextEdge :: forall {k} (s :: k) (w :: World) v e f.
 Dart s -&gt; PlanarGraph s w v e f -&gt; Dart s
-</span><a href="Hiraffe.PlanarGraph.Dual.html#nextEdge"><span class="hs-identifier hs-var hs-var">nextEdge</span></a></span></span><span> </span><span id="local-6989586621679167607"><span class="annot"><span class="annottext">Dart s
-</span><a href="#local-6989586621679167607"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Dart s -&gt; PlanarGraph s (DualOf w) f e v -&gt; Dart s
-forall {k} (s :: k) (w :: World) v e f.
-Dart s -&gt; PlanarGraph s w v e f -&gt; Dart s
-</span><a href="Hiraffe.PlanarGraph.Core.html#nextIncidentEdgeFrom"><span class="hs-identifier hs-var">nextIncidentEdgeFrom</span></a></span><span> </span><span class="annot"><span class="annottext">Dart s
-</span><a href="#local-6989586621679167607"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">(PlanarGraph s (DualOf w) f e v -&gt; Dart s)
--&gt; (PlanarGraph s w v e f -&gt; PlanarGraph s (DualOf w) f e v)
--&gt; PlanarGraph s w v e f
--&gt; Dart s
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Getting
-  (PlanarGraph s (DualOf w) f e v)
-  (PlanarGraph s w v e f)
-  (PlanarGraph s (DualOf w) f e v)
--&gt; PlanarGraph s w v e f -&gt; PlanarGraph s (DualOf w) f e v
-forall s (m :: * -&gt; *) a. MonadReader s m =&gt; Getting a s a -&gt; m a
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Getter.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">Getting
-  (PlanarGraph s (DualOf w) f e v)
-  (PlanarGraph s w v e f)
-  (PlanarGraph s (DualOf w) f e v)
-forall {k} (s :: k) (w :: World) v e f1 (f2 :: * -&gt; *).
-(Contravariant f2, Functor f2) =&gt;
-(PlanarGraph s (DualOf w) f1 e v
- -&gt; f2 (PlanarGraph s (DualOf w) f1 e v))
--&gt; PlanarGraph s w v e f1 -&gt; f2 (PlanarGraph s w v e f1)
-</span><a href="Hiraffe.PlanarGraph.Core.html#dual"><span class="hs-identifier hs-var">dual</span></a></span><span>
-</span><span id="line-119"></span><span>  </span><span class="hs-comment">-- prevIncidentEdge (twin d) (view dual g)</span><span>
-</span><span id="line-120"></span><span>  </span><span class="hs-comment">-- where</span><span>
-</span><span id="line-121"></span><span>  </span><span class="hs-comment">--   f = rightFace d g</span><span>
-</span><span id="line-122"></span><span>
-</span><span id="line-123"></span><span class="hs-comment">-- | Get the previous edge (in clockwise order) along the face that is</span><span>
-</span><span id="line-124"></span><span class="hs-comment">-- to the right of this dart.</span><span>
-</span><span id="line-125"></span><span class="hs-comment">--</span><span>
-</span><span id="line-126"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ prevEdge (dart 1 &quot;+1&quot;) myGraph</span><span>
-</span><span id="line-127"></span><span class="hs-comment">-- (Dart (Arc 2) -1,&quot;c-&quot;)</span><span>
-</span><span id="line-128"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ prevEdge (dart 3 &quot;-1&quot;) myGraph</span><span>
-</span><span id="line-129"></span><span class="hs-comment">-- (Dart (Arc 1) +1,&quot;b+&quot;)</span><span>
-</span><span id="line-130"></span><span class="hs-comment">--</span><span>
-</span><span id="line-131"></span><span class="hs-comment">-- running time: \(O(1)\).</span><span>
-</span><span id="line-132"></span><span id="local-6989586621679167609"><span id="local-6989586621679167610"><span id="local-6989586621679167611"><span id="local-6989586621679167612"><span id="local-6989586621679167613"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#prevEdge"><span class="hs-identifier hs-type">prevEdge</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167609"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167609"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167610"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167611"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167612"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167613"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167609"><span class="hs-identifier hs-type">s</span></a></span></span></span></span></span></span><span>
-</span><span id="line-133"></span><span id="prevEdge"><span class="annot"><span class="annottext">prevEdge :: forall {k} (s :: k) (w :: World) v e f.
-Dart s -&gt; PlanarGraph s w v e f -&gt; Dart s
-</span><a href="Hiraffe.PlanarGraph.Dual.html#prevEdge"><span class="hs-identifier hs-var hs-var">prevEdge</span></a></span></span><span> </span><span id="local-6989586621679167617"><span class="annot"><span class="annottext">Dart s
-</span><a href="#local-6989586621679167617"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Dart s -&gt; PlanarGraph s (DualOf w) f e v -&gt; Dart s
+</span><a href="Hiraffe.PlanarGraph.Dual.html#nextEdge"><span class="hs-identifier hs-var hs-var">nextEdge</span></a></span></span><span> </span><span id="local-6989586621679172516"><span class="annot"><span class="annottext">Dart s
+</span><a href="#local-6989586621679172516"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Dart s -&gt; PlanarGraph s (DualOf w) f e v -&gt; Dart s
 forall {k} (s :: k) (w :: World) v e f.
 Dart s -&gt; PlanarGraph s w v e f -&gt; Dart s
 </span><a href="Hiraffe.PlanarGraph.Core.html#prevIncidentEdgeFrom"><span class="hs-identifier hs-var">prevIncidentEdgeFrom</span></a></span><span> </span><span class="annot"><span class="annottext">Dart s
-</span><a href="#local-6989586621679167617"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">(PlanarGraph s (DualOf w) f e v -&gt; Dart s)
+</span><a href="#local-6989586621679172516"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">(PlanarGraph s (DualOf w) f e v -&gt; Dart s)
 -&gt; (PlanarGraph s w v e f -&gt; PlanarGraph s (DualOf w) f e v)
 -&gt; PlanarGraph s w v e f
 -&gt; Dart s
@@ -302,7 +270,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
   (PlanarGraph s (DualOf w) f e v)
 -&gt; PlanarGraph s w v e f -&gt; PlanarGraph s (DualOf w) f e v
 forall s (m :: * -&gt; *) a. MonadReader s m =&gt; Getting a s a -&gt; m a
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Getter.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">Getting
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-e0202ed71092f553056cdd62278fe0243d8fd74d90d853831fdbf5ca045657ce/share/doc/html/src/Control.Lens.Getter.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">Getting
   (PlanarGraph s (DualOf w) f e v)
   (PlanarGraph s w v e f)
   (PlanarGraph s (DualOf w) f e v)
@@ -312,23 +280,62 @@ forall {k} (s :: k) (w :: World) v e f1 (f2 :: * -&gt; *).
  -&gt; f2 (PlanarGraph s (DualOf w) f1 e v))
 -&gt; PlanarGraph s w v e f1 -&gt; f2 (PlanarGraph s w v e f1)
 </span><a href="Hiraffe.PlanarGraph.Core.html#dual"><span class="hs-identifier hs-var">dual</span></a></span><span>
-</span><span id="line-134"></span><span>
-</span><span id="line-135"></span><span class="hs-comment">-- | Gets a dart bounding this face. I.e. a dart d such that the face lies to</span><span>
-</span><span id="line-136"></span><span class="hs-comment">-- the right of the dart.</span><span>
+</span><span id="line-129"></span><span>
+</span><span id="line-130"></span><span class="hs-comment">-- | Get the previous edge in order along the face (so ccw for internal faces, and cw</span><span>
+</span><span id="line-131"></span><span class="hs-comment">-- for external faces ) that is to the left of this dart.</span><span>
+</span><span id="line-132"></span><span class="hs-comment">--</span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ prevEdge (dart 2 &quot;-1&quot;) myGraph</span><span>
+</span><span id="line-134"></span><span class="hs-comment">-- (Dart (Arc 1) -1,&quot;b-&quot;)</span><span>
+</span><span id="line-135"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ prevEdge (dart 1 &quot;+1&quot;) myGraph</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- (Dart (Arc 0) -1,&quot;a-&quot;)</span><span>
 </span><span id="line-137"></span><span class="hs-comment">--</span><span>
-</span><span id="line-138"></span><span class="hs-comment">-- &gt;&gt;&gt; boundaryDart (FaceId $ VertexId 2) myGraph</span><span>
-</span><span id="line-139"></span><span class="hs-comment">-- Dart (Arc 1) +1</span><span>
-</span><span id="line-140"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ boundaryDart (FaceId $ VertexId 2) myGraph</span><span>
-</span><span id="line-141"></span><span class="hs-comment">-- (Dart (Arc 1) +1,&quot;b+&quot;)</span><span>
-</span><span id="line-142"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ boundaryDart (FaceId $ VertexId 1) myGraph</span><span>
-</span><span id="line-143"></span><span class="hs-comment">-- (Dart (Arc 2) +1,&quot;c+&quot;)</span><span>
-</span><span id="line-144"></span><span id="local-6989586621679167476"><span id="local-6989586621679167477"><span id="local-6989586621679167478"><span id="local-6989586621679167479"><span id="local-6989586621679167480"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#boundaryDart"><span class="hs-identifier hs-type">boundaryDart</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier hs-type">FaceIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167476"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167477"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167477"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167476"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167478"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167479"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167480"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167477"><span class="hs-identifier hs-type">s</span></a></span></span></span></span></span></span><span>
-</span><span id="line-145"></span><span id="boundaryDart"><span class="annot"><span class="annottext">boundaryDart :: forall {k} (w :: World) (s :: k) v e f.
+</span><span id="line-138"></span><span class="hs-comment">-- running time: \(O(1)\).</span><span>
+</span><span id="line-139"></span><span id="local-6989586621679172518"><span id="local-6989586621679172519"><span id="local-6989586621679172520"><span id="local-6989586621679172521"><span id="local-6989586621679172522"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#prevEdge"><span class="hs-identifier hs-type">prevEdge</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172518"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172518"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172519"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172520"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172521"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172522"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172518"><span class="hs-identifier hs-type">s</span></a></span></span></span></span></span></span><span>
+</span><span id="line-140"></span><span id="prevEdge"><span class="annot"><span class="annottext">prevEdge :: forall {k} (s :: k) (w :: World) v e f.
+Dart s -&gt; PlanarGraph s w v e f -&gt; Dart s
+</span><a href="Hiraffe.PlanarGraph.Dual.html#prevEdge"><span class="hs-identifier hs-var hs-var">prevEdge</span></a></span></span><span> </span><span id="local-6989586621679172526"><span class="annot"><span class="annottext">Dart s
+</span><a href="#local-6989586621679172526"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Dart s -&gt; PlanarGraph s (DualOf w) f e v -&gt; Dart s
+forall {k} (s :: k) (w :: World) v e f.
+Dart s -&gt; PlanarGraph s w v e f -&gt; Dart s
+</span><a href="Hiraffe.PlanarGraph.Core.html#nextIncidentEdgeFrom"><span class="hs-identifier hs-var">nextIncidentEdgeFrom</span></a></span><span> </span><span class="annot"><span class="annottext">Dart s
+</span><a href="#local-6989586621679172526"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">(PlanarGraph s (DualOf w) f e v -&gt; Dart s)
+-&gt; (PlanarGraph s w v e f -&gt; PlanarGraph s (DualOf w) f e v)
+-&gt; PlanarGraph s w v e f
+-&gt; Dart s
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Getting
+  (PlanarGraph s (DualOf w) f e v)
+  (PlanarGraph s w v e f)
+  (PlanarGraph s (DualOf w) f e v)
+-&gt; PlanarGraph s w v e f -&gt; PlanarGraph s (DualOf w) f e v
+forall s (m :: * -&gt; *) a. MonadReader s m =&gt; Getting a s a -&gt; m a
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-e0202ed71092f553056cdd62278fe0243d8fd74d90d853831fdbf5ca045657ce/share/doc/html/src/Control.Lens.Getter.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">Getting
+  (PlanarGraph s (DualOf w) f e v)
+  (PlanarGraph s w v e f)
+  (PlanarGraph s (DualOf w) f e v)
+forall {k} (s :: k) (w :: World) v e f1 (f2 :: * -&gt; *).
+(Contravariant f2, Functor f2) =&gt;
+(PlanarGraph s (DualOf w) f1 e v
+ -&gt; f2 (PlanarGraph s (DualOf w) f1 e v))
+-&gt; PlanarGraph s w v e f1 -&gt; f2 (PlanarGraph s w v e f1)
+</span><a href="Hiraffe.PlanarGraph.Core.html#dual"><span class="hs-identifier hs-var">dual</span></a></span><span>
+</span><span id="line-141"></span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- | Gets a dart bounding this face. I.e. a dart d such that the face lies to</span><span>
+</span><span id="line-143"></span><span class="hs-comment">-- the left of the dart.</span><span>
+</span><span id="line-144"></span><span class="hs-comment">--</span><span>
+</span><span id="line-145"></span><span class="hs-comment">-- &gt;&gt;&gt; boundaryDart (FaceId $ VertexId 2) myGraph</span><span>
+</span><span id="line-146"></span><span class="hs-comment">-- Dart (Arc 1) +1</span><span>
+</span><span id="line-147"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ boundaryDart (FaceId $ VertexId 2) myGraph</span><span>
+</span><span id="line-148"></span><span class="hs-comment">-- (Dart (Arc 1) +1,&quot;b+&quot;)</span><span>
+</span><span id="line-149"></span><span class="hs-comment">-- &gt;&gt;&gt; showWithData myGraph $ boundaryDart (FaceId $ VertexId 1) myGraph</span><span>
+</span><span id="line-150"></span><span class="hs-comment">-- (Dart (Arc 2) +1,&quot;c+&quot;)</span><span>
+</span><span id="line-151"></span><span id="local-6989586621679172385"><span id="local-6989586621679172386"><span id="local-6989586621679172387"><span id="local-6989586621679172388"><span id="local-6989586621679172389"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#boundaryDart"><span class="hs-identifier hs-type">boundaryDart</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier hs-type">FaceIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172385"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172386"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172386"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172385"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172387"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172388"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172389"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172386"><span class="hs-identifier hs-type">s</span></a></span></span></span></span></span></span><span>
+</span><span id="line-152"></span><span id="boundaryDart"><span class="annot"><span class="annottext">boundaryDart :: forall {k} (w :: World) (s :: k) v e f.
 FaceIdIn w s -&gt; PlanarGraph s w v e f -&gt; Dart s
-</span><a href="Hiraffe.PlanarGraph.Dual.html#boundaryDart"><span class="hs-identifier hs-var hs-var">boundaryDart</span></a></span></span><span> </span><span id="local-6989586621679167619"><span class="annot"><span class="annottext">FaceIdIn w s
-</span><a href="#local-6989586621679167619"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Vector (Dart s) -&gt; Dart s
+</span><a href="Hiraffe.PlanarGraph.Dual.html#boundaryDart"><span class="hs-identifier hs-var hs-var">boundaryDart</span></a></span></span><span> </span><span id="local-6989586621679172528"><span class="annot"><span class="annottext">FaceIdIn w s
+</span><a href="#local-6989586621679172528"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Vector (Dart s) -&gt; Dart s
 forall a. Vector a -&gt; a
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-3ec09fa1937239e1ee0add061bcf83941d530f9fdf40abc7380204fd69f3cb74/share/doc/html/src/Data.Vector.html#head"><span class="hs-identifier hs-var">V.head</span></a></span><span> </span><span class="annot"><span class="annottext">(Vector (Dart s) -&gt; Dart s)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.html#head"><span class="hs-identifier hs-var">V.head</span></a></span><span> </span><span class="annot"><span class="annottext">(Vector (Dart s) -&gt; Dart s)
 -&gt; (PlanarGraph s w v e f -&gt; Vector (Dart s))
 -&gt; PlanarGraph s w v e f
 -&gt; Dart s
@@ -337,38 +344,37 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall {k} (w :: World) (s :: k) v e f.
 FaceIdIn w s -&gt; PlanarGraph s w v e f -&gt; Vector (Dart s)
 </span><a href="Hiraffe.PlanarGraph.Dual.html#boundary"><span class="hs-identifier hs-var">boundary</span></a></span><span> </span><span class="annot"><span class="annottext">FaceIdIn w s
-</span><a href="#local-6989586621679167619"><span class="hs-identifier hs-var">f</span></a></span><span>
-</span><span id="line-146"></span><span>
-</span><span id="line-147"></span><span class="hs-comment">-- | The darts bounding this face. The darts are reported in order</span><span>
-</span><span id="line-148"></span><span class="hs-comment">-- along the face. This means that for internal faces the darts are</span><span>
-</span><span id="line-149"></span><span class="hs-comment">-- reported in *clockwise* order along the boundary, whereas for the</span><span>
-</span><span id="line-150"></span><span class="hs-comment">-- outer face the darts are reported in counter clockwise order.</span><span>
-</span><span id="line-151"></span><span class="hs-comment">--</span><span>
-</span><span id="line-152"></span><span class="hs-comment">-- &gt;&gt;&gt; boundary (FaceId $ VertexId 2) myGraph</span><span>
-</span><span id="line-153"></span><span class="hs-comment">-- [Dart (Arc 1) +1,Dart (Arc 3) -1,Dart (Arc 2) -1]</span><span>
-</span><span id="line-154"></span><span class="hs-comment">-- &gt;&gt;&gt; mapM_ (print . showWithData myGraph) $ boundary (FaceId $ VertexId 2) myGraph</span><span>
-</span><span id="line-155"></span><span class="hs-comment">-- (Dart (Arc 1) +1,&quot;b+&quot;)</span><span>
-</span><span id="line-156"></span><span class="hs-comment">-- (Dart (Arc 3) -1,&quot;d-&quot;)</span><span>
-</span><span id="line-157"></span><span class="hs-comment">-- (Dart (Arc 2) -1,&quot;c-&quot;)</span><span>
-</span><span id="line-158"></span><span class="hs-comment">-- &gt;&gt;&gt; boundary (FaceId $ VertexId 1) myGraph</span><span>
-</span><span id="line-159"></span><span class="hs-comment">-- [Dart (Arc 2) +1,Dart (Arc 4) +1,Dart (Arc 1) -1,Dart (Arc 0) +1]</span><span>
-</span><span id="line-160"></span><span class="hs-comment">-- &gt;&gt;&gt; mapM_ (print . showWithData myGraph) $ boundary (FaceId $ VertexId 1) myGraph</span><span>
-</span><span id="line-161"></span><span class="hs-comment">-- (Dart (Arc 2) +1,&quot;c+&quot;)</span><span>
-</span><span id="line-162"></span><span class="hs-comment">-- (Dart (Arc 4) +1,&quot;e+&quot;)</span><span>
+</span><a href="#local-6989586621679172528"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-153"></span><span>
+</span><span id="line-154"></span><span class="hs-comment">-- | The darts are reported in order along the face. This means that for internal faces</span><span>
+</span><span id="line-155"></span><span class="hs-comment">-- the darts are reported in *counter clockwise* order along the boundary, whereas for the</span><span>
+</span><span id="line-156"></span><span class="hs-comment">-- outer face the darts are reported in clockwise order.</span><span>
+</span><span id="line-157"></span><span class="hs-comment">--</span><span>
+</span><span id="line-158"></span><span class="hs-comment">-- &gt;&gt;&gt; boundary (FaceId $ VertexId 2) myGraph</span><span>
+</span><span id="line-159"></span><span class="hs-comment">--</span><span>
+</span><span id="line-160"></span><span class="hs-comment">-- &gt;&gt;&gt; mapM_ (print . showWithData myGraph) $ boundary (FaceId $ VertexId 2) myGraph</span><span>
+</span><span id="line-161"></span><span class="hs-comment">-- (Dart (Arc 2) -1,&quot;c-&quot;)</span><span>
+</span><span id="line-162"></span><span class="hs-comment">-- (Dart (Arc 3) +1,&quot;d+&quot;)</span><span>
 </span><span id="line-163"></span><span class="hs-comment">-- (Dart (Arc 1) -1,&quot;b-&quot;)</span><span>
-</span><span id="line-164"></span><span class="hs-comment">-- (Dart (Arc 0) +1,&quot;a+&quot;)</span><span>
-</span><span id="line-165"></span><span class="hs-comment">--</span><span>
-</span><span id="line-166"></span><span class="hs-comment">-- running time: \(O(k)\), where \(k\) is the output size.</span><span>
-</span><span id="line-167"></span><span id="local-6989586621679167489"><span id="local-6989586621679167490"><span id="local-6989586621679167491"><span id="local-6989586621679167492"><span id="local-6989586621679167493"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#boundary"><span class="hs-identifier hs-type">boundary</span></a></span><span>            </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier hs-type">FaceIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167489"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167490"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167490"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167489"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167491"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167492"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167493"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-3ec09fa1937239e1ee0add061bcf83941d530f9fdf40abc7380204fd69f3cb74/share/doc/html/src/Data.Vector.html#Vector"><span class="hs-identifier hs-type">V.Vector</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167490"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span></span></span></span></span></span><span>
-</span><span id="line-168"></span><span id="boundary"><span class="annot"><span class="annottext">boundary :: forall {k} (w :: World) (s :: k) v e f.
+</span><span id="line-164"></span><span class="hs-comment">-- &gt;&gt;&gt; boundary (FaceId $ VertexId 1) myGraph</span><span>
+</span><span id="line-165"></span><span class="hs-comment">-- [Dart (Arc 2) +1,Dart (Arc 4) +1,Dart (Arc 1) -1,Dart (Arc 0) +1]</span><span>
+</span><span id="line-166"></span><span class="hs-comment">-- &gt;&gt;&gt; mapM_ (print . showWithData myGraph) $ boundary (FaceId $ VertexId 1) myGraph</span><span>
+</span><span id="line-167"></span><span class="hs-comment">-- (Dart (Arc 0) +1,&quot;a+&quot;)</span><span>
+</span><span id="line-168"></span><span class="hs-comment">-- (Dart (Arc 1) -1,&quot;b-&quot;)</span><span>
+</span><span id="line-169"></span><span class="hs-comment">-- (Dart (Arc 4) +1,&quot;e+&quot;)</span><span>
+</span><span id="line-170"></span><span class="hs-comment">-- (Dart (Arc 2) +1,&quot;c+&quot;)</span><span>
+</span><span id="line-171"></span><span class="hs-comment">--</span><span>
+</span><span id="line-172"></span><span class="hs-comment">-- running time: \(O(k)\), where \(k\) is the output size.</span><span>
+</span><span id="line-173"></span><span id="local-6989586621679172398"><span id="local-6989586621679172399"><span id="local-6989586621679172400"><span id="local-6989586621679172401"><span id="local-6989586621679172402"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#boundary"><span class="hs-identifier hs-type">boundary</span></a></span><span>            </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier hs-type">FaceIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172398"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172399"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172399"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172398"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172400"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172401"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172402"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.html#Vector"><span class="hs-identifier hs-type">V.Vector</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172399"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span></span></span></span></span></span><span>
+</span><span id="line-174"></span><span id="boundary"><span class="annot"><span class="annottext">boundary :: forall {k} (w :: World) (s :: k) v e f.
 FaceIdIn w s -&gt; PlanarGraph s w v e f -&gt; Vector (Dart s)
-</span><a href="Hiraffe.PlanarGraph.Dual.html#boundary"><span class="hs-identifier hs-var hs-var">boundary</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceId"><span class="hs-identifier hs-type">FaceId</span></a></span><span> </span><span id="local-6989586621679167624"><span class="annot"><span class="annottext">VertexIdIn (DualOf w) s
-</span><a href="#local-6989586621679167624"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">VertexIdIn (DualOf w) s
+</span><a href="Hiraffe.PlanarGraph.Dual.html#boundary"><span class="hs-identifier hs-var hs-var">boundary</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceId"><span class="hs-identifier hs-type">FaceId</span></a></span><span> </span><span id="local-6989586621679172533"><span class="annot"><span class="annottext">VertexIdIn (DualOf w) s
+</span><a href="#local-6989586621679172533"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">VertexIdIn (DualOf w) s
 -&gt; PlanarGraph s (DualOf w) f e v -&gt; Vector (DartId s)
 forall {k} (w :: World) (s :: k) v e f.
 VertexIdIn w s -&gt; PlanarGraph s w v e f -&gt; Vector (DartId s)
 </span><a href="Hiraffe.PlanarGraph.Core.html#incidentEdges"><span class="hs-identifier hs-var">incidentEdges</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIdIn (DualOf w) s
-</span><a href="#local-6989586621679167624"><span class="hs-identifier hs-var">v</span></a></span><span> </span><span class="annot"><span class="annottext">(PlanarGraph s (DualOf w) f e v -&gt; Vector (DartId s))
+</span><a href="#local-6989586621679172533"><span class="hs-identifier hs-var">v</span></a></span><span> </span><span class="annot"><span class="annottext">(PlanarGraph s (DualOf w) f e v -&gt; Vector (DartId s))
 -&gt; (PlanarGraph s w v e f -&gt; PlanarGraph s (DualOf w) f e v)
 -&gt; PlanarGraph s w v e f
 -&gt; Vector (DartId s)
@@ -379,7 +385,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
   (PlanarGraph s (DualOf w) f e v)
 -&gt; PlanarGraph s w v e f -&gt; PlanarGraph s (DualOf w) f e v
 forall s (m :: * -&gt; *) a. MonadReader s m =&gt; Getting a s a -&gt; m a
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-ffc43c1ebc18dbb1d098a5de25c66521b9f4d33f15aab5f7a94a7a5e42d5d997/share/doc/html/src/Control.Lens.Getter.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">Getting
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-e0202ed71092f553056cdd62278fe0243d8fd74d90d853831fdbf5ca045657ce/share/doc/html/src/Control.Lens.Getter.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">Getting
   (PlanarGraph s (DualOf w) f e v)
   (PlanarGraph s w v e f)
   (PlanarGraph s (DualOf w) f e v)
@@ -389,25 +395,25 @@ forall {k} (s :: k) (w :: World) v e f1 (f2 :: * -&gt; *).
  -&gt; f2 (PlanarGraph s (DualOf w) f1 e v))
 -&gt; PlanarGraph s w v e f1 -&gt; f2 (PlanarGraph s w v e f1)
 </span><a href="Hiraffe.PlanarGraph.Core.html#dual"><span class="hs-identifier hs-var">dual</span></a></span><span>
-</span><span id="line-169"></span><span>
-</span><span id="line-170"></span><span class="hs-comment">-- | Given a dart d, generates the darts bounding the face that is to</span><span>
-</span><span id="line-171"></span><span class="hs-comment">-- the right of the given dart. The darts are reported in order along</span><span>
-</span><span id="line-172"></span><span class="hs-comment">-- the face. This means that for internal faces the darts are reported</span><span>
-</span><span id="line-173"></span><span class="hs-comment">-- in *clockwise* order along the boundary, whereas for the outer face</span><span>
-</span><span id="line-174"></span><span class="hs-comment">-- the darts are reported in counter clockwise order.</span><span>
-</span><span id="line-175"></span><span class="hs-comment">--</span><span>
-</span><span id="line-176"></span><span class="hs-comment">-- &gt;&gt;&gt; mapM_ (print . showWithData myGraph) $ boundary' (dart 1 &quot;+1&quot;) myGraph</span><span>
-</span><span id="line-177"></span><span class="hs-comment">-- (Dart (Arc 1) +1,&quot;b+&quot;)</span><span>
-</span><span id="line-178"></span><span class="hs-comment">-- (Dart (Arc 3) -1,&quot;d-&quot;)</span><span>
-</span><span id="line-179"></span><span class="hs-comment">-- (Dart (Arc 2) -1,&quot;c-&quot;)</span><span>
-</span><span id="line-180"></span><span class="hs-comment">--</span><span>
-</span><span id="line-181"></span><span class="hs-comment">-- \(O(k)\), where \(k\) is the number of darts reported</span><span>
-</span><span id="line-182"></span><span id="local-6989586621679167507"><span id="local-6989586621679167508"><span id="local-6989586621679167509"><span id="local-6989586621679167510"><span id="local-6989586621679167511"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#boundary%27"><span class="hs-identifier hs-type">boundary'</span></a></span><span>     </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167507"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167507"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167508"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167509"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167510"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167511"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-3ec09fa1937239e1ee0add061bcf83941d530f9fdf40abc7380204fd69f3cb74/share/doc/html/src/Data.Vector.html#Vector"><span class="hs-identifier hs-type">V.Vector</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167507"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span></span></span></span></span></span><span>
-</span><span id="line-183"></span><span id="boundary%27"><span class="annot"><span class="annottext">boundary' :: forall {k} (s :: k) (w :: World) v e f.
+</span><span id="line-175"></span><span>
+</span><span id="line-176"></span><span class="hs-comment">-- | Given a dart d, generates the darts bounding the face that is to</span><span>
+</span><span id="line-177"></span><span class="hs-comment">-- the left of the given dart. The darts are reported in order along</span><span>
+</span><span id="line-178"></span><span class="hs-comment">-- the face. This means that for internal faces the darts are reported</span><span>
+</span><span id="line-179"></span><span class="hs-comment">-- in *counter clockwise* order along the boundary, whereas for the outer face</span><span>
+</span><span id="line-180"></span><span class="hs-comment">-- the darts are reported in clockwise order.</span><span>
+</span><span id="line-181"></span><span class="hs-comment">--</span><span>
+</span><span id="line-182"></span><span class="hs-comment">-- &gt;&gt;&gt; mapM_ (print . showWithData myGraph) $ boundary' (dart 1 &quot;+1&quot;) myGraph</span><span>
+</span><span id="line-183"></span><span class="hs-comment">-- (Dart (Arc 1) +1,&quot;b+&quot;)</span><span>
+</span><span id="line-184"></span><span class="hs-comment">-- (Dart (Arc 3) -1,&quot;d-&quot;)</span><span>
+</span><span id="line-185"></span><span class="hs-comment">-- (Dart (Arc 2) -1,&quot;c-&quot;)</span><span>
+</span><span id="line-186"></span><span class="hs-comment">--</span><span>
+</span><span id="line-187"></span><span class="hs-comment">-- \(O(k)\), where \(k\) is the number of darts reported</span><span>
+</span><span id="line-188"></span><span id="local-6989586621679172416"><span id="local-6989586621679172417"><span id="local-6989586621679172418"><span id="local-6989586621679172419"><span id="local-6989586621679172420"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#boundary%27"><span class="hs-identifier hs-type">boundary'</span></a></span><span>     </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172416"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172416"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172417"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172418"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172419"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172420"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.html#Vector"><span class="hs-identifier hs-type">V.Vector</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-type">Dart</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172416"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span></span></span></span></span></span><span>
+</span><span id="line-189"></span><span id="boundary%27"><span class="annot"><span class="annottext">boundary' :: forall {k} (s :: k) (w :: World) v e f.
 Dart s -&gt; PlanarGraph s w v e f -&gt; Vector (Dart s)
-</span><a href="Hiraffe.PlanarGraph.Dual.html#boundary%27"><span class="hs-identifier hs-var hs-var">boundary'</span></a></span></span><span> </span><span id="local-6989586621679167630"><span class="annot"><span class="annottext">Dart s
-</span><a href="#local-6989586621679167630"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span id="local-6989586621679167631"><span class="annot"><span class="annottext">PlanarGraph s w v e f
-</span><a href="#local-6989586621679167631"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Vector (Dart s) -&gt; Maybe (Vector (Dart s)) -&gt; Vector (Dart s)
+</span><a href="Hiraffe.PlanarGraph.Dual.html#boundary%27"><span class="hs-identifier hs-var hs-var">boundary'</span></a></span></span><span> </span><span id="local-6989586621679172539"><span class="annot"><span class="annottext">Dart s
+</span><a href="#local-6989586621679172539"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span id="local-6989586621679172540"><span class="annot"><span class="annottext">PlanarGraph s w v e f
+</span><a href="#local-6989586621679172540"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Vector (Dart s) -&gt; Maybe (Vector (Dart s)) -&gt; Vector (Dart s)
 forall a. a -&gt; Maybe a -&gt; a
 </span><span class="hs-identifier hs-var">fromMaybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Char] -&gt; Vector (Dart s)
 forall a. HasCallStack =&gt; [Char] -&gt; a
@@ -419,8 +425,8 @@ forall a. HasCallStack =&gt; [Char] -&gt; a
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Dart s -&gt; Vector (Dart s) -&gt; Maybe (Vector (Dart s))
 forall a. Eq a =&gt; a -&gt; Vector a -&gt; Maybe (Vector a)
-</span><a href="#local-6989586621679167633"><span class="hs-identifier hs-var">rotateTo</span></a></span><span> </span><span class="annot"><span class="annottext">Dart s
-</span><a href="#local-6989586621679167630"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">(Vector (Dart s) -&gt; Vector (Dart s))
+</span><a href="#local-6989586621679172542"><span class="hs-identifier hs-var">rotateTo</span></a></span><span> </span><span class="annot"><span class="annottext">Dart s
+</span><a href="#local-6989586621679172539"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">(Vector (Dart s) -&gt; Vector (Dart s))
 -&gt; Vector (Dart s) -&gt; Vector (Dart s)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">FaceIdIn w s -&gt; PlanarGraph s w v e f -&gt; Vector (Dart s)
@@ -429,76 +435,76 @@ FaceIdIn w s -&gt; PlanarGraph s w v e f -&gt; Vector (Dart s)
 </span><a href="Hiraffe.PlanarGraph.Dual.html#boundary"><span class="hs-identifier hs-var">boundary</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Dart s -&gt; PlanarGraph s w v e f -&gt; FaceIdIn w s
 forall {k} (s :: k) (w :: World) v e f.
 Dart s -&gt; PlanarGraph s w v e f -&gt; FaceIdIn w s
-</span><a href="Hiraffe.PlanarGraph.Dual.html#rightFace"><span class="hs-identifier hs-var">rightFace</span></a></span><span> </span><span class="annot"><span class="annottext">Dart s
-</span><a href="#local-6989586621679167630"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">PlanarGraph s w v e f
-</span><a href="#local-6989586621679167631"><span class="hs-identifier hs-var">g</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">PlanarGraph s w v e f
-</span><a href="#local-6989586621679167631"><span class="hs-identifier hs-var">g</span></a></span><span>
-</span><span id="line-184"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-185"></span><span>    </span><span id="local-6989586621679167524"><span class="annot"><a href="#local-6989586621679167633"><span class="hs-identifier hs-type">rotateTo</span></a></span><span>     </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621679167524"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679167524"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-3ec09fa1937239e1ee0add061bcf83941d530f9fdf40abc7380204fd69f3cb74/share/doc/html/src/Data.Vector.html#Vector"><span class="hs-identifier hs-type">V.Vector</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167524"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-3ec09fa1937239e1ee0add061bcf83941d530f9fdf40abc7380204fd69f3cb74/share/doc/html/src/Data.Vector.html#Vector"><span class="hs-identifier hs-type">V.Vector</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167524"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span>
-</span><span id="line-186"></span><span>    </span><span id="local-6989586621679167633"><span class="annot"><span class="annottext">rotateTo :: forall a. Eq a =&gt; a -&gt; Vector a -&gt; Maybe (Vector a)
-</span><a href="#local-6989586621679167633"><span class="hs-identifier hs-var hs-var">rotateTo</span></a></span></span><span> </span><span id="local-6989586621679167640"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679167640"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679167641"><span class="annot"><span class="annottext">Vector a
-</span><a href="#local-6989586621679167641"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Vector a
-</span><a href="#local-6989586621679167642"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">(Int -&gt; Vector a) -&gt; Maybe Int -&gt; Maybe (Vector a)
+</span><a href="Hiraffe.PlanarGraph.Dual.html#leftFace"><span class="hs-identifier hs-var">leftFace</span></a></span><span> </span><span class="annot"><span class="annottext">Dart s
+</span><a href="#local-6989586621679172539"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">PlanarGraph s w v e f
+</span><a href="#local-6989586621679172540"><span class="hs-identifier hs-var">g</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">PlanarGraph s w v e f
+</span><a href="#local-6989586621679172540"><span class="hs-identifier hs-var">g</span></a></span><span>
+</span><span id="line-190"></span><span>  </span><span class="hs-keyword">where</span><span>
+</span><span id="line-191"></span><span>    </span><span id="local-6989586621679172433"><span class="annot"><a href="#local-6989586621679172542"><span class="hs-identifier hs-type">rotateTo</span></a></span><span>     </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621679172433"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679172433"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.html#Vector"><span class="hs-identifier hs-type">V.Vector</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172433"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.html#Vector"><span class="hs-identifier hs-type">V.Vector</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172433"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-192"></span><span>    </span><span id="local-6989586621679172542"><span class="annot"><span class="annottext">rotateTo :: forall a. Eq a =&gt; a -&gt; Vector a -&gt; Maybe (Vector a)
+</span><a href="#local-6989586621679172542"><span class="hs-identifier hs-var hs-var">rotateTo</span></a></span></span><span> </span><span id="local-6989586621679172549"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679172549"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679172550"><span class="annot"><span class="annottext">Vector a
+</span><a href="#local-6989586621679172550"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Vector a
+</span><a href="#local-6989586621679172551"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">(Int -&gt; Vector a) -&gt; Maybe Int -&gt; Maybe (Vector a)
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; Vector a -&gt; Maybe Int
 forall a. Eq a =&gt; a -&gt; Vector a -&gt; Maybe Int
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-3ec09fa1937239e1ee0add061bcf83941d530f9fdf40abc7380204fd69f3cb74/share/doc/html/src/Data.Vector.html#elemIndex"><span class="hs-identifier hs-var">V.elemIndex</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679167640"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">Vector a
-</span><a href="#local-6989586621679167641"><span class="hs-identifier hs-var">v</span></a></span><span>
-</span><span id="line-187"></span><span>      </span><span class="hs-keyword">where</span><span>
-</span><span id="line-188"></span><span>        </span><span id="local-6989586621679167642"><span class="annot"><span class="annottext">f :: Int -&gt; Vector a
-</span><a href="#local-6989586621679167642"><span class="hs-identifier hs-var hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679167645"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679167645"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679167646"><span class="annot"><span class="annottext">Vector a
-</span><a href="#local-6989586621679167646"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679167647"><span class="annot"><span class="annottext">Vector a
-</span><a href="#local-6989586621679167647"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Vector a -&gt; (Vector a, Vector a)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.html#elemIndex"><span class="hs-identifier hs-var">V.elemIndex</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679172549"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">Vector a
+</span><a href="#local-6989586621679172550"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><span id="line-193"></span><span>      </span><span class="hs-keyword">where</span><span>
+</span><span id="line-194"></span><span>        </span><span id="local-6989586621679172551"><span class="annot"><span class="annottext">f :: Int -&gt; Vector a
+</span><a href="#local-6989586621679172551"><span class="hs-identifier hs-var hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679172554"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679172554"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679172555"><span class="annot"><span class="annottext">Vector a
+</span><a href="#local-6989586621679172555"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679172556"><span class="annot"><span class="annottext">Vector a
+</span><a href="#local-6989586621679172556"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Vector a -&gt; (Vector a, Vector a)
 forall a. Int -&gt; Vector a -&gt; (Vector a, Vector a)
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-3ec09fa1937239e1ee0add061bcf83941d530f9fdf40abc7380204fd69f3cb74/share/doc/html/src/Data.Vector.html#splitAt"><span class="hs-identifier hs-var">V.splitAt</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679167645"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">Vector a
-</span><a href="#local-6989586621679167641"><span class="hs-identifier hs-var">v</span></a></span><span>  </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">Vector a
-</span><a href="#local-6989586621679167647"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="annot"><span class="annottext">Vector a -&gt; Vector a -&gt; Vector a
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.html#splitAt"><span class="hs-identifier hs-var">V.splitAt</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679172554"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">Vector a
+</span><a href="#local-6989586621679172550"><span class="hs-identifier hs-var">v</span></a></span><span>  </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">Vector a
+</span><a href="#local-6989586621679172556"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="annot"><span class="annottext">Vector a -&gt; Vector a -&gt; Vector a
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Vector a
-</span><a href="#local-6989586621679167646"><span class="hs-identifier hs-var">a</span></a></span><span>
-</span><span id="line-189"></span><span>
-</span><span id="line-190"></span><span>
-</span><span id="line-191"></span><span class="hs-comment">-- | The vertices bounding this face, for internal faces in clockwise</span><span>
-</span><span id="line-192"></span><span class="hs-comment">-- order, for the outer face in counter clockwise order.</span><span>
-</span><span id="line-193"></span><span class="hs-comment">--</span><span>
-</span><span id="line-194"></span><span class="hs-comment">-- &gt;&gt;&gt; mapM_ (print . showWithData myGraph) $ boundaryVertices (FaceId $ VertexId 2) myGraph</span><span>
-</span><span id="line-195"></span><span class="hs-comment">-- (VertexId 0,&quot;u&quot;)</span><span>
-</span><span id="line-196"></span><span class="hs-comment">-- (VertexId 1,&quot;v&quot;)</span><span>
-</span><span id="line-197"></span><span class="hs-comment">-- (VertexId 2,&quot;w&quot;)</span><span>
-</span><span id="line-198"></span><span class="hs-comment">-- &gt;&gt;&gt; mapM_ (print . showWithData myGraph) $ boundaryVertices (FaceId $ VertexId 1) myGraph</span><span>
-</span><span id="line-199"></span><span class="hs-comment">-- (VertexId 0,&quot;u&quot;)</span><span>
-</span><span id="line-200"></span><span class="hs-comment">-- (VertexId 2,&quot;w&quot;)</span><span>
-</span><span id="line-201"></span><span class="hs-comment">-- (VertexId 1,&quot;v&quot;)</span><span>
+</span><a href="#local-6989586621679172555"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-195"></span><span>
+</span><span id="line-196"></span><span>
+</span><span id="line-197"></span><span class="hs-comment">-- | The vertices bounding this face, for internal faces in counter clockwise</span><span>
+</span><span id="line-198"></span><span class="hs-comment">-- order, for the outer face in clockwise order.</span><span>
+</span><span id="line-199"></span><span class="hs-comment">--</span><span>
+</span><span id="line-200"></span><span class="hs-comment">-- &gt;&gt;&gt; mapM_ (print . showWithData myGraph) $ boundaryVertices (FaceId $ VertexId 2) myGraph</span><span>
+</span><span id="line-201"></span><span class="hs-comment">-- (VertexId 2,&quot;w&quot;)</span><span>
 </span><span id="line-202"></span><span class="hs-comment">-- (VertexId 0,&quot;u&quot;)</span><span>
-</span><span id="line-203"></span><span class="hs-comment">--</span><span>
-</span><span id="line-204"></span><span class="hs-comment">-- running time: \(O(k)\), where \(k\) is the output size.</span><span>
-</span><span id="line-205"></span><span id="local-6989586621679167534"><span id="local-6989586621679167535"><span id="local-6989586621679167536"><span id="local-6989586621679167537"><span id="local-6989586621679167538"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#boundaryVertices"><span class="hs-identifier hs-type">boundaryVertices</span></a></span><span>     </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier hs-type">FaceIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167534"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167535"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167535"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167534"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167536"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167537"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167538"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-3ec09fa1937239e1ee0add061bcf83941d530f9fdf40abc7380204fd69f3cb74/share/doc/html/src/Data.Vector.html#Vector"><span class="hs-identifier hs-type">V.Vector</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#VertexIdIn"><span class="hs-identifier hs-type">VertexIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167534"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679167535"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span></span></span></span></span></span><span>
-</span><span id="line-206"></span><span id="boundaryVertices"><span class="annot"><span class="annottext">boundaryVertices :: forall {k} (w :: World) (s :: k) v e f.
+</span><span id="line-203"></span><span class="hs-comment">-- (VertexId 1,&quot;v&quot;)</span><span>
+</span><span id="line-204"></span><span class="hs-comment">-- &gt;&gt;&gt; mapM_ (print . showWithData myGraph) $ boundaryVertices (FaceId $ VertexId 1) myGraph</span><span>
+</span><span id="line-205"></span><span class="hs-comment">-- (VertexId 0,&quot;u&quot;)</span><span>
+</span><span id="line-206"></span><span class="hs-comment">-- (VertexId 2,&quot;v&quot;)</span><span>
+</span><span id="line-207"></span><span class="hs-comment">-- (VertexId 1,&quot;w&quot;)</span><span>
+</span><span id="line-208"></span><span class="hs-comment">-- (VertexId 0,&quot;u&quot;)</span><span>
+</span><span id="line-209"></span><span class="hs-comment">--</span><span>
+</span><span id="line-210"></span><span class="hs-comment">-- running time: \(O(k)\), where \(k\) is the output size.</span><span>
+</span><span id="line-211"></span><span id="local-6989586621679172443"><span id="local-6989586621679172444"><span id="local-6989586621679172445"><span id="local-6989586621679172446"><span id="local-6989586621679172447"><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#boundaryVertices"><span class="hs-identifier hs-type">boundaryVertices</span></a></span><span>     </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier hs-type">FaceIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172443"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172444"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172444"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172443"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172445"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172446"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172447"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.html#Vector"><span class="hs-identifier hs-type">V.Vector</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#VertexIdIn"><span class="hs-identifier hs-type">VertexIdIn</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172443"><span class="hs-identifier hs-type">w</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172444"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span></span></span></span></span></span><span>
+</span><span id="line-212"></span><span id="boundaryVertices"><span class="annot"><span class="annottext">boundaryVertices :: forall {k} (w :: World) (s :: k) v e f.
 FaceIdIn w s -&gt; PlanarGraph s w v e f -&gt; Vector (VertexIdIn w s)
-</span><a href="Hiraffe.PlanarGraph.Dual.html#boundaryVertices"><span class="hs-identifier hs-var hs-var">boundaryVertices</span></a></span></span><span> </span><span id="local-6989586621679167650"><span class="annot"><span class="annottext">FaceIdIn w s
-</span><a href="#local-6989586621679167650"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679167651"><span class="annot"><span class="annottext">PlanarGraph s w v e f
-</span><a href="#local-6989586621679167651"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(DartId s -&gt; PlanarGraph s w v e f -&gt; VertexIdIn w s)
+</span><a href="Hiraffe.PlanarGraph.Dual.html#boundaryVertices"><span class="hs-identifier hs-var hs-var">boundaryVertices</span></a></span></span><span> </span><span id="local-6989586621679172559"><span class="annot"><span class="annottext">FaceIdIn w s
+</span><a href="#local-6989586621679172559"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679172560"><span class="annot"><span class="annottext">PlanarGraph s w v e f
+</span><a href="#local-6989586621679172560"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(DartId s -&gt; PlanarGraph s w v e f -&gt; VertexIdIn w s)
 -&gt; PlanarGraph s w v e f -&gt; DartId s -&gt; VertexIdIn w s
 forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
 </span><span class="hs-identifier hs-var">flip</span></span><span> </span><span class="annot"><span class="annottext">DartId s -&gt; PlanarGraph s w v e f -&gt; VertexIdIn w s
 forall {k} (s :: k) (w :: World) v e f.
 DartId s -&gt; PlanarGraph s w v e f -&gt; VertexIdIn w s
 </span><a href="Hiraffe.PlanarGraph.Core.html#tailOf"><span class="hs-identifier hs-var">tailOf</span></a></span><span> </span><span class="annot"><span class="annottext">PlanarGraph s w v e f
-</span><a href="#local-6989586621679167651"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">(DartId s -&gt; VertexIdIn w s)
+</span><a href="#local-6989586621679172560"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">(DartId s -&gt; VertexIdIn w s)
 -&gt; Vector (DartId s) -&gt; Vector (VertexIdIn w s)
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">FaceIdIn w s -&gt; PlanarGraph s w v e f -&gt; Vector (DartId s)
 forall {k} (w :: World) (s :: k) v e f.
 FaceIdIn w s -&gt; PlanarGraph s w v e f -&gt; Vector (Dart s)
 </span><a href="Hiraffe.PlanarGraph.Dual.html#boundary"><span class="hs-identifier hs-var">boundary</span></a></span><span> </span><span class="annot"><span class="annottext">FaceIdIn w s
-</span><a href="#local-6989586621679167650"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">PlanarGraph s w v e f
-</span><a href="#local-6989586621679167651"><span class="hs-identifier hs-var">g</span></a></span><span>
-</span><span id="line-207"></span><span>
-</span><span id="line-208"></span><span class="hs-comment">-- -- | Gets the next dart along the face</span><span>
-</span><span id="line-209"></span><span class="hs-comment">-- nextDart     :: Dart s -&gt; PlanarGraph s w v e f -&gt; Dart s</span><span>
-</span><span id="line-210"></span><span class="hs-comment">-- nextDart d g = f rightFace e</span><span>
-</span><span id="line-211"></span></pre></body></html>
+</span><a href="#local-6989586621679172559"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">PlanarGraph s w v e f
+</span><a href="#local-6989586621679172560"><span class="hs-identifier hs-var">g</span></a></span><span>
+</span><span id="line-213"></span><span>
+</span><span id="line-214"></span><span class="hs-comment">-- -- | Gets the next dart along the face</span><span>
+</span><span id="line-215"></span><span class="hs-comment">-- nextDart     :: Dart s -&gt; PlanarGraph s w v e f -&gt; Dart s</span><span>
+</span><span id="line-216"></span><span class="hs-comment">-- nextDart d g = f rightFace e</span><span>
+</span><span id="line-217"></span></pre></body></html>
