@@ -17,15 +17,16 @@ module Hiraffe.PlanarGraph.Dual
   ) where
 
 import           Control.Lens hiding ((.=))
+import           Data.Maybe (fromMaybe)
+import qualified Data.Vector as V
 import           Hiraffe.PlanarGraph.Core
 import           Hiraffe.PlanarGraph.Dart
-import qualified Data.Vector as V
-import           Data.Maybe (fromMaybe)
 
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
 -- $setup
+-- >>> import Hiraffe.PlanarGraph.World
 -- >>> :{
 -- let dart i s = Dart (Arc i) (read s)
 --     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]

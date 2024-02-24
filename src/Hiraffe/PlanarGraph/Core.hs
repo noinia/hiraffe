@@ -8,9 +8,7 @@
 -- Data type for representing connected planar graphs
 --------------------------------------------------------------------------------
 module Hiraffe.PlanarGraph.Core
-  ( World(..)
-  , DualOf, dualDualIdentity
-  , VertexIdIn(..), VertexId, unVertexId
+  ( VertexIdIn(..), VertexId, unVertexId
   , FaceIdIn(..), FaceId
   , DartId
 
@@ -47,7 +45,7 @@ import qualified Data.Vector.Mutable as MV
 import           GHC.Generics (Generic)
 import           HGeometry.Permutation
 import qualified Hiraffe.PlanarGraph.Dart as Dart
-import           Unsafe.Coerce (unsafeCoerce)
+import           Hiraffe.PlanarGraph.World
 
 --------------------------------------------------------------------------------
 -- $setup
@@ -83,26 +81,6 @@ import           Unsafe.Coerce (unsafeCoerce)
 -- arrows are just to indicate what the Positive direction of the darts is.
 --
 -- ![myGraph](docs/Data/PlanarGraph/testG.png)
-
---------------------------------------------------------------------------------
--- * Representing The World
-
--- | The world in which the graph lives
-data World = Primal | Dual deriving (Show,Eq)
-
--- | We can take the dual of a world. For the Primal this gives us the Dual,
--- for the Dual this gives us the Primal.
-type family DualOf (sp :: World) where
-  DualOf Primal = Dual
-  DualOf Dual   = Primal
-
--- | The Dual of the Dual is the Primal.
-dualDualIdentity :: forall w. DualOf (DualOf w) :~: w
-dualDualIdentity = unsafeCoerce Refl
-          -- manual proof:
-          --    DualOf (DualOf Primal) = Primal
-          --    DualOf (DualOf Dual)   = Dual
-
 
 --------------------------------------------------------------------------------
 -- * VertexId's

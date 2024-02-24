@@ -66,6 +66,7 @@ common setup
               -- , vector-builder          >= 0.3.7     &&  < 1
               , deepseq                 >= 1.1       &&  < 2
               , vector                  >= 0.11      &&  < 1
+              , array                   >= 0.5.5     &&  < 1
               -- , vector-circular         >= 0.1.4     &&  < 1
               -- , nonempty-vector         >= 0.2.0.0   &&  < 1
               , text                    >= 2         &&  < 3
@@ -113,6 +114,7 @@ library
     Hiraffe.DFS
 
     Hiraffe.PlanarGraph
+    Hiraffe.PlanarGraph.Class
     Hiraffe.PlanarGraph.AdjRep
     Hiraffe.PlanarGraph.IO
     Hiraffe.PlanarGraph.EdgeOracle
@@ -124,6 +126,7 @@ library
     Hiraffe.PlanarGraph.Core
     Hiraffe.PlanarGraph.Dual
     Hiraffe.PlanarGraph.Instance
+    Hiraffe.PlanarGraph.World
 
 --------------------------------------------------------------------------------
 -- * Helper Libraries

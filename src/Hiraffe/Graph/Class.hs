@@ -11,21 +11,19 @@
 --
 --------------------------------------------------------------------------------
 module Hiraffe.Graph.Class
-  ( HasVertices(..), HasVertices'(..)
+  ( Graph_(..)
+  , BidirGraph_(..)
+  , DirGraph_(..)
+  , HasVertices(..), HasVertices'(..)
   , HasEdges(..), HasEdges'(..)
   , HasDarts(..), HasDarts'(..)
-  , HasFaces(..), HasFaces'(..)
-
-  , Graph_(..)
-  , DirGraph_(..)
-  , PlanarGraph_ -- (..)
   ) where
 
 import           Control.Lens
+import qualified Data.Array as Array
 import qualified Data.Foldable as F
 import qualified Data.Graph as Containers
-import           Data.Kind (Type)
-
+import           Data.Kind (Type, Constraint)
 
 --------------------------------------------------------------------------------
 -- * Vertices
@@ -106,43 +104,33 @@ class HasEdges' graph => HasEdges graph graph' where
   -- | Traversal of all edges in the graph
   edges :: IndexedTraversal (EdgeIx graph) graph graph' (Edge graph) (Edge graph')
 
---------------------------------------------------------------------------------
--- * Faces
-
--- | A Class for types that have faces.
-class HasFaces' graph where
-  -- | The faces are of type Face graph
-  type Face   graph
-  -- | Faces are indexed by something of type 'FaceIx graph'
-  type FaceIx graph
-
-  -- | Indexed traversal of a given face.
-  faceAt :: FaceIx graph -> IndexedTraversal' (FaceIx graph) graph (Face graph)
-
-  -- | The number of faces in the Planar graph
-  numFaces :: graph -> Int
-  default numFaces :: HasFaces graph graph => graph -> Int
-  numFaces = lengthOf faces
-
--- | Types that have a possibly type changing traversal of all faces.
-class HasFaces' graph => HasFaces graph graph' where
-
-  -- | Traversal of all faces in the graph
-  faces :: IndexedTraversal (FaceIx graph) graph graph' (Face graph) (Face graph')
-
 --------------------------------------
 
 -- | A class representing directed graphs
 class ( HasVertices graph graph
       , HasDarts graph graph
       ) => DirGraph_ graph where
-  {-# MINIMAL endPoints, (outNeighboursOf | outgoingDartsOf) #-}
+  {-# MINIMAL dirGraphFromAdjacencyLists
+            , (endPoints | headOf, tailOf)
+            , (outNeighboursOf | outgoingDartsOf)
+            , twinDartOf
+   #-}
 
-  -- | Get the endpoints (origin, destination) of an edge
-  endPoints :: graph -> DartIx graph -> (VertexIx graph, VertexIx graph)
-  default endPoints :: (DartIx graph ~ (VertexIx graph, VertexIx graph))
-              => graph -> DartIx graph -> (VertexIx graph, VertexIx graph)
-  endPoints _ = id
+  -- | Possible additional constraints for constructing a DirGraph
+  type DirGraphFromAdjListExtraConstraints graph :: Constraint
+  type DirGraphFromAdjListExtraConstraints graph = ()
+
+  -- | Build a directed graph from its adjacency lists.
+  dirGraphFromAdjacencyLists :: ( Foldable f, Functor f, Foldable h, Functor h
+                                , vi ~ VertexIx graph
+                                , v ~ Vertex graph
+                                , d ~ Dart graph
+                                , DirGraphFromAdjListExtraConstraints graph
+                                ) => f (vi, v, h (vi, d)) -> graph
+
+  -- | Get the endpoints (origin, destination) of a dart
+  endPoints     :: graph -> DartIx graph -> (VertexIx graph, VertexIx graph)
+  endPoints g d = (g^.headOf d, g^.tailOf d)
   {-# INLINE endPoints #-}
 
   -- | All outgoing neighbours of a given vertex
@@ -178,6 +166,26 @@ class ( HasVertices graph graph
           toDart v = graph^?!dartAt (toDartIx v)
   {-# INLINE outgoingDartsOf#-}
 
+  -- | The twin of this dart, if it exits
+  twinDartOf :: DartIx graph -> Getter graph (Maybe (DartIx graph))
+
+  -- | The vertex this dart is heading in to (i.e. its destination.)
+  --
+  headOf   :: DartIx graph -> Getter graph (VertexIx graph)
+  headOf d = to $ \g -> snd $ endPoints g d
+
+  -- | The tail of a dart, i.e. the vertex this dart is leaving from (i.e. its origin)
+  --
+  tailOf   :: DartIx graph -> Getter graph (VertexIx graph)
+  tailOf d = to $ \g -> fst $ endPoints g d
+
+-- | Types representing bidirected graphs, i.e. a directed graph, but all directed edges
+-- are guaranteed to exist in both directions.
+class DirGraph_ graph => BidirGraph_ graph where
+
+  -- | The twin of this dart.
+  twinOf :: DartIx graph -> Getter graph (DartIx graph)
+
   -- -- | All incoming neighbours of a given vertex
   -- --
   -- inNeighboursOf :: VertexIx graph -> IndexedFold (VertexIx graph) graph (Vertex graph)
@@ -187,15 +195,16 @@ class ( HasVertices graph graph
   -- incomingEdgesOf :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
 
 
-
-
-
 -- | A graph representing undirected graphs. Note that every undirected graph is also a
 -- directed graph.
 class ( HasVertices graph graph
       , HasEdges graph graph
-      , DirGraph_ graph
+      , BidirGraph_ graph
       ) => Graph_ graph where
+
+  -- | Possible additional constraints for constructing a DirGraph
+  type GraphFromAdjListExtraConstraints graph :: Constraint
+  type GraphFromAdjListExtraConstraints graph = ()
 
   -- | Build a graph from its adjacency lists.
   --
@@ -207,6 +216,7 @@ class ( HasVertices graph graph
                         , vi ~ VertexIx graph
                         , v ~ Vertex graph
                         , e ~ Edge graph
+                        , GraphFromAdjListExtraConstraints graph
                         ) => f (vi, v, h (vi, e)) -> graph
 
   -- | All neighbours of a given vertex
@@ -220,10 +230,6 @@ class ( HasVertices graph graph
 
   {-# MINIMAL fromAdjacencyLists, neighboursOf, incidentEdgesOf #-}
 
--- | A class representing planar graphs
-class ( Graph_   graph
-      , HasFaces graph graph
-      ) => PlanarGraph_ graph where
 
 --------------------------------------------------------------------------------
 -- Instances for Data.Graph
@@ -250,6 +256,9 @@ instance HasDarts' Containers.Graph where
       neighs = traversed . filtered (== v) .> selfIndex <. united
   {-# INLINE dartAt #-}
 
+
+
+
 instance HasDarts Containers.Graph Containers.Graph where
   darts = itraversed <.> neighs
     where
@@ -269,10 +278,27 @@ instance HasEdges Containers.Graph Containers.Graph where
   {-# INLINE edges #-}
 
 instance DirGraph_ Containers.Graph where
+  -- | pre: vertex Id's are in the range 0..n
+  dirGraphFromAdjacencyLists ajs = Containers.buildG (0,n) ds
+    where
+      ds = concatMap (\(u, _, neighs) -> (\(v,_) -> (u,v)) <$> F.toList neighs
+                     ) $ F.toList ajs
+      n = F.foldl' (\a (u,v) -> a `max` u `max` v) 0 ds
+  {-# INLINE dirGraphFromAdjacencyLists #-}
+
   endPoints _ = id
   {-# INLINE endPoints #-}
   outNeighboursOf u = iix u .> traverse .> selfIndex <. united
   {-# INLINE outNeighboursOf #-}
+
+  -- | The twin of this dart (u,v), if it exits.
+  --
+  -- O(d), where d is the out degree of vertex u.
+  twinDartOf (u,v) = to $ \g -> (v,u) <$ F.find (== v) (g Array.! u)
+
+
+instance BidirGraph_ Containers.Graph where
+  twinOf (u,v) = to $ const (v,u)
 
 instance Graph_ Containers.Graph where
   -- | pre: vertex Id's are in the range 0..n

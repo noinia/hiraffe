@@ -158,6 +158,14 @@ linkNegatives g = g&darts %@~ \(u,v) x -> if u <= v then fromJust' x
 
 
 instance HasFromFoldable f => DirGraph_ (GGraph f v e) where
+  dirGraphFromAdjacencyLists =
+    Graph . foldMap (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
+                                    in IntMap.singleton i vd
+                    )
+    where
+      mkNeighMap   = foldMap (uncurry IntMap.singleton)
+      mkNeighOrder = fromList . map fst . F.toList
+
   endPoints _ = id
   outNeighboursOf u = conjoined asFold asIFold
     where
@@ -165,6 +173,13 @@ instance HasFromFoldable f => DirGraph_ (GGraph f v e) where
       asFold  = folding  $ \g -> g^..incidentEdges' u.asIndex.to (\v -> g^?! vertexAt v)
       asIFold = ifolding $ \g -> g^..incidentEdges' u.asIndex.to (\v -> (v, g^?! vertexAt v))
   {-# INLINE outNeighboursOf #-}
+
+  twinDartOf (u,v) = to $ \g -> g^?dartAt (v,u).asIndex
+    -- just look up the dart v,u
+
+
+instance HasFromFoldable f => BidirGraph_ (GGraph f v e) where
+  twinOf (u,v) = to $ const (v,u)
 
 instance HasFromFoldable f => Graph_ (GGraph f v e) where
   fromAdjacencyLists =

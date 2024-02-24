@@ -12,11 +12,10 @@ module Hiraffe.Graph
   ( HasVertices(..), HasVertices'(..)
   , HasDarts(..), HasDarts'(..)
   , HasEdges(..), HasEdges'(..)
-  , HasFaces(..), HasFaces'(..)
 
   , Graph_(..)
   , DirGraph_(..)
-  , PlanarGraph_
+  , BidirGraph_(..)
   ) where
 
 import Hiraffe.Graph.Class

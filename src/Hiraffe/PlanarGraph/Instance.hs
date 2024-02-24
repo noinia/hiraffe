@@ -15,18 +15,14 @@ module Hiraffe.PlanarGraph.Instance
 
 import           Control.Lens
 import qualified Data.Vector as V
-import           Hiraffe.Graph ( HasVertices'(..),HasVertices(..)
-                               , HasDarts(..), HasDarts'(..)
-                               , HasEdges(..), HasEdges'(..)
-                               , HasFaces(..), HasFaces'(..)
-                               , DirGraph_(..)
-                               , Graph_(..)
-                               , PlanarGraph_
-                               )
+import           Hiraffe.Graph.Class
+import           Hiraffe.PlanarGraph.Class
 import           Hiraffe.PlanarGraph.Core (PlanarGraph, VertexIdIn, FaceIdIn)
 import qualified Hiraffe.PlanarGraph.Core as Core
+import qualified Hiraffe.PlanarGraph.Dual as Dual
 import qualified Hiraffe.PlanarGraph.Dart as Dart
 import qualified Hiraffe.PlanarGraph.IO as IO
+import           Hiraffe.PlanarGraph.World
 
 --------------------------------------------------------------------------------
 
@@ -113,7 +109,10 @@ instance HasFaces (PlanarGraph s w v e f) (PlanarGraph s w v e f') where
 
 --------------------------------------------------------------------------------
 
-instance DirGraph_ (PlanarGraph s w v e ()) where
+instance DirGraph_ (PlanarGraph s w v e f) where
+  type DirGraphFromAdjListExtraConstraints (PlanarGraph s w v e f) = (f ~ ())
+  dirGraphFromAdjacencyLists = IO.fromAdjacencyLists
+
   endPoints = flip Core.endPoints
 
   outNeighboursOf u = conjoined asFold asIFold
@@ -130,8 +129,14 @@ instance DirGraph_ (PlanarGraph s w v e ()) where
       asIFold = ifolding $ \g -> (\d -> (d, g^?! edgeAt d)) <$> Core.outgoingEdges u g
   {-# INLINE outgoingDartsOf#-}
 
+  twinDartOf d = twinOf d . to Just
 
-instance Graph_ (PlanarGraph s w v e ()) where
+instance BidirGraph_ (PlanarGraph s w v e f) where
+  twinOf d = to $ const (Dart.twin d)
+
+instance Graph_ (PlanarGraph s w v e f) where
+  type GraphFromAdjListExtraConstraints (PlanarGraph s w v e f) = (f ~ ())
+
   -- | The vertices are expected to have their adjacencies in CCW order.
   fromAdjacencyLists = IO.fromAdjacencyLists
 
@@ -150,4 +155,16 @@ instance Graph_ (PlanarGraph s w v e ()) where
   {-# INLINE incidentEdgesOf #-}
 
 
-instance PlanarGraph_ (PlanarGraph s w v e ()) where
+instance PlanarGraph_ (PlanarGraph s w v e f) where
+  type DualGraphOf (PlanarGraph s w v e f) = PlanarGraph s (DualOf w) f e v
+
+  dualGraph = view Core.dual
+
+  leftFace  = Dual.leftFace
+  rightFace = Dual.rightFace
+
+  nextEdge = Dual.nextEdge
+  prevEdge = Dual.prevEdge
+
+  boundaryDart = Dual.boundaryDart
+  boundary = Dual.boundary

@@ -2,7 +2,7 @@
 {-# LANGUAGE QuasiQuotes #-}
 module Hiraffe.PlanarGraphSpec where
 
-import           Control.Lens (view,_3,ifoldMapOf)
+import           Control.Lens (view,_3,ifoldMapOf,(^..), asIndex)
 import qualified Data.Foldable as F
 import qualified Data.Map.Strict as SM
 import qualified Data.Set as S
@@ -43,8 +43,8 @@ missingAdjacencies     :: PlanarGraph s w v e f
                        -> [(VertexIdIn w s , VertexIdIn w s)]
 missingAdjacencies g h = ifoldMapOf vertices f g
   where
-    f u _ = let adjUh = S.fromList . F.toList $ neighboursOf u h
-            in F.toList . fmap (u,) . V.filter (`S.notMember` adjUh) $ neighboursOf u g
+    f u _ = let adjUh = S.fromList $ h^..neighboursOf u.asIndex
+            in F.toList . fmap (u,) . filter (`S.notMember` adjUh) $ h^..neighboursOf u.asIndex
 
 sameGraphs s g h = do
     describe ("Same Adjacencies " <> s) $ do

@@ -34,6 +34,7 @@ import           Hiraffe.PlanarGraph.AdjRep (Face (Face), Gr (Gr), Vtx (Vtx))
 import           Hiraffe.PlanarGraph.Core
 import           Hiraffe.PlanarGraph.Dart
 import           Hiraffe.PlanarGraph.Dual
+import           Hiraffe.PlanarGraph.World
 import           Hiraffe.PlanarGraph.EdgeOracle
 
 --------------------------------------------------------------------------------

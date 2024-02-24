@@ -31,49 +31,44 @@ module Hiraffe.PlanarGraph
   , toAdjRep
 
   -- * Darts
-  , HasDarts'(..), HasDarts(..)
-  , Core.tailOf, Core.headOf, Core.endPoints
 
   -- * Edges
-  , HasEdges'(..), HasEdges(..)
 
   -- * Vertices
   , VertexIdIn(..), VertexId
-  , HasVertices'(..), HasVertices(..)
   , Core.incidentEdges
   , Core.incomingEdges
   , Core.outgoingEdges
-  , Core.neighboursOf
   , Core.nextIncidentEdge, Core.prevIncidentEdge
   , Core.nextIncidentEdgeFrom, Core.prevIncidentEdgeFrom
 
   -- * Faces
-  , HasFaces'(..), HasFaces(..)
   , FaceIdIn(..), FaceId
-  , leftFace, rightFace
-  , boundaryDart, boundary, boundary', boundaryVertices
-  , nextEdge, prevEdge
+  , boundary'
 
   -- * Dual Graph
   , Core.dual
 
   -- * Associated Data
   , Core.endPointDataOf
+
+  , module Hiraffe.PlanarGraph.Class
+  , module Hiraffe.Graph.Class
   ) where
 
-import           Hiraffe.Graph
+import           Hiraffe.Graph.Class
+import           Hiraffe.PlanarGraph.Class
 import           Hiraffe.PlanarGraph.Core ( PlanarGraph
-                                          , DualOf
-                                          , World(..)
                                           , VertexIdIn(..), VertexId
                                           , FaceIdIn(..), FaceId
                                           )
-import qualified Hiraffe.PlanarGraph.Core as Core
 import           Hiraffe.PlanarGraph.Core (planarGraph, vertexData, faceData, dartData)
+import qualified Hiraffe.PlanarGraph.Core as Core
 import qualified Hiraffe.PlanarGraph.Dart as Dart
 import           Hiraffe.PlanarGraph.Dual
 import           Hiraffe.PlanarGraph.IO
 import           Hiraffe.PlanarGraph.Instance ()
+import           Hiraffe.PlanarGraph.World
 
 --------------------------------------------------------------------------------
 -- $setup
