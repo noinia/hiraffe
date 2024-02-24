@@ -17,12 +17,8 @@ module Hiraffe.PlanarGraph.Class
 
 
 import           Control.Lens
-import qualified Data.Foldable as F
-import qualified Data.Graph as Containers
-import           Data.Kind (Type)
 import qualified Data.Vector as V
 import           Hiraffe.Graph.Class
-import           Hiraffe.PlanarGraph.World
 
 --------------------------------------------------------------------------------
 -- * Faces
@@ -73,25 +69,25 @@ class ( Graph_   planarGraph
   -- | The face to the right of the dart
   rightFace     :: DartIx planarGraph -> planarGraph -> FaceIx planarGraph
 
-  -- | Get the previous edge (in clockwise order) along the face that is to
-  -- the right of this dart.
+  -- | Get the previous edge in order along the face (so ccw for internal faces, and cw
+  -- for external faces ) that is to the left of this dart.
   prevEdge   :: DartIx planarGraph -> planarGraph -> DartIx planarGraph
 
-  -- | Get the next edge (in clockwise order) along the face that is to
-  -- the right of this dart.
+  -- | Get the next edge in order along the face (so ccw for internal faces, and cw for
+  -- external faces ) that is to the left of this dart.
   nextEdge   :: DartIx planarGraph -> planarGraph -> DartIx planarGraph
 
   -- | Gets a dart bounding this face. I.e. a dart d such that the face lies to
-  -- the right of the dart.
+  -- the left of the dart.
   boundaryDart :: FaceIx planarGraph -> planarGraph -> DartIx planarGraph
 
   -- | The darts bounding this face. The darts are reported in order
   -- along the face. This means that for internal faces the darts are
-  -- reported in *clockwise* order along the boundary, whereas for the
-  -- outer face the darts are reported in counter clockwise order.
+  -- reported in *counter clockwise* order along the boundary, whereas for the
+  -- outer face the darts are reported in clockwise order.
   boundary :: FaceIx planarGraph -> planarGraph -> V.Vector (DartIx planarGraph)
 
-  -- | The vertices bounding this face, for internal faces in clockwise
-  -- order, for the outer face in counter clockwise order.
+  -- | The vertices bounding this face, for internal faces in counter clockwise
+  -- order, for the outer face in clockwise order.
   boundaryVertices     :: FaceIx planarGraph -> planarGraph -> V.Vector (VertexIx planarGraph)
   boundaryVertices f g = (\d -> g^.tailOf d) <$> boundary f g

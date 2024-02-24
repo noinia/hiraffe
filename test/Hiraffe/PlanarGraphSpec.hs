@@ -7,7 +7,6 @@ import qualified Data.Foldable as F
 import qualified Data.Map.Strict as SM
 import qualified Data.Set as S
 import qualified Data.Text as Text
-import qualified Data.Vector as V
 import           Data.YAML
 import           HGeometry.Combinatorial.Util
 import           HGeometry.Permutation (toCycleRep)

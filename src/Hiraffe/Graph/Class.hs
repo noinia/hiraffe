@@ -133,6 +133,10 @@ class ( HasVertices graph graph
   endPoints g d = (g^.headOf d, g^.tailOf d)
   {-# INLINE endPoints #-}
 
+  endPointsOf   :: DartIx graph -> Getter graph (VertexIx graph, VertexIx graph)
+  endPointsOf d = to $ \ g -> endPoints g d
+  {-# INLINE endPointsOf #-}
+
   -- | All outgoing neighbours of a given vertex
   --
   outNeighboursOf   :: VertexIx graph -> IndexedFold (VertexIx graph) graph (Vertex graph)
