@@ -133,6 +133,7 @@ instance DirGraph_ (PlanarGraph s w v e f) where
 
 instance BidirGraph_ (PlanarGraph s w v e f) where
   twinOf d = to $ const (Dart.twin d)
+  getPositiveDart _ = id
 
 instance Graph_ (PlanarGraph s w v e f) where
   type GraphFromAdjListExtraConstraints (PlanarGraph s w v e f) = (f ~ ())

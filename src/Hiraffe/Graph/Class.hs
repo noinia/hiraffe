@@ -196,6 +196,11 @@ class DirGraph_ graph => BidirGraph_ graph where
   -- | The twin of this dart.
   twinOf :: DartIx graph -> Getter graph (DartIx graph)
 
+  -- | Given An edgeIx, gets the positive dart that (together with its twin) represents
+  -- this edge.
+  getPositiveDart :: graph -> EdgeIx graph -> DartIx graph
+
+
   -- -- | All incoming neighbours of a given vertex
   -- --
   -- inNeighboursOf :: VertexIx graph -> IndexedFold (VertexIx graph) graph (Vertex graph)
@@ -306,9 +311,10 @@ instance DirGraph_ Containers.Graph where
   -- O(d), where d is the out degree of vertex u.
   twinDartOf (u,v) = to $ \g -> (v,u) <$ F.find (== v) (g Array.! u)
 
-
 instance BidirGraph_ Containers.Graph where
   twinOf (u,v) = to $ const (v,u)
+  getPositiveDart _ = id
+  -- FIXME: should this really be just id, I guess we may want to specifically represent the smallest one as the positive one.
 
 instance Graph_ Containers.Graph where
   -- | pre: vertex Id's are in the range 0..n
