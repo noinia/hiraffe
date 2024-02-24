@@ -133,8 +133,14 @@ class ( HasVertices graph graph
   endPoints g d = (g^.headOf d, g^.tailOf d)
   {-# INLINE endPoints #-}
 
-  endPointsOf   :: DartIx graph -> Getter graph (VertexIx graph, VertexIx graph)
-  endPointsOf d = to $ \ g -> endPoints g d
+  -- | Given a dart, produce an indexed getter to access the endpoints (u,v) of the dart.
+  -- where u is the origin/tail, and v is the destination/head.
+  endPointsOf   :: DartIx graph
+                -> IndexedGetter (VertexIx graph, VertexIx graph)
+                                 graph
+                                 (Vertex graph, Vertex graph)
+  endPointsOf d = ito $ \g -> let e@(u,v) = endPoints g d
+                              in (e, (g^?!vertexAt u, g^?!vertexAt v))
   {-# INLINE endPointsOf #-}
 
   -- | All outgoing neighbours of a given vertex
