@@ -91,3 +91,10 @@ class ( Graph_   planarGraph
   -- order, for the outer face in clockwise order.
   boundaryVertices     :: FaceIx planarGraph -> planarGraph -> V.Vector (VertexIx planarGraph)
   boundaryVertices f g = (\d -> g^.tailOf d) <$> boundary f g
+
+  -- | The vertices bounding this face, for internal faces in counter clockwise
+  -- order, for the outer face in clockwise order.
+  boundaryVerticesOf    :: FaceIx planarGraph
+                        -> IndexedFold (VertexIx planarGraph) planarGraph (Vertex planarGraph)
+  boundaryVerticesOf fi = ifolding $ \g ->
+                            (\vi -> (vi,g^?!vertexAt vi)) <$> boundaryVertices fi g
