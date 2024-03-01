@@ -18,14 +18,19 @@ import           Control.Lens
 import           Data.Bifoldable
 import           Data.Bitraversable
 import qualified Data.Foldable as F
+import           Data.Foldable1
+import           Data.Functor.Apply (Apply)
+import qualified Data.Functor.Apply as Apply
 import           Data.Functor.Classes
 import qualified Data.IntMap as IntMap
+import qualified Data.IntMap.Internal as IntMapInternal
 import           Data.Maybe (fromMaybe)
 import           Data.Monoid
 import qualified Data.Sequence as Seq
 import           GHC.Generics (Generic)
 import           HGeometry.Foldable.Util
 import           Hiraffe.Graph.Class
+
 
 --------------------------------------------------------------------------------
 
@@ -104,12 +109,26 @@ instance HasVertices (GGraph f v e) (GGraph f v' e) where
   -- | running time: \(O(n)\).
   vertices = conjoined traverse' (itraverse' . indexed)
     where
-      traverse'  :: Applicative g => (v -> g v') -> GGraph f v e -> g (GGraph f v' e)
-      traverse'  = _GraphIntMap.traversed.vData
-      itraverse'             :: Applicative g
-                             => (Int -> v -> g v') -> GGraph f v e -> g (GGraph f v' e)
-      itraverse' f (Graph m) =
-        Graph <$> IntMap.traverseWithKey (\i vd -> vd&vData %%~ f i) m
+      traverse'             :: Apply g => (v -> g v') -> GGraph f v e -> g (GGraph f v' e)
+      traverse' f (Graph m) = Graph <$> traverseWithKey1' (\_ vd -> vd&vData %%~ f) m
+      itraverse'             :: Apply g => (Int -> v -> g v') -> GGraph f v e -> g (GGraph f v' e)
+      itraverse' f (Graph m) = Graph <$> traverseWithKey1' (\i vd -> vd&vData %%~ f i) m
+
+-- | Unpacking the implementation of traverseWithKey for IntMap to work for Apply. Inp
+-- principle is unsafe, but since we control how the GGraph's are constructed, the Nil
+-- case should not occur.
+traverseWithKey1'   :: Apply f => (Int -> v -> f v') -> IntMap.IntMap v -> f (IntMap.IntMap v')
+traverseWithKey1' f = go
+  where
+    go = \case
+      IntMapInternal.Tip k a       -> IntMapInternal.Tip k <$> f k a
+      IntMapInternal.Bin prf m l r -> case (l,r) of
+        (IntMapInternal.Nil,_) -> IntMapInternal.Bin prf m IntMapInternal.Nil             <$> go r
+        (_,IntMapInternal.Nil) -> (\l' -> IntMapInternal.Bin prf m l' IntMapInternal.Nil) <$> go l
+        _                      -> IntMapInternal.Bin prf m <$> go l Apply.<.> go r
+      IntMapInternal.Nil           -> error "Hiraffe.AdjacencyListREp.vertices: no vertices!"
+{-# INLINE traverseWithKey1' #-}
+
 
 instance HasDarts' (GGraph f v e) where
   type Dart   (GGraph f v e) = e
@@ -159,9 +178,9 @@ linkNegatives g = g&darts %@~ \(u,v) x -> if u <= v then fromJust' x
 
 instance HasFromFoldable f => DirGraph_ (GGraph f v e) where
   dirGraphFromAdjacencyLists =
-    Graph . foldMap (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
-                                    in IntMap.singleton i vd
-                    )
+    Graph . foldMap1 (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
+                                     in IntMap.singleton i vd
+                     )
     where
       mkNeighMap   = foldMap (uncurry IntMap.singleton)
       mkNeighOrder = fromList . map fst . F.toList

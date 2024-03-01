@@ -12,29 +12,33 @@
 --------------------------------------------------------------------------------
 module Hiraffe.PlanarGraph.AdjRep where
 
-import Control.Lens (Bifunctor (..))
-import Data.Aeson (ToJSON(..),FromJSON(..),genericToEncoding,defaultOptions)
-import Data.Bifoldable
-import Data.Bifunctor (second)
-import Data.Bitraversable
-import Data.YAML
-import GHC.Generics (Generic)
+import           Control.Lens (Bifunctor (..))
+import           Data.Aeson (ToJSON(..),FromJSON(..),genericToEncoding,defaultOptions)
+import           Data.Bifoldable
+import           Data.Bifunctor (second)
+import           Data.Bitraversable
+import qualified Data.Foldable as F
+import           Data.List.NonEmpty (NonEmpty(..))
+import qualified Data.List.NonEmpty as NonEmpty
+import           Data.YAML
+import           GHC.Generics (Generic)
+
 --------------------------------------------------------------------------------
 
 -- | Data type representing the graph in its JSON/Yaml format
-data Gr v f = Gr { adjacencies :: [v]
-                 , faces       :: [f]
+data Gr v f = Gr { adjacencies :: NonEmpty v
+                 , faces       :: NonEmpty f
                  } deriving (Generic, Show, Eq)
 
 instance Functor (Gr v) where
-  fmap f (Gr vs fs) = Gr vs (map f fs)
+  fmap f (Gr vs fs) = Gr vs (fmap f fs)
 instance Foldable (Gr v) where
   foldMap f (Gr _ fs) = foldMap f fs
 instance Traversable (Gr v) where
   traverse f (Gr vs fs) = Gr vs <$> traverse f fs
 
 instance Bifunctor Gr where
-  bimap f g (Gr vs fs) = Gr (map f vs) (map g fs)
+  bimap f g (Gr vs fs) = Gr (fmap f vs) (fmap g fs)
 instance Bifoldable Gr where
   bifoldMap f g (Gr vs fs) = foldMap f vs <> foldMap g fs
 instance Bitraversable Gr where
@@ -42,12 +46,17 @@ instance Bitraversable Gr where
 
 
 instance (ToYAML v, ToYAML f)     => ToYAML   (Gr v f) where
-  toYAML (Gr vs fs) = mapping [ "adjacencies" .= vs
-                              , "faces"       .= fs
+  toYAML (Gr vs fs) = mapping [ "adjacencies" .= F.toList vs
+                              , "faces"       .= F.toList fs
                               ]
 
 instance (FromYAML v, FromYAML f) => FromYAML   (Gr v f) where
-  parseYAML = withMap "Gr" $ \m -> Gr <$> m .: "adjacencies" <*> m .: "faces"
+  parseYAML = withMap "Gr" $ \m -> Gr <$> (m .: "adjacencies" >>= toNonEmpty')
+                                      <*> (m .: "faces"       >>= toNonEmpty')
+    where
+      toNonEmpty' l = case NonEmpty.nonEmpty l of
+                        Just xs -> pure xs
+                        Nothing -> fail "found an empty list, expected non-empty list"
 
 instance (ToJSON v, ToJSON f)     => ToJSON   (Gr v f) where
   toEncoding = genericToEncoding defaultOptions

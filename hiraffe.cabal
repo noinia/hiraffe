@@ -63,12 +63,13 @@ common setup
               , bytestring              >= 0.10      &&  < 1
               , containers              >= 0.5.9     &&  < 1
               , lens                    >= 5.0       &&  < 6
+              , semigroupoids             >= 6.0.0.1       && < 7
               -- , vector-builder          >= 0.3.7     &&  < 1
               , deepseq                 >= 1.1       &&  < 2
               , vector                  >= 0.11      &&  < 1
               , array                   >= 0.5.5     &&  < 1
               -- , vector-circular         >= 0.1.4     &&  < 1
-              -- , nonempty-vector         >= 0.2.0.0   &&  < 1
+              , nonempty-vector         >= 0.2.0.0   &&  < 1
               , text                    >= 2         &&  < 3
               , witherable              >= 0.4       &&  < 1
               , aeson                   >= 2.0       &&  < 3

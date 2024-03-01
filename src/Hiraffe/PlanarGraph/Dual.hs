@@ -18,7 +18,8 @@ module Hiraffe.PlanarGraph.Dual
 
 import           Control.Lens hiding ((.=))
 import           Data.Maybe (fromMaybe)
-import qualified Data.Vector as V
+import           Data.Vector.NonEmpty (NonEmptyVector)
+import qualified Data.Vector.NonEmpty as NonEmptyV
 import           Hiraffe.PlanarGraph.Core
 import           Hiraffe.PlanarGraph.Dart
 
@@ -31,7 +32,8 @@ import           Hiraffe.PlanarGraph.Dart
 -- let dart i s = Dart (Arc i) (read s)
 --     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]
 --     myGraph :: PlanarGraph () Primal String String String
---     myGraph = planarGraph [ [ (Dart aA Negative, "a-")
+--     myGraph = planarGraph . NonEmpty.fromList $
+--                           [ [ (Dart aA Negative, "a-")
 --                             , (Dart aC Positive, "c+")
 --                             , (Dart aB Positive, "b+")
 --                             , (Dart aA Positive, "a+")
@@ -47,8 +49,8 @@ import           Hiraffe.PlanarGraph.Dart
 --                             ]
 --                           , [ (Dart aG Negative, "g-")
 --                             ]
---                           ] & vertexData .~ V.fromList ["u","v","w","x"]
---                             & faceData   .~ V.fromList ["f_3", "f_infty","f_1","f_2"]
+--                           ] & vertexData .~ NonEmptyV.fromList ["u","v","w","x"]
+--                             & faceData   .~ NonEmptyV.fromList ["f_3", "f_infty","f_1","f_2"]
 --     showWithData     :: HasDataOf s i => s -> i -> (i, DataOf s i)
 --     showWithData g i = (i, g^.dataOf i)
 -- :}
@@ -61,7 +63,7 @@ import           Hiraffe.PlanarGraph.Dart
 
 
 -- | Enumerate all faces in the planar graph
-faces' :: PlanarGraph s w v e f -> V.Vector (FaceIdIn w s)
+faces' :: PlanarGraph s w v e f -> NonEmptyVector (FaceIdIn w s)
 faces' = fmap FaceId . vertices' . view dual
 
 -- | All faces with their face data.
@@ -71,8 +73,8 @@ faces' = fmap FaceId . vertices' . view dual
 -- (FaceId 1,"f_infty")
 -- (FaceId 2,"f_1")
 -- (FaceId 3,"f_2")
-faces   :: PlanarGraph s w v e f -> V.Vector (FaceIdIn w s, f)
-faces g = V.zip (faces' g) (g^.faceData)
+faces   :: PlanarGraph s w v e f -> NonEmptyVector (FaceIdIn w s, f)
+faces g = NonEmptyV.zip (faces' g) (g^.faceData)
 
 -- | The face to the left of the dart
 --
@@ -149,7 +151,7 @@ prevEdge d = nextIncidentEdgeFrom d . view dual
 -- >>> showWithData myGraph $ boundaryDart (FaceId $ VertexId 1) myGraph
 -- (Dart (Arc 2) +1,"c+")
 boundaryDart   :: FaceIdIn w s -> PlanarGraph s w v e f -> Dart s
-boundaryDart f = V.head . boundary f
+boundaryDart f = NonEmptyV.head . boundary f
 
 -- | The darts are reported in order along the face. This means that for internal faces
 -- the darts are reported in *counter clockwise* order along the boundary, whereas for the
@@ -170,7 +172,7 @@ boundaryDart f = V.head . boundary f
 -- (Dart (Arc 2) +1,"c+")
 --
 -- running time: \(O(k)\), where \(k\) is the output size.
-boundary            :: FaceIdIn w s -> PlanarGraph s w v e f -> V.Vector (Dart s)
+boundary            :: FaceIdIn w s -> PlanarGraph s w v e f -> NonEmptyVector (Dart s)
 boundary (FaceId v) = incidentEdges v . view dual
 
 -- | Given a dart d, generates the darts bounding the face that is to
@@ -185,13 +187,13 @@ boundary (FaceId v) = incidentEdges v . view dual
 -- (Dart (Arc 2) -1,"c-")
 --
 -- \(O(k)\), where \(k\) is the number of darts reported
-boundary'     :: Dart s -> PlanarGraph s w v e f -> V.Vector (Dart s)
+boundary'     :: Dart s -> PlanarGraph s w v e f -> NonEmptyVector (Dart s)
 boundary' d g = fromMaybe (error "boundary'")  . rotateTo d $ boundary (leftFace d g) g
   where
-    rotateTo     :: Eq a => a -> V.Vector a -> Maybe (V.Vector a)
-    rotateTo x v = f <$> V.elemIndex x v
+    rotateTo     :: Eq a => a -> NonEmptyVector a -> Maybe (NonEmptyVector a)
+    rotateTo x v = f <$> NonEmptyV.elemIndex x v
       where
-        f i = let (a,b) = V.splitAt i v  in b <> a
+        f i = let (a,b) = NonEmptyV.splitAt i v in NonEmptyV.unsafeFromVector $ b <> a
 
 
 -- | The vertices bounding this face, for internal faces in counter clockwise
@@ -208,7 +210,7 @@ boundary' d g = fromMaybe (error "boundary'")  . rotateTo d $ boundary (leftFace
 -- (VertexId 0,"u")
 --
 -- running time: \(O(k)\), where \(k\) is the output size.
-boundaryVertices     :: FaceIdIn w s -> PlanarGraph s w v e f -> V.Vector (VertexIdIn w s)
+boundaryVertices     :: FaceIdIn w s -> PlanarGraph s w v e f -> NonEmptyVector (VertexIdIn w s)
 boundaryVertices f g = flip tailOf g <$> boundary f g
 
 -- -- | Gets the next dart along the face

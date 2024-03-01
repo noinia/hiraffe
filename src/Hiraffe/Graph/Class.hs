@@ -22,8 +22,11 @@ module Hiraffe.Graph.Class
 import           Control.Lens
 import qualified Data.Array as Array
 import qualified Data.Foldable as F
+import           Data.Foldable1 (Foldable1)
+import           Data.Functor.Apply (Apply)
 import qualified Data.Graph as Containers
 import           Data.Kind (Type, Constraint)
+import qualified Data.List.NonEmpty as NonEmpty
 
 --------------------------------------------------------------------------------
 -- * Vertices
@@ -47,10 +50,11 @@ class HasVertices' graph where
   default numVertices :: HasVertices graph graph => graph -> Int
   numVertices = lengthOf vertices
 
--- | Class that expresses that we have a type changing traversal of all vertices.
+-- | Class that expresses that we have a non-empty type changing traversal of all vertices.
+--
 class HasVertices' graph => HasVertices graph graph' where
   -- | Traversal of all vertices in the graph
-  vertices :: IndexedTraversal (VertexIx graph) graph graph' (Vertex graph) (Vertex graph')
+  vertices :: IndexedTraversal1 (VertexIx graph) graph graph' (Vertex graph) (Vertex graph')
 
 --------------------------------------------------------------------------------
 -- * Darts / Directed edges
@@ -106,7 +110,7 @@ class HasEdges' graph => HasEdges graph graph' where
 
 --------------------------------------
 
--- | A class representing directed graphs
+-- | A class representing non-empty directed graphs
 class ( HasVertices graph graph
       , HasDarts graph graph
       ) => DirGraph_ graph where
@@ -121,7 +125,7 @@ class ( HasVertices graph graph
   type DirGraphFromAdjListExtraConstraints graph = ()
 
   -- | Build a directed graph from its adjacency lists.
-  dirGraphFromAdjacencyLists :: ( Foldable f, Functor f, Foldable h, Functor h
+  dirGraphFromAdjacencyLists :: ( Foldable1 f, Functor f, Foldable h, Functor h
                                 , vi ~ VertexIx graph
                                 , v ~ Vertex graph
                                 , d ~ Dart graph
@@ -130,7 +134,7 @@ class ( HasVertices graph graph
 
   -- | Get the endpoints (origin, destination) of a dart
   endPoints     :: graph -> DartIx graph -> (VertexIx graph, VertexIx graph)
-  endPoints g d = (g^.headOf d, g^.tailOf d)
+  endPoints g d = (g^.headOf d.asIndex, g^.tailOf d.asIndex)
   {-# INLINE endPoints #-}
 
   -- | Given a dart, produce an indexed getter to access the endpoints (u,v) of the dart.
@@ -181,15 +185,17 @@ class ( HasVertices graph graph
 
   -- | The vertex this dart is heading in to (i.e. its destination.)
   --
-  headOf   :: DartIx graph -> Getter graph (VertexIx graph)
-  headOf d = to $ \g -> snd $ endPoints g d
+  headOf   :: DartIx graph -> IndexedGetter (VertexIx graph) graph (Vertex graph)
+  headOf d = ito $ \g -> let vi = snd $ endPoints g d
+                         in (vi, g^?!vertexAt vi)
 
   -- | The tail of a dart, i.e. the vertex this dart is leaving from (i.e. its origin)
   --
-  tailOf   :: DartIx graph -> Getter graph (VertexIx graph)
-  tailOf d = to $ \g -> fst $ endPoints g d
+  tailOf   :: DartIx graph -> IndexedGetter (VertexIx graph) graph (Vertex graph)
+  tailOf d = ito $ \g -> let vi = fst $ endPoints g d
+                         in (vi, g^?!vertexAt vi)
 
--- | Types representing bidirected graphs, i.e. a directed graph, but all directed edges
+-- | Types representing non-empty bidirected graphs, i.e. a directed graph, but all directed edges
 -- are guaranteed to exist in both directions.
 class DirGraph_ graph => BidirGraph_ graph where
 
@@ -210,7 +216,7 @@ class DirGraph_ graph => BidirGraph_ graph where
   -- incomingEdgesOf :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
 
 
--- | A graph representing undirected graphs. Note that every undirected graph is also a
+-- | A class representing non-empty undirected graphs. Note that every undirected graph is also a
 -- directed graph.
 class ( HasVertices graph graph
       , HasEdges graph graph
@@ -227,7 +233,7 @@ class ( HasVertices graph graph
   -- that itself does not appear in the adjacencylist, we may drop
   -- it. In other words if u has a neighbour v, then v better have a
   -- specification of its neighbours somewhere.
-  fromAdjacencyLists :: ( Foldable f, Functor f, Foldable h, Functor h
+  fromAdjacencyLists :: ( Foldable1 f, Functor f, Foldable h, Functor h
                         , vi ~ VertexIx graph
                         , v ~ Vertex graph
                         , e ~ Edge graph
@@ -258,8 +264,33 @@ instance HasVertices' Containers.Graph where
   {-# INLINE numVertices #-}
 
 instance HasVertices Containers.Graph Containers.Graph where
-  vertices = itraversed <. lens (const ()) (\xs _ -> xs)
+  -- ^ Note this instance is technically unsafe, since one can construct an empty graph.
+  vertices = unsafeItraversed1 <. lens (const ()) (\xs _ -> xs)
   {-# INLINE vertices #-}
+
+-- | An unsafe Itraversed1 version for Array.
+--
+-- (Essentially by just unfolding the defs of traverse) and itraverse, injecting FromNonEmtpy
+-- in the right places.
+unsafeItraversed1 :: forall i a b. Array.Ix i =>
+                     IndexedTraversal1 i (Array.Array i a) (Array.Array i b) a b
+unsafeItraversed1 = conjoined traverse1' (itraverse1' . indexed)
+  where
+    mkArray      :: (i, i) -> NonEmpty.NonEmpty b
+                 -> Array.Array i b
+    mkArray bnds = Array.listArray bnds . F.toList
+    traverse1'       :: Apply f => (a -> f b) -> Array.Array i a -> f (Array.Array i b)
+    traverse1' f arr =
+      mkArray (Array.bounds arr) <$> traverse1 f (fromList' $ Array.elems arr)
+    itraverse1'       :: Apply f => (i -> a -> f b) -> Array.Array i a -> f (Array.Array i b)
+    itraverse1' f arr =
+      mkArray (Array.bounds arr) <$> traverse1 (uncurry' f) (fromList' $ Array.assocs arr)
+
+    fromList' xs = case NonEmpty.nonEmpty xs of
+      Nothing -> error "Hiraffe.Graph.Class.vertices on Containers.Graph: Empty graph!"
+      Just ns -> ns
+    uncurry' f (a, b) = f a b
+
 
 instance HasDarts' Containers.Graph where
   type Dart Containers.Graph = ()
@@ -270,9 +301,6 @@ instance HasDarts' Containers.Graph where
       neighs :: IndexedTraversal' Containers.Vertex [Containers.Vertex] ()
       neighs = traversed . filtered (== v) .> selfIndex <. united
   {-# INLINE dartAt #-}
-
-
-
 
 instance HasDarts Containers.Graph Containers.Graph where
   darts = itraversed <.> neighs

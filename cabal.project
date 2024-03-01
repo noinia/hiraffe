@@ -13,5 +13,5 @@ source-repository-package
     type: git
     location: https://github.com/noinia/hgeometry
     subdir: hgeometry-combinatorial
-    tag:      caed0eed5244da54ba44b064a077f47ca9ce50c6
+    tag:      32f9fb4767706ef554ee2c5119dc3c82314a809b
     -- branch: hgeom1_again

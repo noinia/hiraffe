@@ -14,13 +14,16 @@ module Hiraffe.PlanarGraph.Instance
   ) where
 
 import           Control.Lens
-import qualified Data.Vector as V
+import           Data.Functor.Apply (Apply)
+import           Data.Semigroup.Traversable
+import           Data.Vector.NonEmpty (NonEmptyVector)
+import qualified Data.Vector.NonEmpty as V
 import           Hiraffe.Graph.Class
 import           Hiraffe.PlanarGraph.Class
 import           Hiraffe.PlanarGraph.Core (PlanarGraph, VertexIdIn, FaceIdIn)
 import qualified Hiraffe.PlanarGraph.Core as Core
-import qualified Hiraffe.PlanarGraph.Dual as Dual
 import qualified Hiraffe.PlanarGraph.Dart as Dart
+import qualified Hiraffe.PlanarGraph.Dual as Dual
 import qualified Hiraffe.PlanarGraph.IO as IO
 import           Hiraffe.PlanarGraph.World
 
@@ -36,10 +39,10 @@ instance HasVertices' (PlanarGraph s w v e f) where
 instance HasVertices (PlanarGraph s w v e f) (PlanarGraph s w v' e f) where
   vertices = conjoined traverse' (itraverseV . indexed)
     where
-      traverse' :: Applicative g
+      traverse' :: Apply g
                 => (v -> g v') -> PlanarGraph s w v e f -> g (PlanarGraph s w v' e f)
-      traverse' = Core.vertexData.traversed
-      itraverseV :: Applicative g
+      traverse' = Core.vertexData.traversed1
+      itraverseV :: Apply g
                  => (VertexIdIn w s -> v -> g v')
                  -> PlanarGraph s w v e f -> g (PlanarGraph s w v' e f)
       itraverseV = Core.traverseVertices
@@ -53,7 +56,7 @@ instance HasDarts' (PlanarGraph s w v e f) where
   numDarts = Core.numDarts
 
 instance HasDarts (PlanarGraph s w v e f) (PlanarGraph s w v e' f) where
-  darts = conjoined (Core.dartData.traversed) (Core.traverseDarts . indexed)
+  darts = conjoined (Core.dartData.traversed1) (Core.traverseDarts . indexed)
 
 ----------------------------------------
 
@@ -80,18 +83,18 @@ instance HasEdges (PlanarGraph s w v e f) (PlanarGraph s w v e' f) where
 -- mapDarts   :: (Dart.Dart s -> e -> e') -> PlanarGraph s w v e f -> PlanarGraph s w v e' f
 -- mapDarts f = runIdentity . Core.traverseDarts (\i e -> Identity $ f i e)
 
-sequenceDarts    :: Applicative g => PlanarGraph s w v (g e) f -> g (PlanarGraph s w v e f)
-sequenceDarts pg = pg&Core.dartData %%~ sequenceA
+sequenceDarts    :: Apply g => PlanarGraph s w v (g e) f -> g (PlanarGraph s w v e f)
+sequenceDarts pg = pg&Core.dartData %%~ sequence1
 
 -- TODO make sure that this somewhat finicky use of laziness works as intended!
-withEdges    :: (Dart.Dart s -> e -> e') -> V.Vector e -> V.Vector e'
+withEdges    :: (Dart.Dart s -> e -> e') -> NonEmptyVector e -> NonEmptyVector e'
 withEdges f v = let out = V.imap (\i e -> let d = toEnum i
                                           in if Dart.isPositive d
                                              then f d e
                                              else out V.! (fromEnum . Dart.twin $ d)
                                  ) v in out
 
-itraverse'      :: Applicative g
+itraverse'      :: Apply g
                 => (Dart.Dart s -> e -> g e')
                 -> PlanarGraph s w v e f -> g (PlanarGraph s w v e' f)
 itraverse' f pg = sequenceDarts $ pg&Core.dartData %~ withEdges f
@@ -105,7 +108,7 @@ instance HasFaces' (PlanarGraph s w v e f) where
   numFaces = Core.numFaces
 
 instance HasFaces (PlanarGraph s w v e f) (PlanarGraph s w v e f') where
-  faces = conjoined (Core.faceData.traversed) (Core.traverseFaces.indexed)
+  faces = conjoined (Core.faceData.traversed1) (Core.traverseFaces.indexed)
 
 --------------------------------------------------------------------------------
 

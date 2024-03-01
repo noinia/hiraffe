@@ -22,10 +22,15 @@ module Hiraffe.PlanarGraph.IO
 import           Control.Lens
 import           Control.Monad.State.Strict
 import           Data.Aeson
+import           Data.Bifunctor
 import qualified Data.Foldable as F
+import           Data.Foldable1
+import           Data.List.NonEmpty (NonEmpty(..))
+import qualified Data.List.NonEmpty as NonEmpty
 import           Data.Maybe (fromJust)
-import qualified Data.Vector as V
 import qualified Data.Vector.Mutable as MV
+import           Data.Vector.NonEmpty (NonEmptyVector)
+import qualified Data.Vector.NonEmpty as NonEmptyV
 import           Data.YAML
 import           HGeometry.Ext
 import           HGeometry.Foldable.Util
@@ -34,8 +39,8 @@ import           Hiraffe.PlanarGraph.AdjRep (Face (Face), Gr (Gr), Vtx (Vtx))
 import           Hiraffe.PlanarGraph.Core
 import           Hiraffe.PlanarGraph.Dart
 import           Hiraffe.PlanarGraph.Dual
-import           Hiraffe.PlanarGraph.World
 import           Hiraffe.PlanarGraph.EdgeOracle
+import           Hiraffe.PlanarGraph.World
 
 --------------------------------------------------------------------------------
 
@@ -64,12 +69,9 @@ instance (FromJSON v, FromJSON e, FromJSON f) => FromJSON (PlanarGraph s Primal 
 toAdjRep   :: PlanarGraph s w v e f -> Gr (Vtx v e) (Face f)
 toAdjRep g = Gr vs fs
   where
-    vs = [ Vtx ui (map (mkEdge u) $ F.toList us) (g^.dataOf u)
-         | (u@(VertexId ui),us) <- toAdjacencyLists g
-         ]
-    fs = [ Face (outerComponentEdge f) x
-         | (f,x) <- F.toList $ faces g
-         ]
+    vs = (\(u@(VertexId ui),us) -> Vtx ui (map (mkEdge u) $ F.toList us) (g^.dataOf u))
+         <$> toAdjacencyLists g
+    fs = (\(f,x) -> Face (outerComponentEdge f) x) <$> (toNonEmpty $ faces g)
 
     outerComponentEdge f = bimap (^.unVertexId) (^.unVertexId)
                          $ endPoints (boundaryDart f g) g
@@ -86,6 +88,7 @@ toAdjRep g = Gr vs fs
 --
 -- pre: - the id's are consecutive from 0 to n (where is the number of vertices)
 --      - no self-loops and no multi-edges
+--      - there is at least one vertex, and at least one edge
 --
 -- running time: \(O(n)\)
 fromAdjRep            :: forall s v e f. Gr (Vtx v e) (Face f) -> PlanarGraph s Primal v e f
@@ -99,7 +102,8 @@ fromAdjRep (Gr as fs) = g&faceData   .~ reorder fs' (_unVertexId._unFaceId)
     findEdge' u v = fromJust $ findDart u v oracle
     -- faces are right of oriented darts
     findFace ui vi = let d = findEdge' (VertexId ui) (VertexId vi) in rightFace d g
-    fs' = V.fromList [ (findFace ui vi, f) | Face (ui,vi) f <- fs ]
+    fs' = fromNonEmpty . fmap (\(Face (ui,vi) f) -> (findFace ui vi, f)) $ fs
+
 
 -- | Read a planar graph, given by its adjacencylists in counter clockwise order.
 --
@@ -107,15 +111,16 @@ fromAdjRep (Gr as fs) = g&faceData   .~ reorder fs' (_unVertexId._unFaceId)
 --      - no self-loops and no multi-edges
 --
 -- running time: \(O(n)\)
-buildGraph    :: forall s v e. [Vtx v e] -> PlanarGraph s Primal v e ()
-buildGraph as = fromAdjacencyLists [ (VertexId vi, x, [(VertexId ui, e) | (ui,e) <- us])
-                                   | Vtx vi us x <- as
-                                   ]
+buildGraph    :: forall s v e. NonEmpty (Vtx v e) -> PlanarGraph s Primal v e ()
+buildGraph = fromAdjacencyLists . fmap f
+  where
+    f               :: Vtx v e -> (VertexIdIn Primal s, v, NonEmpty (VertexIdIn Primal s, e))
+    f (Vtx vi us x) = (VertexId vi, x, NonEmpty.fromList $ first VertexId <$> us)
 
 -- | make sure we order the data values appropriately
-reorder     :: V.Vector (i, a) -> (i -> Int) -> V.Vector a
-reorder v f = V.create $ do
-                           v' <- MV.new (V.length v)
+reorder     :: NonEmptyVector (i, a) -> (i -> Int) -> NonEmptyVector a
+reorder v f = NonEmptyV.unsafeCreate $ do
+                           v' <- MV.new (NonEmptyV.length v)
                            F.forM_ v $ \(i, x) ->
                              MV.write v' (f i) x
                            pure v'
@@ -128,37 +133,38 @@ reorder v f = V.create $ do
 -- pre: No self-loops, and no multi-edges
 --
 -- running time: \(O(n)\).
-fromAdjacencyLists      :: forall s w v e g h. (Functor g, Foldable g, Foldable h, Functor h)
+fromAdjacencyLists      :: forall s w v e g h. (Functor g, Foldable1 g, Foldable1 h, Functor h)
                         => g (VertexIdIn w s, v, h (VertexIdIn w s, e))
                         -> PlanarGraph s w v e ()
 fromAdjacencyLists adjM = gr&dartVector .~ theDartData
                             &vertexData .~ reorder theVertexData _unVertexId
   where
     gr = planarGraph' . toCycleRep n $ perm
-    n  = V.length theDartData
+    n  = NonEmptyV.length theDartData
 
-    perm' :: g [(DartId s, e)]
+    perm' :: g (NonEmpty (DartId s, e))
     perm' = toOrbit <$> adjM
 
-    perm  :: [[DartId s]]
-    perm  = fmap (fmap (^._1)) . F.toList $ perm'
+    perm  :: NonEmpty (NonEmpty (DartId s))
+    perm  = fmap (fmap (^._1)) . toNonEmpty  $ perm'
 
-    theDartData   = V.fromList . foldMap id $ perm' -- todo, we can use a vectorbuilder here.
+    theDartData   :: NonEmptyVector (DartId s, e)
+    theDartData   = fromNonEmpty . foldMap1 id $ perm' -- todo, we can use a vectorbuilder here.
 
-    theVertexData = fromFoldable . fmap (\(vi,v,_) -> (vi,v)) $ adjM
+    theVertexData = fromFoldable1 . fmap (\(vi,v,_) -> (vi,v)) $ adjM
 
     -- Build an edgeOracle, so that we can query the arcId assigned to
     -- an edge in O(1) time.
     oracle :: EdgeOracle s w (Int :+ e)
     oracle = assignArcs . buildEdgeOracle . fmap (\(u,_,adj) -> (u,adj)) $ adjM
 
-    toOrbit (u,_,adjU) = foldMap (toDart u) adjU
+    toOrbit (u,_,adjU) = foldMap1 (toDart u) adjU
 
     -- if u = v we have a self-loop, so we add both a positive and a negative dart
     toDart u (v,_) = let (a :+ e) = case findEdge u v oracle of
                                       Nothing -> error $ "edge not found? " <> show (u,v)
                                       Just a' -> a'
-                     in case u `compare` v of
+                     in NonEmpty.fromList $ case u `compare` v of
                           LT -> [(Dart (Arc a) Positive, e)]
                           EQ -> [(Dart (Arc a) Positive, e), (Dart (Arc a) Negative, e)]
                           GT -> [(Dart (Arc a) Negative, e)]

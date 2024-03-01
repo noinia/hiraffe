@@ -16,9 +16,10 @@ module Hiraffe.PlanarGraph.Class
   ) where
 
 
-import           Control.Lens
-import qualified Data.Vector as V
-import           Hiraffe.Graph.Class
+import Control.Lens
+import Data.Vector.NonEmpty (NonEmptyVector)
+import HGeometry.Lens.Util
+import Hiraffe.Graph.Class
 
 --------------------------------------------------------------------------------
 -- * Faces
@@ -42,7 +43,7 @@ class HasFaces' graph where
 class HasFaces' graph => HasFaces graph graph' where
 
   -- | Traversal of all faces in the graph
-  faces :: IndexedTraversal (FaceIx graph) graph graph' (Face graph) (Face graph')
+  faces :: IndexedTraversal1 (FaceIx graph) graph graph' (Face graph) (Face graph')
 
 --------------------------------------------------------------------------------
 
@@ -85,16 +86,17 @@ class ( Graph_   planarGraph
   -- along the face. This means that for internal faces the darts are
   -- reported in *counter clockwise* order along the boundary, whereas for the
   -- outer face the darts are reported in clockwise order.
-  boundary :: FaceIx planarGraph -> planarGraph -> V.Vector (DartIx planarGraph)
+  boundary :: FaceIx planarGraph -> planarGraph -> NonEmptyVector (DartIx planarGraph)
 
   -- | The vertices bounding this face, for internal faces in counter clockwise
   -- order, for the outer face in clockwise order.
-  boundaryVertices     :: FaceIx planarGraph -> planarGraph -> V.Vector (VertexIx planarGraph)
-  boundaryVertices f g = (\d -> g^.tailOf d) <$> boundary f g
+  boundaryVertices      :: FaceIx planarGraph -> planarGraph
+                        -> NonEmptyVector (VertexIx planarGraph)
+  boundaryVertices fi g = (\d -> g^.tailOf d.asIndex) <$> boundary fi g
 
   -- | The vertices bounding this face, for internal faces in counter clockwise
   -- order, for the outer face in clockwise order.
   boundaryVerticesOf    :: FaceIx planarGraph
-                        -> IndexedFold (VertexIx planarGraph) planarGraph (Vertex planarGraph)
-  boundaryVerticesOf fi = ifolding $ \g ->
-                            (\vi -> (vi,g^?!vertexAt vi)) <$> boundaryVertices fi g
+                        -> IndexedFold1 (VertexIx planarGraph) planarGraph (Vertex planarGraph)
+  boundaryVerticesOf fi = ifolding1 $ \g ->
+                            (\d -> g^.tailOf d.withIndex) <$> boundary fi g
