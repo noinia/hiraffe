@@ -72,103 +72,107 @@
 </span><span id="line-72"></span><span>
 </span><span id="line-73"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
 </span><span id="line-74"></span><span class="hs-comment">-- $setup</span><span>
-</span><span id="line-75"></span><span class="hs-comment">-- &gt;&gt;&gt; import qualified Data.Vector as V</span><span>
-</span><span id="line-76"></span><span class="hs-comment">-- &gt;&gt;&gt; import Control.Lens</span><span>
-</span><span id="line-77"></span><span class="hs-comment">-- &gt;&gt;&gt; import Hiraffe.PlanarGraph.Dart(Dart(Dart),Arc(Arc),Direction(..))</span><span>
-</span><span id="line-78"></span><span class="hs-comment">-- &gt;&gt;&gt; :{</span><span>
-</span><span id="line-79"></span><span class="hs-comment">-- let dart i s = Dart (Arc i) (read s)</span><span>
-</span><span id="line-80"></span><span class="hs-comment">--     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]</span><span>
-</span><span id="line-81"></span><span class="hs-comment">--     myGraph :: PlanarGraph () Primal String String String</span><span>
-</span><span id="line-82"></span><span class="hs-comment">--     myGraph = planarGraph [ [ (Dart aA Negative, &quot;a-&quot;)</span><span>
-</span><span id="line-83"></span><span class="hs-comment">--                             , (Dart aC Positive, &quot;c+&quot;)</span><span>
-</span><span id="line-84"></span><span class="hs-comment">--                             , (Dart aB Positive, &quot;b+&quot;)</span><span>
-</span><span id="line-85"></span><span class="hs-comment">--                             , (Dart aA Positive, &quot;a+&quot;)</span><span>
-</span><span id="line-86"></span><span class="hs-comment">--                             ]</span><span>
-</span><span id="line-87"></span><span class="hs-comment">--                           , [ (Dart aE Negative, &quot;e-&quot;)</span><span>
-</span><span id="line-88"></span><span class="hs-comment">--                             , (Dart aB Negative, &quot;b-&quot;)</span><span>
-</span><span id="line-89"></span><span class="hs-comment">--                             , (Dart aD Negative, &quot;d-&quot;)</span><span>
-</span><span id="line-90"></span><span class="hs-comment">--                             , (Dart aG Positive, &quot;g+&quot;)</span><span>
-</span><span id="line-91"></span><span class="hs-comment">--                             ]</span><span>
-</span><span id="line-92"></span><span class="hs-comment">--                           , [ (Dart aE Positive, &quot;e+&quot;)</span><span>
-</span><span id="line-93"></span><span class="hs-comment">--                             , (Dart aD Positive, &quot;d+&quot;)</span><span>
-</span><span id="line-94"></span><span class="hs-comment">--                             , (Dart aC Negative, &quot;c-&quot;)</span><span>
-</span><span id="line-95"></span><span class="hs-comment">--                             ]</span><span>
-</span><span id="line-96"></span><span class="hs-comment">--                           , [ (Dart aG Negative, &quot;g-&quot;)</span><span>
-</span><span id="line-97"></span><span class="hs-comment">--                             ]</span><span>
-</span><span id="line-98"></span><span class="hs-comment">--                           ] &amp; vertexData .~ V.fromList [&quot;u&quot;,&quot;v&quot;,&quot;w&quot;,&quot;x&quot;]</span><span>
-</span><span id="line-99"></span><span class="hs-comment">--                             &amp; faceData   .~ V.fromList [&quot;f_3&quot;, &quot;f_infty&quot;,&quot;f_1&quot;,&quot;f_2&quot;]</span><span>
-</span><span id="line-100"></span><span class="hs-comment">-- :}</span><span>
-</span><span id="line-101"></span><span class="hs-comment">--</span><span>
-</span><span id="line-102"></span><span class="hs-comment">--</span><span>
-</span><span id="line-103"></span><span class="hs-comment">-- This represents the following graph. Note that the graph is undirected, the</span><span>
-</span><span id="line-104"></span><span class="hs-comment">-- arrows are just to indicate what the Positive direction of the darts is.</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- &gt;&gt;&gt; import qualified Data.Vector.NonEmpty as V</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- &gt;&gt;&gt; import qualified Data.List.NonEmpty as NonEmpty</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- &gt;&gt;&gt; import Control.Lens</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- &gt;&gt;&gt; import Hiraffe.PlanarGraph.Dart(Dart(Dart),Arc(Arc),Direction(..))</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- &gt;&gt;&gt; :{</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- let dart i s = Dart (Arc i) (read s)</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]</span><span>
+</span><span id="line-82"></span><span class="hs-comment">--     adjacencies = NonEmpty.fromList . fmap NonEmpty.fromList $</span><span>
+</span><span id="line-83"></span><span class="hs-comment">--                           [ [ (Dart aA Negative, &quot;a-&quot;)</span><span>
+</span><span id="line-84"></span><span class="hs-comment">--                             , (Dart aC Positive, &quot;c+&quot;)</span><span>
+</span><span id="line-85"></span><span class="hs-comment">--                             , (Dart aB Positive, &quot;b+&quot;)</span><span>
+</span><span id="line-86"></span><span class="hs-comment">--                             , (Dart aA Positive, &quot;a+&quot;)</span><span>
+</span><span id="line-87"></span><span class="hs-comment">--                             ]</span><span>
+</span><span id="line-88"></span><span class="hs-comment">--                           , [ (Dart aE Negative, &quot;e-&quot;)</span><span>
+</span><span id="line-89"></span><span class="hs-comment">--                             , (Dart aB Negative, &quot;b-&quot;)</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--                             , (Dart aD Negative, &quot;d-&quot;)</span><span>
+</span><span id="line-91"></span><span class="hs-comment">--                             , (Dart aG Positive, &quot;g+&quot;)</span><span>
+</span><span id="line-92"></span><span class="hs-comment">--                             ]</span><span>
+</span><span id="line-93"></span><span class="hs-comment">--                           , [ (Dart aE Positive, &quot;e+&quot;)</span><span>
+</span><span id="line-94"></span><span class="hs-comment">--                             , (Dart aD Positive, &quot;d+&quot;)</span><span>
+</span><span id="line-95"></span><span class="hs-comment">--                             , (Dart aC Negative, &quot;c-&quot;)</span><span>
+</span><span id="line-96"></span><span class="hs-comment">--                             ]</span><span>
+</span><span id="line-97"></span><span class="hs-comment">--                           , [ (Dart aG Negative, &quot;g-&quot;)</span><span>
+</span><span id="line-98"></span><span class="hs-comment">--                             ]</span><span>
+</span><span id="line-99"></span><span class="hs-comment">--                           ]</span><span>
+</span><span id="line-100"></span><span class="hs-comment">--     myGraph :: PlanarGraph String Primal String String String</span><span>
+</span><span id="line-101"></span><span class="hs-comment">--     myGraph = planarGraph  adjacencies</span><span>
+</span><span id="line-102"></span><span class="hs-comment">--                  &amp; vertexData .~ V.unsafeFromList [&quot;u&quot;,&quot;v&quot;,&quot;w&quot;,&quot;x&quot;]</span><span>
+</span><span id="line-103"></span><span class="hs-comment">--                  &amp; faceData   .~ V.unsafeFromList [&quot;f_3&quot;, &quot;f_infty&quot;,&quot;f_1&quot;,&quot;f_2&quot;]</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- :}</span><span>
 </span><span id="line-105"></span><span class="hs-comment">--</span><span>
-</span><span id="line-106"></span><span class="hs-comment">-- ![myGraph](docs/Data/PlanarGraph/testG.png)</span><span>
-</span><span id="line-107"></span><span>
-</span><span id="line-108"></span><span>
-</span><span id="line-109"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
-</span><span id="line-110"></span><span class="hs-comment">-- Testing stuff</span><span>
+</span><span id="line-106"></span><span class="hs-comment">--</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- This represents the following graph. Note that the graph is undirected, the</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- arrows are just to indicate what the Positive direction of the darts is.</span><span>
+</span><span id="line-109"></span><span class="hs-comment">--</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- ![myGraph](docs/Data/PlanarGraph/testG.png)</span><span>
 </span><span id="line-111"></span><span>
-</span><span id="line-112"></span><span class="hs-comment">-- testPerm :: Permutation (Dart s)</span><span>
-</span><span id="line-113"></span><span class="hs-comment">-- testPerm = let (a:b:c:d:e:g:_) = take 6 [Arc 0..]</span><span>
-</span><span id="line-114"></span><span class="hs-comment">--            in toCycleRep 12 [ [ Dart a Negative</span><span>
-</span><span id="line-115"></span><span class="hs-comment">--                               , Dart c Positive</span><span>
-</span><span id="line-116"></span><span class="hs-comment">--                               , Dart b Positive</span><span>
-</span><span id="line-117"></span><span class="hs-comment">--                               , Dart a Positive</span><span>
-</span><span id="line-118"></span><span class="hs-comment">--                               ]</span><span>
-</span><span id="line-119"></span><span class="hs-comment">--                             , [ Dart e Negative</span><span>
-</span><span id="line-120"></span><span class="hs-comment">--                               , Dart b Negative</span><span>
-</span><span id="line-121"></span><span class="hs-comment">--                               , Dart d Negative</span><span>
-</span><span id="line-122"></span><span class="hs-comment">--                               , Dart g Positive</span><span>
-</span><span id="line-123"></span><span class="hs-comment">--                               ]</span><span>
-</span><span id="line-124"></span><span class="hs-comment">--                             , [ Dart e Positive</span><span>
-</span><span id="line-125"></span><span class="hs-comment">--                               , Dart d Positive</span><span>
-</span><span id="line-126"></span><span class="hs-comment">--                               , Dart c Negative</span><span>
+</span><span id="line-112"></span><span>
+</span><span id="line-113"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- Testing stuff</span><span>
+</span><span id="line-115"></span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- testPerm :: Permutation (Dart s)</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- testPerm = let (a:b:c:d:e:g:_) = take 6 [Arc 0..]</span><span>
+</span><span id="line-118"></span><span class="hs-comment">--            in toCycleRep 12 [ [ Dart a Negative</span><span>
+</span><span id="line-119"></span><span class="hs-comment">--                               , Dart c Positive</span><span>
+</span><span id="line-120"></span><span class="hs-comment">--                               , Dart b Positive</span><span>
+</span><span id="line-121"></span><span class="hs-comment">--                               , Dart a Positive</span><span>
+</span><span id="line-122"></span><span class="hs-comment">--                               ]</span><span>
+</span><span id="line-123"></span><span class="hs-comment">--                             , [ Dart e Negative</span><span>
+</span><span id="line-124"></span><span class="hs-comment">--                               , Dart b Negative</span><span>
+</span><span id="line-125"></span><span class="hs-comment">--                               , Dart d Negative</span><span>
+</span><span id="line-126"></span><span class="hs-comment">--                               , Dart g Positive</span><span>
 </span><span id="line-127"></span><span class="hs-comment">--                               ]</span><span>
-</span><span id="line-128"></span><span class="hs-comment">--                             , [ Dart g Negative</span><span>
-</span><span id="line-129"></span><span class="hs-comment">--                               ]</span><span>
-</span><span id="line-130"></span><span class="hs-comment">--                             ]</span><span>
-</span><span id="line-131"></span><span>
-</span><span id="line-132"></span><span class="hs-comment">-- data Test</span><span>
-</span><span id="line-133"></span><span>
-</span><span id="line-134"></span><span class="hs-comment">-- testG :: PlanarGraph Test Primal () String ()</span><span>
-</span><span id="line-135"></span><span class="hs-comment">-- testG = planarGraph [ [ (Dart aA Negative, &quot;a-&quot;)</span><span>
-</span><span id="line-136"></span><span class="hs-comment">--                       , (Dart aC Positive, &quot;c+&quot;)</span><span>
-</span><span id="line-137"></span><span class="hs-comment">--                       , (Dart aB Positive, &quot;b+&quot;)</span><span>
-</span><span id="line-138"></span><span class="hs-comment">--                       , (Dart aA Positive, &quot;a+&quot;)</span><span>
-</span><span id="line-139"></span><span class="hs-comment">--                       ]</span><span>
-</span><span id="line-140"></span><span class="hs-comment">--                     , [ (Dart aE Negative, &quot;e-&quot;)</span><span>
-</span><span id="line-141"></span><span class="hs-comment">--                       , (Dart aB Negative, &quot;b-&quot;)</span><span>
-</span><span id="line-142"></span><span class="hs-comment">--                       , (Dart aD Negative, &quot;d-&quot;)</span><span>
-</span><span id="line-143"></span><span class="hs-comment">--                       , (Dart aG Positive, &quot;g+&quot;)</span><span>
-</span><span id="line-144"></span><span class="hs-comment">--                       ]</span><span>
-</span><span id="line-145"></span><span class="hs-comment">--                     , [ (Dart aE Positive, &quot;e+&quot;)</span><span>
-</span><span id="line-146"></span><span class="hs-comment">--                       , (Dart aD Positive, &quot;d+&quot;)</span><span>
-</span><span id="line-147"></span><span class="hs-comment">--                       , (Dart aC Negative, &quot;c-&quot;)</span><span>
+</span><span id="line-128"></span><span class="hs-comment">--                             , [ Dart e Positive</span><span>
+</span><span id="line-129"></span><span class="hs-comment">--                               , Dart d Positive</span><span>
+</span><span id="line-130"></span><span class="hs-comment">--                               , Dart c Negative</span><span>
+</span><span id="line-131"></span><span class="hs-comment">--                               ]</span><span>
+</span><span id="line-132"></span><span class="hs-comment">--                             , [ Dart g Negative</span><span>
+</span><span id="line-133"></span><span class="hs-comment">--                               ]</span><span>
+</span><span id="line-134"></span><span class="hs-comment">--                             ]</span><span>
+</span><span id="line-135"></span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- data Test</span><span>
+</span><span id="line-137"></span><span>
+</span><span id="line-138"></span><span class="hs-comment">-- testG :: PlanarGraph Test Primal () String ()</span><span>
+</span><span id="line-139"></span><span class="hs-comment">-- testG = planarGraph [ [ (Dart aA Negative, &quot;a-&quot;)</span><span>
+</span><span id="line-140"></span><span class="hs-comment">--                       , (Dart aC Positive, &quot;c+&quot;)</span><span>
+</span><span id="line-141"></span><span class="hs-comment">--                       , (Dart aB Positive, &quot;b+&quot;)</span><span>
+</span><span id="line-142"></span><span class="hs-comment">--                       , (Dart aA Positive, &quot;a+&quot;)</span><span>
+</span><span id="line-143"></span><span class="hs-comment">--                       ]</span><span>
+</span><span id="line-144"></span><span class="hs-comment">--                     , [ (Dart aE Negative, &quot;e-&quot;)</span><span>
+</span><span id="line-145"></span><span class="hs-comment">--                       , (Dart aB Negative, &quot;b-&quot;)</span><span>
+</span><span id="line-146"></span><span class="hs-comment">--                       , (Dart aD Negative, &quot;d-&quot;)</span><span>
+</span><span id="line-147"></span><span class="hs-comment">--                       , (Dart aG Positive, &quot;g+&quot;)</span><span>
 </span><span id="line-148"></span><span class="hs-comment">--                       ]</span><span>
-</span><span id="line-149"></span><span class="hs-comment">--                     , [ (Dart aG Negative, &quot;g-&quot;)</span><span>
-</span><span id="line-150"></span><span class="hs-comment">--                       ]</span><span>
-</span><span id="line-151"></span><span class="hs-comment">--                     ]</span><span>
-</span><span id="line-152"></span><span class="hs-comment">--   where</span><span>
-</span><span id="line-153"></span><span class="hs-comment">--     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]</span><span>
-</span><span id="line-154"></span><span>
-</span><span id="line-155"></span><span>
-</span><span id="line-156"></span><span>
-</span><span id="line-157"></span><span>
+</span><span id="line-149"></span><span class="hs-comment">--                     , [ (Dart aE Positive, &quot;e+&quot;)</span><span>
+</span><span id="line-150"></span><span class="hs-comment">--                       , (Dart aD Positive, &quot;d+&quot;)</span><span>
+</span><span id="line-151"></span><span class="hs-comment">--                       , (Dart aC Negative, &quot;c-&quot;)</span><span>
+</span><span id="line-152"></span><span class="hs-comment">--                       ]</span><span>
+</span><span id="line-153"></span><span class="hs-comment">--                     , [ (Dart aG Negative, &quot;g-&quot;)</span><span>
+</span><span id="line-154"></span><span class="hs-comment">--                       ]</span><span>
+</span><span id="line-155"></span><span class="hs-comment">--                     ]</span><span>
+</span><span id="line-156"></span><span class="hs-comment">--   where</span><span>
+</span><span id="line-157"></span><span class="hs-comment">--     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]</span><span>
 </span><span id="line-158"></span><span>
 </span><span id="line-159"></span><span>
-</span><span id="line-160"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
+</span><span id="line-160"></span><span>
 </span><span id="line-161"></span><span>
-</span><span id="line-162"></span><span class="hs-comment">-- -- | Indexed traversal of all darts in the planar graph.</span><span>
-</span><span id="line-163"></span><span class="hs-comment">-- darts :: forall s w v e e' f.</span><span>
-</span><span id="line-164"></span><span class="hs-comment">--          IndexedTraversal (Dart s) (PlanarGraph s w v e f) (PlanarGraph s w v e' f) e e'</span><span>
-</span><span id="line-165"></span><span class="hs-comment">-- darts = conjoined traverse' (itraverse' . indexed)</span><span>
-</span><span id="line-166"></span><span class="hs-comment">--     where</span><span>
-</span><span id="line-167"></span><span class="hs-comment">--       traverse' :: Applicative g</span><span>
-</span><span id="line-168"></span><span class="hs-comment">--                 =&gt; (e -&gt; g e') -&gt; PlanarGraph s w v e f -&gt; g (PlanarGraph s w v e' f)</span><span>
-</span><span id="line-169"></span><span class="hs-comment">--       traverse' = Core.dartData.traversed</span><span>
-</span><span id="line-170"></span><span class="hs-comment">--       itraverse' :: Applicative g</span><span>
-</span><span id="line-171"></span><span class="hs-comment">--                  =&gt; (Dart s -&gt; e -&gt; g e')</span><span>
-</span><span id="line-172"></span><span class="hs-comment">--                  -&gt; PlanarGraph s w v e f -&gt; g (PlanarGraph s w v e' f)</span><span>
-</span><span id="line-173"></span><span class="hs-comment">--       itraverse' = Core.traverseDarts</span><span>
-</span><span id="line-174"></span></pre></body></html>
+</span><span id="line-162"></span><span>
+</span><span id="line-163"></span><span>
+</span><span id="line-164"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
+</span><span id="line-165"></span><span>
+</span><span id="line-166"></span><span class="hs-comment">-- -- | Indexed traversal of all darts in the planar graph.</span><span>
+</span><span id="line-167"></span><span class="hs-comment">-- darts :: forall s w v e e' f.</span><span>
+</span><span id="line-168"></span><span class="hs-comment">--          IndexedTraversal (Dart s) (PlanarGraph s w v e f) (PlanarGraph s w v e' f) e e'</span><span>
+</span><span id="line-169"></span><span class="hs-comment">-- darts = conjoined traverse' (itraverse' . indexed)</span><span>
+</span><span id="line-170"></span><span class="hs-comment">--     where</span><span>
+</span><span id="line-171"></span><span class="hs-comment">--       traverse' :: Applicative g</span><span>
+</span><span id="line-172"></span><span class="hs-comment">--                 =&gt; (e -&gt; g e') -&gt; PlanarGraph s w v e f -&gt; g (PlanarGraph s w v e' f)</span><span>
+</span><span id="line-173"></span><span class="hs-comment">--       traverse' = Core.dartData.traversed</span><span>
+</span><span id="line-174"></span><span class="hs-comment">--       itraverse' :: Applicative g</span><span>
+</span><span id="line-175"></span><span class="hs-comment">--                  =&gt; (Dart s -&gt; e -&gt; g e')</span><span>
+</span><span id="line-176"></span><span class="hs-comment">--                  -&gt; PlanarGraph s w v e f -&gt; g (PlanarGraph s w v e' f)</span><span>
+</span><span id="line-177"></span><span class="hs-comment">--       itraverse' = Core.traverseDarts</span><span>
+</span><span id="line-178"></span></pre></body></html>
