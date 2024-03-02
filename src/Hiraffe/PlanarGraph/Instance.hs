@@ -14,7 +14,9 @@ module Hiraffe.PlanarGraph.Instance
   ) where
 
 import           Control.Lens
+import           Data.Foldable1
 import           Data.Functor.Apply (Apply)
+import qualified Data.Functor.Apply as Apply
 import           Data.Semigroup.Traversable
 import           Data.Vector.NonEmpty (NonEmptyVector)
 import qualified Data.Vector.NonEmpty as V
@@ -56,7 +58,13 @@ instance HasDarts' (PlanarGraph s w v e f) where
   numDarts = Core.numDarts
 
 instance HasDarts (PlanarGraph s w v e f) (PlanarGraph s w v e' f) where
-  darts = conjoined (Core.dartData.traversed1) (Core.traverseDarts . indexed)
+  darts = conjoined (Core.dartData.traversed) (itraverseDarts' . indexed)
+    where
+      itraverseDarts' :: Applicative g
+                      => (Core.DartId s -> e -> g e')
+                      -> PlanarGraph s w v e f -> g (PlanarGraph s w v e' f)
+      itraverseDarts' f = Apply.unwrapApplicative
+                        . Core.traverseDarts (\d e -> Apply.WrapApplicative $ f d e)
 
 ----------------------------------------
 
@@ -78,7 +86,14 @@ edgeAtLens d = ilens (\g -> (d, get'' g)) set''
 
 instance HasEdges (PlanarGraph s w v e f) (PlanarGraph s w v e' f) where
   edges = itraverse'.indexed
+    where
+      itraverse' f = Apply.unwrapApplicative
+                   . itraverse1' (\d e -> Apply.WrapApplicative $ f d e)
 
+      itraverse1'      :: Apply g
+                       => (Dart.Dart s -> e -> g e')
+                       -> PlanarGraph s w v e f -> g (PlanarGraph s w v e' f)
+      itraverse1' f pg = sequenceDarts $ pg&Core.dartData %~ withEdges f
 
 -- mapDarts   :: (Dart.Dart s -> e -> e') -> PlanarGraph s w v e f -> PlanarGraph s w v e' f
 -- mapDarts f = runIdentity . Core.traverseDarts (\i e -> Identity $ f i e)
@@ -94,10 +109,6 @@ withEdges f v = let out = V.imap (\i e -> let d = toEnum i
                                              else out V.! (fromEnum . Dart.twin $ d)
                                  ) v in out
 
-itraverse'      :: Apply g
-                => (Dart.Dart s -> e -> g e')
-                -> PlanarGraph s w v e f -> g (PlanarGraph s w v e' f)
-itraverse' f pg = sequenceDarts $ pg&Core.dartData %~ withEdges f
 
 ----------------------------------------
 
@@ -113,7 +124,7 @@ instance HasFaces (PlanarGraph s w v e f) (PlanarGraph s w v e f') where
 --------------------------------------------------------------------------------
 
 instance DirGraph_ (PlanarGraph s w v e f) where
-  type DirGraphFromAdjListExtraConstraints (PlanarGraph s w v e f) = (f ~ ())
+  type DirGraphFromAdjListExtraConstraints (PlanarGraph s w v e f) h = (f ~ (), Foldable1 h)
   dirGraphFromAdjacencyLists = IO.fromAdjacencyLists
 
   endPoints = flip Core.endPoints
@@ -139,7 +150,7 @@ instance BidirGraph_ (PlanarGraph s w v e f) where
   getPositiveDart _ = id
 
 instance Graph_ (PlanarGraph s w v e f) where
-  type GraphFromAdjListExtraConstraints (PlanarGraph s w v e f) = (f ~ ())
+  type GraphFromAdjListExtraConstraints (PlanarGraph s w v e f) h = (f ~ (), Foldable1 h)
 
   -- | The vertices are expected to have their adjacencies in CCW order.
   fromAdjacencyLists = IO.fromAdjacencyLists

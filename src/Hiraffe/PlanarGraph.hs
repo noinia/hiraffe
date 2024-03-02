@@ -72,14 +72,15 @@ import           Hiraffe.PlanarGraph.World
 
 --------------------------------------------------------------------------------
 -- $setup
--- >>> import qualified Data.Vector as V
+-- >>> import qualified Data.Vector.NonEmpty as V
+-- >>> import qualified Data.List.NonEmpty as NonEmpty
 -- >>> import Control.Lens
 -- >>> import Hiraffe.PlanarGraph.Dart(Dart(Dart),Arc(Arc),Direction(..))
 -- >>> :{
 -- let dart i s = Dart (Arc i) (read s)
 --     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]
---     myGraph :: PlanarGraph () Primal String String String
---     myGraph = planarGraph [ [ (Dart aA Negative, "a-")
+--     adjacencies = NonEmpty.fromList . fmap NonEmpty.fromList $
+--                           [ [ (Dart aA Negative, "a-")
 --                             , (Dart aC Positive, "c+")
 --                             , (Dart aB Positive, "b+")
 --                             , (Dart aA Positive, "a+")
@@ -95,8 +96,11 @@ import           Hiraffe.PlanarGraph.World
 --                             ]
 --                           , [ (Dart aG Negative, "g-")
 --                             ]
---                           ] & vertexData .~ V.fromList ["u","v","w","x"]
---                             & faceData   .~ V.fromList ["f_3", "f_infty","f_1","f_2"]
+--                           ]
+--     myGraph :: PlanarGraph String Primal String String String
+--     myGraph = planarGraph  adjacencies
+--                  & vertexData .~ V.unsafeFromList ["u","v","w","x"]
+--                  & faceData   .~ V.unsafeFromList ["f_3", "f_infty","f_1","f_2"]
 -- :}
 --
 --

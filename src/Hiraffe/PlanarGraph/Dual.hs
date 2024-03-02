@@ -19,7 +19,7 @@ module Hiraffe.PlanarGraph.Dual
 import           Control.Lens hiding ((.=))
 import           Data.Maybe (fromMaybe)
 import           Data.Vector.NonEmpty (NonEmptyVector)
-import qualified Data.Vector.NonEmpty as NonEmptyV
+import qualified Data.Vector.NonEmpty as V
 import           Hiraffe.PlanarGraph.Core
 import           Hiraffe.PlanarGraph.Dart
 
@@ -28,11 +28,11 @@ import           Hiraffe.PlanarGraph.Dart
 --------------------------------------------------------------------------------
 -- $setup
 -- >>> import Hiraffe.PlanarGraph.World
+-- >>> import qualified Data.List.NonEmpty as NonEmpty
 -- >>> :{
 -- let dart i s = Dart (Arc i) (read s)
 --     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]
---     myGraph :: PlanarGraph () Primal String String String
---     myGraph = planarGraph . NonEmpty.fromList $
+--     adjacencies = NonEmpty.fromList . fmap NonEmpty.fromList $
 --                           [ [ (Dart aA Negative, "a-")
 --                             , (Dart aC Positive, "c+")
 --                             , (Dart aB Positive, "b+")
@@ -49,8 +49,11 @@ import           Hiraffe.PlanarGraph.Dart
 --                             ]
 --                           , [ (Dart aG Negative, "g-")
 --                             ]
---                           ] & vertexData .~ NonEmptyV.fromList ["u","v","w","x"]
---                             & faceData   .~ NonEmptyV.fromList ["f_3", "f_infty","f_1","f_2"]
+--                           ]
+--     myGraph :: PlanarGraph () Primal String String String
+--     myGraph = planarGraph adjacencies
+--                     & vertexData .~ V.unsafeFromList ["u","v","w","x"]
+--                     & faceData   .~ V.unsafeFromList ["f_3", "f_infty","f_1","f_2"]
 --     showWithData     :: HasDataOf s i => s -> i -> (i, DataOf s i)
 --     showWithData g i = (i, g^.dataOf i)
 -- :}
@@ -74,7 +77,7 @@ faces' = fmap FaceId . vertices' . view dual
 -- (FaceId 2,"f_1")
 -- (FaceId 3,"f_2")
 faces   :: PlanarGraph s w v e f -> NonEmptyVector (FaceIdIn w s, f)
-faces g = NonEmptyV.zip (faces' g) (g^.faceData)
+faces g = V.zip (faces' g) (g^.faceData)
 
 -- | The face to the left of the dart
 --
@@ -151,7 +154,7 @@ prevEdge d = nextIncidentEdgeFrom d . view dual
 -- >>> showWithData myGraph $ boundaryDart (FaceId $ VertexId 1) myGraph
 -- (Dart (Arc 2) +1,"c+")
 boundaryDart   :: FaceIdIn w s -> PlanarGraph s w v e f -> Dart s
-boundaryDart f = NonEmptyV.head . boundary f
+boundaryDart f = V.head . boundary f
 
 -- | The darts are reported in order along the face. This means that for internal faces
 -- the darts are reported in *counter clockwise* order along the boundary, whereas for the
@@ -191,9 +194,9 @@ boundary'     :: Dart s -> PlanarGraph s w v e f -> NonEmptyVector (Dart s)
 boundary' d g = fromMaybe (error "boundary'")  . rotateTo d $ boundary (leftFace d g) g
   where
     rotateTo     :: Eq a => a -> NonEmptyVector a -> Maybe (NonEmptyVector a)
-    rotateTo x v = f <$> NonEmptyV.elemIndex x v
+    rotateTo x v = f <$> V.elemIndex x v
       where
-        f i = let (a,b) = NonEmptyV.splitAt i v in NonEmptyV.unsafeFromVector $ b <> a
+        f i = let (a,b) = V.splitAt i v in V.unsafeFromVector $ b <> a
 
 
 -- | The vertices bounding this face, for internal faces in counter clockwise

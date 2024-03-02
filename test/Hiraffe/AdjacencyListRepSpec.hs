@@ -1,10 +1,10 @@
 module Hiraffe.AdjacencyListRepSpec (spec) where
 
 import Control.Lens
+import qualified Data.List.NonEmpty as NonEmpty
 import Hiraffe.AdjacencyListRep
 import Hiraffe.Graph
 import Test.Hspec
-
 --------------------------------------------------------------------------------
 
 
@@ -31,7 +31,8 @@ spec = describe "adjacencylist representation tests" $ do
 
 -- | some test graph
 testG :: Graph Int String
-testG = fromAdjacencyLists [ (0, 0, [ (1, "01"), (2, "02") ])
-                           , (1, 1, [ (0, "10"), (2, "12") ])
-                           , (2, 2, [ (1, "21"), (0, "20") ])
+testG = fromAdjacencyLists . NonEmpty.fromList $
+                           [ (0, 0, NonEmpty.fromList [ (1, "01"), (2, "02") ])
+                           , (1, 1, NonEmpty.fromList [ (0, "10"), (2, "12") ])
+                           , (2, 2, NonEmpty.fromList [ (1, "21"), (0, "20") ])
                            ]

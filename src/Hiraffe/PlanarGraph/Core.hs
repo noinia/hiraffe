@@ -46,7 +46,7 @@ import           Data.Semigroup
 import           Data.Type.Equality (gcastWith)
 import qualified Data.Vector.Mutable as MV
 import           Data.Vector.NonEmpty (NonEmptyVector)
-import qualified Data.Vector.NonEmpty as NonEmptyV
+import qualified Data.Vector.NonEmpty as V
 import           GHC.Generics (Generic)
 import           HGeometry.Permutation
 import           HGeometry.Vector.NonEmpty.Util ()
@@ -56,11 +56,11 @@ import           Hiraffe.PlanarGraph.World
 --------------------------------------------------------------------------------
 -- $setup
 -- >>> import Hiraffe.PlanarGraph.Dart(Dart(Dart),Arc(Arc),Direction(..))
+-- >>> import qualified Data.List.NonEmpty as NonEmpty
 -- >>> :{
 -- let dart i s = Dart (Arc i) (read s)
 --     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]
---     myGraph :: PlanarGraph () Primal String String String
---     myGraph = planarGraph . NonEmpty.fromList $
+--     adjacencies = NonEmpty.fromList . fmap NonEmpty.fromList $
 --                            [ [ (Dart aA Negative, "a-")
 --                             , (Dart aC Positive, "c+")
 --                             , (Dart aB Positive, "b+")
@@ -77,8 +77,11 @@ import           Hiraffe.PlanarGraph.World
 --                             ]
 --                           , [ (Dart aG Negative, "g-")
 --                             ]
---                           ] & vertexData .~ NonEmptyV.fromList ["u","v","w","x"]
---                             & faceData   .~ NonEmptyV.fromList ["f_3", "f_infty","f_1","f_2"]
+--                           ]
+--     myGraph :: PlanarGraph String Primal String String String
+--     myGraph = planarGraph adjacencies
+--                    & vertexData .~ V.unsafeFromList ["u","v","w","x"]
+--                    & faceData   .~ V.unsafeFromList ["f_3", "f_infty","f_1","f_2"]
 --     showWithData     :: HasDataOf s i => s -> i -> (i, DataOf s i)
 --     showWithData g i = (i, g^.dataOf i)
 -- :}
@@ -243,7 +246,7 @@ updateData' fv fe ff (PlanarGraph em vtxData dData fData dg) = g'
 
 -- | Reorders the edge data to be in the right order to set dartData
 reorderEdgeData    :: Foldable1 f => f (DartId s, e) -> NonEmptyVector e
-reorderEdgeData ds = NonEmptyV.unsafeCreate $ do
+reorderEdgeData ds = V.unsafeCreate $ do
                                   v <- MV.new (F.length ds)
                                   F.forM_ ds $ \(d,x) ->
                                     MV.write v (fromEnum d) x
@@ -313,19 +316,19 @@ planarGraph' perm = pg
         -- note the lazy calculation of computeDual that refers to pg itself
     d  = size perm
     e  = d `div` 2
-    v  = NonEmptyV.length (perm^.orbits)
+    v  = V.length (perm^.orbits)
     f  = e - v + 2
 
-    vData  = NonEmptyV.replicate1 v ()
-    eData  = NonEmptyV.replicate1 d ()
-    fData  = NonEmptyV.replicate1 f ()
+    vData  = V.replicate1 v ()
+    eData  = V.replicate1 d ()
+    fData  = V.replicate1 f ()
 
 -- | Construct a planar graph, given the darts in cyclic order around each
 -- vertex.
 --
 -- running time: \(O(n)\).
 planarGraph    :: NonEmpty (NonEmpty (DartId s,e)) -> PlanarGraph s Primal () e ()
-planarGraph ds = planarGraph' perm & dartVector .~ NonEmptyV.fromNonEmpty (sconcat ds)
+planarGraph ds = planarGraph' perm & dartVector .~ V.fromNonEmpty (sconcat ds)
   where
     n     = sum . fmap length $ ds
     perm  = toCycleRep n $ fmap (fmap fst) ds
@@ -353,7 +356,7 @@ toAdjacencyLists pg = fmap (\u -> (u,neighboursOf u pg)) . toNonEmpty . vertices
 -- >>> numVertices myGraph
 -- 4
 numVertices :: PlanarGraph s w v e f -> Int
-numVertices g = NonEmptyV.length (g^.embedding.orbits)
+numVertices g = V.length (g^.embedding.orbits)
 
 -- | Get the number of Darts
 --
@@ -382,14 +385,14 @@ numFaces g = numEdges g - numVertices g + 2
 -- >>> vertices' myGraph
 -- [VertexId 0,VertexId 1,VertexId 2,VertexId 3]
 vertices'   :: PlanarGraph s w v e f -> NonEmptyVector (VertexIdIn w s)
-vertices' g = VertexId <$> NonEmptyV.enumFromN1 0 (NonEmptyV.length (g^.embedding.orbits))
+vertices' g = VertexId <$> V.enumFromN1 0 (V.length (g^.embedding.orbits))
 
 -- | Enumerate all vertices, together with their vertex data
 
 -- >>> vertices myGraph
 -- [(VertexId 0,()),(VertexId 1,()),(VertexId 2,()),(VertexId 3,())]
 vertices   :: PlanarGraph s w v e f -> NonEmptyVector (VertexIdIn w s, v)
-vertices g = NonEmptyV.zip (vertices' g) (g^.vertexData)
+vertices g = V.zip (vertices' g) (g^.vertexData)
 
 
 
@@ -417,7 +420,7 @@ darts g = (\d -> (d,g^.dataOf d)) <$> darts' g
 
 -- | Enumerate all edges. We report only the Positive darts
 edges' :: PlanarGraph s w v e f -> NonEmptyVector (DartId s)
-edges' = NonEmptyV.unsafeFromVector . NonEmptyV.filter Dart.isPositive . darts'
+edges' = V.unsafeFromVector . V.filter Dart.isPositive . darts'
 
 -- | Enumerate all edges with their edge data. We report only the Positive
 -- darts.
@@ -430,7 +433,7 @@ edges' = NonEmptyV.unsafeFromVector . NonEmptyV.filter Dart.isPositive . darts'
 -- (Dart (Arc 4) +1,"e+")
 -- (Dart (Arc 3) +1,"d+")
 edges :: PlanarGraph s w v e f -> NonEmptyVector (DartId s, e)
-edges = NonEmptyV.unsafeFromVector . NonEmptyV.filter (Dart.isPositive . fst) . darts
+edges = V.unsafeFromVector . V.filter (Dart.isPositive . fst) . darts
 
 
 -- | The tail of a dart, i.e. the vertex this dart is leaving from
@@ -624,7 +627,7 @@ endPointData d g = let (u,v) = endPoints d g in (g^.dataOf u, g^.dataOf v)
 -- | The dual of this graph
 --
 -- >>> :{
---  let fromList = V.fromList
+--  let fromList = V.unsafeFromList
 --      answer = fromList [ fromList [dart 0 "-1"]
 --                        , fromList [dart 2 "+1",dart 4 "+1",dart 1 "-1",dart 0 "+1"]
 --                        , fromList [dart 1 "+1",dart 3 "-1",dart 2 "-1"]

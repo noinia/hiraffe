@@ -121,15 +121,15 @@ class ( HasVertices graph graph
    #-}
 
   -- | Possible additional constraints for constructing a DirGraph
-  type DirGraphFromAdjListExtraConstraints graph :: Constraint
-  type DirGraphFromAdjListExtraConstraints graph = ()
+  type DirGraphFromAdjListExtraConstraints graph (h :: Type -> Type) :: Constraint
+  type DirGraphFromAdjListExtraConstraints graph h = ()
 
   -- | Build a directed graph from its adjacency lists.
   dirGraphFromAdjacencyLists :: ( Foldable1 f, Functor f, Foldable h, Functor h
                                 , vi ~ VertexIx graph
                                 , v ~ Vertex graph
                                 , d ~ Dart graph
-                                , DirGraphFromAdjListExtraConstraints graph
+                                , DirGraphFromAdjListExtraConstraints graph h
                                 ) => f (vi, v, h (vi, d)) -> graph
 
   -- | Get the endpoints (origin, destination) of a dart
@@ -224,8 +224,8 @@ class ( HasVertices graph graph
       ) => Graph_ graph where
 
   -- | Possible additional constraints for constructing a DirGraph
-  type GraphFromAdjListExtraConstraints graph :: Constraint
-  type GraphFromAdjListExtraConstraints graph = ()
+  type GraphFromAdjListExtraConstraints graph (h :: Type -> Type)  :: Constraint
+  type GraphFromAdjListExtraConstraints graph h = ()
 
   -- | Build a graph from its adjacency lists.
   --
@@ -237,7 +237,7 @@ class ( HasVertices graph graph
                         , vi ~ VertexIx graph
                         , v ~ Vertex graph
                         , e ~ Edge graph
-                        , GraphFromAdjListExtraConstraints graph
+                        , GraphFromAdjListExtraConstraints graph h
                         ) => f (vi, v, h (vi, e)) -> graph
 
   -- | All neighbours of a given vertex

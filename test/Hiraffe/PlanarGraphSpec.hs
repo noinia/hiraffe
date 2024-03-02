@@ -4,6 +4,8 @@ module Hiraffe.PlanarGraphSpec where
 
 import           Control.Lens (view,_3,ifoldMapOf,(^..), asIndex)
 import qualified Data.Foldable as F
+import qualified Data.List.NonEmpty as NonEmpty
+import           Data.List.NonEmpty (NonEmpty(..))
 import qualified Data.Map.Strict as SM
 import qualified Data.Set as S
 import qualified Data.Text as Text
@@ -82,19 +84,21 @@ spec = describe "PlanarGraph spec" $ do
 -- myGraph :: PlanarGraph TestG PlanarGraph.Primal Int Text.Text ()
 -- myGraph = fromAdjacencyLists testEdges
 
-testEdges :: [(Vertex, Int, [(Vertex, Text.Text ) ])]
-testEdges = map (\(i,vs) -> (VertexId i, i,
-                              map (\j -> (VertexId j, Text.pack $ "edge" <> show (i,j))) vs))
-            [ (0, [1])           -- 1
-            , (1, [0,2,4])       -- 3
-            , (2, [1,3,4])       -- 3
-            , (3, [2,5])         -- 2
-            , (4, [1,2,5])       -- 3
-            , (5, [3,4])         -- 2
+testEdges :: NonEmpty (Vertex, Int, NonEmpty (Vertex, Text.Text ))
+testEdges = fmap (\(i,vs) -> (VertexId i, i,
+                              fmap (\j -> (VertexId j, Text.pack $ "edge" <> show (i,j))) vs))
+          $ NonEmpty.fromList
+            [ (0, NonEmpty.fromList [1])           -- 1
+            , (1, NonEmpty.fromList [0,2,4])       -- 3
+            , (2, NonEmpty.fromList [1,3,4])       -- 3
+            , (3, NonEmpty.fromList [2,5])         -- 2
+            , (4, NonEmpty.fromList [1,2,5])       -- 3
+            , (5, NonEmpty.fromList [3,4])         -- 2
             ]
 
-simplify :: [(Vertex, Int, [(Vertex, Text.Text ) ])] -> [(Vertex, [Vertex])]
-simplify = fmap (\(u,_,adjs) -> (u, fmap fst adjs))
+simplify :: NonEmpty (Vertex, Int, NonEmpty (Vertex, Text.Text ))
+         -> [(Vertex, [Vertex])]
+simplify = F.toList . fmap (\(u,_,adjs) -> (u, F.toList $ fmap fst adjs))
 
 -- testGraph = fromAdjacencyLists testEdges
 
@@ -120,7 +124,9 @@ fromAdjacencyListsOld      :: forall s f.(Foldable f, Functor f)
 fromAdjacencyListsOld adjM = planarGraph' . toCycleRep n $ perm
   where
     n    = sum . fmap length $ perm
-    perm = view (_3) . foldr toOrbit (STR mempty 0 mempty) $ adjM
+    perm = NonEmpty.fromList
+         . fmap NonEmpty.fromList
+         . view (_3) . foldr toOrbit (STR mempty 0 mempty) $ adjM
 
 
     -- | Given a vertex with its adjacent vertices (u,vs) (in CCW order) convert this
