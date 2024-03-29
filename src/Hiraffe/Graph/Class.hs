@@ -13,7 +13,7 @@
 module Hiraffe.Graph.Class
   ( Graph_(..)
   , BidirGraph_(..)
-  , DirGraph_(..)
+  , DiGraph_(..)
   , HasVertices(..), HasVertices'(..)
   , HasEdges(..), HasEdges'(..)
   , HasDarts(..), HasDarts'(..)
@@ -113,7 +113,7 @@ class HasEdges' graph => HasEdges graph graph' where
 -- | A class representing non-empty directed graphs
 class ( HasVertices graph graph
       , HasDarts graph graph
-      ) => DirGraph_ graph where
+      ) => DiGraph_ graph where
   {-# MINIMAL dirGraphFromAdjacencyLists
             , (endPoints | headOf, tailOf)
             , (outNeighboursOf | outgoingDartsOf)
@@ -121,15 +121,15 @@ class ( HasVertices graph graph
    #-}
 
   -- | Possible additional constraints for constructing a DirGraph
-  type DirGraphFromAdjListExtraConstraints graph (h :: Type -> Type) :: Constraint
-  type DirGraphFromAdjListExtraConstraints graph h = ()
+  type DiGraphFromAdjListExtraConstraints graph (h :: Type -> Type) :: Constraint
+  type DiGraphFromAdjListExtraConstraints graph h = ()
 
   -- | Build a directed graph from its adjacency lists.
   dirGraphFromAdjacencyLists :: ( Foldable1 f, Functor f, Foldable h, Functor h
                                 , vi ~ VertexIx graph
                                 , v ~ Vertex graph
                                 , d ~ Dart graph
-                                , DirGraphFromAdjListExtraConstraints graph h
+                                , DiGraphFromAdjListExtraConstraints graph h
                                 ) => f (vi, v, h (vi, d)) -> graph
 
   -- | Get the endpoints (origin, destination) of a dart
@@ -197,7 +197,7 @@ class ( HasVertices graph graph
 
 -- | Types representing non-empty bidirected graphs, i.e. a directed graph, but all directed edges
 -- are guaranteed to exist in both directions.
-class DirGraph_ graph => BidirGraph_ graph where
+class DiGraph_ graph => BidirGraph_ graph where
 
   -- | The twin of this dart.
   twinOf :: DartIx graph -> Getter graph (DartIx graph)
@@ -320,7 +320,7 @@ instance HasEdges Containers.Graph Containers.Graph where
   edges = darts . ifiltered (\(u,v) _ -> u <= v)
   {-# INLINE edges #-}
 
-instance DirGraph_ Containers.Graph where
+instance DiGraph_ Containers.Graph where
   -- | pre: vertex Id's are in the range 0..n
   dirGraphFromAdjacencyLists ajs = Containers.buildG (0,n) ds
     where

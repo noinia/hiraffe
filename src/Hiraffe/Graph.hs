@@ -14,7 +14,7 @@ module Hiraffe.Graph
   , HasEdges(..), HasEdges'(..)
 
   , Graph_(..)
-  , DirGraph_(..)
+  , DiGraph_(..)
   , BidirGraph_(..)
   ) where
 

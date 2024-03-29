@@ -176,7 +176,7 @@ linkNegatives g = g&darts %@~ \(u,v) x -> if u <= v then fromJust' x
     fromJust' = fromMaybe (error "Hiraffe.AdjacencyListRep.edges: absurd ; fromJust")
 
 
-instance HasFromFoldable f => DirGraph_ (GGraph f v e) where
+instance HasFromFoldable f => DiGraph_ (GGraph f v e) where
   dirGraphFromAdjacencyLists =
     Graph . foldMap1 (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
                                      in IntMap.singleton i vd

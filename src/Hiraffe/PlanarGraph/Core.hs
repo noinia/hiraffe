@@ -43,6 +43,7 @@ import           Data.Foldable1
 import           Data.Functor.Apply (Apply)
 import           Data.List.NonEmpty (NonEmpty(..))
 import           Data.Semigroup
+import           Data.Traversable
 import           Data.Type.Equality (gcastWith)
 import qualified Data.Vector.Mutable as MV
 import           Data.Vector.NonEmpty (NonEmptyVector)
@@ -151,6 +152,19 @@ data PlanarGraph s (w :: World) v e f =
               , _faceData    :: NonEmptyVector f
               , _dual        :: PlanarGraph s (DualOf w) f e v
               } deriving (Generic)
+
+instance Functor (PlanarGraph s w v e) where
+  fmap = fmapDefault
+instance Foldable (PlanarGraph s w v e) where
+  foldMap f = foldMap f . _faceData
+instance Traversable (PlanarGraph s w v e) where
+  traverse f (PlanarGraph e vs ds fs (PlanarGraph e' _ ds' fs' _)) =
+    (\fsNew -> let g     = PlanarGraph e  vs    ds  fsNew dualG
+                   dualG = PlanarGraph e' fsNew ds' fs'   (gcastWith proof g)
+                   proof = dualDualIdentity :: DualOf (DualOf w) :~: w
+               in g
+    ) <$> traverse f fs
+
 
 instance (Show v, Show e, Show f) => Show (PlanarGraph s w v e f) where
   show (PlanarGraph e v r f _) = unwords [ "PlanarGraph"

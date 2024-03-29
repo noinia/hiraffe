@@ -40,7 +40,7 @@ import           Witherable
 -- pre: the vertices in the graph are numbered (0,n-1)
 --
 -- running time: \(O(V + E)\)
-bfs      :: forall graph. (DirGraph_ graph, Enum (VertexIx graph))
+bfs      :: forall graph. (DiGraph_ graph, Enum (VertexIx graph))
          => graph -> VertexIx graph -> Tree (VertexIx graph)
 bfs gr s = extract s $ V.create
          $ do st  <- UMV.replicate n False
