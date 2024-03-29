@@ -13,13 +13,13 @@
 </span><span id="line-13"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.DFS.html#dff"><span class="hs-identifier">dff</span></a></span><span>
 </span><span id="line-14"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-15"></span><span>
-</span><span id="line-16"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-e0202ed71092f553056cdd62278fe0243d8fd74d90d853831fdbf5ca045657ce/share/doc/html/src/Control.Lens.html"><span class="hs-identifier">Control.Lens</span></a></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-6663224977c14f26ace9163049e5e902fc775cb0a5525b8f3cdca389e0fe1068/share/doc/html/src/Control.Lens.html"><span class="hs-identifier">Control.Lens</span></a></span><span>
 </span><span id="line-17"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Control.Monad.ST</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ST</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">runST</span></span><span class="hs-special">)</span><span>
 </span><span id="line-18"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">fromJust</span></span><span class="hs-special">)</span><span>
 </span><span id="line-19"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Tree</span></span><span>
-</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.Unboxed.Mutable.html"><span class="hs-identifier">Data.Vector.Unboxed.Mutable</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">UMV</span></span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-f64c4a5b135b5f8b22f3e314d5a02a5df6e86ff5642d2220797bdb6b063e2c84/share/doc/html/src/Data.Vector.Unboxed.Mutable.html"><span class="hs-identifier">Data.Vector.Unboxed.Mutable</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">UMV</span></span><span>
 </span><span id="line-21"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.Graph.html"><span class="hs-identifier">Hiraffe.Graph</span></a></span><span>
-</span><span id="line-22"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/witherable-0.4.2-63e93466a0d98d30c6b6e911d30c8f6de2e47a4fb5b1ab760de8a16f5ddf00f1/share/doc/html/src/Witherable.html"><span class="hs-identifier">Witherable</span></a></span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/witherable-0.4.2-f36e9563ee66d486dda945d319c14e1b67223204297eef3e54f4efbf70b87f4a/share/doc/html/src/Witherable.html"><span class="hs-identifier">Witherable</span></a></span><span>
 </span><span id="line-23"></span><span>
 </span><span id="line-24"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
 </span><span id="line-25"></span><span>
@@ -28,13 +28,13 @@
 </span><span id="line-28"></span><span class="hs-comment">-- pre: - the fromEnum instance of a vertex maps the vertices to the range [0,..,V-1]</span><span>
 </span><span id="line-29"></span><span class="hs-comment">--</span><span>
 </span><span id="line-30"></span><span class="hs-comment">-- \(O(V+E)\)</span><span>
-</span><span id="line-31"></span><span id="local-6989586621679170768"><span class="annot"><a href="Hiraffe.DFS.html#dff"><span class="hs-identifier hs-type">dff</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#Graph_"><span class="hs-identifier hs-type">Graph_</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679170768"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Enum</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679170768"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-32"></span><span>      </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679170768"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Forest</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679170768"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-31"></span><span id="local-6989586621679172299"><span class="annot"><a href="Hiraffe.DFS.html#dff"><span class="hs-identifier hs-type">dff</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#Graph_"><span class="hs-identifier hs-type">Graph_</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172299"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Enum</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172299"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span>      </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679172299"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Forest</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172299"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span></span><span>
 </span><span id="line-33"></span><span id="dff"><span class="annot"><span class="annottext">dff :: forall graph.
 (Graph_ graph, Enum (VertexIx graph)) =&gt;
 graph -&gt; Forest (VertexIx graph)
-</span><a href="Hiraffe.DFS.html#dff"><span class="hs-identifier hs-var hs-var">dff</span></a></span></span><span> </span><span id="local-6989586621679170871"><span class="annot"><span class="annottext">graph
-</span><a href="#local-6989586621679170871"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall s. ST s (Forest (VertexIx graph)))
+</span><a href="Hiraffe.DFS.html#dff"><span class="hs-identifier hs-var hs-var">dff</span></a></span></span><span> </span><span id="local-6989586621679172402"><span class="annot"><span class="annottext">graph
+</span><a href="#local-6989586621679172402"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall s. ST s (Forest (VertexIx graph)))
 -&gt; Forest (VertexIx graph)
 forall a. (forall s. ST s a) -&gt; a
 </span><span class="hs-identifier hs-var">runST</span></span><span> </span><span class="annot"><span class="annottext">((forall s. ST s (Forest (VertexIx graph)))
@@ -43,13 +43,13 @@ forall a. (forall s. ST s a) -&gt; a
 -&gt; Forest (VertexIx graph)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-34"></span><span>          </span><span id="local-6989586621679170894"><span class="annot"><span class="annottext">MVector s Bool
-</span><a href="#local-6989586621679170894"><span class="hs-identifier hs-var">bv</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int -&gt; ST s (MVector s Bool)
+</span><span id="line-34"></span><span>          </span><span id="local-6989586621679172425"><span class="annot"><span class="annottext">MVector s Bool
+</span><a href="#local-6989586621679172425"><span class="hs-identifier hs-var">bv</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int -&gt; ST s (MVector s Bool)
 forall s. Int -&gt; ST s (MVector s Bool)
 </span><a href="Hiraffe.DFS.html#intitialize"><span class="hs-identifier hs-var">intitialize</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">graph -&gt; Int
 forall graph. HasVertices' graph =&gt; graph -&gt; Int
 </span><a href="Hiraffe.Graph.Class.html#numVertices"><span class="hs-identifier hs-var">numVertices</span></a></span><span> </span><span class="annot"><span class="annottext">graph
-</span><a href="#local-6989586621679170871"><span class="hs-identifier hs-var">g</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679172402"><span class="hs-identifier hs-var">g</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-35"></span><span>          </span><span class="annot"><span class="annottext">((VertexIx graph -&gt; ST s (Maybe (Tree (VertexIx graph))))
  -&gt; [VertexIx graph] -&gt; ST s (Forest (VertexIx graph)))
 -&gt; [VertexIx graph]
@@ -64,12 +64,12 @@ forall (t :: * -&gt; *) (m :: * -&gt; *) a b.
 forall (m :: * -&gt; *) a b.
 Monad m =&gt;
 (a -&gt; m (Maybe b)) -&gt; [a] -&gt; m [b]
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/witherable-0.4.2-63e93466a0d98d30c6b6e911d30c8f6de2e47a4fb5b1ab760de8a16f5ddf00f1/share/doc/html/src/Witherable.html#witherM"><span class="hs-identifier hs-var">witherM</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">graph
-</span><a href="#local-6989586621679170871"><span class="hs-identifier hs-var">g</span></a></span><span class="annot"><span class="annottext">graph
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/witherable-0.4.2-f36e9563ee66d486dda945d319c14e1b67223204297eef3e54f4efbf70b87f4a/share/doc/html/src/Witherable.html#witherM"><span class="hs-identifier hs-var">witherM</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">graph
+</span><a href="#local-6989586621679172402"><span class="hs-identifier hs-var">g</span></a></span><span class="annot"><span class="annottext">graph
 -&gt; Getting (Endo [VertexIx graph]) graph (VertexIx graph)
 -&gt; [VertexIx graph]
 forall s a. s -&gt; Getting (Endo [a]) s a -&gt; [a]
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-e0202ed71092f553056cdd62278fe0243d8fd74d90d853831fdbf5ca045657ce/share/doc/html/src/Control.Lens.Fold.html#%5E.."><span class="hs-operator hs-var">^..</span></a></span><span class="annot"><span class="annottext">Indexed
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-6663224977c14f26ace9163049e5e902fc775cb0a5525b8f3cdca389e0fe1068/share/doc/html/src/Control.Lens.Fold.html#%5E.."><span class="hs-operator hs-var">^..</span></a></span><span class="annot"><span class="annottext">Indexed
   (VertexIx graph)
   (Vertex graph)
   (Const (Endo [VertexIx graph]) (Vertex graph))
@@ -101,13 +101,13 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall i (p :: * -&gt; * -&gt; *) (f :: * -&gt; *) s.
 (Indexable i p, Contravariant f, Functor f) =&gt;
 p i (f i) -&gt; Indexed i s (f s)
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-e0202ed71092f553056cdd62278fe0243d8fd74d90d853831fdbf5ca045657ce/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">((VertexIx graph -&gt; ST s (Maybe (Tree (VertexIx graph))))
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-6663224977c14f26ace9163049e5e902fc775cb0a5525b8f3cdca389e0fe1068/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">((VertexIx graph -&gt; ST s (Maybe (Tree (VertexIx graph))))
  -&gt; ST s (Forest (VertexIx graph)))
 -&gt; (VertexIx graph -&gt; ST s (Maybe (Tree (VertexIx graph))))
 -&gt; ST s (Forest (VertexIx graph))
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679170903"><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679170903"><span class="hs-identifier hs-var">u</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679172434"><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679172434"><span class="hs-identifier hs-var">u</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-36"></span><span>            </span><span class="annot"><span class="annottext">graph
 -&gt; VertexIx graph
 -&gt; MVector s Bool
@@ -119,9 +119,9 @@ graph
 -&gt; MVector s Bool
 -&gt; ST s (Maybe (Tree (VertexIx graph)))
 </span><a href="Hiraffe.DFS.html#dfsFrom"><span class="hs-identifier hs-var">dfsFrom</span></a></span><span> </span><span class="annot"><span class="annottext">graph
-</span><a href="#local-6989586621679170871"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679170903"><span class="hs-identifier hs-var">u</span></a></span><span> </span><span class="annot"><span class="annottext">MVector s Bool
-</span><a href="#local-6989586621679170894"><span class="hs-identifier hs-var">bv</span></a></span><span>
+</span><a href="#local-6989586621679172402"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679172434"><span class="hs-identifier hs-var">u</span></a></span><span> </span><span class="annot"><span class="annottext">MVector s Bool
+</span><a href="#local-6989586621679172425"><span class="hs-identifier hs-var">bv</span></a></span><span>
 </span><span id="line-37"></span><span>
 </span><span id="line-38"></span><span class="hs-comment">-- | DFS, from a given vertex.</span><span>
 </span><span id="line-39"></span><span class="hs-comment">--</span><span>
@@ -129,27 +129,27 @@ graph
 </span><span id="line-41"></span><span class="hs-comment">--      - the fromEnum instance of a vertex maps the vertices to the range [0,..,V-1]</span><span>
 </span><span id="line-42"></span><span class="hs-comment">--</span><span>
 </span><span id="line-43"></span><span class="hs-comment">-- \(O(V+E)\)</span><span>
-</span><span id="line-44"></span><span id="local-6989586621679170828"><span class="annot"><a href="Hiraffe.DFS.html#dfs"><span class="hs-identifier hs-type">dfs</span></a></span><span>         </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#Graph_"><span class="hs-identifier hs-type">Graph_</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679170828"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Enum</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679170828"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-45"></span><span>            </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679170828"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679170828"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Tree</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679170828"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-44"></span><span id="local-6989586621679172359"><span class="annot"><a href="Hiraffe.DFS.html#dfs"><span class="hs-identifier hs-type">dfs</span></a></span><span>         </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#Graph_"><span class="hs-identifier hs-type">Graph_</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172359"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Enum</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172359"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span>            </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679172359"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172359"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Tree</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172359"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span></span><span>
 </span><span id="line-46"></span><span id="dfs"><span class="annot"><span class="annottext">dfs :: forall graph.
 (Graph_ graph, Enum (VertexIx graph)) =&gt;
 graph -&gt; VertexIx graph -&gt; Tree (VertexIx graph)
-</span><a href="Hiraffe.DFS.html#dfs"><span class="hs-identifier hs-var hs-var">dfs</span></a></span></span><span> </span><span id="local-6989586621679170909"><span class="annot"><span class="annottext">graph
-</span><a href="#local-6989586621679170909"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span id="local-6989586621679170910"><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679170910"><span class="hs-identifier hs-var">start</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall s. ST s (Tree (VertexIx graph))) -&gt; Tree (VertexIx graph)
+</span><a href="Hiraffe.DFS.html#dfs"><span class="hs-identifier hs-var hs-var">dfs</span></a></span></span><span> </span><span id="local-6989586621679172440"><span class="annot"><span class="annottext">graph
+</span><a href="#local-6989586621679172440"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span id="local-6989586621679172441"><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679172441"><span class="hs-identifier hs-var">start</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall s. ST s (Tree (VertexIx graph))) -&gt; Tree (VertexIx graph)
 forall a. (forall s. ST s a) -&gt; a
 </span><span class="hs-identifier hs-var">runST</span></span><span> </span><span class="annot"><span class="annottext">((forall s. ST s (Tree (VertexIx graph))) -&gt; Tree (VertexIx graph))
 -&gt; (forall s. ST s (Tree (VertexIx graph)))
 -&gt; Tree (VertexIx graph)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-47"></span><span>                </span><span id="local-6989586621679170919"><span class="annot"><span class="annottext">MVector s Bool
-</span><a href="#local-6989586621679170919"><span class="hs-identifier hs-var">bv</span></a></span></span><span>     </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int -&gt; ST s (MVector s Bool)
+</span><span id="line-47"></span><span>                </span><span id="local-6989586621679172450"><span class="annot"><span class="annottext">MVector s Bool
+</span><a href="#local-6989586621679172450"><span class="hs-identifier hs-var">bv</span></a></span></span><span>     </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int -&gt; ST s (MVector s Bool)
 forall s. Int -&gt; ST s (MVector s Bool)
 </span><a href="Hiraffe.DFS.html#intitialize"><span class="hs-identifier hs-var">intitialize</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">graph -&gt; Int
 forall graph. HasVertices' graph =&gt; graph -&gt; Int
 </span><a href="Hiraffe.Graph.Class.html#numVertices"><span class="hs-identifier hs-var">numVertices</span></a></span><span> </span><span class="annot"><span class="annottext">graph
-</span><a href="#local-6989586621679170909"><span class="hs-identifier hs-var">g</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679172440"><span class="hs-identifier hs-var">g</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-48"></span><span>                </span><span class="hs-comment">-- start will be unvisited, as per precondition, thus the fromJust is safe</span><span>
 </span><span id="line-49"></span><span>                </span><span class="annot"><span class="annottext">Maybe (Tree (VertexIx graph)) -&gt; Tree (VertexIx graph)
 forall a. HasCallStack =&gt; Maybe a -&gt; a
@@ -168,34 +168,34 @@ graph
 -&gt; MVector s Bool
 -&gt; ST s (Maybe (Tree (VertexIx graph)))
 </span><a href="Hiraffe.DFS.html#dfsFrom"><span class="hs-identifier hs-var">dfsFrom</span></a></span><span> </span><span class="annot"><span class="annottext">graph
-</span><a href="#local-6989586621679170909"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679170910"><span class="hs-identifier hs-var">start</span></a></span><span> </span><span class="annot"><span class="annottext">MVector s Bool
-</span><a href="#local-6989586621679170919"><span class="hs-identifier hs-var">bv</span></a></span><span>
+</span><a href="#local-6989586621679172440"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679172441"><span class="hs-identifier hs-var">start</span></a></span><span> </span><span class="annot"><span class="annottext">MVector s Bool
+</span><a href="#local-6989586621679172450"><span class="hs-identifier hs-var">bv</span></a></span><span>
 </span><span id="line-50"></span><span>
 </span><span id="line-51"></span><span class="annot"><span class="hs-comment">-- | Runs the DFS from a given start node with the given vertex</span></span><span>
-</span><span id="line-52"></span><span id="local-6989586621679170826"><span id="local-6989586621679170827"><span class="annot"><a href="Hiraffe.DFS.html#dfsFrom"><span class="hs-identifier hs-type">dfsFrom</span></a></span><span>            </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#Graph_"><span class="hs-identifier hs-type">Graph_</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679170826"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Enum</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679170826"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-53"></span><span>                   </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679170826"><span class="hs-identifier hs-type">graph</span></a></span><span>
-</span><span id="line-54"></span><span>                   </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679170826"><span class="hs-identifier hs-type">graph</span></a></span><span>
-</span><span id="line-55"></span><span>                   </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.Unboxed.Base.html#MVector"><span class="hs-identifier hs-type">UMV.MVector</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679170827"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
-</span><span id="line-56"></span><span>                   </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ST</span></span><span> </span><span class="annot"><a href="#local-6989586621679170827"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Tree</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679170826"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span></span></span><span>
+</span><span id="line-52"></span><span id="local-6989586621679172357"><span id="local-6989586621679172358"><span class="annot"><a href="Hiraffe.DFS.html#dfsFrom"><span class="hs-identifier hs-type">dfsFrom</span></a></span><span>            </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#Graph_"><span class="hs-identifier hs-type">Graph_</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172357"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Enum</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172357"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span>                   </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679172357"><span class="hs-identifier hs-type">graph</span></a></span><span>
+</span><span id="line-54"></span><span>                   </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172357"><span class="hs-identifier hs-type">graph</span></a></span><span>
+</span><span id="line-55"></span><span>                   </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-f64c4a5b135b5f8b22f3e314d5a02a5df6e86ff5642d2220797bdb6b063e2c84/share/doc/html/src/Data.Vector.Unboxed.Base.html#MVector"><span class="hs-identifier hs-type">UMV.MVector</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172358"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-56"></span><span>                   </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ST</span></span><span> </span><span class="annot"><a href="#local-6989586621679172358"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Tree</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172357"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span></span></span><span>
 </span><span id="line-57"></span><span id="dfsFrom"><span class="annot"><span class="annottext">dfsFrom :: forall graph s.
 (Graph_ graph, Enum (VertexIx graph)) =&gt;
 graph
 -&gt; VertexIx graph
 -&gt; MVector s Bool
 -&gt; ST s (Maybe (Tree (VertexIx graph)))
-</span><a href="Hiraffe.DFS.html#dfsFrom"><span class="hs-identifier hs-var hs-var">dfsFrom</span></a></span></span><span> </span><span id="local-6989586621679170949"><span class="annot"><span class="annottext">graph
-</span><a href="#local-6989586621679170949"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span id="local-6989586621679170950"><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679170950"><span class="hs-identifier hs-var">start</span></a></span></span><span> </span><span id="local-6989586621679170951"><span class="annot"><span class="annottext">MVector s Bool
-</span><a href="#local-6989586621679170951"><span class="hs-identifier hs-var">bv</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">VertexIx graph -&gt; ST s (Maybe (Tree (VertexIx graph)))
-</span><a href="#local-6989586621679170952"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679170950"><span class="hs-identifier hs-var">start</span></a></span><span>
+</span><a href="Hiraffe.DFS.html#dfsFrom"><span class="hs-identifier hs-var hs-var">dfsFrom</span></a></span></span><span> </span><span id="local-6989586621679172480"><span class="annot"><span class="annottext">graph
+</span><a href="#local-6989586621679172480"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span id="local-6989586621679172481"><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679172481"><span class="hs-identifier hs-var">start</span></a></span></span><span> </span><span id="local-6989586621679172482"><span class="annot"><span class="annottext">MVector s Bool
+</span><a href="#local-6989586621679172482"><span class="hs-identifier hs-var">bv</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">VertexIx graph -&gt; ST s (Maybe (Tree (VertexIx graph)))
+</span><a href="#local-6989586621679172483"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679172481"><span class="hs-identifier hs-var">start</span></a></span><span>
 </span><span id="line-58"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-59"></span><span>    </span><span id="local-6989586621679170952"><span class="annot"><span class="annottext">go :: VertexIx graph -&gt; ST s (Maybe (Tree (VertexIx graph)))
-</span><a href="#local-6989586621679170952"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679170953"><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679170953"><span class="hs-identifier hs-var">u</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">VertexIx graph -&gt; ST s Bool
-</span><a href="#local-6989586621679170954"><span class="hs-identifier hs-var">visited</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679170953"><span class="hs-identifier hs-var">u</span></a></span><span> </span><span class="annot"><span class="annottext">ST s Bool
+</span><span id="line-59"></span><span>    </span><span id="local-6989586621679172483"><span class="annot"><span class="annottext">go :: VertexIx graph -&gt; ST s (Maybe (Tree (VertexIx graph)))
+</span><a href="#local-6989586621679172483"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679172484"><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679172484"><span class="hs-identifier hs-var">u</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">VertexIx graph -&gt; ST s Bool
+</span><a href="#local-6989586621679172485"><span class="hs-identifier hs-var">visited</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679172484"><span class="hs-identifier hs-var">u</span></a></span><span> </span><span class="annot"><span class="annottext">ST s Bool
 -&gt; (Bool -&gt; ST s (Maybe (Tree (VertexIx graph))))
 -&gt; ST s (Maybe (Tree (VertexIx graph)))
 forall a b. ST s a -&gt; (a -&gt; ST s b) -&gt; ST s b
@@ -212,8 +212,8 @@ forall a. Maybe a
 </span><span id="line-61"></span><span>      </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-62"></span><span>                  </span><span class="annot"><span class="annottext">VertexIx graph -&gt; ST s ()
-</span><a href="#local-6989586621679170955"><span class="hs-identifier hs-var">visit</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679170953"><span class="hs-identifier hs-var">u</span></a></span><span>
+</span><a href="#local-6989586621679172486"><span class="hs-identifier hs-var">visit</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679172484"><span class="hs-identifier hs-var">u</span></a></span><span>
 </span><span id="line-63"></span><span>                  </span><span class="annot"><span class="annottext">Tree (VertexIx graph) -&gt; Maybe (Tree (VertexIx graph))
 forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">(Tree (VertexIx graph) -&gt; Maybe (Tree (VertexIx graph)))
@@ -224,7 +224,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">VertexIx graph -&gt; [Tree (VertexIx graph)] -&gt; Tree (VertexIx graph)
 forall a. a -&gt; [Tree a] -&gt; Tree a
 </span><span class="hs-identifier hs-var">Node</span></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679170953"><span class="hs-identifier hs-var">u</span></a></span><span> </span><span class="annot"><span class="annottext">([Tree (VertexIx graph)] -&gt; Maybe (Tree (VertexIx graph)))
+</span><a href="#local-6989586621679172484"><span class="hs-identifier hs-var">u</span></a></span><span> </span><span class="annot"><span class="annottext">([Tree (VertexIx graph)] -&gt; Maybe (Tree (VertexIx graph)))
 -&gt; ST s [Tree (VertexIx graph)]
 -&gt; ST s (Maybe (Tree (VertexIx graph)))
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
@@ -236,18 +236,18 @@ forall (t :: * -&gt; *) (m :: * -&gt; *) a b.
 forall (m :: * -&gt; *) a b.
 Monad m =&gt;
 (a -&gt; m (Maybe b)) -&gt; [a] -&gt; m [b]
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/witherable-0.4.2-63e93466a0d98d30c6b6e911d30c8f6de2e47a4fb5b1ab760de8a16f5ddf00f1/share/doc/html/src/Witherable.html#witherM"><span class="hs-identifier hs-var">witherM</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph -&gt; ST s (Maybe (Tree (VertexIx graph)))
-</span><a href="#local-6989586621679170952"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">graph
-</span><a href="#local-6989586621679170949"><span class="hs-identifier hs-var">g</span></a></span><span class="annot"><span class="annottext">graph
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/witherable-0.4.2-f36e9563ee66d486dda945d319c14e1b67223204297eef3e54f4efbf70b87f4a/share/doc/html/src/Witherable.html#witherM"><span class="hs-identifier hs-var">witherM</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph -&gt; ST s (Maybe (Tree (VertexIx graph)))
+</span><a href="#local-6989586621679172483"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">graph
+</span><a href="#local-6989586621679172480"><span class="hs-identifier hs-var">g</span></a></span><span class="annot"><span class="annottext">graph
 -&gt; Getting (Endo [VertexIx graph]) graph (VertexIx graph)
 -&gt; [VertexIx graph]
 forall s a. s -&gt; Getting (Endo [a]) s a -&gt; [a]
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-e0202ed71092f553056cdd62278fe0243d8fd74d90d853831fdbf5ca045657ce/share/doc/html/src/Control.Lens.Fold.html#%5E.."><span class="hs-operator hs-var">^..</span></a></span><span class="annot"><span class="annottext">VertexIx graph -&gt; IndexedFold (VertexIx graph) graph (Vertex graph)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-6663224977c14f26ace9163049e5e902fc775cb0a5525b8f3cdca389e0fe1068/share/doc/html/src/Control.Lens.Fold.html#%5E.."><span class="hs-operator hs-var">^..</span></a></span><span class="annot"><span class="annottext">VertexIx graph -&gt; IndexedFold (VertexIx graph) graph (Vertex graph)
 forall graph.
 Graph_ graph =&gt;
 VertexIx graph -&gt; IndexedFold (VertexIx graph) graph (Vertex graph)
 </span><a href="Hiraffe.Graph.Class.html#neighboursOf"><span class="hs-identifier hs-var">neighboursOf</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679170953"><span class="hs-identifier hs-var">u</span></a></span><span class="annot"><span class="annottext">(Indexed
+</span><a href="#local-6989586621679172484"><span class="hs-identifier hs-var">u</span></a></span><span class="annot"><span class="annottext">(Indexed
    (VertexIx graph)
    (Vertex graph)
    (Const (Endo [VertexIx graph]) (Vertex graph))
@@ -268,44 +268,44 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall i (p :: * -&gt; * -&gt; *) (f :: * -&gt; *) s.
 (Indexable i p, Contravariant f, Functor f) =&gt;
 p i (f i) -&gt; Indexed i s (f s)
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-e0202ed71092f553056cdd62278fe0243d8fd74d90d853831fdbf5ca045657ce/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span class="hs-special">)</span><span>
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.2.3-6663224977c14f26ace9163049e5e902fc775cb0a5525b8f3cdca389e0fe1068/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-64"></span><span>
-</span><span id="line-65"></span><span>    </span><span id="local-6989586621679170955"><span class="annot"><span class="annottext">visit :: VertexIx graph -&gt; ST s ()
-</span><a href="#local-6989586621679170955"><span class="hs-identifier hs-var hs-var">visit</span></a></span></span><span>   </span><span id="local-6989586621679170958"><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679170958"><span class="hs-identifier hs-var">u</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">MVector (PrimState (ST s)) Bool -&gt; Int -&gt; Bool -&gt; ST s ()
+</span><span id="line-65"></span><span>    </span><span id="local-6989586621679172486"><span class="annot"><span class="annottext">visit :: VertexIx graph -&gt; ST s ()
+</span><a href="#local-6989586621679172486"><span class="hs-identifier hs-var hs-var">visit</span></a></span></span><span>   </span><span id="local-6989586621679172489"><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679172489"><span class="hs-identifier hs-var">u</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">MVector (PrimState (ST s)) Bool -&gt; Int -&gt; Bool -&gt; ST s ()
 forall (m :: * -&gt; *) a.
 (PrimMonad m, Unbox a) =&gt;
 MVector (PrimState m) a -&gt; Int -&gt; a -&gt; m ()
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.Unboxed.Mutable.html#write"><span class="hs-identifier hs-var">UMV.write</span></a></span><span> </span><span class="annot"><span class="annottext">MVector s Bool
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-f64c4a5b135b5f8b22f3e314d5a02a5df6e86ff5642d2220797bdb6b063e2c84/share/doc/html/src/Data.Vector.Unboxed.Mutable.html#write"><span class="hs-identifier hs-var">UMV.write</span></a></span><span> </span><span class="annot"><span class="annottext">MVector s Bool
 MVector (PrimState (ST s)) Bool
-</span><a href="#local-6989586621679170951"><span class="hs-identifier hs-var">bv</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VertexIx graph -&gt; Int
+</span><a href="#local-6989586621679172482"><span class="hs-identifier hs-var">bv</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VertexIx graph -&gt; Int
 forall a. Enum a =&gt; a -&gt; Int
 </span><span class="hs-identifier hs-var">fromEnum</span></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679170958"><span class="hs-identifier hs-var">u</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679172489"><span class="hs-identifier hs-var">u</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">True</span></span><span>
-</span><span id="line-66"></span><span>    </span><span id="local-6989586621679170954"><span class="annot"><span class="annottext">visited :: VertexIx graph -&gt; ST s Bool
-</span><a href="#local-6989586621679170954"><span class="hs-identifier hs-var hs-var">visited</span></a></span></span><span> </span><span id="local-6989586621679170961"><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679170961"><span class="hs-identifier hs-var">u</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">MVector (PrimState (ST s)) Bool -&gt; Int -&gt; ST s Bool
+</span><span id="line-66"></span><span>    </span><span id="local-6989586621679172485"><span class="annot"><span class="annottext">visited :: VertexIx graph -&gt; ST s Bool
+</span><a href="#local-6989586621679172485"><span class="hs-identifier hs-var hs-var">visited</span></a></span></span><span> </span><span id="local-6989586621679172492"><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679172492"><span class="hs-identifier hs-var">u</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">MVector (PrimState (ST s)) Bool -&gt; Int -&gt; ST s Bool
 forall (m :: * -&gt; *) a.
 (PrimMonad m, Unbox a) =&gt;
 MVector (PrimState m) a -&gt; Int -&gt; m a
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.Unboxed.Mutable.html#read"><span class="hs-identifier hs-var">UMV.read</span></a></span><span>  </span><span class="annot"><span class="annottext">MVector s Bool
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-f64c4a5b135b5f8b22f3e314d5a02a5df6e86ff5642d2220797bdb6b063e2c84/share/doc/html/src/Data.Vector.Unboxed.Mutable.html#read"><span class="hs-identifier hs-var">UMV.read</span></a></span><span>  </span><span class="annot"><span class="annottext">MVector s Bool
 MVector (PrimState (ST s)) Bool
-</span><a href="#local-6989586621679170951"><span class="hs-identifier hs-var">bv</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VertexIx graph -&gt; Int
+</span><a href="#local-6989586621679172482"><span class="hs-identifier hs-var">bv</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VertexIx graph -&gt; Int
 forall a. Enum a =&gt; a -&gt; Int
 </span><span class="hs-identifier hs-var">fromEnum</span></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679170961"><span class="hs-identifier hs-var">u</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679172492"><span class="hs-identifier hs-var">u</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-67"></span><span>
 </span><span id="line-68"></span><span class="annot"><span class="hs-comment">-- | Initialize the vector with visited marks</span></span><span>
-</span><span id="line-69"></span><span id="local-6989586621679170804"><span class="annot"><a href="Hiraffe.DFS.html#intitialize"><span class="hs-identifier hs-type">intitialize</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ST</span></span><span> </span><span class="annot"><a href="#local-6989586621679170804"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.Unboxed.Base.html#MVector"><span class="hs-identifier hs-type">UMV.MVector</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679170804"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span class="hs-special">)</span></span><span>
+</span><span id="line-69"></span><span id="local-6989586621679172335"><span class="annot"><a href="Hiraffe.DFS.html#intitialize"><span class="hs-identifier hs-type">intitialize</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ST</span></span><span> </span><span class="annot"><a href="#local-6989586621679172335"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-f64c4a5b135b5f8b22f3e314d5a02a5df6e86ff5642d2220797bdb6b063e2c84/share/doc/html/src/Data.Vector.Unboxed.Base.html#MVector"><span class="hs-identifier hs-type">UMV.MVector</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679172335"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span class="hs-special">)</span></span><span>
 </span><span id="line-70"></span><span id="intitialize"><span class="annot"><span class="annottext">intitialize :: forall s. Int -&gt; ST s (MVector s Bool)
-</span><a href="Hiraffe.DFS.html#intitialize"><span class="hs-identifier hs-var hs-var">intitialize</span></a></span></span><span> </span><span id="local-6989586621679170965"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679170965"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Bool -&gt; ST s (MVector (PrimState (ST s)) Bool)
+</span><a href="Hiraffe.DFS.html#intitialize"><span class="hs-identifier hs-var hs-var">intitialize</span></a></span></span><span> </span><span id="local-6989586621679172496"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679172496"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Bool -&gt; ST s (MVector (PrimState (ST s)) Bool)
 forall (m :: * -&gt; *) a.
 (PrimMonad m, Unbox a) =&gt;
 Int -&gt; a -&gt; m (MVector (PrimState m) a)
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-5bebb0b7768a8e4c7f67133874a8657cf996e965959f58cf8682628d936ed126/share/doc/html/src/Data.Vector.Unboxed.Mutable.html#replicate"><span class="hs-identifier hs-var">UMV.replicate</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679170965"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/vector-0.13.1.0-f64c4a5b135b5f8b22f3e314d5a02a5df6e86ff5642d2220797bdb6b063e2c84/share/doc/html/src/Data.Vector.Unboxed.Mutable.html#replicate"><span class="hs-identifier hs-var">UMV.replicate</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679172496"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="hs-comment">-- bit vector of marks</span><span>
 </span><span id="line-71"></span><span>
 </span><span id="line-72"></span><span>
