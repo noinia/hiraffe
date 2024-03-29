@@ -37,7 +37,8 @@ import           HGeometry.Foldable.Util
 import           HGeometry.Permutation
 import           Hiraffe.PlanarGraph.AdjRep (Face (Face), Gr (Gr), Vtx (Vtx))
 import           Hiraffe.PlanarGraph.Core
-import           Hiraffe.PlanarGraph.Dart
+import qualified Hiraffe.PlanarGraph.Dart as Dart
+import           Hiraffe.PlanarGraph.Dart (Direction(..), Arc(..))
 import           Hiraffe.PlanarGraph.Dual
 import           Hiraffe.PlanarGraph.EdgeOracle
 import           Hiraffe.PlanarGraph.World
@@ -104,6 +105,8 @@ fromAdjRep (Gr as fs) = g&faceData   .~ reorder fs' (_unVertexId._unFaceId)
     findFace ui vi = let d = findEdge' (VertexId ui) (VertexId vi) in rightFace d g
     fs' = fromNonEmpty . fmap (\(Face (ui,vi) f) -> (findFace ui vi, f)) $ fs
 
+    rightFace d g' = leftFace (Dart.twin d) g'
+
 
 -- | Read a planar graph, given by its adjacencylists in counter clockwise order.
 --
@@ -165,9 +168,9 @@ fromAdjacencyLists adjM = gr&dartVector .~ theDartData
                                       Nothing -> error $ "edge not found? " <> show (u,v)
                                       Just a' -> a'
                      in NonEmpty.fromList $ case u `compare` v of
-                          LT -> [(Dart (Arc a) Positive, e)]
-                          EQ -> [(Dart (Arc a) Positive, e), (Dart (Arc a) Negative, e)]
-                          GT -> [(Dart (Arc a) Negative, e)]
+                          LT -> [(Dart.Dart (Arc a) Positive, e)]
+                          EQ -> [(Dart.Dart (Arc a) Positive, e), (Dart.Dart (Arc a) Negative, e)]
+                          GT -> [(Dart.Dart (Arc a) Negative, e)]
 
 
 assignArcs   :: forall s w e. EdgeOracle s w e -> EdgeOracle s w (Int :+ e)

@@ -55,7 +55,8 @@ class ( Graph_   planarGraph
       -- , PlanarGraph_ (DualGraphOf planarGraph)
       ) => PlanarGraph_ planarGraph where
 
-  {-# MINIMAL dualGraph, leftFace, rightFace, prevEdge, nextEdge, boundaryDart, boundary
+  {-# MINIMAL dualGraph, (incidentFaceOf|leftFaceOf)
+            , rightFaceOf, prevDartOf, nextDartOf, boundaryDartOf, boundaryDartOf, boundaryDarts
     #-}
 
   type DualGraphOf planarGraph
@@ -65,38 +66,58 @@ class ( Graph_   planarGraph
   dualGraph :: planarGraph -> DualGraphOf planarGraph
 
   -- | The face to the left of the dart
-  leftFace     :: DartIx planarGraph -> planarGraph -> FaceIx planarGraph
+  incidentFaceOf :: DartIx planarGraph
+                 -> IndexedLens' (FaceIx planarGraph) planarGraph (Face planarGraph)
+  incidentFaceOf = leftFaceOf
+
+  -- | The face to the left of the dart. Alternative name for incidentFaceOf
+  leftFaceOf :: DartIx planarGraph
+             -> IndexedLens' (FaceIx planarGraph) planarGraph (Face planarGraph)
+  leftFaceOf = incidentFaceOf
 
   -- | The face to the right of the dart
-  rightFace     :: DartIx planarGraph -> planarGraph -> FaceIx planarGraph
+  rightFaceOf :: DartIx planarGraph
+              -> IndexedLens' (FaceIx planarGraph) planarGraph (Face planarGraph)
 
   -- | Get the previous edge in order along the face (so ccw for internal faces, and cw
-  -- for external faces ) that is to the left of this dart.
-  prevEdge   :: DartIx planarGraph -> planarGraph -> DartIx planarGraph
+  -- for external faces) that is to the left of this dart.
+  prevDartOf   :: DartIx planarGraph
+               -> IndexedLens' (DartIx planarGraph) planarGraph (Dart planarGraph)
 
   -- | Get the next edge in order along the face (so ccw for internal faces, and cw for
-  -- external faces ) that is to the left of this dart.
-  nextEdge   :: DartIx planarGraph -> planarGraph -> DartIx planarGraph
+  -- external faces) that is to the left of this dart.
+  nextDartOf   :: DartIx planarGraph
+               -> IndexedLens' (DartIx planarGraph) planarGraph (Dart planarGraph)
 
   -- | Gets a dart bounding this face. I.e. a dart d such that the face lies to
   -- the left of the dart.
-  boundaryDart :: FaceIx planarGraph -> planarGraph -> DartIx planarGraph
+  boundaryDartOf :: FaceIx planarGraph
+                 -> IndexedLens' (DartIx planarGraph) planarGraph (Dart planarGraph)
 
   -- | The darts bounding this face. The darts are reported in order
   -- along the face. This means that for internal faces the darts are
   -- reported in *counter clockwise* order along the boundary, whereas for the
   -- outer face the darts are reported in clockwise order.
-  boundary :: FaceIx planarGraph -> planarGraph -> NonEmptyVector (DartIx planarGraph)
+  boundaryDarts :: FaceIx planarGraph -> planarGraph -> NonEmptyVector (DartIx planarGraph)
+
+  -- | The darts bounding this face. The darts are reported in order
+  -- along the face. This means that for internal faces the darts are
+  -- reported in *counter clockwise* order along the boundary, whereas for the
+  -- outer face the darts are reported in clockwise order.
+  boundaryDartsOf    :: FaceIx planarGraph
+                     -> IndexedFold1 (DartIx planarGraph) planarGraph (Dart planarGraph)
+  boundaryDartsOf fi = ifolding1 $ \g ->
+                                  (\d -> g^?!dartAt d.withIndex) <$> boundaryDarts fi g
 
   -- | The vertices bounding this face, for internal faces in counter clockwise
   -- order, for the outer face in clockwise order.
   boundaryVertices      :: FaceIx planarGraph -> planarGraph
                         -> NonEmptyVector (VertexIx planarGraph)
-  boundaryVertices fi g = (\d -> g^.tailOf d.asIndex) <$> boundary fi g
+  boundaryVertices fi g = (\d -> g^.tailOf d.asIndex) <$> boundaryDarts fi g
 
   -- | The vertices bounding this face, for internal faces in counter clockwise
   -- order, for the outer face in clockwise order.
   boundaryVerticesOf    :: FaceIx planarGraph
                         -> IndexedFold1 (VertexIx planarGraph) planarGraph (Vertex planarGraph)
   boundaryVerticesOf fi = ifolding1 $ \g ->
-                            (\d -> g^.tailOf d.withIndex) <$> boundary fi g
+                            (\d -> g^.tailOf d.withIndex) <$> boundaryDarts fi g

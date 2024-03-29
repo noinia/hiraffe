@@ -175,11 +175,20 @@ instance PlanarGraph_ (PlanarGraph s w v e f) where
 
   dualGraph = view Core.dual
 
-  leftFace  = Dual.leftFace
-  rightFace = Dual.rightFace
+  leftFaceOf d = \paFb gr -> let fi = Dual.leftFace d gr
+                             in singular (faceAt fi) paFb gr
 
-  nextEdge = Dual.nextEdge
-  prevEdge = Dual.prevEdge
+  rightFaceOf d = leftFaceOf (Dart.twin d)
+    -- \paFb gr -> let fi = Dual.rightFace d gr
+    --                           in singular (faceAt fi) paFb gr
 
-  boundaryDart = Dual.boundaryDart
-  boundary = Dual.boundary
+  nextDartOf d = \paFb gr -> let d' = Dual.nextEdge d gr
+                             in singular (dartAt d') paFb gr
+
+  prevDartOf d = \paFb gr -> let d' = Dual.prevEdge d gr
+                             in singular (dartAt d') paFb gr
+
+  boundaryDartOf d = \paFb gr -> let d' = Dual.boundaryDart d gr
+                                 in singular (dartAt d') paFb gr
+
+  boundaryDarts = Dual.boundary

@@ -10,7 +10,7 @@
 --------------------------------------------------------------------------------
 module Hiraffe.PlanarGraph.Dual
   ( faces', faces
-  , leftFace, rightFace
+  , leftFace
   , nextEdge, prevEdge
   , boundaryDart, boundary, boundary'
   , boundaryVertices
@@ -30,7 +30,12 @@ import           Hiraffe.PlanarGraph.Dart
 -- >>> import Hiraffe.PlanarGraph.World
 -- >>> import qualified Data.List.NonEmpty as NonEmpty
 -- >>> :{
--- let dart i s = Dart (Arc i) (read s)
+-- let
+--     dart             :: String -> Dart s
+--     dart (arcC:dirS) = Dart (Arc arc') (read $ dirS <> "1")
+--       where
+--         arc' = fromMaybe (error "invalid arc") . lookup arcC $ zip "abcdefg" [0..]
+--     dart _ = error "myDart"
 --     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]
 --     adjacencies = NonEmpty.fromList . fmap NonEmpty.fromList $
 --                           [ [ (Dart aA Negative, "a-")
@@ -82,63 +87,21 @@ faces g = V.zip (faces' g) (g^.faceData)
 -- | The face to the left of the dart
 --
 --
--- >>> leftFace (dart 1 "+1") myGraph
--- FaceId 1
--- >>> showWithData myGraph $ leftFace (dart 1 "+1") myGraph
--- (FaceId 1,"f_infty")
--- >>> leftFace (dart 1 "-1") myGraph
--- FaceId 2
--- >>> showWithData myGraph $ leftFace (dart 1 "-1") myGraph
--- (FaceId 2,"f_1")
--- >>> showWithData myGraph $ leftFace (dart 0 "+1") myGraph
--- (FaceId 0,"f_3")
---
 -- running time: \(O(1)\).
 leftFace     :: Dart s -> PlanarGraph s w v e f -> FaceIdIn w s
 leftFace d g = FaceId . headOf d $ view dual g
 
-
--- | The face to the right of the dart
---
---
--- >>> rightFace (dart 1 "+1") myGraph
--- FaceId 2
--- >>> showWithData myGraph $ rightFace (dart 1 "+1") myGraph
--- (FaceId 2,"f_1")
--- >>> rightFace (dart 1 "-1") myGraph
--- FaceId 1
--- >>> showWithData myGraph $ rightFace (dart 1 "-1") myGraph
--- (FaceId 1,"f_infty")
--- >>> showWithData myGraph $ rightFace (dart 0 "+1") myGraph
--- (FaceId 1,"f_infty")
---
--- running time: \(O(1)\).
-rightFace     :: Dart s -> PlanarGraph s w v e f -> FaceIdIn w s
-rightFace d g = FaceId . tailOf d $ view dual g
-
-
 -- | Get the next edge in order along the face (so ccw for internal faces, and cw for
 -- external faces ) that is to the left of this dart.
---
--- >> showWithData myGraph $ nextEdge (dart 1 "+1") myGraph
--- (Dart (Arc 4) -1,"e-")
--- >> showWithData myGraph $ nextEdge (dart 2 "+1") myGraph
--- (Dart (Arc 3) +1,"d+")
--- >> showWithData myGraph $ nextEdge (dart 3 "-1") myGraph
--- (Dart (Arc 4) +1,"e+")
---
+----
 -- running time: \(O(1)\).
-
 nextEdge   :: Dart s -> PlanarGraph s w v e f -> Dart s
 nextEdge d = prevIncidentEdgeFrom d . view dual
 
 -- | Get the previous edge in order along the face (so ccw for internal faces, and cw
 -- for external faces ) that is to the left of this dart.
 --
--- >>> showWithData myGraph $ prevEdge (dart 2 "-1") myGraph
--- (Dart (Arc 1) -1,"b-")
--- >>> showWithData myGraph $ prevEdge (dart 1 "+1") myGraph
--- (Dart (Arc 0) -1,"a-")
+--
 --
 -- running time: \(O(1)\).
 prevEdge   :: Dart s -> PlanarGraph s w v e f -> Dart s
@@ -184,7 +147,7 @@ boundary (FaceId v) = incidentEdges v . view dual
 -- in *counter clockwise* order along the boundary, whereas for the outer face
 -- the darts are reported in clockwise order.
 --
--- >>> mapM_ (print . showWithData myGraph) $ boundary' (dart 1 "+1") myGraph
+-- >>> mapM_ (print . showWithData myGraph) $ boundary' (dart "b+") myGraph
 -- (Dart (Arc 1) +1,"b+")
 -- (Dart (Arc 3) -1,"d-")
 -- (Dart (Arc 2) -1,"c-")
