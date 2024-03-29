@@ -109,9 +109,8 @@ unVertexId :: Getter (VertexIdIn w s) Int
 unVertexId = to _unVertexId
 
 instance Show (VertexIdIn w s) where
-  show (VertexId i) = "VertexId " ++ show i
-
--- TODO: another bad show instance
+  showsPrec d (VertexId i) = showParen (d >= 11)
+                                       (showString "VertexId " . showsPrec 11 i)
 
 --------------------------------------------------------------------------------
 -- * FaceId's
@@ -124,8 +123,8 @@ newtype FaceIdIn w s = FaceId { _unFaceId :: VertexIdIn (DualOf w) s }
 type FaceId = FaceIdIn Primal
 
 instance Show (FaceIdIn w s) where
-  show (FaceId (VertexId i)) = "FaceId " ++ show i
-
+  showsPrec d (FaceId (VertexId i)) = showParen (d >= 11)
+                                                (showString "FaceId " . showsPrec 11 i)
 
 --------------------------------------------------------------------------------
 
