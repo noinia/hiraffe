@@ -341,8 +341,9 @@ instance DiGraph_ Containers.Graph where
 
 instance BidirGraph_ Containers.Graph where
   twinOf (u,v) = to $ const (v,u)
-  getPositiveDart _ = id
-  -- FIXME: should this really be just id, I guess we may want to specifically represent the smallest one as the positive one.
+  getPositiveDart _ d@(u,v) | u <= v    = d
+                            | otherwise = (v,u)
+  -- we use the dart oriented from small to large as the positive one.
 
 instance Graph_ Containers.Graph where
   -- | pre: vertex Id's are in the range 0..n

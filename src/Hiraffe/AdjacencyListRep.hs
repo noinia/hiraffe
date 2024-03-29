@@ -199,8 +199,9 @@ instance HasFromFoldable f => DiGraph_ (GGraph f v e) where
 
 instance HasFromFoldable f => BidirGraph_ (GGraph f v e) where
   twinOf (u,v) = to $ const (v,u)
-  getPositiveDart _ = id
-  -- FIXME: same here. do we want to keep as an invariant that the positive dart is oriented from small to large?
+  getPositiveDart _ d@(u,v) | u <= v    = d
+                            | otherwise = (v,u)
+  -- we use the dart oriented from small to large as the positive one.
 
 instance HasFromFoldable f => Graph_ (GGraph f v e) where
   fromAdjacencyLists =
