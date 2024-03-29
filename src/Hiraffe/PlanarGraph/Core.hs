@@ -38,6 +38,8 @@ module Hiraffe.PlanarGraph.Core
 import           Control.DeepSeq
 import           Control.Lens hiding ((.=))
 import           Data.Aeson
+import           Data.Bifoldable
+import           Data.Bitraversable
 import qualified Data.Foldable as F
 import           Data.Foldable1
 import           Data.Functor.Apply (Apply)
@@ -164,7 +166,18 @@ instance Traversable (PlanarGraph s w v e) where
                    proof = dualDualIdentity :: DualOf (DualOf w) :~: w
                in g
     ) <$> traverse f fs
-
+instance Bifunctor (PlanarGraph s w v) where
+  bimap f g = runIdentity . bitraverse (Identity . f) (Identity . g)
+instance Bifoldable (PlanarGraph s w v) where
+  bifoldMap f g (PlanarGraph _ _ ds fs _) = foldMap f ds <> foldMap g fs
+instance Bitraversable (PlanarGraph s w v) where
+  bitraverse f g (PlanarGraph e vs ds fs (PlanarGraph e' _ _ fs' _)) =
+    (\dsNew fsNew -> let gr    = PlanarGraph e  vs    dsNew fsNew dualG
+                         dualG = PlanarGraph e' fsNew dsNew fs'   (gcastWith proof gr)
+                         proof = dualDualIdentity :: DualOf (DualOf w) :~: w
+                     in gr
+    ) <$> traverse f ds
+      <*> traverse g fs
 
 instance (Show v, Show e, Show f) => Show (PlanarGraph s w v e f) where
   show (PlanarGraph e v r f _) = unwords [ "PlanarGraph"

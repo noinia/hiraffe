@@ -101,11 +101,9 @@ fromAdjRep (Gr as fs) = g&faceData   .~ reorder fs' (_unVertexId._unFaceId)
     oracle = edgeOracle g
     -- function to lookup a given dart
     findEdge' u v = fromJust $ findDart u v oracle
-    -- faces are right of oriented darts
-    findFace ui vi = let d = findEdge' (VertexId ui) (VertexId vi) in rightFace d g
+    -- faces are left of oriented darts
+    findFace ui vi = let d = findEdge' (VertexId ui) (VertexId vi) in leftFace d g
     fs' = fromNonEmpty . fmap (\(Face (ui,vi) f) -> (findFace ui vi, f)) $ fs
-
-    rightFace d g' = leftFace (Dart.twin d) g'
 
 
 -- | Read a planar graph, given by its adjacencylists in counter clockwise order.

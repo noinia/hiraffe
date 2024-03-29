@@ -53,8 +53,8 @@ faces:
 - data: []
   incidentEdge:
   - 1
-  - 4
+  - 2
 - data: []
   incidentEdge:
   - 2
-  - 4
+  - 3
