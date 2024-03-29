@@ -8,6 +8,8 @@ allow-newer:
     vector-circular:base,
     vector-circular:template-haskell,
     vector-circular:semigroupoids,
+    vector-circular:deepseq,
+    vector-circular:primitive,
 
 source-repository-package
     type: git

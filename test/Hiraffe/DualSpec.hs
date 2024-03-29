@@ -5,16 +5,11 @@ import           Control.Lens hiding ((.=))
 import qualified Data.List.NonEmpty as NonEmpty
 import           Data.Maybe (fromMaybe)
 import           Data.Tuple (swap)
-import           Data.Vector.NonEmpty (NonEmptyVector)
 import qualified Data.Vector.NonEmpty as V
 import           Hiraffe.PlanarGraph
--- import           Hiraffe.PlanarGraph.Dart(Dart(..))
-import           Hiraffe.PlanarGraph.Class
 import           Test.Hspec
 import qualified Hiraffe.PlanarGraph.Dart as Dart
-import           Hiraffe.PlanarGraph.Dart (Direction(..))
--- import           Hiraffe.PlanarGraph.Dual
--- import           Hiraffe.PlanarGraph.World
+
 --------------------------------------------------------------------------------
 
 data MyWorld
@@ -38,18 +33,24 @@ spec = describe "PlanarGraph dual graph spec" $ do
            (myGraph^.rightFaceOf (dart "d+").withIndex) `shouldBe` (FaceId $ VertexId 3,"f_2")
          it "nextDartOf tests" $ do
            (myGraph^.nextDartOf (dart "b+")) `shouldBe` "e-"
-           (myGraph^.nextDartOf (dart "a+")) `shouldBe` "c-"
+           (myGraph^.nextDartOf (dart "a+")) `shouldBe` "a+"
+           (myGraph^.nextDartOf (dart "a-")) `shouldBe` "b+"
            (myGraph^.nextDartOf (dart "b-")) `shouldBe` "c+"
            (myGraph^.nextDartOf (dart "d+")) `shouldBe` "b-"
            (myGraph^.nextDartOf (dart "d-")) `shouldBe` "e+"
            (myGraph^.nextDartOf (dart "c+")) `shouldBe` "d+"
          it "prevDartOf tests" $ do
            (myGraph^.prevDartOf (dart "b+")) `shouldBe` "a-"
-           (myGraph^.prevDartOf (dart "d-")) `shouldBe` "c+"
+           (myGraph^.prevDartOf (dart "d+")) `shouldBe` "c+"
+           (myGraph^.prevDartOf (dart "d-")) `shouldBe` "g-"
            (myGraph^.prevDartOf (dart "c+")) `shouldBe` "b-"
            (myGraph^.prevDartOf (dart "c-")) `shouldBe` "e-"
-
-
+         it "boundaryTests" $ do
+           (myGraph^..boundaryDartsOf (FaceId $ VertexId 2)) `shouldBe` ["c+","d+","b-"]
+           (myGraph^..boundaryDartsOf (FaceId $ VertexId 1)) `shouldBe` ["a-","b+","e-","c-"]
+         it "boundaryDartOf" $ do
+           (myGraph^.boundaryDartOf (FaceId $ VertexId 2)) `shouldBe` "c+"
+           (myGraph^.boundaryDartOf (FaceId $ VertexId 1)) `shouldBe` "a-"
 
 
 dart   :: String -> Dart.Dart MyWorld

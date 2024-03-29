@@ -96,26 +96,24 @@ leftFace d g = FaceId . headOf d $ view dual g
 ----
 -- running time: \(O(1)\).
 nextEdge   :: Dart s -> PlanarGraph s w v e f -> Dart s
-nextEdge d = prevIncidentEdgeFrom d . view dual
+nextEdge d = twin . prevIncidentEdgeFrom (twin d) . view dual
 
 -- | Get the previous edge in order along the face (so ccw for internal faces, and cw
 -- for external faces ) that is to the left of this dart.
 --
---
---
 -- running time: \(O(1)\).
 prevEdge   :: Dart s -> PlanarGraph s w v e f -> Dart s
-prevEdge d = nextIncidentEdgeFrom d . view dual
+prevEdge d = twin . nextIncidentEdgeFrom (twin d) . view dual
 
 -- | Gets a dart bounding this face. I.e. a dart d such that the face lies to
 -- the left of the dart.
 --
 -- >>> boundaryDart (FaceId $ VertexId 2) myGraph
--- Dart (Arc 1) +1
+-- Dart (Arc 2) +1
 -- >>> showWithData myGraph $ boundaryDart (FaceId $ VertexId 2) myGraph
--- (Dart (Arc 1) +1,"b+")
--- >>> showWithData myGraph $ boundaryDart (FaceId $ VertexId 1) myGraph
 -- (Dart (Arc 2) +1,"c+")
+-- >>> showWithData myGraph $ boundaryDart (FaceId $ VertexId 1) myGraph
+-- (Dart (Arc 0) -1,"a-")
 boundaryDart   :: FaceIdIn w s -> PlanarGraph s w v e f -> Dart s
 boundaryDart f = V.head . boundary f
 
@@ -123,34 +121,15 @@ boundaryDart f = V.head . boundary f
 -- the darts are reported in *counter clockwise* order along the boundary, whereas for the
 -- outer face the darts are reported in clockwise order.
 --
--- >>> boundary (FaceId $ VertexId 2) myGraph
---
--- >>> mapM_ (print . showWithData myGraph) $ boundary (FaceId $ VertexId 2) myGraph
--- (Dart (Arc 2) -1,"c-")
--- (Dart (Arc 3) +1,"d+")
--- (Dart (Arc 1) -1,"b-")
--- >>> boundary (FaceId $ VertexId 1) myGraph
--- [Dart (Arc 2) +1,Dart (Arc 4) +1,Dart (Arc 1) -1,Dart (Arc 0) +1]
--- >>> mapM_ (print . showWithData myGraph) $ boundary (FaceId $ VertexId 1) myGraph
--- (Dart (Arc 0) +1,"a+")
--- (Dart (Arc 1) -1,"b-")
--- (Dart (Arc 4) +1,"e+")
--- (Dart (Arc 2) +1,"c+")
---
 -- running time: \(O(k)\), where \(k\) is the output size.
 boundary            :: FaceIdIn w s -> PlanarGraph s w v e f -> NonEmptyVector (Dart s)
-boundary (FaceId v) = incidentEdges v . view dual
+boundary (FaceId v) = V.map twin . V.reverse . incidentEdges v . view dual
 
 -- | Given a dart d, generates the darts bounding the face that is to
 -- the left of the given dart. The darts are reported in order along
 -- the face. This means that for internal faces the darts are reported
 -- in *counter clockwise* order along the boundary, whereas for the outer face
 -- the darts are reported in clockwise order.
---
--- >>> mapM_ (print . showWithData myGraph) $ boundary' (dart "b+") myGraph
--- (Dart (Arc 1) +1,"b+")
--- (Dart (Arc 3) -1,"d-")
--- (Dart (Arc 2) -1,"c-")
 --
 -- \(O(k)\), where \(k\) is the number of darts reported
 boundary'     :: Dart s -> PlanarGraph s w v e f -> NonEmptyVector (Dart s)
@@ -166,14 +145,14 @@ boundary' d g = fromMaybe (error "boundary'")  . rotateTo d $ boundary (leftFace
 -- order, for the outer face in clockwise order.
 --
 -- >>> mapM_ (print . showWithData myGraph) $ boundaryVertices (FaceId $ VertexId 2) myGraph
--- (VertexId 2,"w")
 -- (VertexId 0,"u")
+-- (VertexId 2,"w")
 -- (VertexId 1,"v")
 -- >>> mapM_ (print . showWithData myGraph) $ boundaryVertices (FaceId $ VertexId 1) myGraph
 -- (VertexId 0,"u")
--- (VertexId 2,"v")
--- (VertexId 1,"w")
 -- (VertexId 0,"u")
+-- (VertexId 1,"v")
+-- (VertexId 2,"w")
 --
 -- running time: \(O(k)\), where \(k\) is the output size.
 boundaryVertices     :: FaceIdIn w s -> PlanarGraph s w v e f -> NonEmptyVector (VertexIdIn w s)
