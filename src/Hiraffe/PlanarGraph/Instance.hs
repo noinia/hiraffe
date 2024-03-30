@@ -125,7 +125,7 @@ instance HasFaces (PlanarGraph s w v e f) (PlanarGraph s w v e f') where
 
 instance DiGraph_ (PlanarGraph s w v e f) where
   type DiGraphFromAdjListExtraConstraints (PlanarGraph s w v e f) h = (f ~ (), Foldable1 h)
-  dirGraphFromAdjacencyLists = IO.fromAdjacencyLists
+  diGraphFromAdjacencyLists = IO.fromAdjacencyLists
 
   endPoints = flip Core.endPoints
 

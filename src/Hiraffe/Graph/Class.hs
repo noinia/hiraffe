@@ -114,7 +114,7 @@ class HasEdges' graph => HasEdges graph graph' where
 class ( HasVertices graph graph
       , HasDarts graph graph
       ) => DiGraph_ graph where
-  {-# MINIMAL dirGraphFromAdjacencyLists
+  {-# MINIMAL diGraphFromAdjacencyLists
             , (endPoints | headOf, tailOf)
             , (outNeighboursOf | outgoingDartsOf)
             , twinDartOf
@@ -125,12 +125,12 @@ class ( HasVertices graph graph
   type DiGraphFromAdjListExtraConstraints graph h = ()
 
   -- | Build a directed graph from its adjacency lists.
-  dirGraphFromAdjacencyLists :: ( Foldable1 f, Functor f, Foldable h, Functor h
-                                , vi ~ VertexIx graph
-                                , v ~ Vertex graph
-                                , d ~ Dart graph
-                                , DiGraphFromAdjListExtraConstraints graph h
-                                ) => f (vi, v, h (vi, d)) -> graph
+  diGraphFromAdjacencyLists :: ( Foldable1 f, Functor f, Foldable h, Functor h
+                               , vi ~ VertexIx graph
+                               , v ~ Vertex graph
+                               , d ~ Dart graph
+                               , DiGraphFromAdjListExtraConstraints graph h
+                               ) => f (vi, v, h (vi, d)) -> graph
 
   -- | Get the endpoints (origin, destination) of a dart
   endPoints     :: graph -> DartIx graph -> (VertexIx graph, VertexIx graph)
@@ -322,12 +322,12 @@ instance HasEdges Containers.Graph Containers.Graph where
 
 instance DiGraph_ Containers.Graph where
   -- | pre: vertex Id's are in the range 0..n
-  dirGraphFromAdjacencyLists ajs = Containers.buildG (0,n) ds
+  diGraphFromAdjacencyLists ajs = Containers.buildG (0,n) ds
     where
       ds = concatMap (\(u, _, neighs) -> (\(v,_) -> (u,v)) <$> F.toList neighs
                      ) $ F.toList ajs
       n = F.foldl' (\a (u,v) -> a `max` u `max` v) 0 ds
-  {-# INLINE dirGraphFromAdjacencyLists #-}
+  {-# INLINE diGraphFromAdjacencyLists #-}
 
   endPoints _ = id
   {-# INLINE endPoints #-}

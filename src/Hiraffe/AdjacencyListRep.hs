@@ -177,7 +177,7 @@ linkNegatives g = g&darts %@~ \(u,v) x -> if u <= v then fromJust' x
 
 
 instance HasFromFoldable f => DiGraph_ (GGraph f v e) where
-  dirGraphFromAdjacencyLists =
+  diGraphFromAdjacencyLists =
     Graph . foldMap1 (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
                                      in IntMap.singleton i vd
                      )
