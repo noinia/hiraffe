@@ -14,9 +14,11 @@ module Hiraffe.PlanarGraph.Instance
   ) where
 
 import           Control.Lens
+import qualified Data.Foldable as F
 import           Data.Foldable1
 import           Data.Functor.Apply (Apply)
 import qualified Data.Functor.Apply as Apply
+import qualified Data.List.NonEmpty as NonEmpty
 import           Data.Semigroup.Traversable
 import           Data.Vector.NonEmpty (NonEmptyVector)
 import qualified Data.Vector.NonEmpty as V
@@ -93,22 +95,35 @@ instance HasEdges (PlanarGraph s w v e f) (PlanarGraph s w v e' f) where
       itraverse1'      :: Apply g
                        => (Dart.Dart s -> e -> g e')
                        -> PlanarGraph s w v e f -> g (PlanarGraph s w v e' f)
-      itraverse1' f pg = sequenceDarts $ pg&Core.dartData %~ withEdges f
+      itraverse1' f pg = pg&Core.dartData %%~ itraverseEdges1 f
 
--- mapDarts   :: (Dart.Dart s -> e -> e') -> PlanarGraph s w v e f -> PlanarGraph s w v e' f
--- mapDarts f = runIdentity . Core.traverseDarts (\i e -> Identity $ f i e)
+-- | itraverse the edges; i.e. makes sure to only apply our function to the positive darts.
+itraverseEdges1     :: forall g s e e'. Apply g
+                    => (Dart.Dart s -> e -> g e') -> NonEmptyVector e -> g (NonEmptyVector e')
+itraverseEdges1 f v = copyPositives <$> gv'
+  where
+    -- We collect only the positive darts, and apply the given function on them. We tag
+    -- the result with the dart they correspond to (or rather, the corresponding index)
+    gv' :: g (NonEmpty.NonEmpty (Int, e'))
+    gv' = sequence1 . NonEmpty.fromList $ V.ifoldr applyF [] v
+    applyF i e xs = let d = toEnum i
+                    in if Dart.isPositive d
+                       then ((i,) <$> f d e) : xs
+                       else xs
 
-sequenceDarts    :: Apply g => PlanarGraph s w v (g e) f -> g (PlanarGraph s w v e f)
-sequenceDarts pg = pg&Core.dartData %%~ sequence1
+    -- We simultaneously scan through the original vector and the result of processing the
+    -- positive darts. For positive darts we simply take the value as computed before. For
+    -- negative darts, we lookup the value that we computed for their corresponding twin.
+    -- i.e. by tying the knot.
+    copyPositives           :: NonEmpty.NonEmpty (Int, e') -> NonEmptyVector e'
+    copyPositives positives = let (_,v') = imapAccumL (setDartValue v') (F.toList positives) v in v'
+    setDartValue v' i xs _ = case xs of
+                               (j,e') : xs' | i == j -> (xs',e')
+                               _                     -> let i' = fromEnum . Dart.twin . toEnum $ i
+                                                        in (xs, v' V.! i')
 
--- TODO make sure that this somewhat finicky use of laziness works as intended!
-withEdges    :: (Dart.Dart s -> e -> e') -> NonEmptyVector e -> NonEmptyVector e'
-withEdges f v = let out = V.imap (\i e -> let d = toEnum i
-                                          in if Dart.isPositive d
-                                             then f d e
-                                             else out V.! (fromEnum . Dart.twin $ d)
-                                 ) v in out
-
+-- TODO: introduce some rewrite rules for folds; since then we don't have to reconstruct
+-- output vectors.
 
 ----------------------------------------
 

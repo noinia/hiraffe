@@ -2,7 +2,7 @@
 {-# LANGUAGE QuasiQuotes #-}
 module Hiraffe.PlanarGraphSpec where
 
-import           Control.Lens (view,_3,ifoldMapOf,(^..), asIndex)
+import           Control.Lens (view,_3,ifoldMapOf,(^..), asIndex, lengthOf)
 import qualified Data.Foldable as F
 import qualified Data.List.NonEmpty as NonEmpty
 import           Data.List.NonEmpty (NonEmpty(..))
@@ -16,6 +16,7 @@ import           HGeometry.YAML
 import           Hiraffe.Instances ()
 import           Hiraffe.PlanarGraph ( PlanarGraph, VertexId, DartId, VertexIdIn(..)
                                      , neighboursOf, planarGraph', vertices
+                                     , darts, edges
                                      )
 import qualified Hiraffe.PlanarGraph as PlanarGraph
 import qualified Hiraffe.PlanarGraph.Dart as Dart
@@ -59,6 +60,14 @@ sameGraphs s g h = do
 
 spec :: Spec
 spec = describe "PlanarGraph spec" $ do
+    -- prop "edges half the size of the darts" $
+    --   \(gr :: PlanarGraph MyWorld () () ()) ->
+    --     (2 * lengthOf edges gr) `shouldBe` lengthOf darts gr
+    it "edges half the size of the darts" $
+      let gr :: PlanarGraph TestG PlanarGraph.Primal Int Text.Text ()
+          gr = fromAdjacencyLists testEdges
+      in (2 * lengthOf edges gr) `shouldBe` lengthOf darts gr
+
     sameGraphs "testEdges" (fromAdjacencyLists testEdges) (fromAdjacencyListsOld $ simplify testEdges)
     prop "quickheck Dart:  (toEnum (fromEnum d)) = d" $
       \(d :: DartId TestG) -> toEnum (fromEnum d) `shouldBe` d
