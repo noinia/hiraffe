@@ -40,6 +40,7 @@ import           Control.Lens hiding ((.=))
 import           Data.Aeson
 import           Data.Bifoldable
 import           Data.Bitraversable
+import           Data.Default.Class
 import qualified Data.Foldable as F
 import           Data.Foldable1
 import           Data.Functor.Apply (Apply)
@@ -115,6 +116,10 @@ instance Show (VertexIdIn w s) where
   showsPrec d (VertexId i) = showParen (d >= 11)
                                        (showString "VertexId " . showsPrec 11 i)
 
+-- not entirely ideal; but it simplifies our job in hgeometry.
+instance Default (VertexIdIn w s) where
+  def = VertexId 0
+
 --------------------------------------------------------------------------------
 -- * FaceId's
 
@@ -129,6 +134,8 @@ instance Show (FaceIdIn w s) where
   showsPrec d (FaceId (VertexId i)) = showParen (d >= 11)
                                                 (showString "FaceId " . showsPrec 11 i)
 
+instance Default (FaceIdIn w s) where
+  def = FaceId (VertexId 0)
 --------------------------------------------------------------------------------
 
 -- | Type alias to prevent confusion with the Dart type from the HasDart' typeclass.

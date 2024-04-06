@@ -79,6 +79,7 @@ common setup
               , template-haskell        >= 2.10      &&  < 3
               , filepath                >= 1.4.100   &&  < 2
               , file-io                 >= 0.1       &&  < 1
+              , data-default-class      >= 0.1       &&  < 1
 
 
 common quickcheck-setup
