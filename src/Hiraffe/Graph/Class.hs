@@ -27,6 +27,7 @@ import           Data.Functor.Apply (Apply)
 import qualified Data.Graph as Containers
 import           Data.Kind (Type, Constraint)
 import qualified Data.List.NonEmpty as NonEmpty
+import           HGeometry.Ext
 
 --------------------------------------------------------------------------------
 -- * Vertices
@@ -359,3 +360,33 @@ instance Graph_ Containers.Graph where
   {-# INLINE neighboursOf #-}
   incidentEdgesOf u = reindexed (u,) (neighboursOf u)
   {-# INLINE incidentEdgesOf #-}
+
+
+--------------------------------------------------------------------------------
+
+instance HasVertices' graph => HasVertices' (graph :+ extra) where
+  type Vertex   (graph :+ extra) = Vertex graph
+  type VertexIx (graph :+ extra) = VertexIx graph
+  vertexAt u = core.vertexAt u
+  numVertices = numVertices . view core
+
+instance HasVertices graph graph' => HasVertices (graph :+ extra) (graph' :+ extra) where
+  vertices = core.vertices
+
+instance HasDarts' graph => HasDarts' (graph :+ extra) where
+  type DartIx (graph :+ extra) = DartIx graph
+  type Dart   (graph :+ extra) = Dart graph
+  dartAt d = core.dartAt d
+  numDarts = numDarts . view core
+
+instance HasDarts graph graph' => HasDarts (graph :+ extra) (graph' :+ extra) where
+  darts = core.darts
+
+instance HasEdges' graph => HasEdges' (graph :+ extra) where
+  type EdgeIx (graph :+ extra) = EdgeIx graph
+  type Edge   (graph :+ extra) = Edge graph
+  edgeAt d = core.edgeAt d
+  numEdges = numEdges . view core
+
+instance HasEdges graph graph' => HasEdges (graph :+ extra) (graph' :+ extra) where
+  edges = core.edges
