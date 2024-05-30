@@ -11,8 +11,9 @@ author:              Frank Staals
 maintainer:          frank@fstaals.net
 
 tested-with:
-    GHC == 9.6.1
-  , GHC == 9.8.1
+    GHC == 9.6.5
+  , GHC == 9.8.2
+  , GHC == 9.10.1
 
 category:            Graphs
 build-type:          Simple
@@ -60,10 +61,11 @@ common setup
   build-depends:
                 base                    >= 4.11      &&  < 5
               , hgeometry-combinatorial >= 1.0.0.0   &&  < 2
+              -- , hgeometry:point         >= 1.0.0.0   &&  < 2
               , bytestring              >= 0.10      &&  < 1
               , containers              >= 0.5.9     &&  < 1
               , lens                    >= 5.0       &&  < 6
-              , semigroupoids             >= 6.0.0.1       && < 7
+              , semigroupoids           >= 6.0.0.1   && < 7
               -- , vector-builder          >= 0.3.7     &&  < 1
               , deepseq                 >= 1.1       &&  < 2
               , vector                  >= 0.11      &&  < 1
