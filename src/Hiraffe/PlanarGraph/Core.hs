@@ -57,7 +57,6 @@ import           HGeometry.Vector.NonEmpty.Util ()
 import qualified Hiraffe.PlanarGraph.Dart as Dart
 import           Hiraffe.PlanarGraph.World
 
-import Debug.Trace
 --------------------------------------------------------------------------------
 -- $setup
 -- >>> import Hiraffe.PlanarGraph.Dart(Dart(Dart),Arc(Arc),Direction(..))
@@ -512,10 +511,7 @@ endPoints d g = (tailOf d g, headOf d g)
 -- running time: \(O(k)\), where \(k\) is the output size
 incidentEdges                :: VertexIdIn w s -> PlanarGraph s w v e f
                              -> NonEmptyVector (DartId s)
-incidentEdges (VertexId v) g
-  | traceShow ("incidentEdges, vertexId",v) False = undefined
-  | otherwise =
-                              g^?!embedding.orbits.ix v
+incidentEdges (VertexId v) g = g^?!embedding.orbits.ix v
 
 -- | All edges incident to vertex v in incoming direction
 -- (i.e. pointing into v) in counterclockwise order around v.
