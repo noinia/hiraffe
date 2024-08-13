@@ -12,3 +12,4 @@
  100% (  2 /  2) in 'Hiraffe.AdjacencyListRep'
  100% (  1 /  1) in 'Hiraffe.Instances'
  100% (  1 /  1) in 'Hiraffe'
+  66% (  2 /  3) in 'Hiraffe.BFS.Pure'

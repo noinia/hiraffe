@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- |</span><span>
+</span><span id="line-3"></span><span class="hs-comment">-- Module      :  Hiraffe.PlanarGraph.World</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- Copyright   :  (C) Frank Staals</span><span>
+</span><span id="line-5"></span><span class="hs-comment">-- License     :  see the LICENSE file</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- Maintainer  :  Frank Staals</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- Defines a data type to distinguish primal and dual graphs.</span><span>
+</span><span id="line-9"></span><span class="hs-comment">--</span><span>
+</span><span id="line-10"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Hiraffe.PlanarGraph.World</span><span>
+</span><span id="line-12"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#World"><span class="hs-identifier">World</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#DualOf"><span class="hs-identifier">DualOf</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#dualDualIdentity"><span class="hs-identifier">dualDualIdentity</span></a></span><span>
+</span><span id="line-14"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-15"></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Type.Equality</span></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unsafe.Coerce</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unsafeCoerce</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span>
+</span><span id="line-19"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
+</span><span id="line-20"></span><span class="annot"><span class="hs-comment">-- * Representing The World</span></span><span>
+</span><span id="line-21"></span><span>
+</span><span id="line-22"></span><span class="annot"><span class="hs-comment">-- | The world in which the graph lives</span></span><span>
+</span><span id="line-23"></span><span class="hs-keyword">data</span><span> </span><span id="World"><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#World"><span class="hs-identifier hs-var">World</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Primal"><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#Primal"><span class="hs-identifier hs-var">Primal</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="Dual"><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#Dual"><span class="hs-identifier hs-var">Dual</span></a></span></span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679183760"><span id="local-6989586621679183762"><span id="local-6989586621679183766"><span class="annot"><span class="annottext">Int -&gt; World -&gt; ShowS
+[World] -&gt; ShowS
+World -&gt; String
+(Int -&gt; World -&gt; ShowS)
+-&gt; (World -&gt; String) -&gt; ([World] -&gt; ShowS) -&gt; Show World
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+$cshowsPrec :: Int -&gt; World -&gt; ShowS
+showsPrec :: Int -&gt; World -&gt; ShowS
+$cshow :: World -&gt; String
+show :: World -&gt; String
+$cshowList :: [World] -&gt; ShowS
+showList :: [World] -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679183770"><span id="local-6989586621679183772"><span class="annot"><span class="annottext">World -&gt; World -&gt; Bool
+(World -&gt; World -&gt; Bool) -&gt; (World -&gt; World -&gt; Bool) -&gt; Eq World
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+$c== :: World -&gt; World -&gt; Bool
+== :: World -&gt; World -&gt; Bool
+$c/= :: World -&gt; World -&gt; Bool
+/= :: World -&gt; World -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- | We can take the dual of a world. For the Primal this gives us the Dual,</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- for the Dual this gives us the Primal.</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">type</span><span> </span><span class="hs-keyword">family</span><span> </span><span id="DualOf"><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#DualOf"><span class="hs-identifier hs-var">DualOf</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679183776"><span class="annot"><a href="#local-6989586621679183776"><span class="hs-identifier hs-type">sp</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#World"><span class="hs-identifier hs-type">World</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-28"></span><span>  </span><span id="DualOf"><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#DualOf"><span class="hs-identifier hs-var">DualOf</span></a></span></span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#Primal"><span class="hs-identifier hs-type">Primal</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#Dual"><span class="hs-identifier hs-type">Dual</span></a></span><span>
+</span><span id="line-29"></span><span>  </span><span id="DualOf"><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#DualOf"><span class="hs-identifier hs-var">DualOf</span></a></span></span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#Dual"><span class="hs-identifier hs-type">Dual</span></a></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#Primal"><span class="hs-identifier hs-type">Primal</span></a></span><span>
+</span><span id="line-30"></span><span>
+</span><span id="line-31"></span><span class="annot"><span class="hs-comment">-- | The Dual of the Dual is the Primal.</span></span><span>
+</span><span id="line-32"></span><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#dualDualIdentity"><span class="hs-identifier hs-type">dualDualIdentity</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679183747"><span class="annot"><a href="#local-6989586621679183747"><span class="hs-identifier hs-type">w</span></a></span></span><span class="hs-operator">.</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#DualOf"><span class="hs-identifier hs-type">DualOf</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#DualOf"><span class="hs-identifier hs-type">DualOf</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679183747"><span class="hs-identifier hs-type">w</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-operator hs-type">:~:</span></span><span> </span><span class="annot"><a href="#local-6989586621679183747"><span class="hs-identifier hs-type">w</span></a></span><span>
+</span><span id="line-33"></span><span id="dualDualIdentity"><span class="annot"><span class="annottext">dualDualIdentity :: forall (w :: World). DualOf (DualOf w) :~: w
+</span><a href="Hiraffe.PlanarGraph.World.html#dualDualIdentity"><span class="hs-identifier hs-var hs-var">dualDualIdentity</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Any :~: Any) -&gt; DualOf (DualOf w) :~: w
+forall a b. a -&gt; b
+</span><span class="hs-identifier hs-var">unsafeCoerce</span></span><span> </span><span class="annot"><span class="annottext">Any :~: Any
+forall {k} (a :: k). a :~: a
+</span><span class="hs-identifier hs-var">Refl</span></span><span>
+</span><span id="line-34"></span><span>          </span><span class="hs-comment">-- manual proof:</span><span>
+</span><span id="line-35"></span><span>          </span><span class="hs-comment">--    DualOf (DualOf Primal) = Primal</span><span>
+</span><span id="line-36"></span><span>          </span><span class="hs-comment">--    DualOf (DualOf Dual)   = Dual</span><span>
+</span><span id="line-37"></span></pre></body></html>
