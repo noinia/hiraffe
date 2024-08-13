@@ -15,5 +15,10 @@ source-repository-package
     type: git
     location: https://github.com/noinia/hgeometry
     subdir: hgeometry-combinatorial
-    tag:      32f9fb4767706ef554ee2c5119dc3c82314a809b
+    -- tag:      32f9fb4767706ef554ee2c5119dc3c82314a809b
     -- branch: hgeom1_again
+
+source-repository-package
+    type: git
+    location: https://github.com/noinia/vector-circular
+    tag: 98090784e9ed97cf761cf69ad3f32b88dbdd30a2

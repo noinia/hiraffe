@@ -115,6 +115,7 @@ library
     Hiraffe.AdjacencyListRep
 
     Hiraffe.BFS
+    Hiraffe.BFS.Pure
     Hiraffe.DFS
 
     Hiraffe.PlanarGraph
