@@ -7,6 +7,7 @@
  100% (  4 /  4) in 'Hiraffe.Tree'
  100% (  4 /  4) in 'Hiraffe.PlanarGraph.Class'
  100% (  4 /  4) in 'Hiraffe.PlanarGraph.AdjRep'
+ 100% (  3 /  3) in 'Hiraffe.ShortestPath.FloydWarshall'
  100% (  3 /  3) in 'Hiraffe.DFS'
  100% (  2 /  2) in 'Hiraffe.BFS'
  100% (  2 /  2) in 'Hiraffe.AdjacencyListRep'

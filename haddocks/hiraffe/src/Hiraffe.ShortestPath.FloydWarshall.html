@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- |</span><span>
+</span><span id="line-3"></span><span class="hs-comment">-- Module      :  Hiraffe.ShortestPath.FloydWarshall</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- Copyright   :  (C) David Himmelstrup</span><span>
+</span><span id="line-5"></span><span class="hs-comment">-- License     :  see the LICENSE file</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- Maintainer  :  David Himmelstrup</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- Implementation of Floyd-Warshall shortest path algorithm.</span><span>
+</span><span id="line-9"></span><span class="hs-comment">--</span><span>
+</span><span id="line-10"></span><span class="hs-comment">-- See Wikipedia article for details: https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm</span><span>
+</span><span id="line-11"></span><span class="hs-comment">--</span><span>
+</span><span id="line-12"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Hiraffe.ShortestPath.FloydWarshall</span><span>
+</span><span id="line-14"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Hiraffe.ShortestPath.FloydWarshall.html#allPairsShortestPaths"><span class="hs-identifier">allPairsShortestPaths</span></a></span><span>
+</span><span id="line-15"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.ShortestPath.FloydWarshall.html#allPairsShortestPathsWith"><span class="hs-identifier">allPairsShortestPathsWith</span></a></span><span>
+</span><span id="line-16"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-17"></span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Array</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Array</span></span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Coerce</span></span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Semigroup</span></span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-b48bcc080f590ec851e70f8d081704a7973250cb80235d3ecbd970d60ef73ecc/share/doc/html/src/HGeometry.Unbounded.html"><span class="hs-identifier">HGeometry.Unbounded</span></a></span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.Graph.Class.html"><span class="hs-identifier">Hiraffe.Graph.Class</span></a></span><span>
+</span><span id="line-23"></span><span>
+</span><span id="line-24"></span><span class="hs-comment">-------------------------------------------------------------------------------</span><span>
+</span><span id="line-25"></span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- |</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- All pair shortest paths.</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- running time: \(O(n^3)\), where \(n\) is the number of vertices of the graph.</span><span>
+</span><span id="line-30"></span><span class="annot"><a href="Hiraffe.ShortestPath.FloydWarshall.html#allPairsShortestPaths"><span class="hs-identifier hs-type">allPairsShortestPaths</span></a></span><span>     </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679193047"><span class="annot"><a href="#local-6989586621679193047"><span class="hs-identifier hs-type">graph</span></a></span></span><span> </span><span id="local-6989586621679193050"><span class="annot"><a href="#local-6989586621679193050"><span class="hs-identifier hs-type">dist</span></a></span></span><span class="hs-operator">.</span><span>
+</span><span id="line-31"></span><span>                             </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#Graph_"><span class="hs-identifier hs-type">Graph_</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193047"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193047"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="annot"><span class="hs-operator hs-type">~</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Num</span></span><span> </span><span class="annot"><a href="#local-6989586621679193050"><span class="hs-identifier hs-type">dist</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621679193050"><span class="hs-identifier hs-type">dist</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span>                          </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193047"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193047"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-b48bcc080f590ec851e70f8d081704a7973250cb80235d3ecbd970d60ef73ecc/share/doc/html/src/HGeometry.Unbounded.html#Top"><span class="hs-identifier hs-type">Top</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193050"><span class="hs-identifier hs-type">dist</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span>                             </span><span class="annot"><span class="hs-comment">-- ^ edge/dart lengths</span></span><span>
+</span><span id="line-34"></span><span>                          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679193047"><span class="hs-identifier hs-type">graph</span></a></span><span>
+</span><span id="line-35"></span><span>                          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Array.Array</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193047"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193047"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-b48bcc080f590ec851e70f8d081704a7973250cb80235d3ecbd970d60ef73ecc/share/doc/html/src/HGeometry.Unbounded.html#Top"><span class="hs-identifier hs-type">Top</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193050"><span class="hs-identifier hs-type">dist</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span id="allPairsShortestPaths"><span class="annot"><span class="annottext">allPairsShortestPaths :: forall graph dist.
+(Graph_ graph, VertexIx graph ~ Int, Num dist, Ord dist) =&gt;
+(VertexIx graph -&gt; VertexIx graph -&gt; Top dist)
+-&gt; graph -&gt; Array (VertexIx graph, VertexIx graph) (Top dist)
+</span><a href="Hiraffe.ShortestPath.FloydWarshall.html#allPairsShortestPaths"><span class="hs-identifier hs-var hs-var">allPairsShortestPaths</span></a></span></span><span> </span><span id="local-6989586621679193115"><span class="annot"><span class="annottext">VertexIx graph -&gt; VertexIx graph -&gt; Top dist
+</span><a href="#local-6989586621679193115"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Array (Int, Int) (Top (Sum dist)) -&gt; Array (Int, Int) (Top dist)
+forall a b. Coercible a b =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">coerce</span></span><span> </span><span class="annot"><span class="annottext">(Array (Int, Int) (Top (Sum dist)) -&gt; Array (Int, Int) (Top dist))
+-&gt; (graph -&gt; Array (Int, Int) (Top (Sum dist)))
+-&gt; graph
+-&gt; Array (Int, Int) (Top dist)
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">(VertexIx graph -&gt; VertexIx graph -&gt; Top (Sum dist))
+-&gt; graph -&gt; Array (VertexIx graph, VertexIx graph) (Top (Sum dist))
+forall graph dist.
+(Graph_ graph, VertexIx graph ~ Int, Num dist, Ord dist) =&gt;
+(VertexIx graph -&gt; VertexIx graph -&gt; Top dist)
+-&gt; graph -&gt; Array (VertexIx graph, VertexIx graph) (Top dist)
+</span><a href="Hiraffe.ShortestPath.FloydWarshall.html#allPairsShortestPaths"><span class="hs-identifier hs-var">allPairsShortestPaths</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph -&gt; VertexIx graph -&gt; Top (Sum dist)
+</span><a href="#local-6989586621679193117"><span class="hs-identifier hs-var">len'</span></a></span><span>
+</span><span id="line-37"></span><span>  </span><span class="hs-keyword">where</span><span>
+</span><span id="line-38"></span><span>    </span><span class="annot"><a href="#local-6989586621679193117"><span class="hs-identifier hs-type">len'</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193047"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193047"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-b48bcc080f590ec851e70f8d081704a7973250cb80235d3ecbd970d60ef73ecc/share/doc/html/src/HGeometry.Unbounded.html#Top"><span class="hs-identifier hs-type">Top</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Sum</span></span><span> </span><span class="annot"><a href="#local-6989586621679193050"><span class="hs-identifier hs-type">dist</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span>    </span><span id="local-6989586621679193117"><span class="annot"><span class="annottext">len' :: VertexIx graph -&gt; VertexIx graph -&gt; Top (Sum dist)
+</span><a href="#local-6989586621679193117"><span class="hs-identifier hs-var hs-var">len'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Int -&gt; Int -&gt; Top dist) -&gt; Int -&gt; Int -&gt; Top (Sum dist)
+forall a b. Coercible a b =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">coerce</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Top dist
+VertexIx graph -&gt; VertexIx graph -&gt; Top dist
+</span><a href="#local-6989586621679193115"><span class="hs-identifier hs-var">len</span></a></span><span>
+</span><span id="line-40"></span><span>    </span><span class="hs-comment">-- main idea is to use dynamic programming. See dist'</span><span>
+</span><span id="line-41"></span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- |</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- All pair shortest paths.</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- running time: \(O(n^3)\), where \(n\) is the number of vertices of the graph.</span><span>
+</span><span id="line-46"></span><span class="annot"><a href="Hiraffe.ShortestPath.FloydWarshall.html#allPairsShortestPathsWith"><span class="hs-identifier hs-type">allPairsShortestPathsWith</span></a></span><span>        </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679193064"><span class="annot"><a href="#local-6989586621679193064"><span class="hs-identifier hs-type">graph</span></a></span></span><span> </span><span id="local-6989586621679193065"><span class="annot"><a href="#local-6989586621679193065"><span class="hs-identifier hs-type">dist</span></a></span></span><span class="hs-operator">.</span><span>
+</span><span id="line-47"></span><span>                                    </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#Graph_"><span class="hs-identifier hs-type">Graph_</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193064"><span class="hs-identifier hs-type">graph</span></a></span><span>
+</span><span id="line-48"></span><span>                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193064"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="annot"><span class="hs-operator hs-type">~</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
+</span><span id="line-49"></span><span>                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Semigroup</span></span><span> </span><span class="annot"><a href="#local-6989586621679193065"><span class="hs-identifier hs-type">dist</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621679193065"><span class="hs-identifier hs-type">dist</span></a></span><span>
+</span><span id="line-50"></span><span>                                    </span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span>                                 </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193064"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193064"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-b48bcc080f590ec851e70f8d081704a7973250cb80235d3ecbd970d60ef73ecc/share/doc/html/src/HGeometry.Unbounded.html#Top"><span class="hs-identifier hs-type">Top</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193065"><span class="hs-identifier hs-type">dist</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span>                                    </span><span class="annot"><span class="hs-comment">-- ^ edge/dart lengths</span></span><span>
+</span><span id="line-53"></span><span>                                 </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679193064"><span class="hs-identifier hs-type">graph</span></a></span><span>
+</span><span id="line-54"></span><span>                                 </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Array.Array</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193064"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193064"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-b48bcc080f590ec851e70f8d081704a7973250cb80235d3ecbd970d60ef73ecc/share/doc/html/src/HGeometry.Unbounded.html#Top"><span class="hs-identifier hs-type">Top</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193065"><span class="hs-identifier hs-type">dist</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span id="allPairsShortestPathsWith"><span class="annot"><span class="annottext">allPairsShortestPathsWith :: forall graph dist.
+(Graph_ graph, VertexIx graph ~ Int, Semigroup dist, Ord dist) =&gt;
+(VertexIx graph -&gt; VertexIx graph -&gt; Top dist)
+-&gt; graph -&gt; Array (VertexIx graph, VertexIx graph) (Top dist)
+</span><a href="Hiraffe.ShortestPath.FloydWarshall.html#allPairsShortestPathsWith"><span class="hs-identifier hs-var hs-var">allPairsShortestPathsWith</span></a></span></span><span> </span><span id="local-6989586621679193157"><span class="annot"><span class="annottext">VertexIx graph -&gt; VertexIx graph -&gt; Top dist
+</span><a href="#local-6989586621679193157"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span id="local-6989586621679193158"><span class="annot"><span class="annottext">graph
+</span><a href="#local-6989586621679193158"><span class="hs-identifier hs-var">gr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">((VertexIx graph, VertexIx graph),
+ (VertexIx graph, VertexIx graph))
+-&gt; ((VertexIx graph, VertexIx graph) -&gt; Top dist)
+-&gt; Array (VertexIx graph, VertexIx graph) (Top dist)
+forall i a. Ix i =&gt; (i, i) -&gt; (i -&gt; a) -&gt; Array i a
+</span><a href="Hiraffe.ShortestPath.FloydWarshall.html#tabulate"><span class="hs-identifier hs-var">tabulate</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+VertexIx graph
+</span><span class="hs-number">0</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Int
+VertexIx graph
+</span><span class="hs-number">0</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+VertexIx graph
+</span><a href="#local-6989586621679193160"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Int
+VertexIx graph
+</span><a href="#local-6989586621679193160"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(((VertexIx graph, VertexIx graph) -&gt; Top dist)
+ -&gt; Array (VertexIx graph, VertexIx graph) (Top dist))
+-&gt; ((VertexIx graph, VertexIx graph) -&gt; Top dist)
+-&gt; Array (VertexIx graph, VertexIx graph) (Top dist)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679193161"><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679193161"><span class="hs-identifier hs-var">i</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679193162"><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679193162"><span class="hs-identifier hs-var">j</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(Int, Int, Int) -&gt; Top dist
+</span><a href="#local-6989586621679193163"><span class="hs-identifier hs-var">dist</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+VertexIx graph
+</span><a href="#local-6989586621679193161"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Int
+VertexIx graph
+</span><a href="#local-6989586621679193162"><span class="hs-identifier hs-var">j</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193160"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span>  </span><span class="hs-keyword">where</span><span>
+</span><span id="line-57"></span><span>    </span><span class="hs-comment">-- main idea is to use dynamic programming. See dist'</span><span>
+</span><span id="line-58"></span><span>    </span><span id="local-6989586621679193160"><span class="annot"><span class="annottext">n :: Int
+</span><a href="#local-6989586621679193160"><span class="hs-identifier hs-var hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">graph -&gt; Int
+forall graph. HasVertices' graph =&gt; graph -&gt; Int
+</span><a href="Hiraffe.Graph.Class.html#numVertices"><span class="hs-identifier hs-var">numVertices</span></a></span><span> </span><span class="annot"><span class="annottext">graph
+</span><a href="#local-6989586621679193158"><span class="hs-identifier hs-var">gr</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-glyph hs-var">-</span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><span class="hs-number">1</span></span><span>
+</span><span id="line-59"></span><span>
+</span><span id="line-60"></span><span>    </span><span class="hs-comment">-- the table with distances</span><span>
+</span><span id="line-61"></span><span>    </span><span class="annot"><a href="#local-6989586621679193165"><span class="hs-identifier hs-type">dists</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Array.Array</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-b48bcc080f590ec851e70f8d081704a7973250cb80235d3ecbd970d60ef73ecc/share/doc/html/src/HGeometry.Unbounded.html#Top"><span class="hs-identifier hs-type">Top</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193065"><span class="hs-identifier hs-type">dist</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span>    </span><span id="local-6989586621679193165"><span class="annot"><span class="annottext">dists :: Array (Int, Int, Int) (Top dist)
+</span><a href="#local-6989586621679193165"><span class="hs-identifier hs-var hs-var">dists</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">((Int, Int, Int), (Int, Int, Int))
+-&gt; ((Int, Int, Int) -&gt; Top dist)
+-&gt; Array (Int, Int, Int) (Top dist)
+forall i a. Ix i =&gt; (i, i) -&gt; (i -&gt; a) -&gt; Array i a
+</span><a href="Hiraffe.ShortestPath.FloydWarshall.html#tabulate"><span class="hs-identifier hs-var">tabulate</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><span class="hs-number">0</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Int
+</span><span class="hs-number">0</span></span><span class="hs-special">,</span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="annot"><span class="annottext">Int
+</span><span class="hs-number">1</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193160"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193160"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193160"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Int, Int, Int) -&gt; Top dist
+</span><a href="#local-6989586621679193166"><span class="hs-identifier hs-var">dist'</span></a></span><span>
+</span><span id="line-63"></span><span>
+</span><span id="line-64"></span><span>    </span><span class="hs-comment">-- | a memoized version of dist'</span><span>
+</span><span id="line-65"></span><span>    </span><span id="local-6989586621679193163"><span class="annot"><span class="annottext">dist :: (Int, Int, Int) -&gt; Top dist
+</span><a href="#local-6989586621679193163"><span class="hs-identifier hs-var hs-var">dist</span></a></span></span><span> </span><span id="local-6989586621679193167"><span class="annot"><span class="annottext">(Int, Int, Int)
+</span><a href="#local-6989586621679193167"><span class="hs-identifier hs-var">ix</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Array (Int, Int, Int) (Top dist)
+</span><a href="#local-6989586621679193165"><span class="hs-identifier hs-var">dists</span></a></span><span> </span><span class="annot"><span class="annottext">Array (Int, Int, Int) (Top dist) -&gt; (Int, Int, Int) -&gt; Top dist
+forall i e. Ix i =&gt; Array i e -&gt; i -&gt; e
+</span><span class="hs-operator hs-var">Array.!</span></span><span> </span><span class="annot"><span class="annottext">(Int, Int, Int)
+</span><a href="#local-6989586621679193167"><span class="hs-identifier hs-var">ix</span></a></span><span>
+</span><span id="line-66"></span><span>
+</span><span id="line-67"></span><span>    </span><span class="hs-comment">-- | dist (i,j,k) distance/length of the shortest path from i to j using only the</span><span>
+</span><span id="line-68"></span><span>    </span><span class="hs-comment">-- first k vertices.</span><span>
+</span><span id="line-69"></span><span>    </span><span id="local-6989586621679193166"><span class="annot"><span class="annottext">dist' :: (Int, Int, Int) -&gt; Top dist
+</span><a href="#local-6989586621679193166"><span class="hs-identifier hs-var hs-var">dist'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-70"></span><span>      </span><span class="hs-special">(</span><span id="local-6989586621679193169"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193169"><span class="hs-identifier hs-var">i</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679193170"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193170"><span class="hs-identifier hs-var">j</span></a></span></span><span class="hs-special">,</span><span class="hs-glyph">-</span><span class="hs-number">1</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">VertexIx graph -&gt; VertexIx graph -&gt; Top dist
+</span><a href="#local-6989586621679193157"><span class="hs-identifier hs-var">len</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+VertexIx graph
+</span><a href="#local-6989586621679193169"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+VertexIx graph
+</span><a href="#local-6989586621679193170"><span class="hs-identifier hs-var">j</span></a></span><span> </span><span class="hs-comment">-- we cannot use intermediate edges, so just the length of the</span><span>
+</span><span id="line-71"></span><span>                    </span><span class="hs-comment">-- edge from i to j, if such an edge exists.</span><span>
+</span><span id="line-72"></span><span>      </span><span class="hs-special">(</span><span id="local-6989586621679193171"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193171"><span class="hs-identifier hs-var">i</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679193172"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193172"><span class="hs-identifier hs-var">j</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679193173"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193173"><span class="hs-identifier hs-var">k</span></a></span></span><span class="hs-special">)</span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(Int, Int, Int) -&gt; Top dist
+</span><a href="#local-6989586621679193163"><span class="hs-identifier hs-var">dist</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193171"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193172"><span class="hs-identifier hs-var">j</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Int -&gt; Int
+forall a. Enum a =&gt; a -&gt; a
+</span><span class="hs-identifier hs-var">pred</span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193173"><span class="hs-identifier hs-var">k</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Top dist -&gt; Top dist -&gt; Top dist
+forall a. Ord a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">`min`</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Int, Int, Int) -&gt; Top dist
+</span><a href="#local-6989586621679193163"><span class="hs-identifier hs-var">dist</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193171"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193173"><span class="hs-identifier hs-var">k</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Int -&gt; Int
+forall a. Enum a =&gt; a -&gt; a
+</span><span class="hs-identifier hs-var">pred</span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193173"><span class="hs-identifier hs-var">k</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Top dist -&gt; Top dist -&gt; Top dist
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">(Int, Int, Int) -&gt; Top dist
+</span><a href="#local-6989586621679193163"><span class="hs-identifier hs-var">dist</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193173"><span class="hs-identifier hs-var">k</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193172"><span class="hs-identifier hs-var">j</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Int -&gt; Int
+forall a. Enum a =&gt; a -&gt; a
+</span><span class="hs-identifier hs-var">pred</span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679193173"><span class="hs-identifier hs-var">k</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-73"></span><span>        </span><span class="hs-comment">--- either we already have the minimum distance between i and j, or the</span><span>
+</span><span id="line-74"></span><span>        </span><span class="hs-comment">-- shortest path goes through vertex k. So we need the path from i to k (using</span><span>
+</span><span id="line-75"></span><span>        </span><span class="hs-comment">-- only intermediate vertices up to k-1), and from k to j (usign only vertices up</span><span>
+</span><span id="line-76"></span><span>        </span><span class="hs-comment">-- to k-1).</span><span>
+</span><span id="line-77"></span><span>
+</span><span id="line-78"></span><span>
+</span><span id="line-79"></span><span>
+</span><span id="line-80"></span><span>
+</span><span id="line-81"></span><span>
+</span><span id="line-82"></span><span>
+</span><span id="line-83"></span><span class="annot"><span class="hs-comment">-- | Create a table</span></span><span>
+</span><span id="line-84"></span><span id="local-6989586621679193080"><span id="local-6989586621679193081"><span class="annot"><a href="Hiraffe.ShortestPath.FloydWarshall.html#tabulate"><span class="hs-identifier hs-type">tabulate</span></a></span><span>       </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Array.Ix</span></span><span> </span><span class="annot"><a href="#local-6989586621679193080"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679193080"><span class="hs-identifier hs-type">i</span></a></span><span class="hs-special">,</span><span class="annot"><a href="#local-6989586621679193080"><span class="hs-identifier hs-type">i</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679193080"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679193081"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Array.Array</span></span><span> </span><span class="annot"><a href="#local-6989586621679193080"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679193081"><span class="hs-identifier hs-type">a</span></a></span></span></span><span>
+</span><span id="line-85"></span><span id="tabulate"><span class="annot"><span class="annottext">tabulate :: forall i a. Ix i =&gt; (i, i) -&gt; (i -&gt; a) -&gt; Array i a
+</span><a href="Hiraffe.ShortestPath.FloydWarshall.html#tabulate"><span class="hs-identifier hs-var hs-var">tabulate</span></a></span></span><span> </span><span id="local-6989586621679193179"><span class="annot"><span class="annottext">(i, i)
+</span><a href="#local-6989586621679193179"><span class="hs-identifier hs-var">rng</span></a></span></span><span> </span><span id="local-6989586621679193180"><span class="annot"><span class="annottext">i -&gt; a
+</span><a href="#local-6989586621679193180"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(i, i) -&gt; [a] -&gt; Array i a
+forall i e. Ix i =&gt; (i, i) -&gt; [e] -&gt; Array i e
+</span><span class="hs-identifier hs-var">Array.listArray</span></span><span> </span><span class="annot"><span class="annottext">(i, i)
+</span><a href="#local-6989586621679193179"><span class="hs-identifier hs-var">rng</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(i -&gt; a) -&gt; [i] -&gt; [a]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">i -&gt; a
+</span><a href="#local-6989586621679193180"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">([i] -&gt; [a]) -&gt; [i] -&gt; [a]
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(i, i) -&gt; [i]
+forall a. Ix a =&gt; (a, a) -&gt; [a]
+</span><span class="hs-identifier hs-var">Array.range</span></span><span> </span><span class="annot"><span class="annottext">(i, i)
+</span><a href="#local-6989586621679193179"><span class="hs-identifier hs-var">rng</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-86"></span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- -- | \( O(n^3) \)</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- floydWarshall :: (Unbox a, Fractional a, Ord a) =&gt; Int -&gt; MVector s (a, Int) -&gt; ST s ()</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- floydWarshall n graph = do</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--     let nSq = V.length graph</span><span>
+</span><span id="line-91"></span><span class="hs-comment">--     when (n*n /= nSq) $ error &quot;Bad bounds&quot;</span><span>
+</span><span id="line-92"></span><span class="hs-comment">--     forM_ [0 .. n-1] $ \k -&gt;</span><span>
+</span><span id="line-93"></span><span class="hs-comment">--       forM_ [0 .. n-1] $ \i -&gt;</span><span>
+</span><span id="line-94"></span><span class="hs-comment">--         forM_ [0 .. n-1] $ \j -&gt; do</span><span>
+</span><span id="line-95"></span><span class="hs-comment">--           (distIJ, _) &lt;- access (i,j)</span><span>
+</span><span id="line-96"></span><span class="hs-comment">--           (distIK, pathIK) &lt;- access (i,k)</span><span>
+</span><span id="line-97"></span><span class="hs-comment">--           (distKJ, _) &lt;- access (k,j)</span><span>
+</span><span id="line-98"></span><span class="hs-comment">--           let indirectDist = distIK + distKJ</span><span>
+</span><span id="line-99"></span><span class="hs-comment">--           when (distIJ &gt; indirectDist+indirectDist*eps &amp;&amp; distIJ &gt; distIK &amp;&amp; distIJ &gt; distKJ) $</span><span>
+</span><span id="line-100"></span><span class="hs-comment">--             put (i,j) (indirectDist, pathIK)</span><span>
+</span><span id="line-101"></span><span class="hs-comment">--   where</span><span>
+</span><span id="line-102"></span><span class="hs-comment">--     access idx = V.unsafeRead graph (mkIndex n idx)</span><span>
+</span><span id="line-103"></span><span class="hs-comment">--     put idx e = V.unsafeWrite graph (mkIndex n idx) e</span><span>
+</span><span id="line-104"></span><span class="hs-comment">--     eps = 1e-10 -- When two paths are nearly the same length, pick the one with the fewest segments.</span><span>
+</span><span id="line-105"></span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- -- | Compute the index of an element in a given range.</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- mkIndex :: Num a =&gt; a -&gt; (a, a) -&gt; a</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- mkIndex n (i,j) = i*n+j</span><span>
+</span><span id="line-109"></span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- -- | Construct a weighted graph from \(n\) vertices, a max bound, and a list of weighted edges.</span><span>
+</span><span id="line-111"></span><span class="hs-comment">-- mkGraph :: (Unbox a, Num a) =&gt; Int -&gt; a -&gt; [(Int,Int,a)] -&gt; ST s (MVector s (a, Int))</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- mkGraph n maxValue edges = do</span><span>
+</span><span id="line-113"></span><span class="hs-comment">--   graph &lt;- V.replicate (n*n) (maxValue, maxBound)</span><span>
+</span><span id="line-114"></span><span class="hs-comment">--   forM_ [0..n-1] $ \v -&gt; do</span><span>
+</span><span id="line-115"></span><span class="hs-comment">--     unsafeWrite graph (mkIndex n (v,v)) (0, v)</span><span>
+</span><span id="line-116"></span><span class="hs-comment">--   forM_ edges $ \(i,j,cost) -&gt; do</span><span>
+</span><span id="line-117"></span><span class="hs-comment">--     unsafeWrite graph (mkIndex n (i,j)) (cost, j)</span><span>
+</span><span id="line-118"></span><span class="hs-comment">--     unsafeWrite graph (mkIndex n (j,i)) (cost, i)</span><span>
+</span><span id="line-119"></span><span class="hs-comment">--   return graph</span><span>
+</span><span id="line-120"></span></pre></body></html>
