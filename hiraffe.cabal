@@ -125,6 +125,8 @@ library
     Hiraffe.PlanarGraph.EdgeOracle
     Hiraffe.PlanarGraph.Dart
 
+    Hiraffe.ShortestPath.FloydWarshall
+
     Hiraffe.Tree
 
   other-modules:
@@ -191,3 +193,4 @@ test-suite hiraffe-hspec
     Hiraffe.PlanarGraphSpec
     Hiraffe.DualSpec
     Hiraffe.BFSSpec
+    Hiraffe.ShortestPathSpec
