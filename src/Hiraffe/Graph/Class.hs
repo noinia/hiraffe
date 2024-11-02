@@ -181,6 +181,15 @@ class ( HasVertices graph graph
           toDart v = graph^?!dartAt (toDartIx v)
   {-# INLINE outgoingDartsOf#-}
 
+  -- | Given two vertices u and v, get the dart representing u and v (if such a dart
+  -- exists).
+  dartIxFromTo         :: graph -> VertexIx graph -> VertexIx graph -> Maybe (DartIx graph)
+  default dartIxFromTo :: Eq (VertexIx graph)
+                       => graph -> VertexIx graph -> VertexIx graph -> Maybe (DartIx graph)
+  dartIxFromTo gr u v  = preview (outgoingDartsOf u . asIndex . filtered toV) gr
+    where
+      toV d = gr^.headOf d.asIndex == v
+
   -- | The twin of this dart, if it exits
   twinDartOf :: DartIx graph -> Getter graph (Maybe (DartIx graph))
 

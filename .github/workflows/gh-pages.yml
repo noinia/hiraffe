@@ -16,7 +16,7 @@ jobs:
             compilerVersion: 9.6.1
             setup-method: ghcup
             allow-failure: false
-            cabalVersion: 3.10.2.1
+            cabalVersion: 3.12.1.0
       fail-fast: false
     steps:
       - name: Set environment variables
