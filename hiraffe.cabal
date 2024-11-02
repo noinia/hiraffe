@@ -64,6 +64,7 @@ common setup
               -- , hgeometry:point         >= 1.0.0.0   &&  < 2
               , bytestring              >= 0.10      &&  < 1
               , containers              >= 0.5.9     &&  < 1
+              , nonempty-containers     >= 0.3.4.5   &&  < 0.4
               , lens                    >= 5.0       &&  < 6
               , semigroupoids           >= 6.0.0.1   && < 7
               -- , vector-builder          >= 0.3.7     &&  < 1
@@ -113,6 +114,7 @@ library
     Hiraffe.Graph
     Hiraffe.Graph.Class
     Hiraffe.AdjacencyListRep
+    Hiraffe.AdjacencyListRep.Map
 
     Hiraffe.BFS
     Hiraffe.BFS.Pure
