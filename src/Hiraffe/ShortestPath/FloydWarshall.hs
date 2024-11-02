@@ -24,11 +24,11 @@ import           Hiraffe.Graph.Class
 -------------------------------------------------------------------------------
 
 -- |
--- All pair shortest paths.
+-- All pair shortest paths. See 'allPiarsShortestPathsWith' for more info.
 --
 -- running time: \(O(n^3)\), where \(n\) is the number of vertices of the graph.
 allPairsShortestPaths     :: forall graph dist.
-                             ( Graph_ graph, VertexIx graph ~ Int, Num dist, Ord dist)
+                             ( HasVertices' graph, VertexIx graph ~ Int, Num dist, Ord dist)
                           => (VertexIx graph -> VertexIx graph -> Top dist)
                              -- ^ edge/dart lengths
                           -> graph
@@ -42,9 +42,13 @@ allPairsShortestPaths len = coerce . allPairsShortestPaths len'
 -- |
 -- All pair shortest paths.
 --
+-- Note that essentially all information in the graph is actually encoded in the
+-- given distance function; i.e. the length function may be called for any pair of
+-- vertices; even if they are not connected by an edge.
+--
 -- running time: \(O(n^3)\), where \(n\) is the number of vertices of the graph.
 allPairsShortestPathsWith        :: forall graph dist.
-                                    ( Graph_ graph
+                                    ( HasVertices' graph
                                     , VertexIx graph ~ Int
                                     , Semigroup dist, Ord dist
                                     )
@@ -69,7 +73,9 @@ allPairsShortestPathsWith len gr = tabulate ((0,0),(n,n)) $ \(i,j) -> dist (i,j,
     dist' = \case
       (i,j,-1) -> len i j -- we cannot use intermediate edges, so just the length of the
                     -- edge from i to j, if such an edge exists.
-      (i,j,k)  -> dist (i,j,pred k) `min` (dist (i,k,pred k) <> dist (k,j,pred k))
+      (i,j,k)  -> dist (i,j,pred k) `min` (liftA2 (<>) (dist (i,k,pred k))
+                                                       (dist (k,j,pred k))
+                                          )
         --- either we already have the minimum distance between i and j, or the
         -- shortest path goes through vertex k. So we need the path from i to k (using
         -- only intermediate vertices up to k-1), and from k to j (usign only vertices up
