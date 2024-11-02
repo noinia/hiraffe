@@ -13,6 +13,8 @@
 --------------------------------------------------------------------------------
 module Hiraffe.AdjacencyListRep.Map
   ( Graph
+  , GGraph(..)
+  , VertexData(VertexData)
   ) where
 
 import           Control.Lens
