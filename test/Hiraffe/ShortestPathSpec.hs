@@ -42,29 +42,67 @@ gridGraph (nc,nr) = fromAdjacencyLists (NonEmpty.fromList vs)
 
 l1Distance' (x,y) (x',y') = abs (x'-x) + abs (y'-y)
 
+
 l1Distance gr u v = l1Distance' (gr^?!vertexAt u) (gr^?!vertexAt v)
 
 
 
 -- | Computes the length of an edge in the grid graph; if there is an edge it has length
 -- 1.
-edgeLengths gr = \u v -> if u == v then ValT (Sum 0)
-                                   else let len = Sum 1 <$ (gr^?dartAt (u,v))
+edgeLengths gr = \u v -> if u == v then ValT 0
+                                   else let len = 1 <$ (gr^?dartAt (u,v))
                                         in len ^. re _TopMaybe
 
 spec :: Spec
 spec = describe "All pair shortest path test (Floyd Warshall)" $ do
-         modifyMaxSize (const 15) $
+         modifyMaxSize (const 15) $ do
            prop "grid graph distances correct" $
              \(NonNegative nc) (NonNegative nr) ->
                let gr  = gridGraph (nc,nr)
                        -- all edges have length 1
-                   res = allPairsShortestPathsWith (edgeLengths gr) gr
+                   res = allPairsShortestPaths (edgeLengths gr) gr
                in conjoin $ map (\((u,v),dist) ->
-                                   counterexample (show (u -- gr^?!vertexAt u.withIndex
-                                                        ,v) -- gr^?!vertexAt v.withIndex)
-                                                  ) $
-                                   counterexample ("expected" <> show
-                                                   (ValT (Sum $ l1Distance gr u v))) $
-                                     dist === ValT (Sum $ l1Distance gr u v))
+                                   counterexample (show (gr^?!vertexAt u.withIndex
+                                                        ,gr^?!vertexAt v.withIndex
+                                                        )) $
+                                     dist === ValT (l1Distance gr u v)
+                                )
                                 (Array.assocs res)
+           prop "grid graph paths exist" $
+             \(NonNegative nc) (NonNegative nr) ->
+               let gr    = gridGraph (nc,nr)
+                   table = allPairsShortestPathsWithNext (edgeLengths gr) gr
+
+
+                   f     = \case
+                     Top           -> []
+                     ValT (_,u NonEmpty.:| path) -> zip (u:path) path
+               in conjoin [ counterexample (show ((si,s),(ti,t),(u,v))) $
+                            isn't _Nothing  $ gr^?dartAt (u,v)
+                          | (si,s) <- gr^..vertices.withIndex
+                          , (ti,t) <- gr^..vertices.withIndex
+                          , (u,v)  <- f $ extractShortestPath table si ti
+                          ]
+
+         let gr    = gridGraph (4,6)
+             table = allPairsShortestPathsWithNext (edgeLengths gr) gr
+         prop "singleton paths" $
+           conjoin $ map (\(i,v) -> verifyPath (gr, table) i i [v]) (gr^..vertices.withIndex)
+         it "manual path test 1" $
+           let (si,ti) = (0,1)
+               s       = gr^?!vertexAt si
+               t       = gr^?!vertexAt ti
+           in verifyPath (gr,table) si ti ([s, t])
+         it "manual path test" $
+           let (si,ti) = (0,10)
+               s       = gr^?!vertexAt si
+               t       = gr^?!vertexAt ti
+           in verifyPath (gr,table) si ti ([s, (0,1), t])
+
+verifyPath (gr, table) si ti path = (s, t, lookupV <$> extractShortestPath table si ti)
+                                    `shouldBe`
+                                    (s, t, ValT ( l1Distance gr si ti, NonEmpty.fromList path))
+  where
+    lookupV = fmap (fmap (\v -> gr^?!vertexAt v))
+    s  = gr^?!vertexAt si
+    t  = gr^?!vertexAt ti
