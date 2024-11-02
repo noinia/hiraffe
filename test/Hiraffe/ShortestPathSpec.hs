@@ -3,17 +3,11 @@ module Hiraffe.ShortestPathSpec where
 
 import           Control.Lens
 import qualified Data.Array as Array
-import qualified Data.Foldable as F
 import qualified Data.List.NonEmpty as NonEmpty
-import qualified Data.Map as Map
-import           Data.Semigroup
-import           Data.Tree
 import           HGeometry.Unbounded
 import           Hiraffe.AdjacencyListRep.Map
-import           Hiraffe.BFS
 import           Hiraffe.Graph.Class
 import           Hiraffe.ShortestPath.FloydWarshall
-import           Hiraffe.Tree
 import           Test.Hspec
 import           Test.Hspec.QuickCheck
 import           Test.QuickCheck
@@ -36,8 +30,6 @@ gridGraph (nc,nr) = fromAdjacencyLists (NonEmpty.fromList vs)
     mkEdge i (x,y)
       | x >= 0 && x <= nc && y >= 0 && y <= nr = Just (f x y, show i)
       | otherwise                              = Nothing
-
-
 
 
 l1Distance' (x,y) (x',y') = abs (x'-x) + abs (y'-y)
