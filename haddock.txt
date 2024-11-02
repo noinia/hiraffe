@@ -10,6 +10,7 @@
  100% (  3 /  3) in 'Hiraffe.ShortestPath.FloydWarshall'
  100% (  3 /  3) in 'Hiraffe.DFS'
  100% (  2 /  2) in 'Hiraffe.BFS'
+ 100% (  2 /  2) in 'Hiraffe.AdjacencyListRep.Map'
  100% (  2 /  2) in 'Hiraffe.AdjacencyListRep'
  100% (  1 /  1) in 'Hiraffe.Instances'
  100% (  1 /  1) in 'Hiraffe'

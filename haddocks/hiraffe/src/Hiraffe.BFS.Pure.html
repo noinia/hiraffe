@@ -3,7 +3,7 @@
 </span><span id="line-3"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.BFS.Pure.html#bfs"><span class="hs-identifier">bfs</span></a></span><span>
 </span><span id="line-4"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-5"></span><span>
-</span><span id="line-6"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-666777ce10c075b264bd1ec5a74988eacbb0ae5b98efba746659720865960eae/share/doc/html/src/Control.Lens.html"><span class="hs-identifier">Control.Lens</span></a></span><span> </span><span class="hs-keyword">hiding</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-666777ce10c075b264bd1ec5a74988eacbb0ae5b98efba746659720865960eae/share/doc/html/src/Control.Lens.Empty.html#Empty"><span class="hs-identifier">Empty</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-fcc40a1e9a9bd3376879b0c9d2affbc1277f870cd843d116cd2d30dd5935a6ca/share/doc/html/src/Control.Lens.html"><span class="hs-identifier">Control.Lens</span></a></span><span> </span><span class="hs-keyword">hiding</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-fcc40a1e9a9bd3376879b0c9d2affbc1277f870cd843d116cd2d30dd5935a6ca/share/doc/html/src/Control.Lens.Empty.html#Empty"><span class="hs-identifier">Empty</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-7"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Map</span></span><span class="hs-special">)</span><span>
 </span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Map</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Map</span></span><span>
 </span><span id="line-9"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">fromMaybe</span></span><span class="hs-special">)</span><span>
@@ -12,26 +12,26 @@
 </span><span id="line-12"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Tree</span></span><span>
 </span><span id="line-13"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.Graph.Class.html"><span class="hs-identifier">Hiraffe.Graph.Class</span></a></span><span>
 </span><span id="line-14"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Prelude</span></span><span> </span><span class="hs-keyword">hiding</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">filter</span></span><span class="hs-special">)</span><span>
-</span><span id="line-15"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/witherable-0.5-d14eb1fd7b7a1128c6cf99194d1f645fa5b2ffe881add2c59343005570e22cfb/share/doc/html/src/Witherable.html"><span class="hs-identifier">Witherable</span></a></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/witherable-0.5-fb22e654d2397436250bb00ff253a13be0ea32e4a2a5f574d6e830935595cc11/share/doc/html/src/Witherable.html"><span class="hs-identifier">Witherable</span></a></span><span>
 </span><span id="line-16"></span><span>
 </span><span id="line-17"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
 </span><span id="line-18"></span><span class="annot"><span class="hs-comment">-- * BFS</span></span><span>
 </span><span id="line-19"></span><span>
 </span><span id="line-20"></span><span class="hs-comment">-- | Computes a breath first forest</span><span>
 </span><span id="line-21"></span><span class="hs-comment">-- (O(n \log n))</span><span>
-</span><span id="line-22"></span><span id="local-6989586621679182527"><span class="annot"><a href="Hiraffe.BFS.Pure.html#bff"><span class="hs-identifier hs-type">bff</span></a></span><span>    </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#DiGraph_"><span class="hs-identifier hs-type">DiGraph_</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679182527"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679182527"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-23"></span><span>       </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679182527"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Tree</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679182527"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span></span><span>
+</span><span id="line-22"></span><span id="local-6989586621679191360"><span class="annot"><a href="Hiraffe.BFS.Pure.html#bff"><span class="hs-identifier hs-type">bff</span></a></span><span>    </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#DiGraph_"><span class="hs-identifier hs-type">DiGraph_</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679191360"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679191360"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span>       </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679191360"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Tree</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679191360"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span></span><span>
 </span><span id="line-24"></span><span id="bff"><span class="annot"><span class="annottext">bff :: forall graph.
 (DiGraph_ graph, Ord (VertexIx graph)) =&gt;
 graph -&gt; [Tree (VertexIx graph)]
-</span><a href="Hiraffe.BFS.Pure.html#bff"><span class="hs-identifier hs-var hs-var">bff</span></a></span></span><span> </span><span id="local-6989586621679182630"><span class="annot"><span class="annottext">graph
-</span><a href="#local-6989586621679182630"><span class="hs-identifier hs-var">gr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Set (VertexIx graph) -&gt; [Tree (VertexIx graph)]
-</span><a href="#local-6989586621679182631"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Getting (Set (VertexIx graph)) graph (VertexIx graph)
+</span><a href="Hiraffe.BFS.Pure.html#bff"><span class="hs-identifier hs-var hs-var">bff</span></a></span></span><span> </span><span id="local-6989586621679191463"><span class="annot"><span class="annottext">graph
+</span><a href="#local-6989586621679191463"><span class="hs-identifier hs-var">gr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Set (VertexIx graph) -&gt; [Tree (VertexIx graph)]
+</span><a href="#local-6989586621679191464"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Getting (Set (VertexIx graph)) graph (VertexIx graph)
 -&gt; (VertexIx graph -&gt; Set (VertexIx graph))
 -&gt; graph
 -&gt; Set (VertexIx graph)
 forall r s a. Getting r s a -&gt; (a -&gt; r) -&gt; s -&gt; r
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-666777ce10c075b264bd1ec5a74988eacbb0ae5b98efba746659720865960eae/share/doc/html/src/Control.Lens.Fold.html#foldMapOf"><span class="hs-identifier hs-var">foldMapOf</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Indexed
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-fcc40a1e9a9bd3376879b0c9d2affbc1277f870cd843d116cd2d30dd5935a6ca/share/doc/html/src/Control.Lens.Fold.html#foldMapOf"><span class="hs-identifier hs-var">foldMapOf</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Indexed
   (VertexIx graph)
   (Vertex graph)
   (Const (Set (VertexIx graph)) (Vertex graph))
@@ -63,25 +63,25 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall i (p :: * -&gt; * -&gt; *) (f :: * -&gt; *) s.
 (Indexable i p, Contravariant f, Functor f) =&gt;
 p i (f i) -&gt; Indexed i s (f s)
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-666777ce10c075b264bd1ec5a74988eacbb0ae5b98efba746659720865960eae/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">VertexIx graph -&gt; Set (VertexIx graph)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-fcc40a1e9a9bd3376879b0c9d2affbc1277f870cd843d116cd2d30dd5935a6ca/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">VertexIx graph -&gt; Set (VertexIx graph)
 forall a. a -&gt; Set a
 </span><span class="hs-identifier hs-var">Set.singleton</span></span><span> </span><span class="annot"><span class="annottext">graph
-</span><a href="#local-6989586621679182630"><span class="hs-identifier hs-var">gr</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679191463"><span class="hs-identifier hs-var">gr</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-25"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-26"></span><span>    </span><span id="local-6989586621679182631"><span class="annot"><span class="annottext">go :: Set (VertexIx graph) -&gt; [Tree (VertexIx graph)]
-</span><a href="#local-6989586621679182631"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679182637"><span class="annot"><span class="annottext">Set (VertexIx graph)
-</span><a href="#local-6989586621679182637"><span class="hs-identifier hs-var">remaining</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Set (VertexIx graph)
+</span><span id="line-26"></span><span>    </span><span id="local-6989586621679191464"><span class="annot"><span class="annottext">go :: Set (VertexIx graph) -&gt; [Tree (VertexIx graph)]
+</span><a href="#local-6989586621679191464"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679191470"><span class="annot"><span class="annottext">Set (VertexIx graph)
+</span><a href="#local-6989586621679191470"><span class="hs-identifier hs-var">remaining</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Set (VertexIx graph)
 -&gt; Maybe (VertexIx graph, Set (VertexIx graph))
 forall a. Set a -&gt; Maybe (a, Set a)
 </span><span class="hs-identifier hs-var">Set.minView</span></span><span> </span><span class="annot"><span class="annottext">Set (VertexIx graph)
-</span><a href="#local-6989586621679182637"><span class="hs-identifier hs-var">remaining</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679191470"><span class="hs-identifier hs-var">remaining</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-27"></span><span>      </span><span class="annot"><span class="annottext">Maybe (VertexIx graph, Set (VertexIx graph))
 </span><span class="hs-identifier hs-var">Nothing</span></span><span>              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
-</span><span id="line-28"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679182639"><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679182639"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679182640"><span class="annot"><span class="annottext">Set (VertexIx graph)
-</span><a href="#local-6989586621679182640"><span class="hs-identifier hs-var">remaining'</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679182641"><span class="annot"><span class="annottext">Set (VertexIx graph)
-</span><a href="#local-6989586621679182641"><span class="hs-identifier hs-var">remaining''</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679182642"><span class="annot"><span class="annottext">Tree (VertexIx graph)
-</span><a href="#local-6989586621679182642"><span class="hs-identifier hs-var">t</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">graph
+</span><span id="line-28"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679191472"><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679191472"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679191473"><span class="annot"><span class="annottext">Set (VertexIx graph)
+</span><a href="#local-6989586621679191473"><span class="hs-identifier hs-var">remaining'</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679191474"><span class="annot"><span class="annottext">Set (VertexIx graph)
+</span><a href="#local-6989586621679191474"><span class="hs-identifier hs-var">remaining''</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679191475"><span class="annot"><span class="annottext">Tree (VertexIx graph)
+</span><a href="#local-6989586621679191475"><span class="hs-identifier hs-var">t</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">graph
 -&gt; VertexIx graph
 -&gt; Set (VertexIx graph)
 -&gt; (Set (VertexIx graph), Tree (VertexIx graph))
@@ -92,59 +92,59 @@ graph
 -&gt; Set (VertexIx graph)
 -&gt; (Set (VertexIx graph), Tree (VertexIx graph))
 </span><a href="Hiraffe.BFS.Pure.html#bfs"><span class="hs-identifier hs-var">bfs</span></a></span><span> </span><span class="annot"><span class="annottext">graph
-</span><a href="#local-6989586621679182630"><span class="hs-identifier hs-var">gr</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679182639"><span class="hs-identifier hs-var">v</span></a></span><span> </span><span class="annot"><span class="annottext">Set (VertexIx graph)
-</span><a href="#local-6989586621679182640"><span class="hs-identifier hs-var">remaining'</span></a></span><span>
+</span><a href="#local-6989586621679191463"><span class="hs-identifier hs-var">gr</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679191472"><span class="hs-identifier hs-var">v</span></a></span><span> </span><span class="annot"><span class="annottext">Set (VertexIx graph)
+</span><a href="#local-6989586621679191473"><span class="hs-identifier hs-var">remaining'</span></a></span><span>
 </span><span id="line-29"></span><span>                              </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">Tree (VertexIx graph)
-</span><a href="#local-6989586621679182642"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">Tree (VertexIx graph)
+</span><a href="#local-6989586621679191475"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">Tree (VertexIx graph)
 -&gt; [Tree (VertexIx graph)] -&gt; [Tree (VertexIx graph)]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">Set (VertexIx graph) -&gt; [Tree (VertexIx graph)]
-</span><a href="#local-6989586621679182631"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Set (VertexIx graph)
-</span><a href="#local-6989586621679182641"><span class="hs-identifier hs-var">remaining''</span></a></span><span>
+</span><a href="#local-6989586621679191464"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Set (VertexIx graph)
+</span><a href="#local-6989586621679191474"><span class="hs-identifier hs-var">remaining''</span></a></span><span>
 </span><span id="line-30"></span><span>
 </span><span id="line-31"></span><span class="annot"><span class="hs-comment">-- | Turn the map into a tree.</span></span><span>
-</span><span id="line-32"></span><span id="local-6989586621679182568"><span class="annot"><a href="Hiraffe.BFS.Pure.html#toTree"><span class="hs-identifier hs-type">toTree</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621679182568"><span class="hs-identifier hs-type">k</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Map</span></span><span> </span><span class="annot"><a href="#local-6989586621679182568"><span class="hs-identifier hs-type">k</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679182568"><span class="hs-identifier hs-type">k</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679182568"><span class="hs-identifier hs-type">k</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Tree</span></span><span> </span><span class="annot"><a href="#local-6989586621679182568"><span class="hs-identifier hs-type">k</span></a></span></span><span>
+</span><span id="line-32"></span><span id="local-6989586621679191401"><span class="annot"><a href="Hiraffe.BFS.Pure.html#toTree"><span class="hs-identifier hs-type">toTree</span></a></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621679191401"><span class="hs-identifier hs-type">k</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Map</span></span><span> </span><span class="annot"><a href="#local-6989586621679191401"><span class="hs-identifier hs-type">k</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679191401"><span class="hs-identifier hs-type">k</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679191401"><span class="hs-identifier hs-type">k</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Tree</span></span><span> </span><span class="annot"><a href="#local-6989586621679191401"><span class="hs-identifier hs-type">k</span></a></span></span><span>
 </span><span id="line-33"></span><span id="toTree"><span class="annot"><span class="annottext">toTree :: forall k. Ord k =&gt; Map k [k] -&gt; k -&gt; Tree k
-</span><a href="Hiraffe.BFS.Pure.html#toTree"><span class="hs-identifier hs-var hs-var">toTree</span></a></span></span><span> </span><span id="local-6989586621679182646"><span class="annot"><span class="annottext">Map k [k]
-</span><a href="#local-6989586621679182646"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">k -&gt; Tree k
-</span><a href="#local-6989586621679182647"><span class="hs-identifier hs-var">go</span></a></span><span>
+</span><a href="Hiraffe.BFS.Pure.html#toTree"><span class="hs-identifier hs-var hs-var">toTree</span></a></span></span><span> </span><span id="local-6989586621679191479"><span class="annot"><span class="annottext">Map k [k]
+</span><a href="#local-6989586621679191479"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">k -&gt; Tree k
+</span><a href="#local-6989586621679191480"><span class="hs-identifier hs-var">go</span></a></span><span>
 </span><span id="line-34"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-35"></span><span>    </span><span id="local-6989586621679182647"><span class="annot"><span class="annottext">go :: k -&gt; Tree k
-</span><a href="#local-6989586621679182647"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679182648"><span class="annot"><span class="annottext">k
-</span><a href="#local-6989586621679182648"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">k -&gt; [Tree k] -&gt; Tree k
+</span><span id="line-35"></span><span>    </span><span id="local-6989586621679191480"><span class="annot"><span class="annottext">go :: k -&gt; Tree k
+</span><a href="#local-6989586621679191480"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679191481"><span class="annot"><span class="annottext">k
+</span><a href="#local-6989586621679191481"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">k -&gt; [Tree k] -&gt; Tree k
 forall a. a -&gt; [Tree a] -&gt; Tree a
 </span><span class="hs-identifier hs-var">Node</span></span><span> </span><span class="annot"><span class="annottext">k
-</span><a href="#local-6989586621679182648"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">([Tree k] -&gt; Tree k) -&gt; [Tree k] -&gt; Tree k
+</span><a href="#local-6989586621679191481"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">([Tree k] -&gt; Tree k) -&gt; [Tree k] -&gt; Tree k
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(k -&gt; Tree k) -&gt; [k] -&gt; [Tree k]
 forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
 </span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">k -&gt; Tree k
-</span><a href="#local-6989586621679182647"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[k] -&gt; Maybe [k] -&gt; [k]
+</span><a href="#local-6989586621679191480"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[k] -&gt; Maybe [k] -&gt; [k]
 forall a. a -&gt; Maybe a -&gt; a
 </span><span class="hs-identifier hs-var">fromMaybe</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">(Maybe [k] -&gt; [k]) -&gt; Maybe [k] -&gt; [k]
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">k -&gt; Map k [k] -&gt; Maybe [k]
 forall k a. Ord k =&gt; k -&gt; Map k a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Map.lookup</span></span><span> </span><span class="annot"><span class="annottext">k
-</span><a href="#local-6989586621679182648"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">Map k [k]
-</span><a href="#local-6989586621679182646"><span class="hs-identifier hs-var">m</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679191481"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">Map k [k]
+</span><a href="#local-6989586621679191479"><span class="hs-identifier hs-var">m</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-36"></span><span>
 </span><span id="line-37"></span><span class="hs-comment">-- | BFS from the given starting vertex, and the set of still-to-visit vertices.</span><span>
 </span><span id="line-38"></span><span class="hs-comment">-- returns the remaining still-to-visit vertices and the tree.</span><span>
-</span><span id="line-39"></span><span id="local-6989586621679182567"><span class="annot"><a href="Hiraffe.BFS.Pure.html#bfs"><span class="hs-identifier hs-type">bfs</span></a></span><span>      </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#DiGraph_"><span class="hs-identifier hs-type">DiGraph_</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679182567"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679182567"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-40"></span><span>         </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679182567"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679182567"><span class="hs-identifier hs-type">graph</span></a></span><span>
-</span><span id="line-41"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679182567"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-42"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679182567"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Tree</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679182567"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span></span><span>
+</span><span id="line-39"></span><span id="local-6989586621679191400"><span class="annot"><a href="Hiraffe.BFS.Pure.html#bfs"><span class="hs-identifier hs-type">bfs</span></a></span><span>      </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#DiGraph_"><span class="hs-identifier hs-type">DiGraph_</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679191400"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679191400"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span>         </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679191400"><span class="hs-identifier hs-type">graph</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679191400"><span class="hs-identifier hs-type">graph</span></a></span><span>
+</span><span id="line-41"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679191400"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679191400"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Tree</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.Graph.Class.html#VertexIx"><span class="hs-identifier hs-type">VertexIx</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679191400"><span class="hs-identifier hs-type">graph</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span></span><span>
 </span><span id="line-43"></span><span id="bfs"><span class="annot"><span class="annottext">bfs :: forall graph.
 (DiGraph_ graph, Ord (VertexIx graph)) =&gt;
 graph
 -&gt; VertexIx graph
 -&gt; Set (VertexIx graph)
 -&gt; (Set (VertexIx graph), Tree (VertexIx graph))
-</span><a href="Hiraffe.BFS.Pure.html#bfs"><span class="hs-identifier hs-var hs-var">bfs</span></a></span></span><span> </span><span id="local-6989586621679182675"><span class="annot"><span class="annottext">graph
-</span><a href="#local-6989586621679182675"><span class="hs-identifier hs-var">gr</span></a></span></span><span> </span><span id="local-6989586621679182676"><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679182676"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Map (VertexIx graph) [VertexIx graph] -&gt; Tree (VertexIx graph))
+</span><a href="Hiraffe.BFS.Pure.html#bfs"><span class="hs-identifier hs-var hs-var">bfs</span></a></span></span><span> </span><span id="local-6989586621679191508"><span class="annot"><span class="annottext">graph
+</span><a href="#local-6989586621679191508"><span class="hs-identifier hs-var">gr</span></a></span></span><span> </span><span id="local-6989586621679191509"><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679191509"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Map (VertexIx graph) [VertexIx graph] -&gt; Tree (VertexIx graph))
 -&gt; (Set (VertexIx graph), Map (VertexIx graph) [VertexIx graph])
 -&gt; (Set (VertexIx graph), Tree (VertexIx graph))
 forall a b.
@@ -160,7 +160,7 @@ forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
 -&gt; VertexIx graph -&gt; Tree (VertexIx graph)
 forall k. Ord k =&gt; Map k [k] -&gt; k -&gt; Tree k
 </span><a href="Hiraffe.BFS.Pure.html#toTree"><span class="hs-identifier hs-var">toTree</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679182676"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">((Set (VertexIx graph), Map (VertexIx graph) [VertexIx graph])
+</span><a href="#local-6989586621679191509"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">((Set (VertexIx graph), Map (VertexIx graph) [VertexIx graph])
  -&gt; (Set (VertexIx graph), Tree (VertexIx graph)))
 -&gt; (Set (VertexIx graph)
     -&gt; (Set (VertexIx graph), Map (VertexIx graph) [VertexIx graph]))
@@ -170,15 +170,15 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">[VertexIx graph]
 -&gt; Set (VertexIx graph)
 -&gt; (Set (VertexIx graph), Map (VertexIx graph) [VertexIx graph])
-</span><a href="#local-6989586621679182678"><span class="hs-identifier hs-var">bfs'</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679182676"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">]</span><span>
+</span><a href="#local-6989586621679191511"><span class="hs-identifier hs-var">bfs'</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679191509"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">]</span><span>
 </span><span id="line-44"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-45"></span><span>    </span><span id="local-6989586621679182678"><span class="annot"><span class="annottext">bfs' :: [VertexIx graph]
+</span><span id="line-45"></span><span>    </span><span id="local-6989586621679191511"><span class="annot"><span class="annottext">bfs' :: [VertexIx graph]
 -&gt; Set (VertexIx graph)
 -&gt; (Set (VertexIx graph), Map (VertexIx graph) [VertexIx graph])
-</span><a href="#local-6989586621679182678"><span class="hs-identifier hs-var hs-var">bfs'</span></a></span></span><span> </span><span id="local-6989586621679182679"><span class="annot"><span class="annottext">[VertexIx graph]
-</span><a href="#local-6989586621679182679"><span class="hs-identifier hs-var">lvl</span></a></span></span><span> </span><span id="local-6989586621679182680"><span class="annot"><span class="annottext">Set (VertexIx graph)
-</span><a href="#local-6989586621679182680"><span class="hs-identifier hs-var">remaining</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(VertexIx graph
+</span><a href="#local-6989586621679191511"><span class="hs-identifier hs-var hs-var">bfs'</span></a></span></span><span> </span><span id="local-6989586621679191512"><span class="annot"><span class="annottext">[VertexIx graph]
+</span><a href="#local-6989586621679191512"><span class="hs-identifier hs-var">lvl</span></a></span></span><span> </span><span id="local-6989586621679191513"><span class="annot"><span class="annottext">Set (VertexIx graph)
+</span><a href="#local-6989586621679191513"><span class="hs-identifier hs-var">remaining</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(VertexIx graph
  -&gt; (Set (VertexIx graph), Map (VertexIx graph) [VertexIx graph])
  -&gt; (Set (VertexIx graph), Map (VertexIx graph) [VertexIx graph]))
 -&gt; (Set (VertexIx graph), Map (VertexIx graph) [VertexIx graph])
@@ -191,34 +191,34 @@ Foldable t =&gt;
 </span><span class="hs-identifier hs-var">foldr</span></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
 -&gt; (Set (VertexIx graph), Map (VertexIx graph) [VertexIx graph])
 -&gt; (Set (VertexIx graph), Map (VertexIx graph) [VertexIx graph])
-</span><a href="#local-6989586621679182682"><span class="hs-identifier hs-var">visit</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Set (VertexIx graph)
-</span><a href="#local-6989586621679182680"><span class="hs-identifier hs-var">remaining</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Map (VertexIx graph) [VertexIx graph]
+</span><a href="#local-6989586621679191515"><span class="hs-identifier hs-var">visit</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Set (VertexIx graph)
+</span><a href="#local-6989586621679191513"><span class="hs-identifier hs-var">remaining</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Map (VertexIx graph) [VertexIx graph]
 forall k a. Map k a
 </span><span class="hs-identifier hs-var">Map.empty</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[VertexIx graph]
-</span><a href="#local-6989586621679182679"><span class="hs-identifier hs-var">lvl</span></a></span><span>
+</span><a href="#local-6989586621679191512"><span class="hs-identifier hs-var">lvl</span></a></span><span>
 </span><span id="line-46"></span><span>
-</span><span id="line-47"></span><span>    </span><span id="local-6989586621679182682"><span class="annot"><span class="annottext">visit :: VertexIx graph
+</span><span id="line-47"></span><span>    </span><span id="local-6989586621679191515"><span class="annot"><span class="annottext">visit :: VertexIx graph
 -&gt; (Set (VertexIx graph), Map (VertexIx graph) [VertexIx graph])
 -&gt; (Set (VertexIx graph), Map (VertexIx graph) [VertexIx graph])
-</span><a href="#local-6989586621679182682"><span class="hs-identifier hs-var hs-var">visit</span></a></span></span><span> </span><span id="local-6989586621679182684"><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679182684"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679182685"><span class="annot"><span class="annottext">Set (VertexIx graph)
-</span><a href="#local-6989586621679182685"><span class="hs-identifier hs-var">remaining</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679182686"><span class="annot"><span class="annottext">Map (VertexIx graph) [VertexIx graph]
-</span><a href="#local-6989586621679182686"><span class="hs-identifier hs-var">m</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679182687"><span class="annot"><span class="annottext">chs :: [VertexIx graph]
-</span><a href="#local-6989586621679182687"><span class="hs-identifier hs-var hs-var">chs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(VertexIx graph -&gt; Bool) -&gt; [VertexIx graph] -&gt; [VertexIx graph]
+</span><a href="#local-6989586621679191515"><span class="hs-identifier hs-var hs-var">visit</span></a></span></span><span> </span><span id="local-6989586621679191517"><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679191517"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679191518"><span class="annot"><span class="annottext">Set (VertexIx graph)
+</span><a href="#local-6989586621679191518"><span class="hs-identifier hs-var">remaining</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679191519"><span class="annot"><span class="annottext">Map (VertexIx graph) [VertexIx graph]
+</span><a href="#local-6989586621679191519"><span class="hs-identifier hs-var">m</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679191520"><span class="annot"><span class="annottext">chs :: [VertexIx graph]
+</span><a href="#local-6989586621679191520"><span class="hs-identifier hs-var hs-var">chs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(VertexIx graph -&gt; Bool) -&gt; [VertexIx graph] -&gt; [VertexIx graph]
 forall a. (a -&gt; Bool) -&gt; [a] -&gt; [a]
 forall (f :: * -&gt; *) a. Filterable f =&gt; (a -&gt; Bool) -&gt; f a -&gt; f a
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/witherable-0.5-d14eb1fd7b7a1128c6cf99194d1f645fa5b2ffe881add2c59343005570e22cfb/share/doc/html/src/Witherable.html#filter"><span class="hs-identifier hs-var">filter</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(VertexIx graph -&gt; Set (VertexIx graph) -&gt; Bool)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/witherable-0.5-fb22e654d2397436250bb00ff253a13be0ea32e4a2a5f574d6e830935595cc11/share/doc/html/src/Witherable.html#filter"><span class="hs-identifier hs-var">filter</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(VertexIx graph -&gt; Set (VertexIx graph) -&gt; Bool)
 -&gt; Set (VertexIx graph) -&gt; VertexIx graph -&gt; Bool
 forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
 </span><span class="hs-identifier hs-var">flip</span></span><span> </span><span class="annot"><span class="annottext">VertexIx graph -&gt; Set (VertexIx graph) -&gt; Bool
 forall a. Ord a =&gt; a -&gt; Set a -&gt; Bool
 </span><span class="hs-identifier hs-var">Set.member</span></span><span> </span><span class="annot"><span class="annottext">Set (VertexIx graph)
-</span><a href="#local-6989586621679182685"><span class="hs-identifier hs-var">remaining</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">([VertexIx graph] -&gt; [VertexIx graph])
+</span><a href="#local-6989586621679191518"><span class="hs-identifier hs-var">remaining</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">([VertexIx graph] -&gt; [VertexIx graph])
 -&gt; [VertexIx graph] -&gt; [VertexIx graph]
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">VertexIx graph -&gt; [VertexIx graph]
-</span><a href="#local-6989586621679182690"><span class="hs-identifier hs-var">neighs</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679182684"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><a href="#local-6989586621679191523"><span class="hs-identifier hs-var">neighs</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679191517"><span class="hs-identifier hs-var">v</span></a></span><span>
 </span><span id="line-48"></span><span>                             </span><span class="hs-keyword">in</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(VertexIx graph -&gt; Set (VertexIx graph) -&gt; Set (VertexIx graph))
 -&gt; Set (VertexIx graph) -&gt; [VertexIx graph] -&gt; Set (VertexIx graph)
 forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; [a] -&gt; b
@@ -228,30 +228,30 @@ Foldable t =&gt;
 </span><span class="hs-identifier hs-var">foldr</span></span><span> </span><span class="annot"><span class="annottext">VertexIx graph -&gt; Set (VertexIx graph) -&gt; Set (VertexIx graph)
 forall a. Ord a =&gt; a -&gt; Set a -&gt; Set a
 </span><span class="hs-identifier hs-var">Set.delete</span></span><span> </span><span class="annot"><span class="annottext">Set (VertexIx graph)
-</span><a href="#local-6989586621679182685"><span class="hs-identifier hs-var">remaining</span></a></span><span> </span><span class="annot"><span class="annottext">[VertexIx graph]
-</span><a href="#local-6989586621679182687"><span class="hs-identifier hs-var">chs</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679191518"><span class="hs-identifier hs-var">remaining</span></a></span><span> </span><span class="annot"><span class="annottext">[VertexIx graph]
+</span><a href="#local-6989586621679191520"><span class="hs-identifier hs-var">chs</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">VertexIx graph
 -&gt; [VertexIx graph]
 -&gt; Map (VertexIx graph) [VertexIx graph]
 -&gt; Map (VertexIx graph) [VertexIx graph]
 forall k a. Ord k =&gt; k -&gt; a -&gt; Map k a -&gt; Map k a
 </span><span class="hs-identifier hs-var">Map.insert</span></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679182684"><span class="hs-identifier hs-var">v</span></a></span><span> </span><span class="annot"><span class="annottext">[VertexIx graph]
-</span><a href="#local-6989586621679182687"><span class="hs-identifier hs-var">chs</span></a></span><span> </span><span class="annot"><span class="annottext">Map (VertexIx graph) [VertexIx graph]
-</span><a href="#local-6989586621679182686"><span class="hs-identifier hs-var">m</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679191517"><span class="hs-identifier hs-var">v</span></a></span><span> </span><span class="annot"><span class="annottext">[VertexIx graph]
+</span><a href="#local-6989586621679191520"><span class="hs-identifier hs-var">chs</span></a></span><span> </span><span class="annot"><span class="annottext">Map (VertexIx graph) [VertexIx graph]
+</span><a href="#local-6989586621679191519"><span class="hs-identifier hs-var">m</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-49"></span><span>
-</span><span id="line-50"></span><span>    </span><span id="local-6989586621679182690"><span class="annot"><span class="annottext">neighs :: VertexIx graph -&gt; [VertexIx graph]
-</span><a href="#local-6989586621679182690"><span class="hs-identifier hs-var hs-var">neighs</span></a></span></span><span> </span><span id="local-6989586621679182693"><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679182693"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">graph
-</span><a href="#local-6989586621679182675"><span class="hs-identifier hs-var">gr</span></a></span><span class="annot"><span class="annottext">graph
+</span><span id="line-50"></span><span>    </span><span id="local-6989586621679191523"><span class="annot"><span class="annottext">neighs :: VertexIx graph -&gt; [VertexIx graph]
+</span><a href="#local-6989586621679191523"><span class="hs-identifier hs-var hs-var">neighs</span></a></span></span><span> </span><span id="local-6989586621679191526"><span class="annot"><span class="annottext">VertexIx graph
+</span><a href="#local-6989586621679191526"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">graph
+</span><a href="#local-6989586621679191508"><span class="hs-identifier hs-var">gr</span></a></span><span class="annot"><span class="annottext">graph
 -&gt; Getting (Endo [VertexIx graph]) graph (VertexIx graph)
 -&gt; [VertexIx graph]
 forall s a. s -&gt; Getting (Endo [a]) s a -&gt; [a]
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-666777ce10c075b264bd1ec5a74988eacbb0ae5b98efba746659720865960eae/share/doc/html/src/Control.Lens.Fold.html#%5E.."><span class="hs-operator hs-var">^..</span></a></span><span class="annot"><span class="annottext">VertexIx graph -&gt; IndexedFold (VertexIx graph) graph (Vertex graph)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-fcc40a1e9a9bd3376879b0c9d2affbc1277f870cd843d116cd2d30dd5935a6ca/share/doc/html/src/Control.Lens.Fold.html#%5E.."><span class="hs-operator hs-var">^..</span></a></span><span class="annot"><span class="annottext">VertexIx graph -&gt; IndexedFold (VertexIx graph) graph (Vertex graph)
 forall graph.
 DiGraph_ graph =&gt;
 VertexIx graph -&gt; IndexedFold (VertexIx graph) graph (Vertex graph)
 </span><a href="Hiraffe.Graph.Class.html#outNeighboursOf"><span class="hs-identifier hs-var">outNeighboursOf</span></a></span><span> </span><span class="annot"><span class="annottext">VertexIx graph
-</span><a href="#local-6989586621679182693"><span class="hs-identifier hs-var">v</span></a></span><span class="annot"><span class="annottext">(Indexed
+</span><a href="#local-6989586621679191526"><span class="hs-identifier hs-var">v</span></a></span><span class="annot"><span class="annottext">(Indexed
    (VertexIx graph)
    (Vertex graph)
    (Const (Endo [VertexIx graph]) (Vertex graph))
@@ -272,7 +272,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall i (p :: * -&gt; * -&gt; *) (f :: * -&gt; *) s.
 (Indexable i p, Contravariant f, Functor f) =&gt;
 p i (f i) -&gt; Indexed i s (f s)
-</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-666777ce10c075b264bd1ec5a74988eacbb0ae5b98efba746659720865960eae/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span>
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-fcc40a1e9a9bd3376879b0c9d2affbc1277f870cd843d116cd2d30dd5935a6ca/share/doc/html/src/Control.Lens.Internal.Indexed.html#asIndex"><span class="hs-identifier hs-var">asIndex</span></a></span><span>
 </span><span id="line-51"></span><span>
 </span><span id="line-52"></span><span>
 </span><span id="line-53"></span><span>
