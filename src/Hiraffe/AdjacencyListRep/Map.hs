@@ -204,7 +204,8 @@ linkNegatives g = g&darts %@~ \(u,v) x -> if u <= v then fromJust' x
 
 --------------------------------------------------------------------------------
 
-instance (HasFromFoldable f, Ord i) => DiGraph_ (GGraph f i v e) where
+instance Ord i => DiGraph_ (GGraph f i v e) where
+  type DiGraphFromAdjListExtraConstraints (GGraph f i v e) h = HasFromFoldable f
   diGraphFromAdjacencyLists =
     Graph . foldMap1 (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
                                      in NEMap.singleton i vd
@@ -225,13 +226,14 @@ instance (HasFromFoldable f, Ord i) => DiGraph_ (GGraph f i v e) where
     -- just look up the dart v,u
 
 
-instance (HasFromFoldable f, Ord i) => BidirGraph_ (GGraph f i v e) where
+instance Ord i => BidirGraph_ (GGraph f i v e) where
   twinOf (u,v) = to $ const (v,u)
   getPositiveDart _ d@(u,v) | u <= v    = d
                             | otherwise = (v,u)
   -- we use the dart oriented from small to large as the positive one.
 
-instance (HasFromFoldable f, Ord i) => Graph_ (GGraph f i v e) where
+instance Ord i => Graph_ (GGraph f i v e) where
+  type GraphFromAdjListExtraConstraints (GGraph f i v e) h = HasFromFoldable f
   fromAdjacencyLists =
     Graph . foldMap1 (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
                                      in NEMap.singleton i vd
