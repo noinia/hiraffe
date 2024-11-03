@@ -43,6 +43,16 @@ data VertexData f i v e = VertexData { _vData      :: !v
                                      } deriving (Generic,Functor,Foldable,Traversable)
 makeLenses ''VertexData
 
+
+instance ( Semigroup v, Semigroup e, Semigroup (f i), Ord i
+         ) => Semigroup (VertexData f i v e) where
+  (VertexData x ns nOrder) <> (VertexData x' ns' nOrder') =
+    VertexData (x <> x') (Map.unionWith (<>) ns ns') (nOrder <> nOrder')
+
+instance ( Monoid v, Monoid e, Monoid (f i), Ord i
+         ) => Monoid (VertexData f i v e) where
+  mempty = VertexData mempty Map.empty mempty
+
 instance (Show1 f, Show i, Show v, Show e) => Show (VertexData f i v e) where
   showsPrec d (VertexData v ns nOrd) =
     showParen
@@ -98,6 +108,16 @@ _GraphMap :: Iso (GGraph f i v e)             (GGraph f' i' v' e')
                  (NEMap i (VertexData f i v e)) (NEMap i' (VertexData f' i' v' e'))
 _GraphMap = iso (\(Graph m) -> m) Graph
 
+--------------------------------------------------------------------------------
+
+instance Bifunctor (GGraph f i) where
+  bimap f g (Graph m) = Graph $ fmap (bimap f g) m
+
+instance Bifoldable (GGraph f i) where
+  bifoldMap f g (Graph m) = foldMap (bifoldMap f g) m
+
+instance Bitraversable (GGraph f i) where
+  bitraverse f g (Graph m) = Graph <$> traverse (bitraverse f g) m
 
 ----------------------------------------
 
@@ -237,6 +257,15 @@ incidentEdges'  :: Ord i
 -- incidentEdges'  :: (Indexable (VertexIx (GGraph f v e)) p, Applicative g)
 --                 => VertexIx (GGraph f v e) -> p e (g e) -> GGraph f v e -> g (GGraph f v e)
 incidentEdges' u = vertexDataOf u.neighMap.itraversed
+
+
+--------------------------------------------------------------------------------
+-- Combining Graphs
+
+
+instance ( Ord i, Semigroup v, Semigroup e, Semigroup (f i)
+         ) => Semigroup (GGraph f i v e) where
+  (Graph m) <> (Graph m') = Graph $ NEMap.unionWith (<>) m m'
 
 
 --------------------------------------------------------------------------------
