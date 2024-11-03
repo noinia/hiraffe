@@ -4,11 +4,13 @@ module Hiraffe.BFS.Pure
   ) where
 
 import           Control.Lens hiding (Empty)
+import qualified Data.List.NonEmpty as NonEmpty
 import           Data.Map (Map)
 import qualified Data.Map as Map
 import           Data.Maybe (fromMaybe)
 import           Data.Set (Set)
 import qualified Data.Set as Set
+import qualified Data.Set.NonEmpty as NESet
 import           Data.Tree
 import           Hiraffe.Graph.Class
 import           Prelude hiding (filter)
@@ -18,15 +20,16 @@ import           Witherable
 -- * BFS
 
 -- | Computes a breath first forest
+--
 -- (O(n \log n))
 bff    :: (DiGraph_ graph, Ord (VertexIx graph))
-       => graph -> [Tree (VertexIx graph)]
-bff gr = go (foldMapOf (vertices.asIndex) Set.singleton gr)
+       => graph -> NonEmpty.NonEmpty (Tree (VertexIx graph))
+bff gr = go (foldMapOf (vertices.asIndex) NESet.singleton gr)
   where
-    go remaining = case Set.minView remaining of
-      Nothing              -> []
-      Just (v, remaining') -> let (remaining'', t) = bfs gr v remaining'
-                              in t : go remaining''
+    go remaining = let (v, remaining') = NESet.deleteFindMin remaining
+                   in case bfs gr v remaining' of
+                        (NESet.IsEmpty, t)                -> NonEmpty.singleton t
+                        (NESet.IsNonEmpty remaining'', t) -> t NonEmpty.<| go remaining''
 
 -- | Turn the map into a tree.
 toTree   :: Ord k => Map k [k] -> k -> Tree k
