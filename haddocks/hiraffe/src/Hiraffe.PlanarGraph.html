@@ -25,154 +25,523 @@
 </span><span id="line-25"></span><span>  </span><span class="annot"><span class="hs-comment">-- * Building a planar graph</span></span><span>
 </span><span id="line-26"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#planarGraph"><span class="hs-identifier">planarGraph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#planarGraph%27"><span class="hs-identifier">Core.planarGraph'</span></a></span><span>
 </span><span id="line-27"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.IO.html#fromAdjRep"><span class="hs-identifier">fromAdjRep</span></a></span><span>
-</span><span id="line-28"></span><span>
-</span><span id="line-29"></span><span>  </span><span class="annot"><span class="hs-comment">-- * Exporting a planar graph</span></span><span>
-</span><span id="line-30"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#toAdjacencyLists"><span class="hs-identifier">Core.toAdjacencyLists</span></a></span><span>
-</span><span id="line-31"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.IO.html#toAdjRep"><span class="hs-identifier">toAdjRep</span></a></span><span>
-</span><span id="line-32"></span><span>
-</span><span id="line-33"></span><span>  </span><span class="annot"><span class="hs-comment">-- * Darts</span></span><span>
-</span><span id="line-34"></span><span>
-</span><span id="line-35"></span><span>  </span><span class="annot"><span class="hs-comment">-- * Edges</span></span><span>
-</span><span id="line-36"></span><span>
-</span><span id="line-37"></span><span>  </span><span class="annot"><span class="hs-comment">-- * Vertices</span></span><span>
-</span><span id="line-38"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#VertexIdIn"><span class="hs-identifier">VertexIdIn</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#VertexId"><span class="hs-identifier">VertexId</span></a></span><span>
-</span><span id="line-39"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#incidentEdges"><span class="hs-identifier">Core.incidentEdges</span></a></span><span>
-</span><span id="line-40"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#incomingEdges"><span class="hs-identifier">Core.incomingEdges</span></a></span><span>
-</span><span id="line-41"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#outgoingEdges"><span class="hs-identifier">Core.outgoingEdges</span></a></span><span>
-</span><span id="line-42"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#nextIncidentEdge"><span class="hs-identifier">Core.nextIncidentEdge</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#prevIncidentEdge"><span class="hs-identifier">Core.prevIncidentEdge</span></a></span><span>
-</span><span id="line-43"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#nextIncidentEdgeFrom"><span class="hs-identifier">Core.nextIncidentEdgeFrom</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#prevIncidentEdgeFrom"><span class="hs-identifier">Core.prevIncidentEdgeFrom</span></a></span><span>
-</span><span id="line-44"></span><span>
-</span><span id="line-45"></span><span>  </span><span class="annot"><span class="hs-comment">-- * Faces</span></span><span>
-</span><span id="line-46"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier">FaceIdIn</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceId"><span class="hs-identifier">FaceId</span></a></span><span>
-</span><span id="line-47"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#boundary%27"><span class="hs-identifier">boundary'</span></a></span><span>
-</span><span id="line-48"></span><span>
-</span><span id="line-49"></span><span>  </span><span class="annot"><span class="hs-comment">-- * Dual Graph</span></span><span>
-</span><span id="line-50"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#dual"><span class="hs-identifier">Core.dual</span></a></span><span>
-</span><span id="line-51"></span><span>
-</span><span id="line-52"></span><span>  </span><span class="annot"><span class="hs-comment">-- * Associated Data</span></span><span>
-</span><span id="line-53"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#endPointDataOf"><span class="hs-identifier">Core.endPointDataOf</span></a></span><span>
-</span><span id="line-54"></span><span>
-</span><span id="line-55"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Class.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Class</span></a></span><span>
-</span><span id="line-56"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html"><span class="hs-identifier">Hiraffe.Graph.Class</span></a></span><span>
-</span><span id="line-57"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-58"></span><span>
-</span><span id="line-59"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.Graph.Class.html"><span class="hs-identifier">Hiraffe.Graph.Class</span></a></span><span>
-</span><span id="line-60"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.Class.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Class</span></a></span><span>
-</span><span id="line-61"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Core</span></a></span><span> </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier">PlanarGraph</span></a></span><span>
-</span><span id="line-62"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#VertexIdIn"><span class="hs-identifier">VertexIdIn</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#VertexId"><span class="hs-identifier">VertexId</span></a></span><span>
-</span><span id="line-63"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier">FaceIdIn</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceId"><span class="hs-identifier">FaceId</span></a></span><span>
-</span><span id="line-64"></span><span>                                          </span><span class="hs-special">)</span><span>
-</span><span id="line-65"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Core</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#planarGraph"><span class="hs-identifier">planarGraph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#vertexData"><span class="hs-identifier">vertexData</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#faceData"><span class="hs-identifier">faceData</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#dartData"><span class="hs-identifier">dartData</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-66"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Core</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Core</span></span><span>
-</span><span id="line-67"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Dart</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Dart</span></span><span>
-</span><span id="line-68"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Dual</span></a></span><span>
-</span><span id="line-69"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.IO.html"><span class="hs-identifier">Hiraffe.PlanarGraph.IO</span></a></span><span>
-</span><span id="line-70"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.Instance.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Instance</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-71"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.World.html"><span class="hs-identifier">Hiraffe.PlanarGraph.World</span></a></span><span>
-</span><span id="line-72"></span><span>
-</span><span id="line-73"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
-</span><span id="line-74"></span><span class="hs-comment">-- $setup</span><span>
-</span><span id="line-75"></span><span class="hs-comment">-- &gt;&gt;&gt; import qualified Data.Vector.NonEmpty as V</span><span>
-</span><span id="line-76"></span><span class="hs-comment">-- &gt;&gt;&gt; import qualified Data.List.NonEmpty as NonEmpty</span><span>
-</span><span id="line-77"></span><span class="hs-comment">-- &gt;&gt;&gt; import Control.Lens</span><span>
-</span><span id="line-78"></span><span class="hs-comment">-- &gt;&gt;&gt; import Hiraffe.PlanarGraph.Dart(Dart(Dart),Arc(Arc),Direction(..))</span><span>
-</span><span id="line-79"></span><span class="hs-comment">-- &gt;&gt;&gt; :{</span><span>
-</span><span id="line-80"></span><span class="hs-comment">-- let dart i s = Dart (Arc i) (read s)</span><span>
-</span><span id="line-81"></span><span class="hs-comment">--     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]</span><span>
-</span><span id="line-82"></span><span class="hs-comment">--     adjacencies = NonEmpty.fromList . fmap NonEmpty.fromList $</span><span>
-</span><span id="line-83"></span><span class="hs-comment">--                           [ [ (Dart aA Negative, &quot;a-&quot;)</span><span>
-</span><span id="line-84"></span><span class="hs-comment">--                             , (Dart aC Positive, &quot;c+&quot;)</span><span>
-</span><span id="line-85"></span><span class="hs-comment">--                             , (Dart aB Positive, &quot;b+&quot;)</span><span>
-</span><span id="line-86"></span><span class="hs-comment">--                             , (Dart aA Positive, &quot;a+&quot;)</span><span>
-</span><span id="line-87"></span><span class="hs-comment">--                             ]</span><span>
-</span><span id="line-88"></span><span class="hs-comment">--                           , [ (Dart aE Negative, &quot;e-&quot;)</span><span>
-</span><span id="line-89"></span><span class="hs-comment">--                             , (Dart aB Negative, &quot;b-&quot;)</span><span>
-</span><span id="line-90"></span><span class="hs-comment">--                             , (Dart aD Negative, &quot;d-&quot;)</span><span>
-</span><span id="line-91"></span><span class="hs-comment">--                             , (Dart aG Positive, &quot;g+&quot;)</span><span>
-</span><span id="line-92"></span><span class="hs-comment">--                             ]</span><span>
-</span><span id="line-93"></span><span class="hs-comment">--                           , [ (Dart aE Positive, &quot;e+&quot;)</span><span>
-</span><span id="line-94"></span><span class="hs-comment">--                             , (Dart aD Positive, &quot;d+&quot;)</span><span>
-</span><span id="line-95"></span><span class="hs-comment">--                             , (Dart aC Negative, &quot;c-&quot;)</span><span>
-</span><span id="line-96"></span><span class="hs-comment">--                             ]</span><span>
-</span><span id="line-97"></span><span class="hs-comment">--                           , [ (Dart aG Negative, &quot;g-&quot;)</span><span>
+</span><span id="line-28"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.html#fromAdjacencyRep"><span class="hs-identifier">fromAdjacencyRep</span></a></span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span>  </span><span class="annot"><span class="hs-comment">-- * Exporting a planar graph</span></span><span>
+</span><span id="line-31"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#toAdjacencyLists"><span class="hs-identifier">Core.toAdjacencyLists</span></a></span><span>
+</span><span id="line-32"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.IO.html#toAdjRep"><span class="hs-identifier">toAdjRep</span></a></span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span>  </span><span class="annot"><span class="hs-comment">-- * Darts</span></span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span>  </span><span class="annot"><span class="hs-comment">-- * Edges</span></span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span>  </span><span class="annot"><span class="hs-comment">-- * Vertices</span></span><span>
+</span><span id="line-39"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#VertexIdIn"><span class="hs-identifier">VertexIdIn</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#VertexId"><span class="hs-identifier">VertexId</span></a></span><span>
+</span><span id="line-40"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#incidentEdges"><span class="hs-identifier">Core.incidentEdges</span></a></span><span>
+</span><span id="line-41"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#incomingEdges"><span class="hs-identifier">Core.incomingEdges</span></a></span><span>
+</span><span id="line-42"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#outgoingEdges"><span class="hs-identifier">Core.outgoingEdges</span></a></span><span>
+</span><span id="line-43"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#nextIncidentEdge"><span class="hs-identifier">Core.nextIncidentEdge</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#prevIncidentEdge"><span class="hs-identifier">Core.prevIncidentEdge</span></a></span><span>
+</span><span id="line-44"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#nextIncidentEdgeFrom"><span class="hs-identifier">Core.nextIncidentEdgeFrom</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#prevIncidentEdgeFrom"><span class="hs-identifier">Core.prevIncidentEdgeFrom</span></a></span><span>
+</span><span id="line-45"></span><span>
+</span><span id="line-46"></span><span>  </span><span class="annot"><span class="hs-comment">-- * Faces</span></span><span>
+</span><span id="line-47"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier">FaceIdIn</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceId"><span class="hs-identifier">FaceId</span></a></span><span>
+</span><span id="line-48"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html#boundary%27"><span class="hs-identifier">boundary'</span></a></span><span>
+</span><span id="line-49"></span><span>
+</span><span id="line-50"></span><span>  </span><span class="annot"><span class="hs-comment">-- * Dual Graph</span></span><span>
+</span><span id="line-51"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#dual"><span class="hs-identifier">Core.dual</span></a></span><span>
+</span><span id="line-52"></span><span>
+</span><span id="line-53"></span><span>  </span><span class="annot"><span class="hs-comment">-- * Associated Data</span></span><span>
+</span><span id="line-54"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#endPointDataOf"><span class="hs-identifier">Core.endPointDataOf</span></a></span><span>
+</span><span id="line-55"></span><span>
+</span><span id="line-56"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Class.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Class</span></a></span><span>
+</span><span id="line-57"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html"><span class="hs-identifier">Hiraffe.Graph.Class</span></a></span><span>
+</span><span id="line-58"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-59"></span><span>
+</span><span id="line-60"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-fcc40a1e9a9bd3376879b0c9d2affbc1277f870cd843d116cd2d30dd5935a6ca/share/doc/html/src/Control.Lens.html"><span class="hs-identifier">Control.Lens</span></a></span><span>
+</span><span id="line-61"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Control.Monad.State</span></span><span>
+</span><span id="line-62"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Foldable1</span></span><span>
+</span><span id="line-63"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.List.NonEmpty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">NonEmpty</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-64"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Map</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Map</span></span><span>
+</span><span id="line-65"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/nonempty-containers-0.3.4.5-01203e796a546ccfe61240691d4f8b8553b9de7dfc26b59417cb42d85969962e/share/doc/html/src/Data.Map.NonEmpty.html"><span class="hs-identifier">Data.Map.NonEmpty</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">NEMap</span></span><span>
+</span><span id="line-66"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-f28bb9d51db010d13285d7aee0d6fd53c3ca075ebedcc1340a95117e6e8c3c0c/share/doc/html/src/HGeometry.Ext.html"><span class="hs-identifier">HGeometry.Ext</span></a></span><span>
+</span><span id="line-67"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-f28bb9d51db010d13285d7aee0d6fd53c3ca075ebedcc1340a95117e6e8c3c0c/share/doc/html/src/HGeometry.Foldable.Util.html"><span class="hs-identifier">HGeometry.Foldable.Util</span></a></span><span>
+</span><span id="line-68"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.AdjacencyListRep.Map.html"><span class="hs-identifier">Hiraffe.AdjacencyListRep.Map</span></a></span><span>
+</span><span id="line-69"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.Graph.Class.html"><span class="hs-identifier">Hiraffe.Graph.Class</span></a></span><span>
+</span><span id="line-70"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.Class.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Class</span></a></span><span>
+</span><span id="line-71"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Core</span></a></span><span> </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier">PlanarGraph</span></a></span><span>
+</span><span id="line-72"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#VertexIdIn"><span class="hs-identifier">VertexIdIn</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#VertexId"><span class="hs-identifier">VertexId</span></a></span><span>
+</span><span id="line-73"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceIdIn"><span class="hs-identifier">FaceIdIn</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#FaceId"><span class="hs-identifier">FaceId</span></a></span><span>
+</span><span id="line-74"></span><span>                                          </span><span class="hs-special">)</span><span>
+</span><span id="line-75"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Core</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#planarGraph"><span class="hs-identifier">planarGraph</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#vertexData"><span class="hs-identifier">vertexData</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#faceData"><span class="hs-identifier">faceData</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#dartData"><span class="hs-identifier">dartData</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-76"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Core</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Core</span></span><span>
+</span><span id="line-77"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dart.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Dart</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Dart</span></span><span>
+</span><span id="line-78"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.Dual.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Dual</span></a></span><span>
+</span><span id="line-79"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.IO.html"><span class="hs-identifier">Hiraffe.PlanarGraph.IO</span></a></span><span>
+</span><span id="line-80"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.Instance.html"><span class="hs-identifier">Hiraffe.PlanarGraph.Instance</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-81"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Hiraffe.PlanarGraph.World.html"><span class="hs-identifier">Hiraffe.PlanarGraph.World</span></a></span><span>
+</span><span id="line-82"></span><span>
+</span><span id="line-83"></span><span>
+</span><span id="line-84"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- $setup</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- &gt;&gt;&gt; import qualified Data.Vector.NonEmpty as V</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- &gt;&gt;&gt; import qualified Data.List.NonEmpty as NonEmpty</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- &gt;&gt;&gt; import Control.Lens</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- &gt;&gt;&gt; import Hiraffe.PlanarGraph.Dart(Dart(Dart),Arc(Arc),Direction(..))</span><span>
+</span><span id="line-90"></span><span class="hs-comment">-- &gt;&gt;&gt; :{</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- let dart i s = Dart (Arc i) (read s)</span><span>
+</span><span id="line-92"></span><span class="hs-comment">--     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]</span><span>
+</span><span id="line-93"></span><span class="hs-comment">--     adjacencies = NonEmpty.fromList . fmap NonEmpty.fromList $</span><span>
+</span><span id="line-94"></span><span class="hs-comment">--                           [ [ (Dart aA Negative, &quot;a-&quot;)</span><span>
+</span><span id="line-95"></span><span class="hs-comment">--                             , (Dart aC Positive, &quot;c+&quot;)</span><span>
+</span><span id="line-96"></span><span class="hs-comment">--                             , (Dart aB Positive, &quot;b+&quot;)</span><span>
+</span><span id="line-97"></span><span class="hs-comment">--                             , (Dart aA Positive, &quot;a+&quot;)</span><span>
 </span><span id="line-98"></span><span class="hs-comment">--                             ]</span><span>
-</span><span id="line-99"></span><span class="hs-comment">--                           ]</span><span>
-</span><span id="line-100"></span><span class="hs-comment">--     myGraph :: PlanarGraph String Primal String String String</span><span>
-</span><span id="line-101"></span><span class="hs-comment">--     myGraph = planarGraph  adjacencies</span><span>
-</span><span id="line-102"></span><span class="hs-comment">--                  &amp; vertexData .~ V.unsafeFromList [&quot;u&quot;,&quot;v&quot;,&quot;w&quot;,&quot;x&quot;]</span><span>
-</span><span id="line-103"></span><span class="hs-comment">--                  &amp; faceData   .~ V.unsafeFromList [&quot;f_3&quot;, &quot;f_infty&quot;,&quot;f_1&quot;,&quot;f_2&quot;]</span><span>
-</span><span id="line-104"></span><span class="hs-comment">-- :}</span><span>
-</span><span id="line-105"></span><span class="hs-comment">--</span><span>
-</span><span id="line-106"></span><span class="hs-comment">--</span><span>
-</span><span id="line-107"></span><span class="hs-comment">-- This represents the following graph. Note that the graph is undirected, the</span><span>
-</span><span id="line-108"></span><span class="hs-comment">-- arrows are just to indicate what the Positive direction of the darts is.</span><span>
-</span><span id="line-109"></span><span class="hs-comment">--</span><span>
-</span><span id="line-110"></span><span class="hs-comment">-- ![myGraph](docs/Data/PlanarGraph/testG.png)</span><span>
-</span><span id="line-111"></span><span>
-</span><span id="line-112"></span><span>
-</span><span id="line-113"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
-</span><span id="line-114"></span><span class="hs-comment">-- Testing stuff</span><span>
-</span><span id="line-115"></span><span>
-</span><span id="line-116"></span><span class="hs-comment">-- testPerm :: Permutation (Dart s)</span><span>
-</span><span id="line-117"></span><span class="hs-comment">-- testPerm = let (a:b:c:d:e:g:_) = take 6 [Arc 0..]</span><span>
-</span><span id="line-118"></span><span class="hs-comment">--            in toCycleRep 12 [ [ Dart a Negative</span><span>
-</span><span id="line-119"></span><span class="hs-comment">--                               , Dart c Positive</span><span>
-</span><span id="line-120"></span><span class="hs-comment">--                               , Dart b Positive</span><span>
-</span><span id="line-121"></span><span class="hs-comment">--                               , Dart a Positive</span><span>
-</span><span id="line-122"></span><span class="hs-comment">--                               ]</span><span>
-</span><span id="line-123"></span><span class="hs-comment">--                             , [ Dart e Negative</span><span>
-</span><span id="line-124"></span><span class="hs-comment">--                               , Dart b Negative</span><span>
-</span><span id="line-125"></span><span class="hs-comment">--                               , Dart d Negative</span><span>
-</span><span id="line-126"></span><span class="hs-comment">--                               , Dart g Positive</span><span>
-</span><span id="line-127"></span><span class="hs-comment">--                               ]</span><span>
-</span><span id="line-128"></span><span class="hs-comment">--                             , [ Dart e Positive</span><span>
-</span><span id="line-129"></span><span class="hs-comment">--                               , Dart d Positive</span><span>
-</span><span id="line-130"></span><span class="hs-comment">--                               , Dart c Negative</span><span>
-</span><span id="line-131"></span><span class="hs-comment">--                               ]</span><span>
-</span><span id="line-132"></span><span class="hs-comment">--                             , [ Dart g Negative</span><span>
+</span><span id="line-99"></span><span class="hs-comment">--                           , [ (Dart aE Negative, &quot;e-&quot;)</span><span>
+</span><span id="line-100"></span><span class="hs-comment">--                             , (Dart aB Negative, &quot;b-&quot;)</span><span>
+</span><span id="line-101"></span><span class="hs-comment">--                             , (Dart aD Negative, &quot;d-&quot;)</span><span>
+</span><span id="line-102"></span><span class="hs-comment">--                             , (Dart aG Positive, &quot;g+&quot;)</span><span>
+</span><span id="line-103"></span><span class="hs-comment">--                             ]</span><span>
+</span><span id="line-104"></span><span class="hs-comment">--                           , [ (Dart aE Positive, &quot;e+&quot;)</span><span>
+</span><span id="line-105"></span><span class="hs-comment">--                             , (Dart aD Positive, &quot;d+&quot;)</span><span>
+</span><span id="line-106"></span><span class="hs-comment">--                             , (Dart aC Negative, &quot;c-&quot;)</span><span>
+</span><span id="line-107"></span><span class="hs-comment">--                             ]</span><span>
+</span><span id="line-108"></span><span class="hs-comment">--                           , [ (Dart aG Negative, &quot;g-&quot;)</span><span>
+</span><span id="line-109"></span><span class="hs-comment">--                             ]</span><span>
+</span><span id="line-110"></span><span class="hs-comment">--                           ]</span><span>
+</span><span id="line-111"></span><span class="hs-comment">--     myGraph :: PlanarGraph String Primal String String String</span><span>
+</span><span id="line-112"></span><span class="hs-comment">--     myGraph = planarGraph  adjacencies</span><span>
+</span><span id="line-113"></span><span class="hs-comment">--                  &amp; vertexData .~ V.unsafeFromList [&quot;u&quot;,&quot;v&quot;,&quot;w&quot;,&quot;x&quot;]</span><span>
+</span><span id="line-114"></span><span class="hs-comment">--                  &amp; faceData   .~ V.unsafeFromList [&quot;f_3&quot;, &quot;f_infty&quot;,&quot;f_1&quot;,&quot;f_2&quot;]</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- :}</span><span>
+</span><span id="line-116"></span><span class="hs-comment">--</span><span>
+</span><span id="line-117"></span><span class="hs-comment">--</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- This represents the following graph. Note that the graph is undirected, the</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- arrows are just to indicate what the Positive direction of the darts is.</span><span>
+</span><span id="line-120"></span><span class="hs-comment">--</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- ![myGraph](docs/Data/PlanarGraph/testG.png)</span><span>
+</span><span id="line-122"></span><span>
+</span><span id="line-123"></span><span>
+</span><span id="line-124"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- Testing stuff</span><span>
+</span><span id="line-126"></span><span>
+</span><span id="line-127"></span><span class="hs-comment">-- testPerm :: Permutation (Dart s)</span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- testPerm = let (a:b:c:d:e:g:_) = take 6 [Arc 0..]</span><span>
+</span><span id="line-129"></span><span class="hs-comment">--            in toCycleRep 12 [ [ Dart a Negative</span><span>
+</span><span id="line-130"></span><span class="hs-comment">--                               , Dart c Positive</span><span>
+</span><span id="line-131"></span><span class="hs-comment">--                               , Dart b Positive</span><span>
+</span><span id="line-132"></span><span class="hs-comment">--                               , Dart a Positive</span><span>
 </span><span id="line-133"></span><span class="hs-comment">--                               ]</span><span>
-</span><span id="line-134"></span><span class="hs-comment">--                             ]</span><span>
-</span><span id="line-135"></span><span>
-</span><span id="line-136"></span><span class="hs-comment">-- data Test</span><span>
-</span><span id="line-137"></span><span>
-</span><span id="line-138"></span><span class="hs-comment">-- testG :: PlanarGraph Test Primal () String ()</span><span>
-</span><span id="line-139"></span><span class="hs-comment">-- testG = planarGraph [ [ (Dart aA Negative, &quot;a-&quot;)</span><span>
-</span><span id="line-140"></span><span class="hs-comment">--                       , (Dart aC Positive, &quot;c+&quot;)</span><span>
-</span><span id="line-141"></span><span class="hs-comment">--                       , (Dart aB Positive, &quot;b+&quot;)</span><span>
-</span><span id="line-142"></span><span class="hs-comment">--                       , (Dart aA Positive, &quot;a+&quot;)</span><span>
-</span><span id="line-143"></span><span class="hs-comment">--                       ]</span><span>
-</span><span id="line-144"></span><span class="hs-comment">--                     , [ (Dart aE Negative, &quot;e-&quot;)</span><span>
-</span><span id="line-145"></span><span class="hs-comment">--                       , (Dart aB Negative, &quot;b-&quot;)</span><span>
-</span><span id="line-146"></span><span class="hs-comment">--                       , (Dart aD Negative, &quot;d-&quot;)</span><span>
-</span><span id="line-147"></span><span class="hs-comment">--                       , (Dart aG Positive, &quot;g+&quot;)</span><span>
-</span><span id="line-148"></span><span class="hs-comment">--                       ]</span><span>
-</span><span id="line-149"></span><span class="hs-comment">--                     , [ (Dart aE Positive, &quot;e+&quot;)</span><span>
-</span><span id="line-150"></span><span class="hs-comment">--                       , (Dart aD Positive, &quot;d+&quot;)</span><span>
-</span><span id="line-151"></span><span class="hs-comment">--                       , (Dart aC Negative, &quot;c-&quot;)</span><span>
-</span><span id="line-152"></span><span class="hs-comment">--                       ]</span><span>
-</span><span id="line-153"></span><span class="hs-comment">--                     , [ (Dart aG Negative, &quot;g-&quot;)</span><span>
+</span><span id="line-134"></span><span class="hs-comment">--                             , [ Dart e Negative</span><span>
+</span><span id="line-135"></span><span class="hs-comment">--                               , Dart b Negative</span><span>
+</span><span id="line-136"></span><span class="hs-comment">--                               , Dart d Negative</span><span>
+</span><span id="line-137"></span><span class="hs-comment">--                               , Dart g Positive</span><span>
+</span><span id="line-138"></span><span class="hs-comment">--                               ]</span><span>
+</span><span id="line-139"></span><span class="hs-comment">--                             , [ Dart e Positive</span><span>
+</span><span id="line-140"></span><span class="hs-comment">--                               , Dart d Positive</span><span>
+</span><span id="line-141"></span><span class="hs-comment">--                               , Dart c Negative</span><span>
+</span><span id="line-142"></span><span class="hs-comment">--                               ]</span><span>
+</span><span id="line-143"></span><span class="hs-comment">--                             , [ Dart g Negative</span><span>
+</span><span id="line-144"></span><span class="hs-comment">--                               ]</span><span>
+</span><span id="line-145"></span><span class="hs-comment">--                             ]</span><span>
+</span><span id="line-146"></span><span>
+</span><span id="line-147"></span><span class="hs-comment">-- data Test</span><span>
+</span><span id="line-148"></span><span>
+</span><span id="line-149"></span><span class="hs-comment">-- testG :: PlanarGraph Test Primal () String ()</span><span>
+</span><span id="line-150"></span><span class="hs-comment">-- testG = planarGraph [ [ (Dart aA Negative, &quot;a-&quot;)</span><span>
+</span><span id="line-151"></span><span class="hs-comment">--                       , (Dart aC Positive, &quot;c+&quot;)</span><span>
+</span><span id="line-152"></span><span class="hs-comment">--                       , (Dart aB Positive, &quot;b+&quot;)</span><span>
+</span><span id="line-153"></span><span class="hs-comment">--                       , (Dart aA Positive, &quot;a+&quot;)</span><span>
 </span><span id="line-154"></span><span class="hs-comment">--                       ]</span><span>
-</span><span id="line-155"></span><span class="hs-comment">--                     ]</span><span>
-</span><span id="line-156"></span><span class="hs-comment">--   where</span><span>
-</span><span id="line-157"></span><span class="hs-comment">--     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]</span><span>
-</span><span id="line-158"></span><span>
-</span><span id="line-159"></span><span>
-</span><span id="line-160"></span><span>
-</span><span id="line-161"></span><span>
-</span><span id="line-162"></span><span>
-</span><span id="line-163"></span><span>
-</span><span id="line-164"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
-</span><span id="line-165"></span><span>
-</span><span id="line-166"></span><span class="hs-comment">-- -- | Indexed traversal of all darts in the planar graph.</span><span>
-</span><span id="line-167"></span><span class="hs-comment">-- darts :: forall s w v e e' f.</span><span>
-</span><span id="line-168"></span><span class="hs-comment">--          IndexedTraversal (Dart s) (PlanarGraph s w v e f) (PlanarGraph s w v e' f) e e'</span><span>
-</span><span id="line-169"></span><span class="hs-comment">-- darts = conjoined traverse' (itraverse' . indexed)</span><span>
-</span><span id="line-170"></span><span class="hs-comment">--     where</span><span>
-</span><span id="line-171"></span><span class="hs-comment">--       traverse' :: Applicative g</span><span>
-</span><span id="line-172"></span><span class="hs-comment">--                 =&gt; (e -&gt; g e') -&gt; PlanarGraph s w v e f -&gt; g (PlanarGraph s w v e' f)</span><span>
-</span><span id="line-173"></span><span class="hs-comment">--       traverse' = Core.dartData.traversed</span><span>
-</span><span id="line-174"></span><span class="hs-comment">--       itraverse' :: Applicative g</span><span>
-</span><span id="line-175"></span><span class="hs-comment">--                  =&gt; (Dart s -&gt; e -&gt; g e')</span><span>
-</span><span id="line-176"></span><span class="hs-comment">--                  -&gt; PlanarGraph s w v e f -&gt; g (PlanarGraph s w v e' f)</span><span>
-</span><span id="line-177"></span><span class="hs-comment">--       itraverse' = Core.traverseDarts</span><span>
-</span><span id="line-178"></span></pre></body></html>
+</span><span id="line-155"></span><span class="hs-comment">--                     , [ (Dart aE Negative, &quot;e-&quot;)</span><span>
+</span><span id="line-156"></span><span class="hs-comment">--                       , (Dart aB Negative, &quot;b-&quot;)</span><span>
+</span><span id="line-157"></span><span class="hs-comment">--                       , (Dart aD Negative, &quot;d-&quot;)</span><span>
+</span><span id="line-158"></span><span class="hs-comment">--                       , (Dart aG Positive, &quot;g+&quot;)</span><span>
+</span><span id="line-159"></span><span class="hs-comment">--                       ]</span><span>
+</span><span id="line-160"></span><span class="hs-comment">--                     , [ (Dart aE Positive, &quot;e+&quot;)</span><span>
+</span><span id="line-161"></span><span class="hs-comment">--                       , (Dart aD Positive, &quot;d+&quot;)</span><span>
+</span><span id="line-162"></span><span class="hs-comment">--                       , (Dart aC Negative, &quot;c-&quot;)</span><span>
+</span><span id="line-163"></span><span class="hs-comment">--                       ]</span><span>
+</span><span id="line-164"></span><span class="hs-comment">--                     , [ (Dart aG Negative, &quot;g-&quot;)</span><span>
+</span><span id="line-165"></span><span class="hs-comment">--                       ]</span><span>
+</span><span id="line-166"></span><span class="hs-comment">--                     ]</span><span>
+</span><span id="line-167"></span><span class="hs-comment">--   where</span><span>
+</span><span id="line-168"></span><span class="hs-comment">--     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]</span><span>
+</span><span id="line-169"></span><span>
+</span><span id="line-170"></span><span>
+</span><span id="line-171"></span><span>
+</span><span id="line-172"></span><span>
+</span><span id="line-173"></span><span>
+</span><span id="line-174"></span><span>
+</span><span id="line-175"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
+</span><span id="line-176"></span><span>
+</span><span id="line-177"></span><span class="hs-comment">-- -- | Indexed traversal of all darts in the planar graph.</span><span>
+</span><span id="line-178"></span><span class="hs-comment">-- darts :: forall s w v e e' f.</span><span>
+</span><span id="line-179"></span><span class="hs-comment">--          IndexedTraversal (Dart s) (PlanarGraph s w v e f) (PlanarGraph s w v e' f) e e'</span><span>
+</span><span id="line-180"></span><span class="hs-comment">-- darts = conjoined traverse' (itraverse' . indexed)</span><span>
+</span><span id="line-181"></span><span class="hs-comment">--     where</span><span>
+</span><span id="line-182"></span><span class="hs-comment">--       traverse' :: Applicative g</span><span>
+</span><span id="line-183"></span><span class="hs-comment">--                 =&gt; (e -&gt; g e') -&gt; PlanarGraph s w v e f -&gt; g (PlanarGraph s w v e' f)</span><span>
+</span><span id="line-184"></span><span class="hs-comment">--       traverse' = Core.dartData.traversed</span><span>
+</span><span id="line-185"></span><span class="hs-comment">--       itraverse' :: Applicative g</span><span>
+</span><span id="line-186"></span><span class="hs-comment">--                  =&gt; (Dart s -&gt; e -&gt; g e')</span><span>
+</span><span id="line-187"></span><span class="hs-comment">--                  -&gt; PlanarGraph s w v e f -&gt; g (PlanarGraph s w v e' f)</span><span>
+</span><span id="line-188"></span><span class="hs-comment">--       itraverse' = Core.traverseDarts</span><span>
+</span><span id="line-189"></span><span>
+</span><span id="line-190"></span><span>
+</span><span id="line-191"></span><span>
+</span><span id="line-192"></span><span>
+</span><span id="line-193"></span><span class="hs-comment">-- | Given a connected plane graph in adjacency list format; convert it into an actual</span><span>
+</span><span id="line-194"></span><span class="hs-comment">-- PlanarGraph.</span><span>
+</span><span id="line-195"></span><span class="hs-comment">--</span><span>
+</span><span id="line-196"></span><span class="hs-comment">-- \(O(n\log n)\)</span><span>
+</span><span id="line-197"></span><span id="local-6989586621679205928"><span id="local-6989586621679205929"><span id="local-6989586621679205931"><span id="local-6989586621679205932"><span id="local-6989586621679205933"><span id="local-6989586621679205934"><span class="annot"><a href="Hiraffe.PlanarGraph.html#fromAdjacencyRep"><span class="hs-identifier hs-type">fromAdjacencyRep</span></a></span><span>             </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621679205928"><span class="hs-identifier hs-type">i</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Foldable1</span></span><span> </span><span class="annot"><a href="#local-6989586621679205929"><span class="hs-identifier hs-type">f</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-198"></span><span>                             </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679205931"><span class="hs-identifier hs-type">proxy</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679205932"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.AdjacencyListRep.Map.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679205929"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679205928"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679205933"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679205934"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.Core.html#PlanarGraph"><span class="hs-identifier hs-type">PlanarGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679205932"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="Hiraffe.PlanarGraph.World.html#Primal"><span class="hs-identifier hs-type">Primal</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679205933"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679205934"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span></span></span></span></span></span><span>
+</span><span id="line-199"></span><span id="fromAdjacencyRep"><span class="annot"><span class="annottext">fromAdjacencyRep :: forall {k} i (f :: * -&gt; *) (proxy :: k -&gt; *) (s :: k) v e.
+(Ord i, Foldable1 f) =&gt;
+proxy s -&gt; GGraph f i v e -&gt; PlanarGraph s 'Primal v e ()
+</span><a href="Hiraffe.PlanarGraph.html#fromAdjacencyRep"><span class="hs-identifier hs-var hs-var">fromAdjacencyRep</span></a></span></span><span> </span><span class="annot"><span class="annottext">proxy s
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.Map.html#Graph"><span class="hs-identifier hs-type">Graph</span></a></span><span> </span><span id="local-6989586621679206145"><span class="annot"><span class="annottext">NEMap i (VertexData f i v e)
+</span><a href="#local-6989586621679206145"><span class="hs-identifier hs-var">m</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">NonEmpty (NonEmpty (DartId s, e)) -&gt; PlanarGraph s 'Primal () e ()
+forall {k} (s :: k) e.
+NonEmpty (NonEmpty (DartId s, e)) -&gt; PlanarGraph s 'Primal () e ()
+</span><a href="Hiraffe.PlanarGraph.Core.html#planarGraph"><span class="hs-identifier hs-var">planarGraph</span></a></span><span> </span><span class="annot"><span class="annottext">NonEmpty (NonEmpty (DartId s, e))
+</span><a href="#local-6989586621679206146"><span class="hs-identifier hs-var">theDarts</span></a></span><span class="hs-special">)</span><span class="annot"><span class="annottext">PlanarGraph s 'Primal () e ()
+-&gt; (PlanarGraph s 'Primal () e () -&gt; PlanarGraph s 'Primal v e ())
+-&gt; PlanarGraph s 'Primal v e ()
+forall a b. a -&gt; (a -&gt; b) -&gt; b
+</span><span class="hs-operator hs-var">&amp;</span></span><span class="annot"><span class="annottext">(NonEmptyVector () -&gt; Identity (NonEmptyVector v))
+-&gt; PlanarGraph s 'Primal () e ()
+-&gt; Identity (PlanarGraph s 'Primal v e ())
+forall {k} (s :: k) (w :: World) v e f1 v' (f2 :: * -&gt; *).
+Functor f2 =&gt;
+(NonEmptyVector v -&gt; f2 (NonEmptyVector v'))
+-&gt; PlanarGraph s w v e f1 -&gt; f2 (PlanarGraph s w v' e f1)
+</span><a href="Hiraffe.PlanarGraph.Core.html#vertexData"><span class="hs-identifier hs-var">vertexData</span></a></span><span> </span><span class="annot"><span class="annottext">((NonEmptyVector () -&gt; Identity (NonEmptyVector v))
+ -&gt; PlanarGraph s 'Primal () e ()
+ -&gt; Identity (PlanarGraph s 'Primal v e ()))
+-&gt; NonEmptyVector v
+-&gt; PlanarGraph s 'Primal () e ()
+-&gt; PlanarGraph s 'Primal v e ()
+forall s t a b. ASetter s t a b -&gt; b -&gt; s -&gt; t
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-fcc40a1e9a9bd3376879b0c9d2affbc1277f870cd843d116cd2d30dd5935a6ca/share/doc/html/src/Control.Lens.Setter.html#.~"><span class="hs-operator hs-var">.~</span></a></span><span> </span><span class="annot"><span class="annottext">NonEmptyVector v
+</span><a href="#local-6989586621679206149"><span class="hs-identifier hs-var">vtxData</span></a></span><span>
+</span><span id="line-200"></span><span>  </span><span class="hs-keyword">where</span><span>
+</span><span id="line-201"></span><span>    </span><span id="local-6989586621679206149"><span class="annot"><span class="annottext">vtxData :: NonEmptyVector v
+</span><a href="#local-6989586621679206149"><span class="hs-identifier hs-var hs-var">vtxData</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.Map.html#VertexData"><span class="hs-identifier hs-type">VertexData</span></a></span><span> </span><span id="local-6989586621679206151"><span class="annot"><span class="annottext">v
+</span><a href="#local-6989586621679206151"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="annot"><span class="annottext">Map i e
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">f i
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">v
+</span><a href="#local-6989586621679206151"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(VertexData f i v e -&gt; v)
+-&gt; NonEmptyVector (VertexData f i v e) -&gt; NonEmptyVector v
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">NEMap i (VertexData f i v e) -&gt; NonEmptyVector (VertexData f i v e)
+forall (f :: * -&gt; *) (g :: * -&gt; *) a.
+(HasFromFoldable1 f, Foldable1 g) =&gt;
+g a -&gt; f a
+forall (g :: * -&gt; *) a. Foldable1 g =&gt; g a -&gt; NonEmptyVector a
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-f28bb9d51db010d13285d7aee0d6fd53c3ca075ebedcc1340a95117e6e8c3c0c/share/doc/html/src/HGeometry.Foldable.Util.html#fromFoldable1"><span class="hs-identifier hs-var">fromFoldable1</span></a></span><span> </span><span class="annot"><span class="annottext">NEMap i (VertexData f i v e)
+</span><a href="#local-6989586621679206145"><span class="hs-identifier hs-var">m</span></a></span><span>
+</span><span id="line-202"></span><span>    </span><span class="hs-comment">--  a non-empty list of vertices, with for each vertex the darts in order around the vertex</span><span>
+</span><span id="line-203"></span><span>    </span><span id="local-6989586621679206146"><span class="annot"><span class="annottext">theDarts :: NonEmpty (NonEmpty (DartId s, e))
+</span><a href="#local-6989586621679206146"><span class="hs-identifier hs-var hs-var">theDarts</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">State
+  (Int :+ Map (i, i) (Arc s)) (NonEmpty (NonEmpty (DartId s, e)))
+-&gt; (Int :+ Map (i, i) (Arc s)) -&gt; NonEmpty (NonEmpty (DartId s, e))
+forall s a. State s a -&gt; s -&gt; a
+</span><span class="hs-identifier hs-var">evalState</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">NonEmpty
+  (NonEmpty
+     (StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s), e))
+-&gt; State
+     (Int :+ Map (i, i) (Arc s)) (NonEmpty (NonEmpty (DartId s, e)))
+forall (m :: * -&gt; *) a b.
+Applicative m =&gt;
+NonEmpty (NonEmpty (m a, b)) -&gt; m (NonEmpty (NonEmpty (a, b)))
+</span><a href="Hiraffe.PlanarGraph.html#sequence%27"><span class="hs-identifier hs-var">sequence'</span></a></span><span> </span><span class="annot"><span class="annottext">NonEmpty
+  (NonEmpty
+     (StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s), e))
+</span><a href="#local-6989586621679206156"><span class="hs-identifier hs-var">theDarts'</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Map (i, i) (Arc s) -&gt; Int :+ Map (i, i) (Arc s)
+forall core extra. core -&gt; extra -&gt; core :+ extra
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-f28bb9d51db010d13285d7aee0d6fd53c3ca075ebedcc1340a95117e6e8c3c0c/share/doc/html/src/HGeometry.Ext.html#%3A%2B"><span class="hs-operator hs-var">:+</span></a></span><span> </span><span class="annot"><span class="annottext">Map (i, i) (Arc s)
+forall k a. Map k a
+</span><span class="hs-identifier hs-var">Map.empty</span></span><span class="hs-special">)</span><span>
+</span><span id="line-204"></span><span>    </span><span id="local-6989586621679206156"><span class="annot"><span class="annottext">theDarts' :: NonEmpty
+  (NonEmpty
+     (StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s), e))
+</span><a href="#local-6989586621679206156"><span class="hs-identifier hs-var hs-var">theDarts'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">NEMap
+  i
+  (NonEmpty
+     (StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s), e))
+-&gt; NonEmpty
+     (NonEmpty
+        (StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s), e))
+forall a. NEMap i a -&gt; NonEmpty a
+forall (t :: * -&gt; *) a. Foldable1 t =&gt; t a -&gt; NonEmpty a
+</span><span class="hs-identifier hs-var">toNonEmpty</span></span><span> </span><span class="annot"><span class="annottext">(NEMap
+   i
+   (NonEmpty
+      (StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s), e))
+ -&gt; NonEmpty
+      (NonEmpty
+         (StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s), e)))
+-&gt; NEMap
+     i
+     (NonEmpty
+        (StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s), e))
+-&gt; NonEmpty
+     (NonEmpty
+        (StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s), e))
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(i
+ -&gt; VertexData f i v e
+ -&gt; NonEmpty
+      (StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s), e))
+-&gt; NEMap i (VertexData f i v e)
+-&gt; NEMap
+     i
+     (NonEmpty
+        (StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s), e))
+forall k a b. (k -&gt; a -&gt; b) -&gt; NEMap k a -&gt; NEMap k b
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/nonempty-containers-0.3.4.5-01203e796a546ccfe61240691d4f8b8553b9de7dfc26b59417cb42d85969962e/share/doc/html/src/Data.Map.NonEmpty.html#mapWithKey"><span class="hs-identifier hs-var">NEMap.mapWithKey</span></a></span><span> </span><span class="annot"><span class="annottext">i
+-&gt; VertexData f i v e
+-&gt; NonEmpty
+     (StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s), e)
+</span><a href="#local-6989586621679206161"><span class="hs-identifier hs-var">toIncidentDarts</span></a></span><span> </span><span class="annot"><span class="annottext">NEMap i (VertexData f i v e)
+</span><a href="#local-6989586621679206145"><span class="hs-identifier hs-var">m</span></a></span><span>
+</span><span id="line-205"></span><span>    </span><span class="hs-comment">-- turn the outgoing edges of u into darts</span><span>
+</span><span id="line-206"></span><span>    </span><span id="local-6989586621679206161"><span class="annot"><span class="annottext">toIncidentDarts :: i
+-&gt; VertexData f i v e
+-&gt; NonEmpty
+     (StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s), e)
+</span><a href="#local-6989586621679206161"><span class="hs-identifier hs-var hs-var">toIncidentDarts</span></a></span></span><span> </span><span id="local-6989586621679206162"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206162"><span class="hs-identifier hs-var">u</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.Map.html#VertexData"><span class="hs-identifier hs-type">VertexData</span></a></span><span> </span><span class="annot"><span class="annottext">v
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679206163"><span class="annot"><span class="annottext">Map i e
+</span><a href="#local-6989586621679206163"><span class="hs-identifier hs-var">neighMap</span></a></span></span><span> </span><span id="local-6989586621679206164"><span class="annot"><span class="annottext">f i
+</span><a href="#local-6989586621679206164"><span class="hs-identifier hs-var">neighOrder</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-207"></span><span>      </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679206165"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206165"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">i -&gt; i -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s)
+</span><a href="#local-6989586621679206166"><span class="hs-identifier hs-var">toDart</span></a></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206162"><span class="hs-identifier hs-var">u</span></a></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206165"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Map i e
+</span><a href="#local-6989586621679206163"><span class="hs-identifier hs-var">neighMap</span></a></span><span> </span><span class="annot"><span class="annottext">Map i e -&gt; i -&gt; e
+forall k a. Ord k =&gt; Map k a -&gt; k -&gt; a
+</span><span class="hs-operator hs-var">Map.!</span></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206162"><span class="hs-identifier hs-var">u</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(i -&gt; (StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s), e))
+-&gt; NonEmpty i
+-&gt; NonEmpty
+     (StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s), e)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">f i -&gt; NonEmpty i
+forall a. f a -&gt; NonEmpty a
+forall (t :: * -&gt; *) a. Foldable1 t =&gt; t a -&gt; NonEmpty a
+</span><span class="hs-identifier hs-var">toNonEmpty</span></span><span> </span><span class="annot"><span class="annottext">f i
+</span><a href="#local-6989586621679206164"><span class="hs-identifier hs-var">neighOrder</span></a></span><span>
+</span><span id="line-208"></span><span>    </span><span class="hs-comment">-- create the dart corresponding to vertices u and v</span><span>
+</span><span id="line-209"></span><span>
+</span><span id="line-210"></span><span>    </span><span id="local-6989586621679206166"><span class="annot"><span class="annottext">toDart :: i -&gt; i -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s)
+</span><a href="#local-6989586621679206166"><span class="hs-identifier hs-var hs-var">toDart</span></a></span></span><span> </span><span id="local-6989586621679206168"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206168"><span class="hs-identifier hs-var">u</span></a></span></span><span> </span><span id="local-6989586621679206169"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206169"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206168"><span class="hs-identifier hs-var">u</span></a></span><span> </span><span class="annot"><span class="annottext">i -&gt; i -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;=</span></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206169"><span class="hs-identifier hs-var">v</span></a></span><span>    </span><span class="hs-glyph">=</span><span>  </span><span class="annot"><span class="annottext">(Arc s -&gt; Direction -&gt; DartId s) -&gt; Direction -&gt; Arc s -&gt; DartId s
+forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
+</span><span class="hs-identifier hs-var">flip</span></span><span> </span><span class="annot"><span class="annottext">Arc s -&gt; Direction -&gt; DartId s
+forall {k} (s :: k). Arc s -&gt; Direction -&gt; Dart s
+</span><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-var">Dart.Dart</span></a></span><span> </span><span class="annot"><span class="annottext">Direction
+</span><a href="Hiraffe.PlanarGraph.Dart.html#Positive"><span class="hs-identifier hs-var">Dart.Positive</span></a></span><span> </span><span class="annot"><span class="annottext">(Arc s -&gt; DartId s)
+-&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (Arc s)
+-&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">i -&gt; i -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (Arc s)
+</span><a href="#local-6989586621679206174"><span class="hs-identifier hs-var">arc</span></a></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206168"><span class="hs-identifier hs-var">u</span></a></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206169"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><span id="line-211"></span><span>               </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span>  </span><span class="annot"><span class="annottext">(Arc s -&gt; Direction -&gt; DartId s) -&gt; Direction -&gt; Arc s -&gt; DartId s
+forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
+</span><span class="hs-identifier hs-var">flip</span></span><span> </span><span class="annot"><span class="annottext">Arc s -&gt; Direction -&gt; DartId s
+forall {k} (s :: k). Arc s -&gt; Direction -&gt; Dart s
+</span><a href="Hiraffe.PlanarGraph.Dart.html#Dart"><span class="hs-identifier hs-var">Dart.Dart</span></a></span><span> </span><span class="annot"><span class="annottext">Direction
+</span><a href="Hiraffe.PlanarGraph.Dart.html#Negative"><span class="hs-identifier hs-var">Dart.Negative</span></a></span><span> </span><span class="annot"><span class="annottext">(Arc s -&gt; DartId s)
+-&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (Arc s)
+-&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (DartId s)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">i -&gt; i -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (Arc s)
+</span><a href="#local-6989586621679206174"><span class="hs-identifier hs-var">arc</span></a></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206169"><span class="hs-identifier hs-var">v</span></a></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206168"><span class="hs-identifier hs-var">u</span></a></span><span>
+</span><span id="line-212"></span><span>
+</span><span id="line-213"></span><span>    </span><span id="local-6989586621679206174"><span class="annot"><span class="annottext">arc :: i -&gt; i -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (Arc s)
+</span><a href="#local-6989586621679206174"><span class="hs-identifier hs-var hs-var">arc</span></a></span></span><span> </span><span id="local-6989586621679206176"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206176"><span class="hs-identifier hs-var">u</span></a></span></span><span> </span><span id="local-6989586621679206177"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206177"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">((Int :+ Map (i, i) (Arc s)) -&gt; Maybe (Arc s))
+-&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (Maybe (Arc s))
+forall s (m :: * -&gt; *) a. MonadState s m =&gt; (s -&gt; a) -&gt; m a
+</span><span class="hs-identifier hs-var">gets</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(i, i) -&gt; (Int :+ Map (i, i) (Arc s)) -&gt; Maybe (Arc s)
+forall {k} {core} {a}. Ord k =&gt; k -&gt; (core :+ Map k a) -&gt; Maybe a
+</span><a href="#local-6989586621679206179"><span class="hs-identifier hs-var">arcOf</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206176"><span class="hs-identifier hs-var">u</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206177"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">StateT (Int :+ Map (i, i) (Arc s)) Identity (Maybe (Arc s))
+-&gt; (Maybe (Arc s)
+    -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (Arc s))
+-&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (Arc s)
+forall a b.
+StateT (Int :+ Map (i, i) (Arc s)) Identity a
+-&gt; (a -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity b)
+-&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity b
+forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-214"></span><span>                </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679206180"><span class="annot"><span class="annottext">Arc s
+</span><a href="#local-6989586621679206180"><span class="hs-identifier hs-var">a</span></a></span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Arc s -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (Arc s)
+forall a. a -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity a
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">Arc s
+</span><a href="#local-6989586621679206180"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-215"></span><span>                </span><span class="annot"><span class="annottext">Maybe (Arc s)
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679206181"><span class="annot"><span class="annottext">Arc s
+</span><a href="#local-6989586621679206181"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">StateT (Int :+ Map (i, i) (Arc s)) Identity (Arc s)
+forall {k} {s :: k}.
+StateT (Int :+ Map (i, i) (Arc s)) Identity (Arc s)
+</span><a href="#local-6989586621679206182"><span class="hs-identifier hs-var">nextArc</span></a></span><span>
+</span><span id="line-216"></span><span>                              </span><span class="annot"><span class="annottext">((Int :+ Map (i, i) (Arc s)) -&gt; Int :+ Map (i, i) (Arc s))
+-&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity ()
+forall s (m :: * -&gt; *). MonadState s m =&gt; (s -&gt; s) -&gt; m ()
+</span><span class="hs-identifier hs-var">modify</span></span><span> </span><span class="annot"><span class="annottext">(((Int :+ Map (i, i) (Arc s)) -&gt; Int :+ Map (i, i) (Arc s))
+ -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity ())
+-&gt; ((Int :+ Map (i, i) (Arc s)) -&gt; Int :+ Map (i, i) (Arc s))
+-&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(i, i)
+-&gt; Arc s
+-&gt; (Int :+ Map (i, i) (Arc s))
+-&gt; Int :+ Map (i, i) (Arc s)
+forall {k} {a} {core}.
+Ord k =&gt;
+k -&gt; a -&gt; (core :+ Map k a) -&gt; core :+ Map k a
+</span><a href="#local-6989586621679206184"><span class="hs-identifier hs-var">insertArc</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206176"><span class="hs-identifier hs-var">u</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679206177"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Arc s
+</span><a href="#local-6989586621679206181"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-217"></span><span>                              </span><span class="annot"><span class="annottext">Arc s -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (Arc s)
+forall a. a -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity a
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">Arc s
+</span><a href="#local-6989586621679206181"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-218"></span><span>
+</span><span id="line-219"></span><span>    </span><span id="local-6989586621679206179"><span class="annot"><span class="annottext">arcOf :: k -&gt; (core :+ Map k a) -&gt; Maybe a
+</span><a href="#local-6989586621679206179"><span class="hs-identifier hs-var hs-var">arcOf</span></a></span></span><span> </span><span id="local-6989586621679206194"><span class="annot"><span class="annottext">k
+</span><a href="#local-6989586621679206194"><span class="hs-identifier hs-var">x</span></a></span></span><span>       </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">k -&gt; Map k a -&gt; Maybe a
+forall k a. Ord k =&gt; k -&gt; Map k a -&gt; Maybe a
+</span><span class="hs-identifier hs-var">Map.lookup</span></span><span> </span><span class="annot"><span class="annottext">k
+</span><a href="#local-6989586621679206194"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">(Map k a -&gt; Maybe a)
+-&gt; ((core :+ Map k a) -&gt; Map k a) -&gt; (core :+ Map k a) -&gt; Maybe a
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Getting (Map k a) (core :+ Map k a) (Map k a)
+-&gt; (core :+ Map k a) -&gt; Map k a
+forall s (m :: * -&gt; *) a. MonadReader s m =&gt; Getting a s a -&gt; m a
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-fcc40a1e9a9bd3376879b0c9d2affbc1277f870cd843d116cd2d30dd5935a6ca/share/doc/html/src/Control.Lens.Getter.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">Getting (Map k a) (core :+ Map k a) (Map k a)
+forall core extra extra' (f :: * -&gt; *).
+Functor f =&gt;
+(extra -&gt; f extra') -&gt; (core :+ extra) -&gt; f (core :+ extra')
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-f28bb9d51db010d13285d7aee0d6fd53c3ca075ebedcc1340a95117e6e8c3c0c/share/doc/html/src/HGeometry.Ext.html#extra"><span class="hs-identifier hs-var">extra</span></a></span><span>
+</span><span id="line-220"></span><span>    </span><span id="local-6989586621679206184"><span class="annot"><span class="annottext">insertArc :: k -&gt; a -&gt; (core :+ Map k a) -&gt; core :+ Map k a
+</span><a href="#local-6989586621679206184"><span class="hs-identifier hs-var hs-var">insertArc</span></a></span></span><span> </span><span id="local-6989586621679206204"><span class="annot"><span class="annottext">k
+</span><a href="#local-6989586621679206204"><span class="hs-identifier hs-var">k</span></a></span></span><span> </span><span id="local-6989586621679206205"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679206205"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ASetter (core :+ Map k a) (core :+ Map k a) (Map k a) (Map k a)
+-&gt; (Map k a -&gt; Map k a) -&gt; (core :+ Map k a) -&gt; core :+ Map k a
+forall s t a b. ASetter s t a b -&gt; (a -&gt; b) -&gt; s -&gt; t
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-fcc40a1e9a9bd3376879b0c9d2affbc1277f870cd843d116cd2d30dd5935a6ca/share/doc/html/src/Control.Lens.Setter.html#over"><span class="hs-identifier hs-var">over</span></a></span><span> </span><span class="annot"><span class="annottext">ASetter (core :+ Map k a) (core :+ Map k a) (Map k a) (Map k a)
+forall core extra extra' (f :: * -&gt; *).
+Functor f =&gt;
+(extra -&gt; f extra') -&gt; (core :+ extra) -&gt; f (core :+ extra')
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-f28bb9d51db010d13285d7aee0d6fd53c3ca075ebedcc1340a95117e6e8c3c0c/share/doc/html/src/HGeometry.Ext.html#extra"><span class="hs-identifier hs-var">extra</span></a></span><span> </span><span class="annot"><span class="annottext">((Map k a -&gt; Map k a) -&gt; (core :+ Map k a) -&gt; core :+ Map k a)
+-&gt; (Map k a -&gt; Map k a) -&gt; (core :+ Map k a) -&gt; core :+ Map k a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">k -&gt; a -&gt; Map k a -&gt; Map k a
+forall k a. Ord k =&gt; k -&gt; a -&gt; Map k a -&gt; Map k a
+</span><span class="hs-identifier hs-var">Map.insert</span></span><span> </span><span class="annot"><span class="annottext">k
+</span><a href="#local-6989586621679206204"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679206205"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><span id="line-221"></span><span>
+</span><span id="line-222"></span><span>    </span><span id="local-6989586621679206182"><span class="annot"><span class="annottext">nextArc :: StateT (Int :+ Map (i, i) (Arc s)) Identity (Arc s)
+</span><a href="#local-6989586621679206182"><span class="hs-identifier hs-var hs-var">nextArc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679206224"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679206224"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">((Int :+ Map (i, i) (Arc s)) -&gt; Int)
+-&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity Int
+forall s (m :: * -&gt; *) a. MonadState s m =&gt; (s -&gt; a) -&gt; m a
+</span><span class="hs-identifier hs-var">gets</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Getting Int (Int :+ Map (i, i) (Arc s)) Int
+-&gt; (Int :+ Map (i, i) (Arc s)) -&gt; Int
+forall s (m :: * -&gt; *) a. MonadReader s m =&gt; Getting a s a -&gt; m a
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-fcc40a1e9a9bd3376879b0c9d2affbc1277f870cd843d116cd2d30dd5935a6ca/share/doc/html/src/Control.Lens.Getter.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">Getting Int (Int :+ Map (i, i) (Arc s)) Int
+forall core extra core' (f :: * -&gt; *).
+Functor f =&gt;
+(core -&gt; f core') -&gt; (core :+ extra) -&gt; f (core' :+ extra)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-f28bb9d51db010d13285d7aee0d6fd53c3ca075ebedcc1340a95117e6e8c3c0c/share/doc/html/src/HGeometry.Ext.html#core"><span class="hs-identifier hs-var">core</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-223"></span><span>                 </span><span class="annot"><span class="annottext">((Int :+ Map (i, i) (Arc s)) -&gt; Int :+ Map (i, i) (Arc s))
+-&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity ()
+forall s (m :: * -&gt; *). MonadState s m =&gt; (s -&gt; s) -&gt; m ()
+</span><span class="hs-identifier hs-var">modify</span></span><span> </span><span class="annot"><span class="annottext">(((Int :+ Map (i, i) (Arc s)) -&gt; Int :+ Map (i, i) (Arc s))
+ -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity ())
+-&gt; ((Int :+ Map (i, i) (Arc s)) -&gt; Int :+ Map (i, i) (Arc s))
+-&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">ASetter
+  (Int :+ Map (i, i) (Arc s)) (Int :+ Map (i, i) (Arc s)) Int Int
+-&gt; (Int -&gt; Int)
+-&gt; (Int :+ Map (i, i) (Arc s))
+-&gt; Int :+ Map (i, i) (Arc s)
+forall s t a b. ASetter s t a b -&gt; (a -&gt; b) -&gt; s -&gt; t
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.2-fcc40a1e9a9bd3376879b0c9d2affbc1277f870cd843d116cd2d30dd5935a6ca/share/doc/html/src/Control.Lens.Setter.html#over"><span class="hs-identifier hs-var">over</span></a></span><span> </span><span class="annot"><span class="annottext">ASetter
+  (Int :+ Map (i, i) (Arc s)) (Int :+ Map (i, i) (Arc s)) Int Int
+forall core extra core' (f :: * -&gt; *).
+Functor f =&gt;
+(core -&gt; f core') -&gt; (core :+ extra) -&gt; f (core' :+ extra)
+</span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-f28bb9d51db010d13285d7aee0d6fd53c3ca075ebedcc1340a95117e6e8c3c0c/share/doc/html/src/HGeometry.Ext.html#core"><span class="hs-identifier hs-var">core</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">+</span></span><span class="annot"><span class="annottext">Int
+</span><span class="hs-number">1</span></span><span class="hs-special">)</span><span>
+</span><span id="line-224"></span><span>                 </span><span class="annot"><span class="annottext">Arc s -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (Arc s)
+forall a. a -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity a
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Arc s -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (Arc s))
+-&gt; Arc s -&gt; StateT (Int :+ Map (i, i) (Arc s)) Identity (Arc s)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Arc s
+forall {k} (s :: k). Int -&gt; Arc s
+</span><a href="Hiraffe.PlanarGraph.Dart.html#Arc"><span class="hs-identifier hs-var">Dart.Arc</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679206224"><span class="hs-identifier hs-var">i</span></a></span><span>
+</span><span id="line-225"></span><span>
+</span><span id="line-226"></span><span class="annot"><span class="hs-comment">-- | Helper to implement fromAdjacencyRep</span></span><span>
+</span><span id="line-227"></span><span id="local-6989586621679205995"><span id="local-6989586621679205996"><span id="local-6989586621679205997"><span class="annot"><a href="Hiraffe.PlanarGraph.html#sequence%27"><span class="hs-identifier hs-type">sequence'</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679205995"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">NonEmpty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">NonEmpty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679205995"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679205996"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679205997"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679205995"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">NonEmpty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">NonEmpty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679205996"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span class="annot"><a href="#local-6989586621679205997"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span></span></span></span><span>
+</span><span id="line-228"></span><span id="sequence%27"><span class="annot"><span class="annottext">sequence' :: forall (m :: * -&gt; *) a b.
+Applicative m =&gt;
+NonEmpty (NonEmpty (m a, b)) -&gt; m (NonEmpty (NonEmpty (a, b)))
+</span><a href="Hiraffe.PlanarGraph.html#sequence%27"><span class="hs-identifier hs-var hs-var">sequence'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(NonEmpty (m a, b) -&gt; m (NonEmpty (a, b)))
+-&gt; NonEmpty (NonEmpty (m a, b)) -&gt; m (NonEmpty (NonEmpty (a, b)))
+forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
+(Traversable t, Applicative f) =&gt;
+(a -&gt; f b) -&gt; t a -&gt; f (t b)
+forall (f :: * -&gt; *) a b.
+Applicative f =&gt;
+(a -&gt; f b) -&gt; NonEmpty a -&gt; f (NonEmpty b)
+</span><span class="hs-identifier hs-var">traverse</span></span><span> </span><span class="annot"><span class="annottext">((NonEmpty (m a, b) -&gt; m (NonEmpty (a, b)))
+ -&gt; NonEmpty (NonEmpty (m a, b)) -&gt; m (NonEmpty (NonEmpty (a, b))))
+-&gt; (NonEmpty (m a, b) -&gt; m (NonEmpty (a, b)))
+-&gt; NonEmpty (NonEmpty (m a, b))
+-&gt; m (NonEmpty (NonEmpty (a, b)))
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">((m a, b) -&gt; m (a, b)) -&gt; NonEmpty (m a, b) -&gt; m (NonEmpty (a, b))
+forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
+(Traversable t, Applicative f) =&gt;
+(a -&gt; f b) -&gt; t a -&gt; f (t b)
+forall (f :: * -&gt; *) a b.
+Applicative f =&gt;
+(a -&gt; f b) -&gt; NonEmpty a -&gt; f (NonEmpty b)
+</span><span class="hs-identifier hs-var">traverse</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679206238"><span class="annot"><span class="annottext">m a
+</span><a href="#local-6989586621679206238"><span class="hs-identifier hs-var">fa</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679206239"><span class="annot"><span class="annottext">b
+</span><a href="#local-6989586621679206239"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="hs-special">,</span><span class="annot"><span class="annottext">b
+</span><a href="#local-6989586621679206239"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(a -&gt; (a, b)) -&gt; m a -&gt; m (a, b)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">m a
+</span><a href="#local-6989586621679206238"><span class="hs-identifier hs-var">fa</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-229"></span></pre></body></html>
