@@ -14,7 +14,9 @@
 module Hiraffe.AdjacencyListRep.Map
   ( Graph
   , GGraph(..)
+  , mapNeighbourOrder
   , VertexData(VertexData)
+  , mapNeighbourOrder'
   ) where
 
 import           Control.Lens
@@ -52,6 +54,12 @@ instance ( Semigroup v, Semigroup e, Semigroup (f i), Ord i
 instance ( Monoid v, Monoid e, Monoid (f i), Ord i
          ) => Monoid (VertexData f i v e) where
   mempty = VertexData mempty Map.empty mempty
+
+
+-- | Apply some mapping function over the vertexData
+mapNeighbourOrder' :: (f i -> g i) -> VertexData f i v e -> VertexData g i v e
+mapNeighbourOrder' f (VertexData x nm os) = VertexData x nm (f os)
+
 
 instance (Show1 f, Show i, Show v, Show e) => Show (VertexData f i v e) where
   showsPrec d (VertexData v ns nOrd) =
@@ -118,6 +126,10 @@ instance Bifoldable (GGraph f i) where
 
 instance Bitraversable (GGraph f i) where
   bitraverse f g (Graph m) = Graph <$> traverse (bitraverse f g) m
+
+-- | Apply a mapping function over all neighbourOrder lists in the graph
+mapNeighbourOrder :: (f i -> g i) -> GGraph f i v e -> GGraph g i v e
+mapNeighbourOrder f (Graph m) = Graph $ fmap (mapNeighbourOrder' f) m
 
 ----------------------------------------
 

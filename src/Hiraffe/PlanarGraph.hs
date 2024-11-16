@@ -25,6 +25,7 @@ module Hiraffe.PlanarGraph
   -- * Building a planar graph
   , planarGraph, Core.planarGraph'
   , fromAdjRep
+  , fromAdjacencyRep
 
   -- * Exporting a planar graph
   , Core.toAdjacencyLists
@@ -56,6 +57,15 @@ module Hiraffe.PlanarGraph
   , module Hiraffe.Graph.Class
   ) where
 
+import           Control.Lens
+import           Control.Monad.State
+import           Data.Foldable1
+import           Data.List.NonEmpty (NonEmpty(..))
+import qualified Data.Map as Map
+import qualified Data.Map.NonEmpty as NEMap
+import           HGeometry.Ext
+import           HGeometry.Foldable.Util
+import           Hiraffe.AdjacencyListRep.Map
 import           Hiraffe.Graph.Class
 import           Hiraffe.PlanarGraph.Class
 import           Hiraffe.PlanarGraph.Core ( PlanarGraph
@@ -69,6 +79,7 @@ import           Hiraffe.PlanarGraph.Dual
 import           Hiraffe.PlanarGraph.IO
 import           Hiraffe.PlanarGraph.Instance ()
 import           Hiraffe.PlanarGraph.World
+
 
 --------------------------------------------------------------------------------
 -- $setup
@@ -175,3 +186,43 @@ import           Hiraffe.PlanarGraph.World
 --                  => (Dart s -> e -> g e')
 --                  -> PlanarGraph s w v e f -> g (PlanarGraph s w v e' f)
 --       itraverse' = Core.traverseDarts
+
+
+
+
+-- | Given a connected plane graph in adjacency list format; convert it into an actual
+-- PlanarGraph.
+--
+-- \(O(n\log n)\)
+fromAdjacencyRep             :: (Ord i, Foldable1 f)
+                             => proxy s -> GGraph f i v e -> PlanarGraph s Primal v e ()
+fromAdjacencyRep _ (Graph m) = (planarGraph theDarts)&vertexData .~ vtxData
+  where
+    vtxData = (\(VertexData x _ _) -> x) <$> fromFoldable1 m
+    --  a non-empty list of vertices, with for each vertex the darts in order around the vertex
+    theDarts  = evalState (sequence' theDarts') (0 :+ Map.empty)
+    theDarts' = toNonEmpty $ NEMap.mapWithKey toIncidentDarts m
+    -- turn the outgoing edges of u into darts
+    toIncidentDarts u (VertexData _ neighMap neighOrder) =
+      (\v -> (toDart u v, neighMap Map.! u)) <$> toNonEmpty neighOrder
+    -- create the dart corresponding to vertices u and v
+
+    toDart u v | u <= v    =  flip Dart.Dart Dart.Positive <$> arc u v
+               | otherwise =  flip Dart.Dart Dart.Negative <$> arc v u
+
+    arc u v = gets (arcOf (u,v)) >>= \case
+                Just a  -> pure a
+                Nothing -> do a <- nextArc
+                              modify $ insertArc (u,v) a
+                              pure a
+
+    arcOf x       = Map.lookup x . view extra
+    insertArc k v = over extra $ Map.insert k v
+
+    nextArc = do i <- gets (view core)
+                 modify $ over core (+1)
+                 pure $ Dart.Arc i
+
+-- | Helper to implement fromAdjacencyRep
+sequence' :: Applicative m => NonEmpty (NonEmpty (m a, b)) -> m (NonEmpty (NonEmpty (a,b)))
+sequence' = traverse $ traverse (\(fa,b) -> (,b) <$> fa)
