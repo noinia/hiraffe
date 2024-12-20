@@ -59,11 +59,11 @@ import           Hiraffe.PlanarGraph.World
 -- 'local' edgeId (dart)'s.
 --
 -- invariant: the outerface has faceId 0
-type PlanarGraph (s :: k) w v e f = PlanarGraphF s (CPlanarGraph w) v e f
+type PlanarGraph w (s :: k) v e f = PlanarGraphF (CPlanarGraph w) s v e f
 
 -- | The Implementation of the PlanarGraph type, where the component is a parameter.
-data PlanarGraphF (s   :: k)
-                  (pg :: Type -> Type -> Type -> Type -> Type)
+data PlanarGraphF (pg :: Type -> Type -> Type -> Type -> Type)
+                  (s   :: k)
                   v e f = PlanarGraph
     { _components    :: NonEmptyVector (Component pg s)
     , _rawVertexData :: NonEmptyVector (Raw s (VertexId  (Wrap s)) v)
@@ -73,50 +73,50 @@ data PlanarGraphF (s   :: k)
 
 
 -- | Lens to access the connected components of a planar subdivision.
-components :: Lens' (PlanarGraphF s pg v e f)
+components :: Lens' (PlanarGraphF pg s v e f)
                     (NonEmptyVector (Component pg s))
 components = lens _components (\ps cs -> ps { _components = cs })
 
 -- | Lens to access the raw vertex data
-rawVertexData :: Lens (PlanarGraphF s pg v e f)
-                      (PlanarGraphF s pg v' e f)
+rawVertexData :: Lens (PlanarGraphF pg s v e f)
+                      (PlanarGraphF pg s v' e f)
                       (NonEmptyVector (Raw s (VertexId  (Wrap s)) v))
                       (NonEmptyVector (Raw s (VertexId  (Wrap s)) v'))
 rawVertexData = lens _rawVertexData (\ps vxd -> ps { _rawVertexData = vxd })
 
 -- | Lens to access the raw dart daat a
-rawDartData :: Lens (PlanarGraphF s pg v e f) (PlanarGraphF s pg v e' f)
+rawDartData :: Lens (PlanarGraphF pg s v e f) (PlanarGraphF pg s v e' f)
                     (NonEmptyVector (Raw s (Dart.Dart  (Wrap s)) e))
                     (NonEmptyVector (Raw s (Dart.Dart  (Wrap s)) e'))
 rawDartData = lens _rawDartData (\ps vxd -> ps { _rawDartData = vxd })
 
 -- | Access the raw face data
-rawFaceData :: Lens (PlanarGraphF s pg v e f) (PlanarGraphF s pg v e f')
+rawFaceData :: Lens (PlanarGraphF pg s v e f) (PlanarGraphF pg s v e f')
                     (NonEmptyVector (RawFace s f))    (NonEmptyVector (RawFace s f'))
 rawFaceData = lens _rawFaceData (\ps vxd -> ps { _rawFaceData = vxd })
 
 -- | Lens to access a particular component of the planar subdivision.
 component    :: ComponentId s
-             -> Lens' (PlanarGraphF s pg v e f) (Component pg s)
+             -> Lens' (PlanarGraphF pg s v e f) (Component pg s)
 component ci = components.singular (ix $ unCI ci)
 
 --------------------------------------------------------------------------------
 
 -- | Given a "global" dart id, get the component and local dart info
-asLocalD      :: Dart.Dart s -> PlanarGraphF s pg v e f
+asLocalD      :: Dart.Dart s -> PlanarGraphF pg s v e f
               -> (ComponentId s, Dart.Dart (Wrap s), Component pg s)
 asLocalD d ps = let (Raw ci d' _) = ps^?!rawDartData.ix (fromEnum d)
                 in (ci,d',ps^.component ci)
 
 -- | Given a global vertexId, get the local info
-asLocalV                 :: VertexId s -> PlanarGraphF s pg v e f
+asLocalV                 :: VertexId s -> PlanarGraphF pg s v e f
                          -> (ComponentId s, VertexId (Wrap s), Component pg s)
 asLocalV (VertexId v) ps = let (Raw ci v' _) = ps^?!rawVertexData.ix v
                            in (ci,v',ps^.component ci)
 
 
 -- -- | Get the local face and component from a given face.
--- asLocalF                          :: FaceId s -> PlanarGraphF s pg v e f
+-- asLocalF                          :: FaceId s -> PlanarGraphF pg s v e f
 --                                   -> NonEmpty (ComponentId s, FaceId (Wrap s), Component s r)
 -- asLocalF (FaceId (VertexId f)) ps = case ps^?!rawFaceData.ix f of
 --       RawFace (Just (ci,f')) _        -> (ci,f',ps^.component ci) :| []
@@ -127,50 +127,50 @@ asLocalV (VertexId v) ps = let (Raw ci v' _) = ps^?!rawVertexData.ix v
 
 --------------------------------------------------------------------------------
 
-instance HasVertices' (PlanarGraphF s pg v e f) where
-  type Vertex   (PlanarGraphF s pg v e f) = v
-  type VertexIx (PlanarGraphF s pg v e f) = VertexId s
+instance HasVertices' (PlanarGraphF pg s v e f) where
+  type Vertex   (PlanarGraphF pg s v e f) = v
+  type VertexIx (PlanarGraphF pg s v e f) = VertexId s
   vertexAt u@(VertexId ui) = reindexed (const u) $ rawVertexData.iix ui <. dataVal
   numVertices = NonEmptyV.length . _rawVertexData
   {-# INLINE numVertices #-}
 
-instance HasVertices (PlanarGraphF s pg v e f) (PlanarGraphF s pg v' e f)  where
-  vertices = reindexed (VertexId :: Int -> VertexIx (PlanarGraphF s pg v e f))
+instance HasVertices (PlanarGraphF pg s v e f) (PlanarGraphF pg s v' e f)  where
+  vertices = reindexed (VertexId :: Int -> VertexIx (PlanarGraphF pg s v e f))
            $ rawVertexData .> traversed1 <. dataVal
-instance HasDarts' (PlanarGraphF s pg v e f) where
+instance HasDarts' (PlanarGraphF pg s v e f) where
 
-  type Dart   (PlanarGraphF s pg v e f) = e
-  type DartIx (PlanarGraphF s pg v e f) = Dart.Dart s
+  type Dart   (PlanarGraphF pg s v e f) = e
+  type DartIx (PlanarGraphF pg s v e f) = Dart.Dart s
   dartAt d = reindexed (const d) $ rawDartData.iix (fromEnum d) <. dataVal
   numDarts = NonEmptyV.length . _rawDartData
   {-# INLINE numDarts #-}
 
-instance HasDarts (PlanarGraphF s pg v e f) (PlanarGraphF s pg v e' f)  where
-  darts = reindexed (toEnum :: Int -> DartIx (PlanarGraphF s pg v e f))
+instance HasDarts (PlanarGraphF pg s v e f) (PlanarGraphF pg s v e' f)  where
+  darts = reindexed (toEnum :: Int -> DartIx (PlanarGraphF pg s v e f))
         $ rawDartData .> itraversed <. dataVal
 
-instance HasEdges' (PlanarGraphF s pg v e f) where
-  type Edge   (PlanarGraphF s pg v e f) = e
-  type EdgeIx (PlanarGraphF s pg v e f) = Dart.Dart s
+instance HasEdges' (PlanarGraphF pg s v e f) where
+  type Edge   (PlanarGraphF pg s v e f) = e
+  type EdgeIx (PlanarGraphF pg s v e f) = Dart.Dart s
   edgeAt d = reindexed (const d) $ rawDartData.iix (fromEnum d) <. dataVal
   numEdges = (`div` 2) . NonEmptyV.length . _rawDartData
 
-instance HasEdges (PlanarGraphF s pg v e f) (PlanarGraphF s pg v e' f)  where
+instance HasEdges (PlanarGraphF pg s v e f) (PlanarGraphF pg s v e' f)  where
   -- edges = undefined
-    -- reindexed (VertexId :: Int -> VertexIx (PlanarGraphF s pg v e f))
+    -- reindexed (VertexId :: Int -> VertexIx (PlanarGraphF pg s v e f))
     --        $ rawDartData .> traversed1 <. dataVal
   -- TODO: we need some careful filtering like in planarGraph here as well
 
-instance HasFaces' (PlanarGraphF s pg v e f) where
-  type Face   (PlanarGraphF s pg v e f) = f
-  type FaceIx (PlanarGraphF s pg v e f) = FaceId s
+instance HasFaces' (PlanarGraphF pg s v e f) where
+  type Face   (PlanarGraphF pg s v e f) = f
+  type FaceIx (PlanarGraphF pg s v e f) = FaceId s
   faceAt fi = reindexed (const fi)
             $ rawFaceData .> iix (coerce fi) <. faceDataVal.fData
   numFaces = NonEmptyV.length . _rawFaceData
   {-# INLINE numFaces #-}
 
-instance HasFaces (PlanarGraphF s pg v e f) (PlanarGraphF s pg v e f')  where
-  faces = reindexed (coerce :: Int -> FaceIx (PlanarGraphF s pg v e f))
+instance HasFaces (PlanarGraphF pg s v e f) (PlanarGraphF pg s v e f')  where
+  faces = reindexed (coerce :: Int -> FaceIx (PlanarGraphF pg s v e f))
         $ rawFaceData .> traversed1 <. faceDataVal.fData
 
 
@@ -193,7 +193,7 @@ type IsComponent pg s = ( DartIx   (Component pg s) ~ Dart.Dart (Wrap' s)
 instance ( DiGraph_ (Component pg s)
          , BidirGraph_ (Component pg s)
          , IsComponent pg s
-         ) => DiGraph_ (PlanarGraphF s pg v e f) where
+         ) => DiGraph_ (PlanarGraphF pg s v e f) where
   -- diGraphFromAdjacencyLists =
 
   tailOf d = ito $ \ps -> let (_,d',c) = asLocalD d ps
@@ -221,7 +221,7 @@ instance ( DiGraph_ (Component pg s)
 
 instance ( BidirGraph_ (Component pg s)
          , IsComponent pg s
-         ) => BidirGraph_ (PlanarGraphF s pg v e f) where
+         ) => BidirGraph_ (PlanarGraphF pg s v e f) where
   twinOf d = to $ const (Dart.twin d)
   getPositiveDart _ = id
 
@@ -230,7 +230,7 @@ instance ( Graph_ (Component pg s)
          , IsComponent pg s
          , EdgeIx   (Component pg s) ~ Dart.Dart (Wrap' s)
          , Edge     (Component pg s) ~ Dart.Dart s
-         ) => Graph_ (PlanarGraphF s pg v e f) where
+         ) => Graph_ (PlanarGraphF pg s v e f) where
   -- fromAdjacencyLists =
 
   neighboursOf v  = ifolding $ \ps -> let (_,v',c) = asLocalV v ps
@@ -245,10 +245,71 @@ instance ( Graph_ (Component pg s)
     -- same general approach as outGoingDartsOf
 
 
--- instance PlanarGraph_ (PlanarGraphF s pg v e f) v where
+-- instance PlanarGraph_ (PlanarGraphF pg s v e f) v where
 --   -- dualGraph, (incidentFaceOf | leftFaceOf), rightFaceOf, prevDartOf, nextDartOf, boundaryDartOf, boundaryDartOf, boundaryDarts
 
--- instance PlaneGraph_ (PlanarGraphF s pg v e f) v where
+-- instance PlaneGraph_ (PlanarGraphF pg s v e f) v where
 --   -- TODO: fromEmbedding
 
 -- instance PlanarGraphF component_ (PlanarGraphF component  s v e f) v where
+
+
+
+
+--------------------------------------------------------------------------------
+
+{-
+-- | Constructs a PlanarGraph from a connected planar graph (i.e. a single component graph)
+--
+-- runningTime: \(O(n)\)
+fromConnected   :: forall s v e f. (Ord r, Num r)
+                => CPlanarGraph w s v e f -> PlanarGraph w s v e f
+fromConnected g = fromConnected' g (PG.outerFaceDart g)
+
+
+
+{- HLINT ignore fromConnected' -}
+-- | Given a (connected) PlanarGraph and a dart that has the outerface on its left
+-- | Constructs a planarsubdivision
+--
+-- runningTime: \(O(n)\)
+fromConnected'        :: forall s v e f.
+                      pg
+
+                         CPlanarGraph w s v e f -> Dart s
+                       -> PlanarGraph w s v e f
+fromConnected' g ofD = PlanarGraph (V.singleton . coerce $ g') vd ed fd
+  where
+    c = ComponentId 0
+    vd = V.imap    (\i v   -> Raw c (VertexId i) v)                   $ g^.PG.vertexData
+    ed = V.zipWith (\d dd  -> Raw c d dd) allDarts''                  $ g^.PG.rawDartData
+    fd = V.imap (\i f      -> RawFace (mkFaceIdx i) (mkFaceData i f)) $ g^.PG.faceData
+
+    g' :: PlaneGraph s (VertexId' s) (Dart s) (FaceId' s) r
+    g' = g&PG.faceData    %~ V.imap (\i _ -> mkFaceId $ flipID i)
+          &PG.vertexData  %~ V.imap (\i _ -> VertexId i)
+          &PG.rawDartData .~ allDarts''
+
+    allDarts'' :: forall s'. NonEmptyVector (Dart s')
+    allDarts'' = allDarts' (PG.numDarts g)
+
+    -- make sure the outerFaceId is 0
+    oF@(FaceId (VertexId of')) = PG.leftFace ofD g
+
+    mkFaceIdx i | i == 0    = Nothing
+                | otherwise = Just (c,mkFaceId . flipID $ i)
+
+    -- at index i we are storing the outerface
+    mkFaceData                 :: Int -> f -> FaceData (Dart s) f
+    mkFaceData i f | i == 0    = FaceData (Seq.singleton ofD) (g^.dataOf oF)
+                   | i == of'  = FaceData mempty              (g^.dataOf (mkFaceId @s 0))
+                   | otherwise = FaceData mempty              f
+
+    mkFaceId :: forall s'. Int -> FaceId' s'
+    mkFaceId = FaceId . VertexId
+
+    flipID i | i == 0    = of'
+             | i == of'  = 0
+             | otherwise = i
+
+-}
