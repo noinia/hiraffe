@@ -12,7 +12,7 @@
 module Hiraffe.PlanarGraph.Component
   ( HasConnectedComponents(..)
   , HasConnectedComponents'(..)
-
+  , Component
 
   , FaceData(FaceData)
   , holes, fData
@@ -30,8 +30,18 @@ import           Data.Kind (Type)
 import qualified Data.Sequence as Seq
 import           GHC.Generics (Generic)
 import           Hiraffe.Graph.Component
-import           Hiraffe.PlanarGraph (FaceId)
+import           Hiraffe.PlanarGraph.Connected (CPlanarGraph, FaceId, VertexId)
 import           Hiraffe.PlanarGraph.Dart (Dart)
+
+--------------------------------------------------------------------------------
+
+-- | A connected component.
+--
+-- For every face f, and every hole in this face, the facedata points to a dart
+-- d on the hole s.t. this dart has the face f on its left. i.e.
+-- leftFace d = f
+type Component (planarGraph :: Type -> Type -> Type -> Type -> Type) s =
+  planarGraph (Wrap s) (VertexId s) (Dart s) (FaceId s)
 
 --------------------------------------------------------------------------------
 -- * ComponentId

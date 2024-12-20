@@ -139,6 +139,7 @@ library
     Hiraffe.PlanarGraph.Connected.Dual
     Hiraffe.PlanarGraph.Connected.Instance
     Hiraffe.PlanarGraph.World
+    -- Hiraffe.PlanarGraph.Type
 
 --------------------------------------------------------------------------------
 -- * Helper Libraries
