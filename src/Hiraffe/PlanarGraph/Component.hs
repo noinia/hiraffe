@@ -17,7 +17,7 @@ module Hiraffe.PlanarGraph.Component
   , FaceData(FaceData)
   , holes, fData
 
-  , Wrap
+  , Wrap, Wrap'
   , ComponentId(..)
   , Raw(Raw), dataVal
   , RawFace(RawFace), faceIdx, faceDataVal

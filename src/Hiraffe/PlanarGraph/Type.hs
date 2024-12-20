@@ -1,3 +1,4 @@
+{-# LANGUAGE UndecidableInstances #-}
 --------------------------------------------------------------------------------
 -- |
 -- Module      :  Hiraffe.PlanarGraph.Type
@@ -58,7 +59,7 @@ import           Hiraffe.PlanarGraph.World
 -- 'local' edgeId (dart)'s.
 --
 -- invariant: the outerface has faceId 0
-type PlanarGraph (s :: k) w v e f = PlanarGraphF s (PG w) v e f
+type PlanarGraph (s :: k) w v e f = PlanarGraphF s (CPlanarGraph w) v e f
 
 -- | The Implementation of the PlanarGraph type, where the component is a parameter.
 data PlanarGraphF (s   :: k)
@@ -69,14 +70,6 @@ data PlanarGraphF (s   :: k)
     , _rawDartData   :: NonEmptyVector (Raw s (Dart.Dart (Wrap s)) e)
     , _rawFaceData   :: NonEmptyVector (RawFace s f)
     } deriving (Functor,Generic)
-
-
--- | Just hte connected planar graph with the w and s arguments flipped
--- so that we can plug it into PlanarGraphF
-newtype PG w s v e f = PG (CPlanarGraph s w v e f)
-  deriving newtype (Show,Eq)
-
-
 
 
 -- | Lens to access the connected components of a planar subdivision.
@@ -111,13 +104,13 @@ component ci = components.singular (ix $ unCI ci)
 
 -- | Given a "global" dart id, get the component and local dart info
 asLocalD      :: Dart.Dart s -> PlanarGraphF s pg v e f
-              -> (ComponentId s, Dart.Dart (Wrap s), component)
+              -> (ComponentId s, Dart.Dart (Wrap s), Component pg s)
 asLocalD d ps = let (Raw ci d' _) = ps^?!rawDartData.ix (fromEnum d)
                 in (ci,d',ps^.component ci)
 
 -- | Given a global vertexId, get the local info
 asLocalV                 :: VertexId s -> PlanarGraphF s pg v e f
-                         -> (ComponentId s, VertexId (Wrap s), component)
+                         -> (ComponentId s, VertexId (Wrap s), Component pg s)
 asLocalV (VertexId v) ps = let (Raw ci v' _) = ps^?!rawVertexData.ix v
                            in (ci,v',ps^.component ci)
 
@@ -180,7 +173,27 @@ instance HasFaces (PlanarGraphF s pg v e f) (PlanarGraphF s pg v e f')  where
   faces = reindexed (coerce :: Int -> FaceIx (PlanarGraphF s pg v e f))
         $ rawFaceData .> traversed1 <. faceDataVal.fData
 
-instance DiGraph_ (PlanarGraphF s pg v e f) where
+
+-- DartIx
+--                              (pg
+--                                 (Hiraffe.PlanarGraph.Component.Wrap' s)
+--                                 (VertexId s)
+--                                 (Dart.Dart s)
+--                                 (FaceId s))
+--                      with:
+
+type IsComponent pg s = ( DartIx   (Component pg s) ~ Dart.Dart (Wrap' s)
+                        , VertexIx (Component pg s) ~ VertexId (Wrap' s)
+                        , Dart     (Component pg s) ~ Dart.Dart s
+                        , Vertex   (Component pg s) ~ VertexId s
+                        -- , FaceId (Component pg s) ~ FaceId s
+
+                        )
+
+instance ( DiGraph_ (Component pg s)
+         , BidirGraph_ (Component pg s)
+         , IsComponent pg s
+         ) => DiGraph_ (PlanarGraphF s pg v e f) where
   -- diGraphFromAdjacencyLists =
 
   tailOf d = ito $ \ps -> let (_,d',c) = asLocalD d ps
@@ -206,12 +219,18 @@ instance DiGraph_ (PlanarGraphF s pg v e f) where
 
   twinDartOf d = twinOf d . to Just
 
-instance BidirGraph_ (PlanarGraphF s pg v e f) where
+instance ( BidirGraph_ (Component pg s)
+         , IsComponent pg s
+         ) => BidirGraph_ (PlanarGraphF s pg v e f) where
   twinOf d = to $ const (Dart.twin d)
   getPositiveDart _ = id
 
 -- TODO:  Component's should somehow link/remember how it gets its v values.
-instance Graph_ (PlanarGraphF s pg v e f) where
+instance ( Graph_ (Component pg s)
+         , IsComponent pg s
+         , EdgeIx   (Component pg s) ~ Dart.Dart (Wrap' s)
+         , Edge     (Component pg s) ~ Dart.Dart s
+         ) => Graph_ (PlanarGraphF s pg v e f) where
   -- fromAdjacencyLists =
 
   neighboursOf v  = ifolding $ \ps -> let (_,v',c) = asLocalV v ps
