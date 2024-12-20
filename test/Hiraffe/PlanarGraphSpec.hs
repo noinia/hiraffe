@@ -14,7 +14,7 @@ import           HGeometry.Combinatorial.Util
 import           HGeometry.Permutation (toCycleRep)
 import           HGeometry.YAML
 import           Hiraffe.Instances ()
-import           Hiraffe.PlanarGraph ( PlanarGraph, VertexId, DartId, VertexIdIn(..)
+import           Hiraffe.PlanarGraph ( CPlanarGraph, VertexId, DartId, VertexIdIn(..)
                                      , neighboursOf, planarGraph', vertices
                                      , darts, edges
                                      )
@@ -40,8 +40,8 @@ instance FromYAML () where
                   _             -> fail "parse () failed"
 
 -- | Report all adjacnecies from g missing in h
-missingAdjacencies     :: PlanarGraph s w v e f
-                       -> PlanarGraph s w v' e' f'
+missingAdjacencies     :: CPlanarGraph s w v e f
+                       -> CPlanarGraph s w v' e' f'
                        -> [(VertexIdIn w s , VertexIdIn w s)]
 missingAdjacencies g h = ifoldMapOf vertices f g
   where
@@ -59,12 +59,12 @@ sameGraphs s g h = do
 
 
 spec :: Spec
-spec = describe "PlanarGraph spec" $ do
+spec = describe "CPlanarGraph spec" $ do
     -- prop "edges half the size of the darts" $
     --   \(gr :: PlanarGraph MyWorld () () ()) ->
     --     (2 * lengthOf edges gr) `shouldBe` lengthOf darts gr
     it "edges half the size of the darts" $
-      let gr :: PlanarGraph TestG PlanarGraph.Primal Int Text.Text ()
+      let gr :: CPlanarGraph TestG PlanarGraph.Primal Int Text.Text ()
           gr = fromAdjacencyLists testEdges
       in (2 * lengthOf edges gr) `shouldBe` lengthOf darts gr
 
@@ -129,7 +129,7 @@ type STR' s b = STR (SM.Map (VertexId s,VertexId s) Int) Int b
 -- running time: $O(n \log n)$.
 fromAdjacencyListsOld      :: forall s f.(Foldable f, Functor f)
                         => [(VertexId s, f (VertexId s))]
-                        -> PlanarGraph s PlanarGraph.Primal () () ()
+                        -> CPlanarGraph s PlanarGraph.Primal () () ()
 fromAdjacencyListsOld adjM = planarGraph' . toCycleRep n $ perm
   where
     n    = sum . fmap length $ perm

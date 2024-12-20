@@ -55,7 +55,7 @@ import           Hiraffe.PlanarGraph.Dart
 --                           , [ (Dart aG Negative, "g-")
 --                             ]
 --                           ]
---     myGraph :: PlanarGraph () Primal String String String
+--     myGraph :: CPlanarGraph () Primal String String String
 --     myGraph = planarGraph adjacencies
 --                     & vertexData .~ V.unsafeFromList ["u","v","w","x"]
 --                     & faceData   .~ V.unsafeFromList ["f_3", "f_infty","f_1","f_2"]
@@ -67,11 +67,11 @@ import           Hiraffe.PlanarGraph.Dart
 -- This represents the following graph. Note that the graph is undirected, the
 -- arrows are just to indicate what the Positive direction of the darts is.
 --
--- ![myGraph](docs/Data/PlanarGraph/testG.png)
+-- ![myGraph](docs/Data/PlanarGraph/Connected/testG.png)
 
 
 -- | Enumerate all faces in the planar graph
-faces' :: PlanarGraph s w v e f -> NonEmptyVector (FaceIdIn w s)
+faces' :: CPlanarGraph s w v e f -> NonEmptyVector (FaceIdIn w s)
 faces' = fmap FaceId . vertices' . view dual
 
 -- | All faces with their face data.
@@ -81,28 +81,28 @@ faces' = fmap FaceId . vertices' . view dual
 -- (FaceId 1,"f_infty")
 -- (FaceId 2,"f_1")
 -- (FaceId 3,"f_2")
-faces   :: PlanarGraph s w v e f -> NonEmptyVector (FaceIdIn w s, f)
+faces   :: CPlanarGraph s w v e f -> NonEmptyVector (FaceIdIn w s, f)
 faces g = V.zip (faces' g) (g^.faceData)
 
 -- | The face to the left of the dart
 --
 --
 -- running time: \(O(1)\).
-leftFace     :: Dart s -> PlanarGraph s w v e f -> FaceIdIn w s
+leftFace     :: Dart s -> CPlanarGraph s w v e f -> FaceIdIn w s
 leftFace d g = FaceId . headOf d $ view dual g
 
 -- | Get the next edge in order along the face (so ccw for internal faces, and cw for
 -- external faces ) that is to the left of this dart.
 ----
 -- running time: \(O(1)\).
-nextEdge   :: Dart s -> PlanarGraph s w v e f -> Dart s
+nextEdge   :: Dart s -> CPlanarGraph s w v e f -> Dart s
 nextEdge d = twin . prevIncidentEdgeFrom (twin d) . view dual
 
 -- | Get the previous edge in order along the face (so ccw for internal faces, and cw
 -- for external faces ) that is to the left of this dart.
 --
 -- running time: \(O(1)\).
-prevEdge   :: Dart s -> PlanarGraph s w v e f -> Dart s
+prevEdge   :: Dart s -> CPlanarGraph s w v e f -> Dart s
 prevEdge d = twin . nextIncidentEdgeFrom (twin d) . view dual
 
 -- | Gets a dart bounding this face. I.e. a dart d such that the face lies to
@@ -114,7 +114,7 @@ prevEdge d = twin . nextIncidentEdgeFrom (twin d) . view dual
 -- (Dart (Arc 2) +1,"c+")
 -- >>> showWithData myGraph $ boundaryDart (FaceId $ VertexId 1) myGraph
 -- (Dart (Arc 0) -1,"a-")
-boundaryDart   :: FaceIdIn w s -> PlanarGraph s w v e f -> Dart s
+boundaryDart   :: FaceIdIn w s -> CPlanarGraph s w v e f -> Dart s
 boundaryDart f = V.head . boundary f
 
 -- | The darts are reported in order along the face. This means that for internal faces
@@ -122,7 +122,7 @@ boundaryDart f = V.head . boundary f
 -- outer face the darts are reported in clockwise order.
 --
 -- running time: \(O(k)\), where \(k\) is the output size.
-boundary            :: FaceIdIn w s -> PlanarGraph s w v e f -> NonEmptyVector (Dart s)
+boundary            :: FaceIdIn w s -> CPlanarGraph s w v e f -> NonEmptyVector (Dart s)
 boundary (FaceId v) = V.map twin . V.reverse . incidentEdges v . view dual
 
 -- | Given a dart d, generates the darts bounding the face that is to
@@ -132,7 +132,7 @@ boundary (FaceId v) = V.map twin . V.reverse . incidentEdges v . view dual
 -- the darts are reported in clockwise order.
 --
 -- \(O(k)\), where \(k\) is the number of darts reported
-boundary'     :: Dart s -> PlanarGraph s w v e f -> NonEmptyVector (Dart s)
+boundary'     :: Dart s -> CPlanarGraph s w v e f -> NonEmptyVector (Dart s)
 boundary' d g = fromMaybe (error "boundary'")  . rotateTo d $ boundary (leftFace d g) g
   where
     rotateTo     :: Eq a => a -> NonEmptyVector a -> Maybe (NonEmptyVector a)
@@ -155,9 +155,9 @@ boundary' d g = fromMaybe (error "boundary'")  . rotateTo d $ boundary (leftFace
 -- (VertexId 2,"w")
 --
 -- running time: \(O(k)\), where \(k\) is the output size.
-boundaryVertices     :: FaceIdIn w s -> PlanarGraph s w v e f -> NonEmptyVector (VertexIdIn w s)
+boundaryVertices     :: FaceIdIn w s -> CPlanarGraph s w v e f -> NonEmptyVector (VertexIdIn w s)
 boundaryVertices f g = flip tailOf g <$> boundary f g
 
 -- -- | Gets the next dart along the face
--- nextDart     :: Dart s -> PlanarGraph s w v e f -> Dart s
+-- nextDart     :: Dart s -> CPlanarGraph s w v e f -> Dart s
 -- nextDart d g = f rightFace e
