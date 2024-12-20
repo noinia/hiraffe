@@ -43,58 +43,58 @@ import           Hiraffe.PlanarGraph.Connected.Core
 -- u's adjacency list or in v's. This can be done s.t. all adjacency lists have length at
 -- most 6. So every edge, as considered as an undirected edge, would be stored exactly
 -- once. (i.e. either at u or at v, but not both)
-newtype EdgeOracle s w e = MkEdgeOracle (EdgeOracle' s w (DartData e))
+newtype EdgeOracle w s e = MkEdgeOracle (EdgeOracle' w s (DartData e))
                          deriving (Show,Eq,Functor,Foldable,Traversable)
 
 -- | Implementation of the EdgeOracle. the type ue here essentially models the data
 -- associated with an unidrected edge.
-newtype EdgeOracle' s w ue = EdgeOracle' (V.Vector (V.Vector (VertexIdIn w s, ue)))
+newtype EdgeOracle' w s ue = EdgeOracle' (V.Vector (V.Vector (VertexIdIn w s, ue)))
                           deriving (Show,Eq,Functor,Foldable,Traversable)
 
 
 -- | Pattern to get to the underlying vector
 pattern EdgeOracle     :: (V.Vector (V.Vector (VertexIdIn w s, DartData e)))
-                       -> EdgeOracle s w e
+                       -> EdgeOracle w s e
 pattern EdgeOracle out = MkEdgeOracle (EdgeOracle' out)
 {-# COMPLETE EdgeOracle #-}
 
 
-type instance Index   (EdgeOracle' s w e) = (VertexIdIn w s, VertexIdIn w s)
-type instance IxValue (EdgeOracle' s w e) = e
+type instance Index   (EdgeOracle' w s e) = (VertexIdIn w s, VertexIdIn w s)
+type instance IxValue (EdgeOracle' w s e) = e
 
-instance FunctorWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle' s w) where
+instance FunctorWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle' w s) where
   imap f (EdgeOracle' os) = EdgeOracle' $ V.imap (\u -> fmap (g u)) os
     where
       g u (v,x) = (v, f (coerce u, v) x)
 
-instance FoldableWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle' s w) where
+instance FoldableWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle' w s) where
   ifoldMap f (EdgeOracle' os) = ifoldMap (\u -> foldMap (g u)) os
     where
       g u (v,x) = f (coerce u, v) x
 
-instance TraversableWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle' s w) where
+instance TraversableWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle' w s) where
   itraverse f (EdgeOracle' os) = EdgeOracle' <$> itraverse (\u -> traverse (g u)) os
     where
       g u (v,x) = (v,) <$> f (coerce u, v) x
 
-type instance Index   (EdgeOracle s w e) = (VertexIdIn w s, VertexIdIn w s)
-type instance IxValue (EdgeOracle s w e) = e
+type instance Index   (EdgeOracle w s e) = (VertexIdIn w s, VertexIdIn w s)
+type instance IxValue (EdgeOracle w s e) = e
 
-instance FunctorWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle s w) where
+instance FunctorWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle w s) where
   imap f (MkEdgeOracle eo) = MkEdgeOracle $ imap (mapWith f) eo
 
-instance FoldableWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle s w) where
+instance FoldableWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle w s) where
   ifoldMap f (MkEdgeOracle eo) = ifoldMap (foldMapWith f) eo
 
-instance TraversableWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle s w) where
+instance TraversableWithIndex (VertexIdIn w s, VertexIdIn w s) (EdgeOracle w s) where
   itraverse f (MkEdgeOracle eo) =
     MkEdgeOracle <$> itraverse (traverseWith f) eo
 
 -- | Traverse the undirected edges stored in the edge oracle
 itraverseUndirected  :: Applicative f
                      => ((VertexIdIn w s, VertexIdIn w s) -> DartData e -> f (DartData e'))
-                     -> EdgeOracle s w e
-                     -> f (EdgeOracle s w e')
+                     -> EdgeOracle w s e
+                     -> f (EdgeOracle w s e')
 itraverseUndirected f (MkEdgeOracle eo) = MkEdgeOracle <$> itraverse f eo
 
 --------------------------------------------------------------------------------
@@ -145,7 +145,7 @@ traverseWith f (u,v) = \case
 -- pre: No self-loops and no multi-edges!!!
 --
 -- running time: \(O(n)\)
-edgeOracle   :: CPlanarGraph w s v e f -> EdgeOracle s w (DartId s)
+edgeOracle   :: CPlanarGraph w s v e f -> EdgeOracle w s (DartId s)
 edgeOracle g = buildEdgeOracle [ (v, mkAdjacency v <$> incidentEdges v g)
                                | v <- F.toList $ vertices' g
                                ]
@@ -158,7 +158,7 @@ withBothData              :: forall s w e.
                              V.Vector (V.Vector (VertexIdIn w s, e))
                              -- ^ the original adjacency lists that have the data from
                              -- both (u,v) and (v,u).
-                          -> EdgeOracle' s w e -> EdgeOracle s w e
+                          -> EdgeOracle' w s e -> EdgeOracle w s e
 withBothData inAdj oracle = EdgeOracle oOut
   where
     -- in the current oracle, we only have the data from (u,v) edges.
@@ -199,7 +199,7 @@ withBothData inAdj oracle = EdgeOracle oOut
 --
 -- running time: \(O(n)\)
 buildEdgeOracle        :: forall s w e f g. (Foldable f, Foldable g)
-                       => f (VertexIdIn w s, g (VertexIdIn w s, e)) -> EdgeOracle s w e
+                       => f (VertexIdIn w s, g (VertexIdIn w s, e)) -> EdgeOracle w s e
 buildEdgeOracle inAdj' = withBothData inAdj oracle
     -- main idea: maintain a vector with counts; i.e. how many unprocessed
     -- vertices are adjacent to u, and a bit vector with marks to keep track if
@@ -263,7 +263,7 @@ buildEdgeOracle inAdj' = withBothData inAdj oracle
 -- | Test if u and v are connected by an edge.
 --
 -- running time: \(O(1)\)
-hasEdge     :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle s w a -> Bool
+hasEdge     :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle w s a -> Bool
 hasEdge u v = isJust . findEdge u v
 
 
@@ -271,7 +271,7 @@ hasEdge u v = isJust . findEdge u v
 --
 --
 -- running time: \(O(1)\)
-findEdge :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle s w a -> Maybe a
+findEdge :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle w s a -> Maybe a
 findEdge u v (EdgeOracle os) = find' uToV u v <|> find' vToU v u
   where
     -- looks up j in the adjacencylist of i and applies f to the result
@@ -282,5 +282,5 @@ findEdge u v (EdgeOracle os) = find' uToV u v <|> find' vToU v u
 -- corresponding to these vertices.
 --
 -- running time: \(O(1)\)
-findDart :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle s w (DartId s) -> Maybe (DartId s)
+findDart :: VertexIdIn w s -> VertexIdIn w s -> EdgeOracle w s (DartId s) -> Maybe (DartId s)
 findDart = findEdge

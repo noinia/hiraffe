@@ -22,7 +22,7 @@ testEdges = map (\(i,vs) -> (VertexId i, map VertexId vs))
             , (5, [3,4])
             ]
 
-buildEdgeOracle'  :: [(Vertex,[Vertex])] -> EdgeOracle TestG Primal ()
+buildEdgeOracle'  :: [(Vertex,[Vertex])] -> EdgeOracle Primal TestG ()
 buildEdgeOracle' = buildEdgeOracle . map (second $ fmap (,()) )
 
 -- | Flattens an adjacencylist representation into a set of edges
@@ -38,7 +38,7 @@ nonEdges es = flattenEdges . map (second $ f . S.fromList) $ es
     allVs = map fst es
 
 -- | Retains only the edges in the graph
-hasEdges         :: EdgeOracle s w a -> [(VertexIdIn w s , VertexIdIn w s )]
+hasEdges         :: EdgeOracle w s a -> [(VertexIdIn w s , VertexIdIn w s )]
                  -> [(VertexIdIn w s , VertexIdIn w s )]
 oracle `hasEdges` es = filter (\(u,v) -> hasEdge u v oracle) es
 
