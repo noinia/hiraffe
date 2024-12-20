@@ -1,13 +1,13 @@
 --------------------------------------------------------------------------------
 -- |
--- Module      :  Hiraffe.PlanarGraph.Core
+-- Module      :  Hiraffe.PlanarGraph.Connected.Core
 -- Copyright   :  (C) Frank Staals
 -- License     :  see the LICENSE file
 -- Maintainer  :  Frank Staals
 --
 -- Data type for representing connected planar graphs
 --------------------------------------------------------------------------------
-module Hiraffe.PlanarGraph.Core
+module Hiraffe.PlanarGraph.Connected.Core
   ( VertexIdIn(..), VertexId, unVertexId
   , FaceIdIn(..), FaceId
   , DartId

@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 -- |
--- Module      :  Hiraffe.PlanarGraph.Dual
+-- Module      :  Hiraffe.PlanarGraph.Connected.Dual
 -- Copyright   :  (C) Frank Staals
 -- License     :  see the LICENSE file
 -- Maintainer  :  Frank Staals
@@ -8,7 +8,7 @@
 -- Stuff related to the dual of a planar graph
 --
 --------------------------------------------------------------------------------
-module Hiraffe.PlanarGraph.Dual
+module Hiraffe.PlanarGraph.Connected.Dual
   ( faces', faces
   , leftFace
   , nextEdge, prevEdge
@@ -20,7 +20,7 @@ import           Control.Lens hiding ((.=))
 import           Data.Maybe (fromMaybe)
 import           Data.Vector.NonEmpty (NonEmptyVector)
 import qualified Data.Vector.NonEmpty as V
-import           Hiraffe.PlanarGraph.Core
+import           Hiraffe.PlanarGraph.Connected.Core
 import           Hiraffe.PlanarGraph.Dart
 
 --------------------------------------------------------------------------------

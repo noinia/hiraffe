@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 --------------------------------------------------------------------------------
 -- |
--- Module      :  Hiraffe.PlanarGraph.Instance
+-- Module      :  Hiraffe.PlanarGraph.Connected.Instance
 -- Copyright   :  (C) Frank Staals
 -- License     :  see the LICENSE file
 -- Maintainer  :  Frank Staals
@@ -9,7 +9,7 @@
 -- The instances of the various classes for our planar grpah implementation.
 --
 --------------------------------------------------------------------------------
-module Hiraffe.PlanarGraph.Instance
+module Hiraffe.PlanarGraph.Connected.Instance
   (
   ) where
 
@@ -24,10 +24,10 @@ import           Data.Vector.NonEmpty (NonEmptyVector)
 import qualified Data.Vector.NonEmpty as V
 import           Hiraffe.Graph.Class
 import           Hiraffe.PlanarGraph.Class
-import           Hiraffe.PlanarGraph.Core (PlanarGraph, VertexIdIn, FaceIdIn)
-import qualified Hiraffe.PlanarGraph.Core as Core
+import           Hiraffe.PlanarGraph.Connected.Core (PlanarGraph, VertexIdIn, FaceIdIn)
+import qualified Hiraffe.PlanarGraph.Connected.Core as Core
 import qualified Hiraffe.PlanarGraph.Dart as Dart
-import qualified Hiraffe.PlanarGraph.Dual as Dual
+import qualified Hiraffe.PlanarGraph.Connected.Dual as Dual
 import qualified Hiraffe.PlanarGraph.IO as IO
 import           Hiraffe.PlanarGraph.World
 

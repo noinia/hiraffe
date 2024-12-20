@@ -36,10 +36,10 @@ import           HGeometry.Ext
 import           HGeometry.Foldable.Util
 import           HGeometry.Permutation
 import           Hiraffe.PlanarGraph.AdjRep (Face (Face), Gr (Gr), Vtx (Vtx))
-import           Hiraffe.PlanarGraph.Core
+import           Hiraffe.PlanarGraph.Connected.Core
 import qualified Hiraffe.PlanarGraph.Dart as Dart
 import           Hiraffe.PlanarGraph.Dart (Direction(..), Arc(..))
-import           Hiraffe.PlanarGraph.Dual
+import           Hiraffe.PlanarGraph.Connected.Dual
 import           Hiraffe.PlanarGraph.EdgeOracle
 import           Hiraffe.PlanarGraph.World
 

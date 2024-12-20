@@ -11,9 +11,9 @@ author:              Frank Staals
 maintainer:          frank@fstaals.net
 
 tested-with:
-    GHC == 9.6.5
+    GHC == 9.10.1
   , GHC == 9.8.2
-  , GHC == 9.10.1
+  , GHC == 9.6.5
 
 category:            Graphs
 build-type:          Simple
@@ -113,6 +113,7 @@ library
     Hiraffe
     Hiraffe.Graph
     Hiraffe.Graph.Class
+    Hiraffe.Graph.Component
     Hiraffe.AdjacencyListRep
     Hiraffe.AdjacencyListRep.Map
 
@@ -121,20 +122,22 @@ library
     Hiraffe.DFS
 
     Hiraffe.PlanarGraph
-    Hiraffe.PlanarGraph.Class
     Hiraffe.PlanarGraph.AdjRep
-    Hiraffe.PlanarGraph.IO
-    Hiraffe.PlanarGraph.EdgeOracle
+    Hiraffe.PlanarGraph.Component
+    Hiraffe.PlanarGraph.Class
+    Hiraffe.PlanarGraph.Connected
     Hiraffe.PlanarGraph.Dart
+    Hiraffe.PlanarGraph.EdgeOracle
+    Hiraffe.PlanarGraph.IO
 
     Hiraffe.ShortestPath.FloydWarshall
 
     Hiraffe.Tree
 
   other-modules:
-    Hiraffe.PlanarGraph.Core
-    Hiraffe.PlanarGraph.Dual
-    Hiraffe.PlanarGraph.Instance
+    Hiraffe.PlanarGraph.Connected.Core
+    Hiraffe.PlanarGraph.Connected.Dual
+    Hiraffe.PlanarGraph.Connected.Instance
     Hiraffe.PlanarGraph.World
 
 --------------------------------------------------------------------------------

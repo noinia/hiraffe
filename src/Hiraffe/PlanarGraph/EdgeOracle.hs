@@ -33,7 +33,7 @@ import qualified Data.Vector.Generic as GV
 import qualified Data.Vector.Mutable as MV
 import qualified Data.Vector.Unboxed as UV
 import qualified Data.Vector.Unboxed.Mutable as UMV
-import           Hiraffe.PlanarGraph.Core
+import           Hiraffe.PlanarGraph.Connected.Core
 
 --------------------------------------------------------------------------------
 
