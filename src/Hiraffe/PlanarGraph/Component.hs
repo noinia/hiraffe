@@ -30,7 +30,7 @@ import           Data.Kind (Type)
 import qualified Data.Sequence as Seq
 import           GHC.Generics (Generic)
 import           Hiraffe.Graph.Component
-import           Hiraffe.PlanarGraph.Connected (CPlanarGraph, FaceId, VertexId)
+import           Hiraffe.PlanarGraph.Connected (FaceId, VertexId)
 import           Hiraffe.PlanarGraph.Dart (Dart)
 
 --------------------------------------------------------------------------------

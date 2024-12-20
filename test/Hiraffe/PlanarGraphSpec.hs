@@ -40,8 +40,8 @@ instance FromYAML () where
                   _             -> fail "parse () failed"
 
 -- | Report all adjacnecies from g missing in h
-missingAdjacencies     :: CPlanarGraph s w v e f
-                       -> CPlanarGraph s w v' e' f'
+missingAdjacencies     :: CPlanarGraph w s v e f
+                       -> CPlanarGraph w s v' e' f'
                        -> [(VertexIdIn w s , VertexIdIn w s)]
 missingAdjacencies g h = ifoldMapOf vertices f g
   where
@@ -64,7 +64,7 @@ spec = describe "CPlanarGraph spec" $ do
     --   \(gr :: PlanarGraph MyWorld () () ()) ->
     --     (2 * lengthOf edges gr) `shouldBe` lengthOf darts gr
     it "edges half the size of the darts" $
-      let gr :: CPlanarGraph TestG PlanarGraph.Primal Int Text.Text ()
+      let gr :: CPlanarGraph PlanarGraph.Primal TestG Int Text.Text ()
           gr = fromAdjacencyLists testEdges
       in (2 * lengthOf edges gr) `shouldBe` lengthOf darts gr
 
@@ -129,7 +129,7 @@ type STR' s b = STR (SM.Map (VertexId s,VertexId s) Int) Int b
 -- running time: $O(n \log n)$.
 fromAdjacencyListsOld      :: forall s f.(Foldable f, Functor f)
                         => [(VertexId s, f (VertexId s))]
-                        -> CPlanarGraph s PlanarGraph.Primal () () ()
+                        -> CPlanarGraph PlanarGraph.Primal s () () ()
 fromAdjacencyListsOld adjM = planarGraph' . toCycleRep n $ perm
   where
     n    = sum . fmap length $ perm

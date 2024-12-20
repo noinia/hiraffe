@@ -108,7 +108,7 @@ import           Hiraffe.PlanarGraph.World
 --                           , [ (Dart aG Negative, "g-")
 --                             ]
 --                           ]
---     myGraph :: CPlanarGraph String Primal String String String
+--     myGraph :: CPlanarGraph Primal String String String String
 --     myGraph = planarGraph  adjacencies
 --                  & vertexData .~ V.unsafeFromList ["u","v","w","x"]
 --                  & faceData   .~ V.unsafeFromList ["f_3", "f_infty","f_1","f_2"]
@@ -176,15 +176,15 @@ import           Hiraffe.PlanarGraph.World
 
 -- -- | Indexed traversal of all darts in the planar graph.
 -- darts :: forall s w v e e' f.
---          IndexedTraversal (Dart s) (CPlanarGraph s w v e f) (CPlanarGraph s w v e' f) e e'
+--          IndexedTraversal (Dart s) (CPlanarGraph w s v e f) (CPlanarGraph w s v e' f) e e'
 -- darts = conjoined traverse' (itraverse' . indexed)
 --     where
 --       traverse' :: Applicative g
---                 => (e -> g e') -> CPlanarGraph s w v e f -> g (CPlanarGraph s w v e' f)
+--                 => (e -> g e') -> CPlanarGraph w s v e f -> g (CPlanarGraph w s v e' f)
 --       traverse' = Core.dartData.traversed
 --       itraverse' :: Applicative g
 --                  => (Dart s -> e -> g e')
---                  -> CPlanarGraph s w v e f -> g (CPlanarGraph s w v e' f)
+--                  -> CPlanarGraph w s v e f -> g (CPlanarGraph w s v e' f)
 --       itraverse' = Core.traverseDarts
 
 
@@ -195,7 +195,7 @@ import           Hiraffe.PlanarGraph.World
 --
 -- \(O(n\log n)\)
 fromAdjacencyRep             :: (Ord i, Foldable1 f)
-                             => proxy s -> GGraph f i v e -> CPlanarGraph s Primal v e ()
+                             => proxy s -> GGraph f i v e -> CPlanarGraph Primal s v e ()
 fromAdjacencyRep _ (Graph m) = (planarGraph theDarts)&vertexData .~ vtxData
   where
     vtxData = (\(VertexData x _ _) -> x) <$> fromFoldable1 m

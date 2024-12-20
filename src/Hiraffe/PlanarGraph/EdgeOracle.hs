@@ -145,7 +145,7 @@ traverseWith f (u,v) = \case
 -- pre: No self-loops and no multi-edges!!!
 --
 -- running time: \(O(n)\)
-edgeOracle   :: CPlanarGraph s w v e f -> EdgeOracle s w (DartId s)
+edgeOracle   :: CPlanarGraph w s v e f -> EdgeOracle s w (DartId s)
 edgeOracle g = buildEdgeOracle [ (v, mkAdjacency v <$> incidentEdges v g)
                                | v <- F.toList $ vertices' g
                                ]

@@ -82,7 +82,7 @@ import           Hiraffe.PlanarGraph.World
 --                           , [ (Dart aG Negative, "g-")
 --                             ]
 --                           ]
---     myGraph :: CPlanarGraph String Primal String String String
+--     myGraph :: CPlanarGraph Primal String String String String
 --     myGraph = planarGraph adjacencies
 --                    & vertexData .~ V.unsafeFromList ["u","v","w","x"]
 --                    & faceData   .~ V.unsafeFromList ["f_3", "f_infty","f_1","f_2"]
@@ -153,31 +153,31 @@ type DartId s = Dart.Dart s
 --
 -- The orbits in the embedding are assumed to be in counterclockwise
 -- order. Therefore, every dart directly bounds the face to its right.
-data CPlanarGraph s (w :: World) v e f =
+data CPlanarGraph (w :: World) s v e f =
   CPlanarGraph { _embedding   :: Permutation (DartId s)
                , _vertexData  :: NonEmptyVector v
                , _dartData    :: NonEmptyVector e
                -- ^ For every dart (so both negative and positive) we can store some data.
                , _faceData    :: NonEmptyVector f
-               , _dual        :: CPlanarGraph s (DualOf w) f e v
+               , _dual        :: CPlanarGraph (DualOf w) s f e v
                } deriving (Generic)
 
-instance Functor (CPlanarGraph s w v e) where
+instance Functor (CPlanarGraph w s v e) where
   fmap = fmapDefault
-instance Foldable (CPlanarGraph s w v e) where
+instance Foldable (CPlanarGraph w s v e) where
   foldMap f = foldMap f . _faceData
-instance Traversable (CPlanarGraph s w v e) where
+instance Traversable (CPlanarGraph w s v e) where
   traverse f (CPlanarGraph e vs ds fs (CPlanarGraph e' _ ds' fs' _)) =
     (\fsNew -> let g     = CPlanarGraph e  vs    ds  fsNew dualG
                    dualG = CPlanarGraph e' fsNew ds' fs'   (gcastWith proof g)
                    proof = dualDualIdentity :: DualOf (DualOf w) :~: w
                in g
     ) <$> traverse f fs
-instance Bifunctor (CPlanarGraph s w v) where
+instance Bifunctor (CPlanarGraph w s v) where
   bimap f g = runIdentity . bitraverse (Identity . f) (Identity . g)
-instance Bifoldable (CPlanarGraph s w v) where
+instance Bifoldable (CPlanarGraph w s v) where
   bifoldMap f g (CPlanarGraph _ _ ds fs _) = foldMap f ds <> foldMap g fs
-instance Bitraversable (CPlanarGraph s w v) where
+instance Bitraversable (CPlanarGraph w s v) where
   bitraverse f g (CPlanarGraph e vs ds fs (CPlanarGraph e' _ _ fs' _)) =
     (\dsNew fsNew -> let gr    = CPlanarGraph e  vs    dsNew fsNew dualG
                          dualG = CPlanarGraph e' fsNew dsNew fs'   (gcastWith proof gr)
@@ -186,7 +186,7 @@ instance Bitraversable (CPlanarGraph s w v) where
     ) <$> traverse f ds
       <*> traverse g fs
 
-instance (Show v, Show e, Show f) => Show (CPlanarGraph s w v e f) where
+instance (Show v, Show e, Show f) => Show (CPlanarGraph w s v e f) where
   show (CPlanarGraph e v r f _) = unwords [ "CPlanarGraph"
                                           , "embedding =", show e
                                           , ", vertexData =", show v
@@ -195,7 +195,7 @@ instance (Show v, Show e, Show f) => Show (CPlanarGraph s w v e f) where
                                           ]
   -- TODO: this is not a very good show instance; implement showsPrec instead
 
-instance (Eq v, Eq e, Eq f) => Eq (CPlanarGraph s w v e f) where
+instance (Eq v, Eq e, Eq f) => Eq (CPlanarGraph w s v e f) where
   (CPlanarGraph e v r f _) == (CPlanarGraph e' v' r' f' _) =  e == e' && v == v'
                                                          && r == r' && f == f'
   {-# INLINE (==) #-}
@@ -206,40 +206,40 @@ instance (Eq v, Eq e, Eq f) => Eq (CPlanarGraph s w v e f) where
 
 -- | Get the embedding, represented as a permutation of the darts, of this
 -- graph.
-embedding :: Getter (CPlanarGraph s w v e f) (Permutation (DartId s))
+embedding :: Getter (CPlanarGraph w s v e f) (Permutation (DartId s))
 embedding = to _embedding
 
 -- | \(O(1)\) access, \( O(n) \) update.
-vertexData :: Lens (CPlanarGraph s w v e f) (CPlanarGraph s w v' e f)
+vertexData :: Lens (CPlanarGraph w s v e f) (CPlanarGraph w s v' e f)
                    (NonEmptyVector v) (NonEmptyVector v')
 vertexData = lens _vertexData (\g vD -> updateData (const vD) id id g)
 
 -- | \(O(1)\) access, \( O(n) \) update.
-dartData :: Lens (CPlanarGraph s w v e f) (CPlanarGraph s w v e' f)
+dartData :: Lens (CPlanarGraph w s v e f) (CPlanarGraph w s v e' f)
                     (NonEmptyVector e) (NonEmptyVector e')
 dartData = lens _dartData (\g dD -> updateData id (const dD) id g)
 -- FIXME rename this just to dartData
 
 -- | \(O(1)\) access, \( O(n) \) update.
-faceData :: Lens (CPlanarGraph s w v e f) (CPlanarGraph s w v e f')
+faceData :: Lens (CPlanarGraph w s v e f) (CPlanarGraph w s v e f')
                  (NonEmptyVector f) (NonEmptyVector f')
 faceData = lens _faceData (\g fD -> updateData id id (const fD) g)
 
 -- | Get the dual graph of this graph.
-dual :: Getter (CPlanarGraph s w v e f) (CPlanarGraph s (DualOf w) f e v)
+dual :: Getter (CPlanarGraph w s v e f) (CPlanarGraph (DualOf w) s f e v)
 dual = to _dual
 
 -- | lens to access the vector with DartId s with their data. This function makes sure that
 -- if you somehow reorder the edge data it is assigned correctly again.
 --
 -- \(O(1)\) access, \( O(n) \) update.
-dartVector :: Lens (CPlanarGraph s w v e f) (CPlanarGraph s w v e' f)
+dartVector :: Lens (CPlanarGraph w s v e f) (CPlanarGraph w s v e' f)
                    (NonEmptyVector (DartId s, e))  (NonEmptyVector (DartId s, e'))
 dartVector = lens darts (\g dD -> updateData id (const $ reorderEdgeData dD) id g)
 {-# INLINE dartVector #-}
 
 -- -- | edgeData is just an alias for 'dartVector'
--- edgeData :: Lens (CPlanarGraph s w v e f) (CPlanarGraph s w v e' f)
+-- edgeData :: Lens (CPlanarGraph w s v e f) (CPlanarGraph w s v e' f)
 --                  (V.Vector (DartId s, e)) (V.Vector (DartId s, e'))
 -- edgeData = dartVector
 
@@ -249,8 +249,8 @@ updateData :: forall s w v e f v' e' f'
            .  (NonEmptyVector v -> NonEmptyVector v')
            -> (NonEmptyVector e -> NonEmptyVector e')
            -> (NonEmptyVector f -> NonEmptyVector f')
-           -> CPlanarGraph s w v  e  f
-           -> CPlanarGraph s w v' e' f'
+           -> CPlanarGraph w s v  e  f
+           -> CPlanarGraph w s v' e' f'
 updateData = gcastWith proof updateData'
   where
     proof :: DualOf (DualOf w) :~: w
@@ -261,8 +261,8 @@ updateData'  :: (DualOf (DualOf w) ~ w)
              => (NonEmptyVector v -> NonEmptyVector v')
              -> (NonEmptyVector e -> NonEmptyVector e')
              -> (NonEmptyVector f -> NonEmptyVector f')
-             -> CPlanarGraph s w v  e  f
-             -> CPlanarGraph s w v' e' f'
+             -> CPlanarGraph w s v  e  f
+             -> CPlanarGraph w s v' e' f'
 updateData' fv fe ff (CPlanarGraph em vtxData dData fData dg) = g'
   where
     vtxData' = fv vtxData
@@ -298,8 +298,8 @@ reorderEdgeData ds = V.unsafeCreate $ do
 -- (VertexId 3,"x")
 traverseVertices   :: Apply m
                    => (VertexIdIn w s -> v -> m v')
-                   -> CPlanarGraph s w v e f
-                   -> m (CPlanarGraph s w v' e f)
+                   -> CPlanarGraph w s v e f
+                   -> m (CPlanarGraph w s v' e f)
 traverseVertices f = itraverseOf (vertexData.traversed1) (f . VertexId)
 
 -- | Traverses the darts
@@ -319,8 +319,8 @@ traverseVertices f = itraverseOf (vertexData.traversed1) (f . VertexId)
 -- (Dart (Arc 5) -1,"g-")
 traverseDarts   :: Apply m
                 => (DartId s -> e -> m e')
-                -> CPlanarGraph s w v e f
-                -> m (CPlanarGraph s w v e' f)
+                -> CPlanarGraph w s v e f
+                -> m (CPlanarGraph w s v e' f)
 traverseDarts f = itraverseOf (dartData.traversed1) (f . toEnum)
 
 -- | Traverses the faces
@@ -332,8 +332,8 @@ traverseDarts f = itraverseOf (dartData.traversed1) (f . toEnum)
 -- (FaceId 3,"f_2")
 traverseFaces   :: Apply m
                 => (FaceIdIn w s -> f -> m f')
-                -> CPlanarGraph s w v e f
-                -> m (CPlanarGraph s w v e f')
+                -> CPlanarGraph w s v e f
+                -> m (CPlanarGraph w s v e f')
 traverseFaces f = itraverseOf (faceData.traversed1) (\i -> f (FaceId $ VertexId i))
 
 --------------------------------------------------------------------------------
@@ -342,7 +342,7 @@ traverseFaces f = itraverseOf (faceData.traversed1) (\i -> f (FaceId $ VertexId 
 -- | Construct a planar graph
 --
 -- running time: \(O(n)\).
-planarGraph'      :: Permutation (DartId s) -> CPlanarGraph s w () () ()
+planarGraph'      :: Permutation (DartId s) -> CPlanarGraph w s () () ()
 planarGraph' perm = pg
   where
     pg = CPlanarGraph perm vData eData fData (computeDual pg)
@@ -360,7 +360,7 @@ planarGraph' perm = pg
 -- vertex.
 --
 -- running time: \(O(n)\).
-planarGraph    :: NonEmpty (NonEmpty (DartId s,e)) -> CPlanarGraph s Primal () e ()
+planarGraph    :: NonEmpty (NonEmpty (DartId s,e)) -> CPlanarGraph Primal s () e ()
 planarGraph ds = planarGraph' perm & dartVector .~ V.fromNonEmpty (sconcat ds)
   where
     n     = sum . fmap length $ ds
@@ -375,7 +375,7 @@ planarGraph ds = planarGraph' perm & dartVector .~ V.fromNonEmpty (sconcat ds)
 -- multiple darts between a pair of edges they occur multiple times.
 --
 -- running time: \(O(n)\)
-toAdjacencyLists    :: CPlanarGraph s w v e f
+toAdjacencyLists    :: CPlanarGraph w s v e f
                     -> NonEmpty (VertexIdIn w s, NonEmptyVector (VertexIdIn w s))
 toAdjacencyLists pg = fmap (\u -> (u,neighboursOf u pg)) . toNonEmpty . vertices' $ pg
 -- TODO: something weird happens when we have self-loops here.
@@ -388,28 +388,28 @@ toAdjacencyLists pg = fmap (\u -> (u,neighboursOf u pg)) . toNonEmpty . vertices
 --
 -- >>> numVertices myGraph
 -- 4
-numVertices :: CPlanarGraph s w v e f -> Int
+numVertices :: CPlanarGraph w s v e f -> Int
 numVertices g = V.length (g^.embedding.orbits)
 
 -- | Get the number of Darts
 --
 -- >>> numDarts myGraph
 -- 12
-numDarts :: CPlanarGraph s w v e f -> Int
+numDarts :: CPlanarGraph w s v e f -> Int
 numDarts g = size (g^.embedding)
 
 -- | Get the number of Edges
 --
 -- >>> numEdges myGraph
 -- 6
-numEdges :: CPlanarGraph s w v e f -> Int
+numEdges :: CPlanarGraph w s v e f -> Int
 numEdges g = numDarts g `div` 2
 
 -- | Get the number of faces
 --
 -- >>> numFaces myGraph
 -- 4
-numFaces   :: CPlanarGraph s w v e f -> Int
+numFaces   :: CPlanarGraph w s v e f -> Int
 numFaces g = numEdges g - numVertices g + 2
 
 
@@ -417,20 +417,20 @@ numFaces g = numEdges g - numVertices g + 2
 --
 -- >>> vertices' myGraph
 -- [VertexId 0,VertexId 1,VertexId 2,VertexId 3]
-vertices'   :: CPlanarGraph s w v e f -> NonEmptyVector (VertexIdIn w s)
+vertices'   :: CPlanarGraph w s v e f -> NonEmptyVector (VertexIdIn w s)
 vertices' g = VertexId <$> V.enumFromN1 0 (V.length (g^.embedding.orbits))
 
 -- | Enumerate all vertices, together with their vertex data
 
 -- >>> vertices myGraph
 -- [(VertexId 0,()),(VertexId 1,()),(VertexId 2,()),(VertexId 3,())]
-vertices   :: CPlanarGraph s w v e f -> NonEmptyVector (VertexIdIn w s, v)
+vertices   :: CPlanarGraph w s v e f -> NonEmptyVector (VertexIdIn w s, v)
 vertices g = V.zip (vertices' g) (g^.vertexData)
 
 
 
 -- | Enumerate all darts
-darts' :: CPlanarGraph s w v e f -> NonEmptyVector (DartId s)
+darts' :: CPlanarGraph w s v e f -> NonEmptyVector (DartId s)
 darts' = elems . _embedding
 
 -- | Get all darts together with their data
@@ -448,11 +448,11 @@ darts' = elems . _embedding
 -- (Dart (Arc 3) +1,"d+")
 -- (Dart (Arc 2) -1,"c-")
 -- (Dart (Arc 5) -1,"g-")
-darts   :: CPlanarGraph s w v e f -> NonEmptyVector (DartId s, e)
+darts   :: CPlanarGraph w s v e f -> NonEmptyVector (DartId s, e)
 darts g = (\d -> (d,g^.dataOf d)) <$> darts' g
 
 -- | Enumerate all edges. We report only the Positive darts
-edges' :: CPlanarGraph s w v e f -> NonEmptyVector (DartId s)
+edges' :: CPlanarGraph w s v e f -> NonEmptyVector (DartId s)
 edges' = V.unsafeFromVector . V.filter Dart.isPositive . darts'
 
 -- | Enumerate all edges with their edge data. We report only the Positive
@@ -465,7 +465,7 @@ edges' = V.unsafeFromVector . V.filter Dart.isPositive . darts'
 -- (Dart (Arc 5) +1,"g+")
 -- (Dart (Arc 4) +1,"e+")
 -- (Dart (Arc 3) +1,"d+")
-edges :: CPlanarGraph s w v e f -> NonEmptyVector (DartId s, e)
+edges :: CPlanarGraph w s v e f -> NonEmptyVector (DartId s, e)
 edges = V.unsafeFromVector . V.filter (Dart.isPositive . fst) . darts
 
 
@@ -475,7 +475,7 @@ edges = V.unsafeFromVector . V.filter (Dart.isPositive . fst) . darts
 -- (VertexId 2,"w")
 --
 -- running time: \(O(1)\)
-tailOf     :: DartId s -> CPlanarGraph s w v e f -> VertexIdIn w s
+tailOf     :: DartId s -> CPlanarGraph w s v e f -> VertexIdIn w s
 tailOf d g = VertexId . fst $ lookupIdx (g^.embedding) d
 
 -- | The vertex this dart is heading in to
@@ -484,7 +484,7 @@ tailOf d g = VertexId . fst $ lookupIdx (g^.embedding) d
 -- (VertexId 1,"v")
 --
 -- running time: \(O(1)\)
-headOf   :: DartId s -> CPlanarGraph s w v e f -> VertexIdIn w s
+headOf   :: DartId s -> CPlanarGraph w s v e f -> VertexIdIn w s
 headOf d = tailOf (Dart.twin d)
 
 -- | endPoints d g = (tailOf d g, headOf d g)
@@ -493,7 +493,7 @@ headOf d = tailOf (Dart.twin d)
 -- (VertexId 2,VertexId 1)
 --
 -- running time: \(O(1)\)
-endPoints :: DartId s -> CPlanarGraph s w v e f -> (VertexIdIn w s, VertexIdIn w s)
+endPoints :: DartId s -> CPlanarGraph w s v e f -> (VertexIdIn w s, VertexIdIn w s)
 endPoints d g = (tailOf d g, headOf d g)
 
 -- | All edges incident to vertex v, in counterclockwise order around v.
@@ -509,7 +509,7 @@ endPoints d g = (tailOf d g, headOf d g)
 -- (Dart (Arc 5) -1,"g-")
 --
 -- running time: \(O(k)\), where \(k\) is the output size
-incidentEdges                :: VertexIdIn w s -> CPlanarGraph s w v e f
+incidentEdges                :: VertexIdIn w s -> CPlanarGraph w s v e f
                              -> NonEmptyVector (DartId s)
 incidentEdges (VertexId v) g = g^?!embedding.orbits.ix v
 
@@ -525,7 +525,7 @@ incidentEdges (VertexId v) g = g^?!embedding.orbits.ix v
 -- (Dart (Arc 5) -1,"g-")
 --
 -- running time: \(O(k)\), where \(k) is the total number of incident edges of v
-incomingEdges     :: VertexIdIn w s -> CPlanarGraph s w v e f -> NonEmptyVector (DartId s)
+incomingEdges     :: VertexIdIn w s -> CPlanarGraph w s v e f -> NonEmptyVector (DartId s)
 incomingEdges v g = orient <$> incidentEdges v g
   where
     orient d = if headOf d g == v then d else Dart.twin d
@@ -534,7 +534,7 @@ incomingEdges v g = orient <$> incidentEdges v g
 -- (i.e. pointing away from v) in counterclockwise order around v.
 --
 -- running time: \(O(k)\), where \(k) is the total number of incident edges of v
-outgoingEdges     :: VertexIdIn w s -> CPlanarGraph s w v e f -> NonEmptyVector (DartId s)
+outgoingEdges     :: VertexIdIn w s -> CPlanarGraph w s v e f -> NonEmptyVector (DartId s)
 outgoingEdges v g = orient <$> incidentEdges v g
   where
     orient d = if tailOf d g == v then d else Dart.twin d
@@ -552,7 +552,7 @@ outgoingEdges v g = orient <$> incidentEdges v g
 -- (VertexId 1,"v")
 --
 -- running time: \(O(k)\), where \(k\) is the output size
-neighboursOf     :: VertexIdIn w s -> CPlanarGraph s w v e f -> NonEmptyVector (VertexIdIn w s)
+neighboursOf     :: VertexIdIn w s -> CPlanarGraph w s v e f -> NonEmptyVector (VertexIdIn w s)
 neighboursOf v g = flip tailOf g <$> incomingEdges v g
 
 -- | Given a dart d that points into some vertex v, report the next dart in the
@@ -566,7 +566,7 @@ neighboursOf v g = flip tailOf g <$> incomingEdges v g
 -- (Dart (Arc 3) -1,"d-")
 --
 -- running time: \(O(1)\)
-nextIncidentEdge   :: DartId s -> CPlanarGraph s w v e f -> DartId s
+nextIncidentEdge   :: DartId s -> CPlanarGraph w s v e f -> DartId s
 nextIncidentEdge d = nextIncidentEdgeFrom (Dart.twin d)
 
 -- | Given a dart d that points into some vertex v, report the previous dart in the
@@ -578,7 +578,7 @@ nextIncidentEdge d = nextIncidentEdgeFrom (Dart.twin d)
 -- (Dart (Arc 1) -1,"b-")
 --
 -- running time: \(O(1)\)
-prevIncidentEdge   :: DartId s -> CPlanarGraph s w v e f -> DartId s
+prevIncidentEdge   :: DartId s -> CPlanarGraph w s v e f -> DartId s
 prevIncidentEdge d = prevIncidentEdgeFrom (Dart.twin d)
 
 
@@ -593,7 +593,7 @@ prevIncidentEdge d = prevIncidentEdgeFrom (Dart.twin d)
 -- (Dart (Arc 0) +1,"a+")
 --
 -- running time: \(O(1)\)
-nextIncidentEdgeFrom     :: DartId s -> CPlanarGraph s w v e f -> DartId s
+nextIncidentEdgeFrom     :: DartId s -> CPlanarGraph w s v e f -> DartId s
 nextIncidentEdgeFrom d g = let perm  = g^.embedding
                                (i,j) = lookupIdx perm d
                            in next (perm^?!orbits.ix i) j
@@ -610,7 +610,7 @@ nextIncidentEdgeFrom d g = let perm  = g^.embedding
 -- (Dart (Arc 2) +1,"c+")
 --
 -- running time: \(O(1)\)
-prevIncidentEdgeFrom     :: DartId s -> CPlanarGraph s w v e f -> DartId s
+prevIncidentEdgeFrom     :: DartId s -> CPlanarGraph w s v e f -> DartId s
 prevIncidentEdgeFrom d g = let perm  = g^.embedding
                                (i,j) = lookupIdx perm d
                            in previous (perm^?!orbits.ix i) j
@@ -627,30 +627,30 @@ class HasDataOf g i where
   -- running time: \(O(1)\) to read the data, \(O(n)\) to write it.
   dataOf :: i -> IndexedLens' i g (DataOf g i)
 
-instance HasDataOf (CPlanarGraph s w v e f) (VertexIdIn w s) where
-  type DataOf (CPlanarGraph s w v e f) (VertexIdIn w s) = v
+instance HasDataOf (CPlanarGraph w s v e f) (VertexIdIn w s) where
+  type DataOf (CPlanarGraph w s v e f) (VertexIdIn w s) = v
   dataOf vi@(VertexId i) = reindexed (const vi) $ vertexData.singular (iix i)
 
-instance HasDataOf (CPlanarGraph s w v e f) (DartId s) where
-  type DataOf (CPlanarGraph s w v e f) (DartId s) = e
+instance HasDataOf (CPlanarGraph w s v e f) (DartId s) where
+  type DataOf (CPlanarGraph w s v e f) (DartId s) = e
   dataOf d = reindexed (const d) $ dartData.singular (iix $ fromEnum d)
 
-instance HasDataOf (CPlanarGraph s w v e f) (FaceIdIn w s) where
-  type DataOf (CPlanarGraph s w v e f) (FaceIdIn w s) = f
+instance HasDataOf (CPlanarGraph w s v e f) (FaceIdIn w s) where
+  type DataOf (CPlanarGraph w s v e f) (FaceIdIn w s) = f
   dataOf fi@(FaceId (VertexId i)) = reindexed (const fi) $ faceData.singular (iix i)
 
 -- | Data corresponding to the endpoints of the dart
 --
 -- >>> myGraph^.endPointDataOf (Dart (Arc 3) Positive)
 -- ("w","v")
-endPointDataOf   :: DartId s -> Getter (CPlanarGraph s w v e f) (v,v)
+endPointDataOf   :: DartId s -> Getter (CPlanarGraph w s v e f) (v,v)
 endPointDataOf d = to $ endPointData d
 
 
 -- | Data corresponding to the endpoints of the dart
 --
 -- running time: \(O(1)\)
-endPointData     :: DartId s -> CPlanarGraph s w v e f -> (v,v)
+endPointData     :: DartId s -> CPlanarGraph w s v e f -> (v,v)
 endPointData d g = let (u,v) = endPoints d g in (g^.dataOf u, g^.dataOf v)
 
 
@@ -671,7 +671,7 @@ endPointData d g = let (u,v) = endPoints d g in (g^.dataOf u, g^.dataOf v)
 -- True
 --
 -- running time: \(O(n)\).
-computeDual :: forall s w v e f. CPlanarGraph s w v e f -> CPlanarGraph s (DualOf w) f e v
+computeDual :: forall s w v e f. CPlanarGraph w s v e f -> CPlanarGraph (DualOf w) s f e v
 computeDual = gcastWith proof computeDual'
   where
     proof :: DualOf (DualOf w) :~: w
@@ -679,7 +679,7 @@ computeDual = gcastWith proof computeDual'
 
 -- | Does the actual work for dualGraph
 computeDual'   :: (DualOf (DualOf w) ~ w)
-               => CPlanarGraph s w v e f -> CPlanarGraph s (DualOf w) f e v
+               => CPlanarGraph w s v e f -> CPlanarGraph (DualOf w) s f e v
 computeDual' g = dualG
   where
     perm  = g^.embedding
@@ -693,7 +693,7 @@ computeDual' g = dualG
 
 --------------------------------------------------------------------------------
 
--- myGraph :: PlanarGraph () Primal String String String
+-- myGraph :: PlanarGraph Primal () String String String
 -- myGraph = planarGraph [ [ (Dart aA Negative, "a-")
 --                             , (Dart aC Positive, "c+")
 --                             , (Dart aB Positive, "b+")
