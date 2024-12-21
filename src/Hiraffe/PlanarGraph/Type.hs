@@ -10,10 +10,9 @@
 --------------------------------------------------------------------------------
 module Hiraffe.PlanarGraph.Type
   ( PlanarGraph
-  , PlanarGraphF
-
+  , PlanarGraphF(..)
+  , Component
   ) where
-
 
 import           Control.Lens hiding (holes, holesOf, (.=))
 import           Control.Monad.State
@@ -21,10 +20,15 @@ import           Data.Bifunctor (first, second)
 import           Data.Coerce
 import qualified Data.Foldable as F
 import           Data.Foldable1
+import           Data.Functor.Apply (Apply)
+import qualified Data.Functor.Apply as Apply
 import           Data.Kind (Type)
 import           Data.List.NonEmpty (NonEmpty(..))
+import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
 import qualified Data.Map.NonEmpty as NEMap
+import           Data.Maybe (fromMaybe)
+import           Data.Semigroup.Traversable
 import qualified Data.Sequence as Seq
 import qualified Data.Set as Set
 import qualified Data.Vector.Mutable as MV
@@ -42,13 +46,24 @@ import           Hiraffe.PlanarGraph.Connected ( CPlanarGraph
                                                , VertexIdIn(..), VertexId
                                                , FaceIdIn(..), FaceId
                                                )
+import qualified Hiraffe.PlanarGraph.Connected.Core as Core
 import           Hiraffe.PlanarGraph.Connected.Dual
 import           Hiraffe.PlanarGraph.Connected.Instance ()
 import qualified Hiraffe.PlanarGraph.Dart as Dart
 import           Hiraffe.PlanarGraph.IO
 import           Hiraffe.PlanarGraph.World
 
+
 --------------------------------------------------------------------------------
+
+-- | A connected component.
+--
+-- For every face f, and every hole in this face, the facedata points to a dart
+-- d on the hole s.t. this dart has the face f on its left. i.e.
+-- leftFace d = f
+type Component (planarGraph :: Type -> Type -> Type -> Type -> Type) (s :: k) =
+  planarGraph (Wrap s) (VertexId s) (Dart.Dart s) (FaceId s)
+
 
 -- | A PlanarGraph is essentially a bunch of connected Planargraphs; one for every
 -- connected component. These graphs store the global ID's (darts, vertexId's, faceId's)
@@ -156,10 +171,46 @@ instance HasEdges' (PlanarGraphF pg s v e f) where
   numEdges = (`div` 2) . NonEmptyV.length . _rawDartData
 
 instance HasEdges (PlanarGraphF pg s v e f) (PlanarGraphF pg s v e' f)  where
-  -- edges = undefined
-    -- reindexed (VertexId :: Int -> VertexIx (PlanarGraphF pg s v e f))
-    --        $ rawDartData .> traversed1 <. dataVal
-  -- TODO: we need some careful filtering like in planarGraph here as well
+  edges = itraverse'.indexed
+    where
+      itraverse' f = Apply.unwrapApplicative
+                   . itraverse1' (\d e -> Apply.WrapApplicative $ f d e)
+
+      itraverse1'      :: Apply g
+                       => (Dart.Dart s -> e -> g e')
+                       -> PlanarGraphF pg s v e f -> g (PlanarGraphF pg s v e' f)
+      itraverse1' f pg = pg&rawDartData %%~ itraverseEdges1 f
+
+-- | itraverse the edges; i.e. makes sure to only apply our function to the positive darts.
+itraverseEdges1     :: forall g s a e e'. Apply g
+                    => (Dart.Dart s -> e -> g e')
+                    -> NonEmptyVector (Raw s a e)
+                    -> g (NonEmptyVector (Raw s a e'))
+itraverseEdges1 f v = copyPositives <$> gv'
+  where
+    -- We collect only the positive darts, and apply the given function on them. We tag
+    -- the result with the dart they correspond to (or rather, the corresponding index)
+    gv' :: g (NonEmpty (Int, e'))
+    gv' = sequence1 . NonEmpty.fromList $ NonEmptyV.ifoldr applyF [] v
+    applyF i raw xs = let d = toEnum i
+                      in if Dart.isPositive d
+                         then ((i,) <$> f d (raw^.dataVal)) : xs
+                         else xs
+
+    -- We simultaneously scan through the original vector and the result of processing the
+    -- positive darts. For positive darts we simply take the value as computed before. For
+    -- negative darts, we lookup the value that we computed for their corresponding twin.
+    -- i.e. by tying the knot.
+    copyPositives           :: NonEmpty.NonEmpty (Int, e')
+                            -> NonEmptyVector (Raw s a e')
+    copyPositives positives = let (_,v') = imapAccumL (setDartValue v') (F.toList positives) v
+                              in v'
+
+    setDartValue v' i xs raw = case xs of
+        (j,e') : xs' | i == j -> (xs', raw&dataVal .~ e')
+        _                     -> let i' = fromEnum . Dart.twin . toEnum $ i
+                                 in (xs, raw&dataVal .~ (v' NonEmptyV.! i')^.dataVal)
+
 
 instance HasFaces' (PlanarGraphF pg s v e f) where
   type Face   (PlanarGraphF pg s v e f) = f
@@ -190,8 +241,7 @@ type IsComponent pg s = ( DartIx   (Component pg s) ~ Dart.Dart (Wrap' s)
 
                         )
 
-instance ( DiGraph_ (Component pg s)
-         , BidirGraph_ (Component pg s)
+instance ( BidirGraph_ (pg (Wrap' s) (VertexId s) (Dart.Dart s) (FaceId s))
          , IsComponent pg s
          ) => DiGraph_ (PlanarGraphF pg s v e f) where
   -- diGraphFromAdjacencyLists =
@@ -219,11 +269,13 @@ instance ( DiGraph_ (Component pg s)
 
   twinDartOf d = twinOf d . to Just
 
-instance ( BidirGraph_ (Component pg s)
-         , IsComponent pg s
+instance ( IsComponent pg s
+         , BidirGraph_ (pg (Wrap' s) (VertexId s) (Dart.Dart s) (FaceId s))
          ) => BidirGraph_ (PlanarGraphF pg s v e f) where
   twinOf d = to $ const (Dart.twin d)
   getPositiveDart _ = id
+{-
+
 
 -- TODO:  Component's should somehow link/remember how it gets its v values.
 instance ( Graph_ (Component pg s)
@@ -253,7 +305,7 @@ instance ( Graph_ (Component pg s)
 
 -- instance PlanarGraphF component_ (PlanarGraphF component  s v e f) v where
 
-
+-}
 
 
 --------------------------------------------------------------------------------
@@ -266,50 +318,4 @@ fromConnected   :: forall s v e f. (Ord r, Num r)
                 => CPlanarGraph w s v e f -> PlanarGraph w s v e f
 fromConnected g = fromConnected' g (PG.outerFaceDart g)
 
-
-
-{- HLINT ignore fromConnected' -}
--- | Given a (connected) PlanarGraph and a dart that has the outerface on its left
--- | Constructs a planarsubdivision
---
--- runningTime: \(O(n)\)
-fromConnected'        :: forall s v e f.
-                      pg
-
-                         CPlanarGraph w s v e f -> Dart s
-                       -> PlanarGraph w s v e f
-fromConnected' g ofD = PlanarGraph (V.singleton . coerce $ g') vd ed fd
-  where
-    c = ComponentId 0
-    vd = V.imap    (\i v   -> Raw c (VertexId i) v)                   $ g^.PG.vertexData
-    ed = V.zipWith (\d dd  -> Raw c d dd) allDarts''                  $ g^.PG.rawDartData
-    fd = V.imap (\i f      -> RawFace (mkFaceIdx i) (mkFaceData i f)) $ g^.PG.faceData
-
-    g' :: PlaneGraph s (VertexId' s) (Dart s) (FaceId' s) r
-    g' = g&PG.faceData    %~ V.imap (\i _ -> mkFaceId $ flipID i)
-          &PG.vertexData  %~ V.imap (\i _ -> VertexId i)
-          &PG.rawDartData .~ allDarts''
-
-    allDarts'' :: forall s'. NonEmptyVector (Dart s')
-    allDarts'' = allDarts' (PG.numDarts g)
-
-    -- make sure the outerFaceId is 0
-    oF@(FaceId (VertexId of')) = PG.leftFace ofD g
-
-    mkFaceIdx i | i == 0    = Nothing
-                | otherwise = Just (c,mkFaceId . flipID $ i)
-
-    -- at index i we are storing the outerface
-    mkFaceData                 :: Int -> f -> FaceData (Dart s) f
-    mkFaceData i f | i == 0    = FaceData (Seq.singleton ofD) (g^.dataOf oF)
-                   | i == of'  = FaceData mempty              (g^.dataOf (mkFaceId @s 0))
-                   | otherwise = FaceData mempty              f
-
-    mkFaceId :: forall s'. Int -> FaceId' s'
-    mkFaceId = FaceId . VertexId
-
-    flipID i | i == 0    = of'
-             | i == of'  = 0
-             | otherwise = i
-
--}
+ -}

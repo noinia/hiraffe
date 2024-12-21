@@ -1,3 +1,4 @@
+{-# LANGUAGE RoleAnnotations  #-}
 --------------------------------------------------------------------------------
 -- |
 -- Module      :  Hiraffe.PlanarGraph.Connected.Core
@@ -153,7 +154,7 @@ type DartId s = Dart.Dart s
 --
 -- The orbits in the embedding are assumed to be in counterclockwise
 -- order. Therefore, every dart directly bounds the face to its right.
-data CPlanarGraph (w :: World) s v e f =
+data CPlanarGraph (w :: World) (s :: k) v e f =
   CPlanarGraph { _embedding   :: Permutation (DartId s)
                , _vertexData  :: NonEmptyVector v
                , _dartData    :: NonEmptyVector e
@@ -161,6 +162,8 @@ data CPlanarGraph (w :: World) s v e f =
                , _faceData    :: NonEmptyVector f
                , _dual        :: CPlanarGraph (DualOf w) s f e v
                } deriving (Generic)
+type role CPlanarGraph phantom phantom representational representational representational
+
 
 instance Functor (CPlanarGraph w s v e) where
   fmap = fmapDefault
@@ -216,9 +219,8 @@ vertexData = lens _vertexData (\g vD -> updateData (const vD) id id g)
 
 -- | \(O(1)\) access, \( O(n) \) update.
 dartData :: Lens (CPlanarGraph w s v e f) (CPlanarGraph w s v e' f)
-                    (NonEmptyVector e) (NonEmptyVector e')
+                 (NonEmptyVector e)       (NonEmptyVector e')
 dartData = lens _dartData (\g dD -> updateData id (const dD) id g)
--- FIXME rename this just to dartData
 
 -- | \(O(1)\) access, \( O(n) \) update.
 faceData :: Lens (CPlanarGraph w s v e f) (CPlanarGraph w s v e f')

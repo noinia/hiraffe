@@ -140,6 +140,7 @@ library
     Hiraffe.PlanarGraph.Connected.Instance
     Hiraffe.PlanarGraph.World
     Hiraffe.PlanarGraph.Type
+    Hiraffe.PlanarGraph.Build
 
 --------------------------------------------------------------------------------
 -- * Helper Libraries
