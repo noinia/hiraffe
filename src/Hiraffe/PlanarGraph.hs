@@ -11,8 +11,10 @@ module Hiraffe.PlanarGraph
   ( module Hiraffe.PlanarGraph.Connected
   , module Hiraffe.PlanarGraph.Class
   , module Hiraffe.Graph.Class
+  , module Hiraffe.PlanarGraph.Type
   ) where
 
-import Hiraffe.PlanarGraph.Connected
-import Hiraffe.PlanarGraph.Class
 import Hiraffe.Graph.Class
+import Hiraffe.PlanarGraph.Class
+import Hiraffe.PlanarGraph.Connected
+import Hiraffe.PlanarGraph.Type
