@@ -179,14 +179,6 @@ linkNegatives g = g&darts %@~ \(u,v) x -> if u <= v then fromJust' x
 
 
 instance HasFromFoldable f => DiGraph_ (GGraph f v e) where
-  diGraphFromAdjacencyLists =
-    Graph . foldMap1 (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
-                                     in IntMap.singleton i vd
-                     )
-    where
-      mkNeighMap   = foldMap (uncurry IntMap.singleton)
-      mkNeighOrder = fromList . map fst . F.toList
-
   endPoints _ = id
   outNeighboursOf u = conjoined asFold asIFold
     where
@@ -198,6 +190,16 @@ instance HasFromFoldable f => DiGraph_ (GGraph f v e) where
   twinDartOf (u,v) = to $ \g -> g^?dartAt (v,u).asIndex
     -- just look up the dart v,u
 
+instance HasFromFoldable f => ConstructableDiGraph_ (GGraph f v e) where
+  diGraphFromAdjacencyLists =
+    Graph . foldMap1 (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
+                                     in IntMap.singleton i vd
+                     )
+    where
+      mkNeighMap   = foldMap (uncurry IntMap.singleton)
+      mkNeighOrder = fromList . map fst . F.toList
+
+
 
 instance HasFromFoldable f => BidirGraph_ (GGraph f v e) where
   twinOf (u,v) = to $ const (v,u)
@@ -206,14 +208,6 @@ instance HasFromFoldable f => BidirGraph_ (GGraph f v e) where
   -- we use the dart oriented from small to large as the positive one.
 
 instance HasFromFoldable f => Graph_ (GGraph f v e) where
-  fromAdjacencyLists =
-    Graph . foldMap (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
-                                    in IntMap.singleton i vd
-                    )
-    where
-      mkNeighMap   = foldMap (uncurry IntMap.singleton)
-      mkNeighOrder = fromList . map fst . F.toList
-
   neighboursOf u = conjoined asFold asIFold
     where
       asFold  :: Fold (GGraph f v e) v
@@ -224,10 +218,18 @@ instance HasFromFoldable f => Graph_ (GGraph f v e) where
   incidentEdgesOf u = reindexed (u,) (incidentEdges' u)
 
 
-
 -- | A traversal of the edges incident to vertex u as an intexed by the other vertex
 incidentEdges'  :: VertexIx (GGraph f v e)
                 -> IndexedTraversal' (VertexIx (GGraph f v e)) (GGraph f v e) e
 -- incidentEdges'  :: (Indexable (VertexIx (GGraph f v e)) p, Applicative g)
 --                 => VertexIx (GGraph f v e) -> p e (g e) -> GGraph f v e -> g (GGraph f v e)
 incidentEdges' u = vertexDataOf u.neighMap.itraversed
+
+instance HasFromFoldable f => ConstructableGraph_ (GGraph f v e) where
+  fromAdjacencyLists =
+    Graph . foldMap (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
+                                    in IntMap.singleton i vd
+                    )
+    where
+      mkNeighMap   = foldMap (uncurry IntMap.singleton)
+      mkNeighOrder = fromList . map fst . F.toList

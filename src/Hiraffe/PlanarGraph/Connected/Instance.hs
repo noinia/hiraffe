@@ -139,11 +139,6 @@ instance HasFaces (CPlanarGraph w s v e f) (CPlanarGraph w s v e f') where
 --------------------------------------------------------------------------------
 
 instance DiGraph_ (CPlanarGraph w s v e f) where
-  type DiGraphFromAdjListExtraConstraints (CPlanarGraph w s v e f) h = (f ~ (), Foldable1 h)
-
-  -- | The vertices are expected to have their adjacencies in CCW order.
-  diGraphFromAdjacencyLists = IO.fromAdjacencyLists
-
   endPoints = flip Core.endPoints
 
   outNeighboursOf u = conjoined asFold asIFold
@@ -162,16 +157,18 @@ instance DiGraph_ (CPlanarGraph w s v e f) where
 
   twinDartOf d = twinOf d . to Just
 
+instance ConstructableDiGraph_ (CPlanarGraph w s v e f) where
+  type DiGraphFromAdjListExtraConstraints (CPlanarGraph w s v e f) h = (f ~ (), Foldable1 h)
+
+  -- | The vertices are expected to have their adjacencies in CCW order.
+  diGraphFromAdjacencyLists = IO.fromAdjacencyLists
+
+
 instance BidirGraph_ (CPlanarGraph w s v e f) where
   twinOf d = to $ const (Dart.twin d)
   getPositiveDart _ = id
 
 instance Graph_ (CPlanarGraph w s v e f) where
-  type GraphFromAdjListExtraConstraints (CPlanarGraph w s v e f) h = (f ~ (), Foldable1 h)
-
-  -- | The vertices are expected to have their adjacencies in CCW order.
-  fromAdjacencyLists = IO.fromAdjacencyLists
-
   neighboursOf u = conjoined asFold asIFold
     where
       asFold  :: Fold (CPlanarGraph w s v e f) v
@@ -186,6 +183,11 @@ instance Graph_ (CPlanarGraph w s v e f) where
       asIFold = ifolding $ \g -> (\d -> (d, g^?! edgeAt d)) <$> Core.outgoingEdges u g
   {-# INLINE incidentEdgesOf #-}
 
+instance ConstructableGraph_ (CPlanarGraph w s v e f) where
+  type GraphFromAdjListExtraConstraints (CPlanarGraph w s v e f) h = (f ~ (), Foldable1 h)
+
+  -- | The vertices are expected to have their adjacencies in CCW order.
+  fromAdjacencyLists = IO.fromAdjacencyLists
 
 instance PlanarGraph_ (CPlanarGraph w s v e f) where
   type DualGraphOf (CPlanarGraph w s v e f) = CPlanarGraph (DualOf w) s f e v

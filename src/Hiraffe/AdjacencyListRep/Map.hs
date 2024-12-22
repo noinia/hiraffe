@@ -220,15 +220,6 @@ linkNegatives g = g&darts %@~ \(u,v) x -> if u <= v then fromJust' x
 --------------------------------------------------------------------------------
 
 instance Ord i => DiGraph_ (GGraph f i v e) where
-  type DiGraphFromAdjListExtraConstraints (GGraph f i v e) h = HasFromFoldable f
-  diGraphFromAdjacencyLists =
-    Graph . foldMap1 (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
-                                     in NEMap.singleton i vd
-                     )
-    where
-      mkNeighMap   = foldMap (uncurry Map.singleton)
-      mkNeighOrder = fromList . map fst . F.toList
-
   endPoints _ = id
   outNeighboursOf u = conjoined asFold asIFold
     where
@@ -240,6 +231,16 @@ instance Ord i => DiGraph_ (GGraph f i v e) where
   twinDartOf (u,v) = to $ \g -> g^?dartAt (v,u).asIndex
     -- just look up the dart v,u
 
+instance Ord i => ConstructableDiGraph_ (GGraph f i v e) where
+  type DiGraphFromAdjListExtraConstraints (GGraph f i v e) h = HasFromFoldable f
+  diGraphFromAdjacencyLists =
+    Graph . foldMap1 (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
+                                     in NEMap.singleton i vd
+                     )
+    where
+      mkNeighMap   = foldMap (uncurry Map.singleton)
+      mkNeighOrder = fromList . map fst . F.toList
+
 
 instance Ord i => BidirGraph_ (GGraph f i v e) where
   twinOf (u,v) = to $ const (v,u)
@@ -248,15 +249,6 @@ instance Ord i => BidirGraph_ (GGraph f i v e) where
   -- we use the dart oriented from small to large as the positive one.
 
 instance Ord i => Graph_ (GGraph f i v e) where
-  type GraphFromAdjListExtraConstraints (GGraph f i v e) h = HasFromFoldable f
-  fromAdjacencyLists =
-    Graph . foldMap1 (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
-                                     in NEMap.singleton i vd
-                     )
-    where
-      mkNeighMap   = foldMap (uncurry Map.singleton)
-      mkNeighOrder = fromList . map fst . F.toList
-
   neighboursOf u = conjoined asFold asIFold
     where
       asFold  :: Fold (GGraph f i v e) v
@@ -265,6 +257,16 @@ instance Ord i => Graph_ (GGraph f i v e) where
   {-# INLINE neighboursOf #-}
 
   incidentEdgesOf u = reindexed (u,) (incidentEdges' u)
+
+instance Ord i => ConstructableGraph_ (GGraph f i v e) where
+  type GraphFromAdjListExtraConstraints (GGraph f i v e) h = HasFromFoldable f
+  fromAdjacencyLists =
+    Graph . foldMap1 (\(i,v,adjs) -> let vd = VertexData v (mkNeighMap adjs) (mkNeighOrder adjs)
+                                     in NEMap.singleton i vd
+                     )
+    where
+      mkNeighMap   = foldMap (uncurry Map.singleton)
+      mkNeighOrder = fromList . map fst . F.toList
 
 
 -- | A traversal of the edges incident to vertex u as an intexed by the other vertex

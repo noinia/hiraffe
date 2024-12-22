@@ -15,32 +15,20 @@ module Hiraffe.PlanarGraph.Type
   , fromConnected'
   ) where
 
-import           Unsafe.Coerce (unsafeCoerce)
 import           Control.Lens hiding (holes, holesOf, (.=))
-import           Control.Monad.State
-import           Data.Bifunctor (first, second)
 import           Data.Coerce
 import qualified Data.Foldable as F
-import           Data.Foldable1
 import           Data.Functor.Apply (Apply)
 import qualified Data.Functor.Apply as Apply
 import           Data.Kind (Type)
 import           Data.List.NonEmpty (NonEmpty(..))
 import qualified Data.List.NonEmpty as NonEmpty
-import qualified Data.Map as Map
-import qualified Data.Map.NonEmpty as NEMap
 import           Data.Maybe (fromMaybe)
 import           Data.Semigroup.Traversable
 import qualified Data.Sequence as Seq
-import qualified Data.Set as Set
-import qualified Data.Vector.Mutable as MV
 import           Data.Vector.NonEmpty (NonEmptyVector)
 import qualified Data.Vector.NonEmpty as NonEmptyV
 import           GHC.Generics (Generic)
-import           HGeometry.Ext
-import           HGeometry.Foldable.Util
-import           HGeometry.Vector.NonEmpty.Util
-import           Hiraffe.AdjacencyListRep.Map
 import           Hiraffe.Graph.Class
 import           Hiraffe.PlanarGraph.Class
 import           Hiraffe.PlanarGraph.Component
@@ -49,10 +37,8 @@ import           Hiraffe.PlanarGraph.Connected ( CPlanarGraph
                                                , FaceIdIn(..), FaceId
                                                )
 import qualified Hiraffe.PlanarGraph.Connected.Core as Core
-import           Hiraffe.PlanarGraph.Connected.Dual
 import           Hiraffe.PlanarGraph.Connected.Instance ()
 import qualified Hiraffe.PlanarGraph.Dart as Dart
-import           Hiraffe.PlanarGraph.IO
 import           Hiraffe.PlanarGraph.World
 
 
@@ -242,10 +228,9 @@ type IsComponent pg s = ( DartIx   (Component pg s) ~ Dart.Dart (Wrap' s)
 
                         )
 
-instance ( BidirGraph_ (pg (Wrap' s) (VertexId s) (Dart.Dart s) (FaceId s))
+instance ( BidirGraph_ (Component pg s)
          , IsComponent pg s
          ) => DiGraph_ (PlanarGraphF pg s v e f) where
-  -- diGraphFromAdjacencyLists =
 
   tailOf d = ito $ \ps -> let (_,d',c) = asLocalD d ps
                               vi       = c^.tailOf d'
@@ -271,22 +256,17 @@ instance ( BidirGraph_ (pg (Wrap' s) (VertexId s) (Dart.Dart s) (FaceId s))
   twinDartOf d = twinOf d . to Just
 
 instance ( IsComponent pg s
-         , BidirGraph_ (pg (Wrap' s) (VertexId s) (Dart.Dart s) (FaceId s))
+         , BidirGraph_ (Component pg s)
          ) => BidirGraph_ (PlanarGraphF pg s v e f) where
   twinOf d = to $ const (Dart.twin d)
   getPositiveDart _ = id
 
-{-
 
-
--- TODO:  Component's should somehow link/remember how it gets its v values.
 instance ( Graph_ (Component pg s)
          , IsComponent pg s
          , EdgeIx   (Component pg s) ~ Dart.Dart (Wrap' s)
          , Edge     (Component pg s) ~ Dart.Dart s
          ) => Graph_ (PlanarGraphF pg s v e f) where
-  -- fromAdjacencyLists =
-
   neighboursOf v  = ifolding $ \ps -> let (_,v',c) = asLocalV v ps
                                       in foldMapOf (neighboursOf v')
                                                    (\w -> [(w,ps^?!vertexAt w)])
@@ -298,7 +278,6 @@ instance ( Graph_ (Component pg s)
                                                      c
     -- same general approach as outGoingDartsOf
 
-
 -- instance PlanarGraph_ (PlanarGraphF pg s v e f) v where
 --   -- dualGraph, (incidentFaceOf | leftFaceOf), rightFaceOf, prevDartOf, nextDartOf, boundaryDartOf, boundaryDartOf, boundaryDarts
 
@@ -306,7 +285,7 @@ instance ( Graph_ (Component pg s)
 --   -- TODO: fromEmbedding
 
 -- instance PlanarGraph_ component_ (PlanarGraphF component  s v e f) v where
-type DualGraphOf (CPlanarGraph w s v e f) = CPlanarGraph (DualOf w) s f e v
+-- type DualGraphOf (CPlanarGraph w s v e f) = CPlanarGraph (DualOf w) s f e v
 
 
 
@@ -321,9 +300,6 @@ fromConnected   :: forall s v e f. (Ord r, Num r)
 fromConnected g = fromConnected' g (PG.outerFaceDart g)
 
  -}
-
-
--}
 
 -- | Given a (connected) PlanarGraph and a dart that has the outerface on its left
 -- | Constructs a planarsubdivision
@@ -367,9 +343,3 @@ fromConnected' g ofD = PlanarGraph (NonEmptyV.singleton $ Core.unsafeChangeS g')
     flipID i | i == 0           = (coerce oF)
              | i == (coerce oF) = 0
              | otherwise        = i
-
-
--- -- | coerce the compoenent into a Wrap
--- coerce' :: forall s' v' e' f'.
---            CPlanarGraph Primal s' v' e' f' -> CPlanarGraph Primal (Wrap s') v' e' f'
--- coerce' = undefined -- unsafeCoerce
