@@ -191,6 +191,7 @@ instance ConstructableGraph_ (CPlanarGraph w s v e f) where
 
 instance PlanarGraph_ (CPlanarGraph w s v e f) where
   type DualGraphOf (CPlanarGraph w s v e f) = CPlanarGraph (DualOf w) s f e v
+  type WorldOf     (CPlanarGraph w s v e f) = w
 
   dualGraph = view Core.dual
 

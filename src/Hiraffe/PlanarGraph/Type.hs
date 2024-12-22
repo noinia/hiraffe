@@ -30,6 +30,7 @@ import           Data.Vector.NonEmpty (NonEmptyVector)
 import qualified Data.Vector.NonEmpty as NonEmptyV
 import           GHC.Generics (Generic)
 import           Hiraffe.Graph.Class
+-- import           Hiraffe.Graph.Component
 import           Hiraffe.PlanarGraph.Class
 import           Hiraffe.PlanarGraph.Component
 import           Hiraffe.PlanarGraph.Connected ( CPlanarGraph
@@ -40,7 +41,6 @@ import qualified Hiraffe.PlanarGraph.Connected.Core as Core
 import           Hiraffe.PlanarGraph.Connected.Instance ()
 import qualified Hiraffe.PlanarGraph.Dart as Dart
 import           Hiraffe.PlanarGraph.World
-
 
 --------------------------------------------------------------------------------
 
@@ -117,15 +117,14 @@ asLocalV                 :: VertexId s -> PlanarGraphF pg s v e f
 asLocalV (VertexId v) ps = let (Raw ci v' _) = ps^?!rawVertexData.ix v
                            in (ci,v',ps^.component ci)
 
-
 -- -- | Get the local face and component from a given face.
 -- asLocalF                          :: FaceId s -> PlanarGraphF pg s v e f
 --                                   -> NonEmpty (ComponentId s, FaceId (Wrap s), Component s r)
 -- asLocalF (FaceId (VertexId f)) ps = case ps^?!rawFaceData.ix f of
---       RawFace (Just (ci,f')) _        -> (ci,f',ps^.component ci) :| []
+--       RawFace (Just (ci,f')) _        -> NonEmpty.singleton (ci,f', ps^.component ci)
 --       RawFace Nothing (FaceData hs _) -> toLocalF <$> NonEmpty.fromList (F.toList hs)
 --   where
---     toLocalF d = let (ci,d',c) = asLocalD d ps in (ci,PG.leftFace d' c,c)
+--     toLocalF d = let (ci,d',c) = asLocalD d ps in (ci, c^.leftFaceOf d' , c)
 
 --------------------------------------------------------------------------------
 
@@ -211,6 +210,24 @@ instance HasFaces (PlanarGraphF pg s v e f) (PlanarGraphF pg s v e f')  where
   faces = reindexed (coerce :: Int -> FaceIx (PlanarGraphF pg s v e f))
         $ rawFaceData .> traversed1 <. faceDataVal.fData
 
+{-
+
+instance HasConnectedComponents' (PlanarGraphF pg s v e f) where
+  -- TODO: Hmm, should this return an actual component, i.e. in which
+  -- the vertices store .s.t of value v? darts of value e etc. ?
+  type ConnectedComponent   (PlanarGraphF pg s v e f) = pg s v e f
+  type ConnectedComponentIx (PlanarGraphF pg s v e f) =
+  -- connectedComponentAt pg =
+  numConnectedComponents pg = NonEmptyV.length . _components
+
+-- hmm, I guess this thing cannot be type changing in our case?
+instance HasConnectedComponents (PlanarGraphF pg s v e f) (PlanarGraphF pg s v e f) where
+  connectedComponents =
+
+-}
+
+--------------------------------------------------------------------------------
+
 
 -- DartIx
 --                              (pg
@@ -225,8 +242,11 @@ type IsComponent pg s = ( DartIx   (Component pg s) ~ Dart.Dart (Wrap' s)
                         , Dart     (Component pg s) ~ Dart.Dart s
                         , Vertex   (Component pg s) ~ VertexId s
                         -- , FaceId (Component pg s) ~ FaceId s
-
                         )
+
+
+
+
 
 instance ( BidirGraph_ (Component pg s)
          , IsComponent pg s
@@ -277,9 +297,36 @@ instance ( Graph_ (Component pg s)
                                                      (\e -> [(e,ps^?!edgeAt e)])
                                                      c
     -- same general approach as outGoingDartsOf
+{-
+instance ( PlanarGraph_ (Component pg s)
+         , IsComponent pg s
+         , EdgeIx   (Component pg s) ~ Dart.Dart (Wrap' s)
+         , Edge     (Component pg s) ~ Dart.Dart s
+         ) => PlanarGraph_ (PlanarGraphF pg s v e f) where
+  -- dualGraph, (incidentFaceOf | leftFaceOf), rightFaceOf, prevDartOf, nextDartOf, boundaryDartOf, boundaryDartOf, boundaryDarts
+  type DualGraphOf (PlanarGraphF pg s v e f) =
+    CPlanarGraph (DualOf (WorldOf (Component pg s))) s f e v
 
--- instance PlanarGraph_ (PlanarGraphF pg s v e f) v where
---   -- dualGraph, (incidentFaceOf | leftFaceOf), rightFaceOf, prevDartOf, nextDartOf, boundaryDartOf, boundaryDartOf, boundaryDarts
+  type WorldOf     (PlanarGraphF pg s v e f) = WorldOf (Component pg s)
+
+  -- dualGraph = undefined
+    -- main idea: consider the dual of the components, glue them together in some
+    -- bigger graph
+
+  -- leftFace      :: Dart s -> PlanarSubdivision s v e f  -> FaceId' s
+  -- leftFaceOf d = \pEfE g -> let (_,d',c) = asLocalD d g
+  --                           in leftFaceOf d' c
+
+
+
+  --                 --               fi       = PG.leftFace d' g
+  --                 -- in
+
+  -- leftFace d ps = let (_,d',g) = asLocalD d ps
+  --                     fi       = PG.leftFace d' g
+  --                 in g^.dataOf fi
+
+
 
 -- instance PlaneGraph_ (PlanarGraphF pg s v e f) v where
 --   -- TODO: fromEmbedding
@@ -288,7 +335,7 @@ instance ( Graph_ (Component pg s)
 -- type DualGraphOf (CPlanarGraph w s v e f) = CPlanarGraph (DualOf w) s f e v
 
 
-
+-}
 --------------------------------------------------------------------------------
 
 {-

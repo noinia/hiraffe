@@ -39,7 +39,7 @@ import           Hiraffe.PlanarGraph.Dart (Dart)
 -- * ComponentId
 
 -- | ComponentId type
-newtype ComponentId s = ComponentId { unCI :: Int }
+newtype ComponentId (s :: k) = ComponentId { unCI :: Int }
   deriving (Show,Eq,Ord,Generic,Bounded,Enum,ToJSON,FromJSON)
 
 

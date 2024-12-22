@@ -20,6 +20,7 @@ import Control.Lens
 import Data.Vector.NonEmpty (NonEmptyVector)
 import HGeometry.Lens.Util
 import Hiraffe.Graph.Class
+import Hiraffe.PlanarGraph.World
 
 --------------------------------------------------------------------------------
 -- * Faces
@@ -61,6 +62,9 @@ class ( Graph_   planarGraph
 
   type DualGraphOf planarGraph
   type DualGraphOf planarGraph = planarGraph
+
+  type WorldOf planarGraph :: World
+  type WorldOf planarGraph = Primal
 
   -- | The dual of this graph
   dualGraph :: planarGraph -> DualGraphOf planarGraph
