@@ -1,4 +1,3 @@
-{-# LANGUAGE RoleAnnotations  #-}
 --------------------------------------------------------------------------------
 -- |
 -- Module      :  Hiraffe.PlanarGraph.Connected.Core
@@ -34,6 +33,8 @@ module Hiraffe.PlanarGraph.Connected.Core
   , HasDataOf(..)
   , endPointDataOf
   , computeDual
+
+  , unsafeChangeS
   ) where
 
 import           Control.DeepSeq
@@ -162,8 +163,23 @@ data CPlanarGraph (w :: World) (s :: k) v e f =
                , _faceData    :: NonEmptyVector f
                , _dual        :: CPlanarGraph (DualOf w) s f e v
                } deriving (Generic)
-type role CPlanarGraph phantom phantom representational representational representational
 
+-- | Change the s type involved
+--
+-- O(n).
+--
+--
+unsafeChangeS :: forall w s s' v e f. CPlanarGraph w s v e f -> CPlanarGraph w s' v e f
+unsafeChangeS (CPlanarGraph emb vtx ds fs (CPlanarGraph dualE dualV dualD dualF _)) = g
+  where
+    g  = CPlanarGraph (fmap coerce' emb)   vtx   ds    fs    dg
+    dg = CPlanarGraph (fmap coerce' dualE) dualV dualD dualF (gcastWith proof g)
+    proof = dualDualIdentity :: DualOf (DualOf w) :~: w
+    coerce'                            :: Dart.Dart s -> Dart.Dart s'
+    coerce' (Dart.Dart (Dart.Arc a) d) = Dart.Dart (Dart.Arc a) d
+  -- TODO: this should really just be coerce or unsafeCoerce, but somehow GHC
+  -- then loops because it does not want to coerce to s.t. of a different kind
+{-# INLINE unsafeChangeS #-}
 
 instance Functor (CPlanarGraph w s v e) where
   fmap = fmapDefault
