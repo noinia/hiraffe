@@ -12,8 +12,10 @@
 --------------------------------------------------------------------------------
 module Hiraffe.Graph.Class
   ( Graph_(..)
+  , ConstructableGraph_(..)
   , BidirGraph_(..)
   , DiGraph_(..)
+  , ConstructableDiGraph_(..)
   , HasVertices(..), HasVertices'(..)
   , HasEdges(..), HasEdges'(..)
   , HasDarts(..), HasDarts'(..)
@@ -115,23 +117,10 @@ class HasEdges' graph => HasEdges graph graph' where
 class ( HasVertices graph graph
       , HasDarts graph graph
       ) => DiGraph_ graph where
-  {-# MINIMAL diGraphFromAdjacencyLists
-            , (endPoints | headOf, tailOf)
+  {-# MINIMAL (endPoints | headOf, tailOf)
             , (outNeighboursOf | outgoingDartsOf)
             , twinDartOf
    #-}
-
-  -- | Possible additional constraints for constructing a DirGraph
-  type DiGraphFromAdjListExtraConstraints graph (h :: Type -> Type) :: Constraint
-  type DiGraphFromAdjListExtraConstraints graph h = ()
-
-  -- | Build a directed graph from its adjacency lists.
-  diGraphFromAdjacencyLists :: ( Foldable1 f, Functor f, Foldable h, Functor h
-                               , vi ~ VertexIx graph
-                               , v ~ Vertex graph
-                               , d ~ Dart graph
-                               , DiGraphFromAdjListExtraConstraints graph h
-                               ) => f (vi, v, h (vi, d)) -> graph
 
   -- | Get the endpoints (origin, destination) of a dart
   endPoints     :: graph -> DartIx graph -> (VertexIx graph, VertexIx graph)
@@ -205,6 +194,26 @@ class ( HasVertices graph graph
   tailOf d = ito $ \g -> let vi = fst $ endPoints g d
                          in (vi, g^?!vertexAt vi)
 
+
+-- | A class representing non-empty directed graphs
+class ( DiGraph_ graph
+      ) => ConstructableDiGraph_ graph where
+  {-# MINIMAL diGraphFromAdjacencyLists #-}
+  -- | Possible additional constraints for constructing a DirGraph
+  type DiGraphFromAdjListExtraConstraints graph (h :: Type -> Type) :: Constraint
+  type DiGraphFromAdjListExtraConstraints graph h = ()
+
+  -- | Build a directed graph from its adjacency lists.
+  diGraphFromAdjacencyLists :: ( Foldable1 f, Functor f, Foldable h, Functor h
+                               , vi ~ VertexIx graph
+                               , v ~ Vertex graph
+                               , d ~ Dart graph
+                               , DiGraphFromAdjListExtraConstraints graph h
+                               ) => f (vi, v, h (vi, d)) -> graph
+
+--------------------------------------------------------------------------------
+
+
 -- | Types representing non-empty bidirected graphs, i.e. a directed graph, but all directed edges
 -- are guaranteed to exist in both directions.
 class DiGraph_ graph => BidirGraph_ graph where
@@ -228,10 +237,23 @@ class DiGraph_ graph => BidirGraph_ graph where
 
 -- | A class representing non-empty undirected graphs. Note that every undirected graph is also a
 -- directed graph.
-class ( HasVertices graph graph
-      , HasEdges graph graph
-      , BidirGraph_ graph
+class ( BidirGraph_ graph
       ) => Graph_ graph where
+
+  -- | All neighbours of a given vertex
+  --
+  neighboursOf :: VertexIx graph -> IndexedFold (VertexIx graph) graph (Vertex graph)
+
+  -- | All edges incident to a given vertex
+  --
+  incidentEdgesOf :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
+
+  {-# MINIMAL neighboursOf, incidentEdgesOf #-}
+
+class ( Graph_ graph
+      ) => ConstructableGraph_ graph where
+  {-# MINIMAL fromAdjacencyLists #-}
+
 
   -- | Possible additional constraints for constructing a DirGraph
   type GraphFromAdjListExtraConstraints graph (h :: Type -> Type)  :: Constraint
@@ -249,18 +271,6 @@ class ( HasVertices graph graph
                         , e ~ Edge graph
                         , GraphFromAdjListExtraConstraints graph h
                         ) => f (vi, v, h (vi, e)) -> graph
-
-  -- | All neighbours of a given vertex
-  --
-  neighboursOf :: VertexIx graph -> IndexedFold (VertexIx graph) graph (Vertex graph)
-
-  -- | All edges incident to a given vertex
-  --
-  incidentEdgesOf :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
-
-
-  {-# MINIMAL fromAdjacencyLists, neighboursOf, incidentEdgesOf #-}
-
 
 --------------------------------------------------------------------------------
 -- Instances for Data.Graph
@@ -331,14 +341,6 @@ instance HasEdges Containers.Graph Containers.Graph where
   {-# INLINE edges #-}
 
 instance DiGraph_ Containers.Graph where
-  -- | pre: vertex Id's are in the range 0..n
-  diGraphFromAdjacencyLists ajs = Containers.buildG (0,n) ds
-    where
-      ds = concatMap (\(u, _, neighs) -> (\(v,_) -> (u,v)) <$> F.toList neighs
-                     ) $ F.toList ajs
-      n = F.foldl' (\a (u,v) -> a `max` u `max` v) 0 ds
-  {-# INLINE diGraphFromAdjacencyLists #-}
-
   endPoints _ = id
   {-# INLINE endPoints #-}
   outNeighboursOf u = iix u .> traverse .> selfIndex <. united
@@ -349,6 +351,15 @@ instance DiGraph_ Containers.Graph where
   -- O(d), where d is the out degree of vertex u.
   twinDartOf (u,v) = to $ \g -> (v,u) <$ F.find (== v) (g Array.! u)
 
+instance ConstructableDiGraph_ Containers.Graph where
+  -- | pre: vertex Id's are in the range 0..n
+  diGraphFromAdjacencyLists ajs = Containers.buildG (0,n) ds
+    where
+      ds = concatMap (\(u, _, neighs) -> (\(v,_) -> (u,v)) <$> F.toList neighs
+                     ) $ F.toList ajs
+      n = F.foldl' (\a (u,v) -> a `max` u `max` v) 0 ds
+  {-# INLINE diGraphFromAdjacencyLists #-}
+
 instance BidirGraph_ Containers.Graph where
   twinOf (u,v) = to $ const (v,u)
   getPositiveDart _ d@(u,v) | u <= v    = d
@@ -356,6 +367,13 @@ instance BidirGraph_ Containers.Graph where
   -- we use the dart oriented from small to large as the positive one.
 
 instance Graph_ Containers.Graph where
+  -- Containers.graphFromEdges
+  neighboursOf u = iix u .> traverse .> selfIndex <. united
+  {-# INLINE neighboursOf #-}
+  incidentEdgesOf u = reindexed (u,) (neighboursOf u)
+  {-# INLINE incidentEdgesOf #-}
+
+instance ConstructableGraph_ Containers.Graph where
   -- | pre: vertex Id's are in the range 0..n
   fromAdjacencyLists ajs = Containers.buildG (0,n) ds
     where
@@ -363,12 +381,6 @@ instance Graph_ Containers.Graph where
                      ) $ F.toList ajs
       n = F.foldl' (\a (u,v) -> a `max` u `max` v) 0 ds
   {-# INLINE fromAdjacencyLists #-}
-
-      -- Containers.graphFromEdges
-  neighboursOf u = iix u .> traverse .> selfIndex <. united
-  {-# INLINE neighboursOf #-}
-  incidentEdgesOf u = reindexed (u,) (neighboursOf u)
-  {-# INLINE incidentEdgesOf #-}
 
 
 --------------------------------------------------------------------------------

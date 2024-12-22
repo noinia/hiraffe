@@ -36,26 +36,26 @@ import           HGeometry.Ext
 import           HGeometry.Foldable.Util
 import           HGeometry.Permutation
 import           Hiraffe.PlanarGraph.AdjRep (Face (Face), Gr (Gr), Vtx (Vtx))
-import           Hiraffe.PlanarGraph.Core
+import           Hiraffe.PlanarGraph.Connected.Core
 import qualified Hiraffe.PlanarGraph.Dart as Dart
 import           Hiraffe.PlanarGraph.Dart (Direction(..), Arc(..))
-import           Hiraffe.PlanarGraph.Dual
+import           Hiraffe.PlanarGraph.Connected.Dual
 import           Hiraffe.PlanarGraph.EdgeOracle
 import           Hiraffe.PlanarGraph.World
 
 --------------------------------------------------------------------------------
 
-instance (ToYAML v, ToYAML e, ToYAML f) => ToYAML (PlanarGraph s w v e f) where
+instance (ToYAML v, ToYAML e, ToYAML f) => ToYAML (CPlanarGraph w s v e f) where
   toYAML = toYAML . toAdjRep
 
-instance (FromYAML v, FromYAML e, FromYAML f) => FromYAML (PlanarGraph s Primal v e f) where
+instance (FromYAML v, FromYAML e, FromYAML f) => FromYAML (CPlanarGraph Primal s v e f) where
   parseYAML n = fromAdjRep @s <$> parseYAML n
 
-instance (ToJSON v, ToJSON e, ToJSON f) => ToJSON (PlanarGraph s w v e f) where
+instance (ToJSON v, ToJSON e, ToJSON f) => ToJSON (CPlanarGraph w s v e f) where
   toEncoding = toEncoding . toAdjRep
   toJSON     = toJSON     . toAdjRep
 
-instance (FromJSON v, FromJSON e, FromJSON f) => FromJSON (PlanarGraph s Primal v e f) where
+instance (FromJSON v, FromJSON e, FromJSON f) => FromJSON (CPlanarGraph Primal s v e f) where
   parseJSON v = fromAdjRep @s <$> parseJSON v
 
 --------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ instance (FromJSON v, FromJSON e, FromJSON f) => FromJSON (PlanarGraph s Primal 
 -- See 'toAdjacencyLists' for notes on how we handle self-loops.
 --
 -- running time: \(O(n)\)
-toAdjRep   :: PlanarGraph s w v e f -> Gr (Vtx v e) (Face f)
+toAdjRep   :: CPlanarGraph w s v e f -> Gr (Vtx v e) (Face f)
 toAdjRep g = Gr vs fs
   where
     vs = (\(u@(VertexId ui),us) -> Vtx ui (map (mkEdge u) $ F.toList us) (g^.dataOf u))
@@ -92,7 +92,7 @@ toAdjRep g = Gr vs fs
 --      - there is at least one vertex, and at least one edge
 --
 -- running time: \(O(n)\)
-fromAdjRep            :: forall s v e f. Gr (Vtx v e) (Face f) -> PlanarGraph s Primal v e f
+fromAdjRep            :: forall s v e f. Gr (Vtx v e) (Face f) -> CPlanarGraph Primal s v e f
 fromAdjRep (Gr as fs) = g&faceData   .~ reorder fs' (_unVertexId._unFaceId)
   where
     -- build the actual graph using the adjacencies
@@ -112,7 +112,7 @@ fromAdjRep (Gr as fs) = g&faceData   .~ reorder fs' (_unVertexId._unFaceId)
 --      - no self-loops and no multi-edges
 --
 -- running time: \(O(n)\)
-buildGraph    :: forall s v e. NonEmpty (Vtx v e) -> PlanarGraph s Primal v e ()
+buildGraph    :: forall s v e. NonEmpty (Vtx v e) -> CPlanarGraph Primal s v e ()
 buildGraph = fromAdjacencyLists . fmap f
   where
     f               :: Vtx v e -> (VertexIdIn Primal s, v, NonEmpty (VertexIdIn Primal s, e))
@@ -136,7 +136,7 @@ reorder v f = NonEmptyV.unsafeCreate $ do
 -- running time: \(O(n)\).
 fromAdjacencyLists      :: forall s w v e g h. (Functor g, Foldable1 g, Foldable1 h, Functor h)
                         => g (VertexIdIn w s, v, h (VertexIdIn w s, e))
-                        -> PlanarGraph s w v e ()
+                        -> CPlanarGraph w s v e ()
 fromAdjacencyLists adjM = gr&dartVector .~ theDartData
                             &vertexData .~ reorder theVertexData _unVertexId
   where
@@ -156,7 +156,7 @@ fromAdjacencyLists adjM = gr&dartVector .~ theDartData
 
     -- Build an edgeOracle, so that we can query the arcId assigned to
     -- an edge in O(1) time.
-    oracle :: EdgeOracle s w (Int :+ e)
+    oracle :: EdgeOracle w s (Int :+ e)
     oracle = assignArcs . buildEdgeOracle . fmap (\(u,_,adj) -> (u,adj)) $ adjM
 
     toOrbit (u,_,adjU) = foldMap1 (toDart u) adjU
@@ -171,7 +171,7 @@ fromAdjacencyLists adjM = gr&dartVector .~ theDartData
                           GT -> [(Dart.Dart (Arc a) Negative, e)]
 
 
-assignArcs   :: forall s w e. EdgeOracle s w e -> EdgeOracle s w (Int :+ e)
+assignArcs   :: forall s w e. EdgeOracle w s e -> EdgeOracle w s (Int :+ e)
 assignArcs o = evalState (itraverseUndirected f o) 0
   where
     f     :: (VertexIdIn w s, VertexIdIn w s) -> DartData e -> State Int (DartData (Int :+ e))

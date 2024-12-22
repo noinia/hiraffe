@@ -9,13 +9,7 @@
 --
 --------------------------------------------------------------------------------
 module Hiraffe.Graph
-  ( HasVertices(..), HasVertices'(..)
-  , HasDarts(..), HasDarts'(..)
-  , HasEdges(..), HasEdges'(..)
-
-  , Graph_(..)
-  , DiGraph_(..)
-  , BidirGraph_(..)
+  ( module Hiraffe.Graph.Class
   ) where
 
 import Hiraffe.Graph.Class

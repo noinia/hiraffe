@@ -58,7 +58,7 @@ dart s = fromMaybe (error "dart not found") $ lookup s ds
   where
     ds = map swap $ myGraph^..darts.withIndex
 
-myGraph :: PlanarGraph MyWorld Primal String String String
+myGraph :: CPlanarGraph Primal MyWorld String String String
 myGraph = planarGraph adjacencies
                     & vertexData .~ V.unsafeFromList ["u","v","w","x"]
                     & faceData   .~ V.unsafeFromList ["f_3", "f_infty","f_1","f_2"]
