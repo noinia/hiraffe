@@ -169,12 +169,14 @@ instance BidirGraph_ (CPlanarGraph w s v e f) where
   getPositiveDart _ = id
 
 instance Graph_ (CPlanarGraph w s v e f) where
-  neighboursOf u = conjoined asFold asIFold
+  neighboursOfByEdge u = conjoined asFold asIFold
     where
       asFold  :: Fold (CPlanarGraph w s v e f) v
-      asFold  = folding  $ \g -> (\v ->     g^?! vertexAt v)  <$> Core.neighboursOf u g
-      asIFold = ifolding $ \g -> (\v -> (v, g^?! vertexAt v)) <$> Core.neighboursOf u g
-  {-# INLINE neighboursOf #-}
+      asFold =  folding  $ \pg -> (\v ->    pg^?! vertexAt v)  <$> Core.neighboursOf  u pg
+      asIFold = ifolding $ \pg -> (\d -> let v = Core.headOf d pg
+                                         in ((d,v), pg^?! vertexAt v)
+                                  )                            <$> Core.outgoingEdges u pg
+  {-# INLINE neighboursOfByEdge #-}
 
   incidentEdgesOf u = conjoined asFold asIFold
     where

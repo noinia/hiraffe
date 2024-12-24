@@ -103,8 +103,8 @@ import           Hiraffe.PlanarGraph.World
 
 -- | A vertex in a planar graph. A vertex is tied to a particular planar graph
 -- by the phantom type s, and to a particular world w.
-newtype VertexIdIn (w :: World) s = VertexId { _unVertexId :: Int }
-                                  deriving (Eq,Ord,Enum,ToJSON,FromJSON,Generic,NFData)
+newtype VertexIdIn (w :: World) (s :: k) = VertexId { _unVertexId :: Int }
+                                         deriving (Eq,Ord,Enum,ToJSON,FromJSON,Generic,NFData)
 -- VertexId's are in the range 0...|orbits|-1
 
 -- | Shorthand for vertices in the primal.
@@ -126,8 +126,8 @@ instance Default (VertexIdIn w s) where
 -- * FaceId's
 
 -- | The type to represent FaceId's
-newtype FaceIdIn w s = FaceId { _unFaceId :: VertexIdIn (DualOf w) s }
-                     deriving (Eq,Ord,Enum,ToJSON,FromJSON)
+newtype FaceIdIn w (s :: k) = FaceId { _unFaceId :: VertexIdIn (DualOf w) s }
+                            deriving (Eq,Ord,Enum,ToJSON,FromJSON)
 
 -- | Shorthand for FaceId's in the primal.
 type FaceId = FaceIdIn Primal
