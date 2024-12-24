@@ -118,7 +118,7 @@ class ( HasVertices graph graph
       , HasDarts graph graph
       ) => DiGraph_ graph where
   {-# MINIMAL (endPoints | headOf, tailOf)
-            , (outNeighboursOf | outgoingDartsOf)
+            , (outNeighboursOfByDart | outgoingDartsOf)
             , twinDartOf
    #-}
 
@@ -140,17 +140,25 @@ class ( HasVertices graph graph
   -- | All outgoing neighbours of a given vertex
   --
   outNeighboursOf   :: VertexIx graph -> IndexedFold (VertexIx graph) graph (Vertex graph)
-  outNeighboursOf u = theFold
+  outNeighboursOf u = reindexed snd $ outNeighboursOfByDart u
+
+
+  -- | All outgoing Neighbours, indexed by the Dart towards them as well as their
+  -- vertexId
+  outNeighboursOfByDart   :: VertexIx graph
+                          -> IndexedFold (DartIx graph, VertexIx graph) graph (Vertex graph)
+  outNeighboursOfByDart u = theFold
     where
       theFold paFa graph = (outgoingDartsOf u . asIndex) otherVtx graph
         where
           otherVtx e = let v = otherVertexIx e
-                       in contramap otherVertex $ indexed paFa v (graph^?!vertexAt v)
+                       in contramap otherVertex $ indexed paFa (e,v) (graph^?!vertexAt v)
           -- otherVertexIx  :: DartIx graph -> VertexIx graph
-          otherVertexIx  = snd . endPoints graph
+          otherVertexIx = snd . endPoints graph
           -- otherVertex    :: DartIx graph -> Vertex graph
           otherVertex e = graph^?!vertexAt (otherVertexIx e)
   {-# INLINE outNeighboursOf #-}
+
 
   -- | All outgoing darts incident to a given vertex
   --
@@ -242,13 +250,19 @@ class ( BidirGraph_ graph
 
   -- | All neighbours of a given vertex
   --
-  neighboursOf :: VertexIx graph -> IndexedFold (VertexIx graph) graph (Vertex graph)
+  neighboursOf   :: VertexIx graph -> IndexedFold (VertexIx graph) graph (Vertex graph)
+  neighboursOf u = reindexed snd $ neighboursOfByEdge u
 
   -- | All edges incident to a given vertex
   --
   incidentEdgesOf :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (Edge graph)
 
-  {-# MINIMAL neighboursOf, incidentEdgesOf #-}
+  -- | Get the neighbours of a given vertex, indexed by the edgeIx and the vertexIx
+  neighboursOfByEdge :: VertexIx graph
+                     -> IndexedFold (EdgeIx graph, VertexIx graph) graph (Vertex graph)
+
+  {-# MINIMAL neighboursOfByEdge, incidentEdgesOf #-}
+
 
 class ( Graph_ graph
       ) => ConstructableGraph_ graph where
@@ -345,6 +359,8 @@ instance DiGraph_ Containers.Graph where
   {-# INLINE endPoints #-}
   outNeighboursOf u = iix u .> traverse .> selfIndex <. united
   {-# INLINE outNeighboursOf #-}
+  outNeighboursOfByDart u = reindexed (\v -> ((u,v),v)) $ outNeighboursOf u
+  {-# INLINE outNeighboursOfByDart #-}
 
   -- | The twin of this dart (u,v), if it exits.
   --
@@ -372,6 +388,8 @@ instance Graph_ Containers.Graph where
   {-# INLINE neighboursOf #-}
   incidentEdgesOf u = reindexed (u,) (neighboursOf u)
   {-# INLINE incidentEdgesOf #-}
+  neighboursOfByEdge u = reindexed (\v -> ((u,v),v)) $ neighboursOf u
+  {-# INLINE neighboursOfByEdge #-}
 
 instance ConstructableGraph_ Containers.Graph where
   -- | pre: vertex Id's are in the range 0..n

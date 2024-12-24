@@ -195,6 +195,9 @@ instance PlanarGraph_ (CPlanarGraph w s v e f) where
 
   dualGraph = view Core.dual
 
+  _DualFaceIx   _ = coerced
+  _DualVertexIx _ = coerced
+
   leftFaceOf d = \paFb gr -> let fi = Dual.leftFace d gr
                              in singular (faceAt fi) paFb gr
 

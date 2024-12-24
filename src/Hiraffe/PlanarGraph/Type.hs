@@ -297,6 +297,35 @@ instance ( Graph_ (Component pg s)
                                                      (\e -> [(e,ps^?!edgeAt e)])
                                                      c
     -- same general approach as outGoingDartsOf
+
+--  neighboursOfByEdge    :: VertexIx -> IndexedFold (EdgeIx graph, VertexIx graph) graph (Vertex graph)
+  neighboursOfByEdge u = theFold
+    where
+      neighboursOfByEdge' :: VertexId (Wrap' s)
+                          -> IndexedFold (Dart.Dart (Wrap' s), VertexId (Wrap' s))
+                                         (Component pg s)
+                                         (VertexId s)
+      neighboursOfByEdge' = neighboursOfByEdge
+
+      theFold         :: forall p h.
+                         (Contravariant h, Applicative h, Indexable (Dart.Dart s, VertexId s) p)
+                      => p v (h v) -> PlanarGraphF pg s v e f -> h (PlanarGraphF pg s v e f)
+      theFold pvFv pg = neighboursOfByEdge' u' g c
+        where
+          (_,u',c) = asLocalV u pg
+
+          g          :: (Dart.Dart (Wrap' s), VertexId (Wrap' s)) -> VertexId s -> h v
+          g (e',_) v = indexed pvFv (c^?!edgeAt e', v) (pg^?!vertexAt v)
+
+
+
+  -- neighboursOfByEdge v = ifolding $ \ps -> let (_,v',c) = asLocalV v ps
+  --                                     in foldMapOf (neighboursOf v')
+  --                                                  (\w -> [(w,ps^?!vertexAt w)])
+  --                                                  c
+
+
+
 {-
 instance ( PlanarGraph_ (Component pg s)
          , IsComponent pg s

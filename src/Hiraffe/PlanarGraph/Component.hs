@@ -16,7 +16,7 @@ module Hiraffe.PlanarGraph.Component
   , FaceData(FaceData)
   , holes, fData
 
-  , Wrap, Wrap'
+  , Wrap --, Wrap'
   , ComponentId(..)
   , Raw(Raw), dataVal
   , RawFace(RawFace), faceIdx, faceDataVal
@@ -25,7 +25,6 @@ module Hiraffe.PlanarGraph.Component
 
 import           Control.Lens hiding (holes)
 import           Data.Aeson
-import           Data.Kind (Type)
 import qualified Data.Sequence as Seq
 import           GHC.Generics (Generic)
 import           Hiraffe.Graph.Component
@@ -74,9 +73,9 @@ instance (ToJSON h, ToJSON f)     => ToJSON (FaceData h f) where
 -- * Helper for storing information about multiple components
 
 -- | Helper data type and type family to Wrap a proxy type.
-type data Wrap' (s :: k)
-type family Wrap (s :: k) :: Type where
-  Wrap s = Wrap' s
+type data Wrap (s :: k)
+-- type family Wrap (s :: k) :: Type where
+--   Wrap s = Wrap' s
 
 --------------------------------------------------------------------------------
 
