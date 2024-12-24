@@ -198,6 +198,7 @@ test-suite hspec
     Hiraffe.AdjacencyListRepSpec
     Hiraffe.PlanarGraph.EdgeOracleSpec
     Hiraffe.PlanarGraphSpec
+    Hiraffe.PlanarGraph.ConnectedSpec
     Hiraffe.DualSpec
     Hiraffe.BFSSpec
     Hiraffe.ShortestPathSpec
