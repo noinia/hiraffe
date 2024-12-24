@@ -377,7 +377,7 @@ instance Graph_ (PlanarGraph w s v e f) where
 -}
 
 
-
+{-
 instance ( -- PlanarGraph_ (Component s)
          -- , IsComponent s
          -- , EdgeIx   (Component s) ~ Dart.Dart (Wrap s)
@@ -387,6 +387,7 @@ instance ( -- PlanarGraph_ (Component s)
   type DualGraphOf (PlanarGraph w s v e f) = CPlanarGraph (DualOf w) s f e v
   type WorldOf     (PlanarGraph w s v e f) = w
 
+-}
   -- dualGraph = undefined
     -- main idea: consider the dual of the components, glue them together in some
     -- bigger graph
