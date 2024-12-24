@@ -19,7 +19,6 @@ import           Data.Coerce
 import qualified Data.Foldable as F
 import           Data.Functor.Apply (Apply)
 import qualified Data.Functor.Apply as Apply
-import           Data.Kind (Type)
 import           Data.List.NonEmpty (NonEmpty(..))
 import qualified Data.List.NonEmpty as NonEmpty
 import           Data.Maybe (fromMaybe)
@@ -66,7 +65,7 @@ data PlanarGraph (w :: World) (s   :: k) v e f = PlanarGraph
     , _rawVertexData :: NonEmptyVector (Raw s (VertexIx (Component w s)) v)
     , _rawDartData   :: NonEmptyVector (Raw s (DartIx   (Component w s)) e)
     , _rawFaceData   :: NonEmptyVector (RawFace s f)
-    } deriving (Functor,Generic)
+    } deriving (Functor,Generic,Show,Eq)
 
 
 -- | Lens to access the connected components of a planar subdivision.

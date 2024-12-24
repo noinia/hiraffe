@@ -26,10 +26,11 @@ import           Hiraffe.Graph.Class
 import           Hiraffe.PlanarGraph.Class
 import           Hiraffe.PlanarGraph.Connected.Core (CPlanarGraph, VertexIdIn, FaceIdIn)
 import qualified Hiraffe.PlanarGraph.Connected.Core as Core
-import qualified Hiraffe.PlanarGraph.Dart as Dart
 import qualified Hiraffe.PlanarGraph.Connected.Dual as Dual
+import qualified Hiraffe.PlanarGraph.Dart as Dart
 import qualified Hiraffe.PlanarGraph.IO as IO
 import           Hiraffe.PlanarGraph.World
+import           Witherable
 
 --------------------------------------------------------------------------------
 
@@ -141,18 +142,15 @@ instance HasFaces (CPlanarGraph w s v e f) (CPlanarGraph w s v e f') where
 instance DiGraph_ (CPlanarGraph w s v e f) where
   endPoints = flip Core.endPoints
 
-  outNeighboursOf u = conjoined asFold asIFold
-    where
-      asFold  :: Fold (CPlanarGraph w s v e f) v
-      asFold  = folding  $ \g -> (\v ->     g^?! vertexAt v)  <$> Core.neighboursOf u g
-      asIFold = ifolding $ \g -> (\v -> (v, g^?! vertexAt v)) <$> Core.neighboursOf u g
-  {-# INLINE outNeighboursOf #-}
-
   outgoingDartsOf u = conjoined asFold asIFold
     where
       asFold  :: Fold (CPlanarGraph w s v e f) e
-      asFold  = folding  $ \g -> (\d ->     g^?! edgeAt d)  <$> Core.outgoingEdges u g
-      asIFold = ifolding $ \g -> (\d -> (d, g^?! edgeAt d)) <$> Core.outgoingEdges u g
+      asFold  = folding  $ \g -> mapMaybe (\d -> if Core.tailOf d g == u
+                                                 then g^? edgeAt d else Nothing
+                                          ) $ F.toList (Core.incidentEdges u g)
+      asIFold = ifolding $ \g -> mapMaybe (\d -> if Core.tailOf d g == u
+                                                 then g^? edgeAt d.withIndex else Nothing
+                                          ) $ F.toList (Core.incidentEdges u g)
   {-# INLINE outgoingDartsOf#-}
 
   twinDartOf d = twinOf d . to Just

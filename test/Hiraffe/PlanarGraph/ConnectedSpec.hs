@@ -2,10 +2,13 @@
 {-# LANGUAGE QuasiQuotes #-}
 module Hiraffe.PlanarGraph.ConnectedSpec where
 
-import           Control.Lens (view,_3,ifoldMapOf,(^..), asIndex, lengthOf)
+import           Control.Lens ( view,_3,ifoldMapOf,(^..), asIndex, lengthOf, toListOf
+                              , withIndex, (^.), (^?!)
+                              )
+import           Control.Monad
 import qualified Data.Foldable as F
-import qualified Data.List.NonEmpty as NonEmpty
 import           Data.List.NonEmpty (NonEmpty(..))
+import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map.Strict as SM
 import qualified Data.Set as S
 import qualified Data.Text as Text
@@ -17,6 +20,10 @@ import           Hiraffe.Instances ()
 import           Hiraffe.PlanarGraph ( CPlanarGraph, VertexId, DartId, VertexIdIn(..)
                                      , neighboursOf, planarGraph', vertices
                                      , darts, edges
+                                     , outNeighboursOf
+                                     , outgoingDartsOf
+                                     , diGraphFromAdjacencyLists
+                                     , dartAt, endPoints
                                      )
 import qualified Hiraffe.PlanarGraph as PlanarGraph
 import qualified Hiraffe.PlanarGraph.Dart as Dart
@@ -59,10 +66,29 @@ sameGraphs s g h = do
 
 
 spec :: Spec
-spec = describe "CPlanarGraph spec" $ do
+spec = describe "PlanarGraph.Connected spec" $ do
     -- prop "edges half the size of the darts" $
     --   \(gr :: PlanarGraph MyWorld () () ()) ->
     --     (2 * lengthOf edges gr) `shouldBe` lengthOf darts gr
+
+    it "outNeighboursOf" $ do
+      let theVertices = (\u -> (u,) <$> toListOf (outNeighboursOf u.asIndex) myGraph')
+                         <$> toListOf (vertices.asIndex) myGraph'
+      theVertices `shouldBe` ((\(u,_,adj) -> (\(v,_) -> (u,v)) <$> F.toList adj)
+                               <$> F.toList testEdges)
+
+    it "dart endpoints ok" $ do
+      forM_ (myDiGraph'^..darts.asIndex) $ \d ->
+         (myDiGraph'^?!dartAt d) `shouldBe` (let (VertexId u,VertexId v) = endPoints myDiGraph' d
+                                             in Text.pack $ "edge" <> show (u,v)
+                                            )
+
+    it "outgoingDarts correct" $ do
+      let theVertices = (\u -> (u, snd <$> toListOf (outgoingDartsOf u.withIndex) myDiGraph')
+                        ) <$> toListOf (vertices.asIndex) myDiGraph'
+      theVertices `shouldBe` ((\(u,_,adj) -> (u, snd <$> F.toList adj))
+                               <$> F.toList testEdges)
+
     it "edges half the size of the darts" $
       let gr :: CPlanarGraph PlanarGraph.Primal TestG Int Text.Text ()
           gr = fromAdjacencyLists testEdges
@@ -90,8 +116,11 @@ spec = describe "CPlanarGraph spec" $ do
 -- testGr = do Right x <- decodeYAMLFile [osp|data/PlanarGraph/myGraph.yaml|]
 --             pure x
 
--- myGraph :: PlanarGraph TestG PlanarGraph.Primal Int Text.Text ()
--- myGraph = fromAdjacencyLists testEdges
+myDiGraph' :: CPlanarGraph PlanarGraph.Primal TestG Int Text.Text ()
+myDiGraph' = diGraphFromAdjacencyLists testEdges
+
+myGraph' :: CPlanarGraph PlanarGraph.Primal TestG Int Text.Text ()
+myGraph' = fromAdjacencyLists testEdges
 
 testEdges :: NonEmpty (Vertex, Int, NonEmpty (Vertex, Text.Text ))
 testEdges = fmap (\(i,vs) -> (VertexId i, i,
