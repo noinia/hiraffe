@@ -315,10 +315,10 @@ instance Graph_ (PlanarGraph w s v e f) where
   neighboursOfByEdge u = ifolding $ \pg ->
     let (_,u',c) = asLocalV u pg
     in foldMapOf (incidentEdgesOf u')
-                 (\e -> let (v,x) = pg^?!headOf e.withIndex
-                        in [((e,v), x)]
-                 )
+                 (\e -> (\(v,x) -> ((e,v),x)) <$> toListOf (headOf e.withIndex) pg)
                  c
+    -- TODO: improve these implementations. We shouldn't have to build the intermediate
+    -- lists.
 
 {-
     conjoined theFold theIFold
