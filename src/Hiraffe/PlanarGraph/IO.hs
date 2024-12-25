@@ -15,6 +15,7 @@ module Hiraffe.PlanarGraph.IO
   , fromAdjRep
   , buildGraph
   , fromAdjacencyLists
+  , directedFromAdjacencyLists
 
   , reorder
   ) where
@@ -30,7 +31,7 @@ import qualified Data.List.NonEmpty as NonEmpty
 import           Data.Maybe (fromJust)
 import qualified Data.Vector.Mutable as MV
 import           Data.Vector.NonEmpty (NonEmptyVector)
-import qualified Data.Vector.NonEmpty as NonEmptyV
+import qualified Data.Vector.NonEmpty as V
 import           Data.YAML
 import           HGeometry.Ext
 import           HGeometry.Foldable.Util
@@ -83,7 +84,7 @@ toAdjRep g = Gr vs fs
     mkEdge u v@(VertexId vi) = (vi,fromJust $ findData u v)
 
 
--- | Read a planar graph, given in some adjacency list representation
+-- | Read a directed planar graph, given in some adjacency list representation
 -- into a planar graph. The adjacencylists should be in counter
 -- clockwise order.
 --
@@ -106,42 +107,43 @@ fromAdjRep (Gr as fs) = g&faceData   .~ reorder fs' (_unVertexId._unFaceId)
     fs' = fromNonEmpty . fmap (\(Face (ui,vi) f) -> (findFace ui vi, f)) $ fs
 
 
--- | Read a planar graph, given by its adjacencylists in counter clockwise order.
+-- | Read a directed planar graph, given by its adjacencylists in counter clockwise order.
 --
 -- pre: - the id's are consecutive from 0 to n (where is the number of vertices)
 --      - no self-loops and no multi-edges
 --
 -- running time: \(O(n)\)
 buildGraph    :: forall s v e. NonEmpty (Vtx v e) -> CPlanarGraph Primal s v e ()
-buildGraph = fromAdjacencyLists . fmap f
+buildGraph = directedFromAdjacencyLists . fmap f
   where
     f               :: Vtx v e -> (VertexIdIn Primal s, v, NonEmpty (VertexIdIn Primal s, e))
     f (Vtx vi us x) = (VertexId vi, x, NonEmpty.fromList $ first VertexId <$> us)
 
 -- | make sure we order the data values appropriately
 reorder     :: NonEmptyVector (i, a) -> (i -> Int) -> NonEmptyVector a
-reorder v f = NonEmptyV.unsafeCreate $ do
-                           v' <- MV.new (NonEmptyV.length v)
-                           F.forM_ v $ \(i, x) ->
-                             MV.write v' (f i) x
-                           pure v'
+reorder v f = V.unsafeCreate $ do v' <- MV.new (V.length v)
+                                  F.forM_ v $ \(i, x) ->
+                                    MV.write v' (f i) x
+                                  pure v'
 
 --------------------------------------------------------------------------------
 
--- | Construct a planar graph from a adjacency matrix. For every vertex, all
--- vertices should be given in counter-clockwise order.
+-- | Construct a "directed" planar graph from a adjacency matrix. For every vertex, all
+-- vertices should be given in counter-clockwise order. The result is directed in the
+-- sense that Positive and Negative darts may store different data.
 --
 -- pre: No self-loops, and no multi-edges
 --
 -- running time: \(O(n)\).
-fromAdjacencyLists      :: forall s w v e g h. (Functor g, Foldable1 g, Foldable1 h, Functor h)
-                        => g (VertexIdIn w s, v, h (VertexIdIn w s, e))
-                        -> CPlanarGraph w s v e ()
-fromAdjacencyLists adjM = gr&dartVector .~ theDartData
-                            &vertexData .~ reorder theVertexData _unVertexId
+directedFromAdjacencyLists      :: forall s w v e g h.
+                                   (Functor g, Foldable1 g, Foldable1 h, Functor h)
+                                => g (VertexIdIn w s, v, h (VertexIdIn w s, e))
+                                -> CPlanarGraph w s v e ()
+directedFromAdjacencyLists adjM = gr&dartVector .~ theDartData
+                                    &vertexData .~ reorder theVertexData _unVertexId
   where
     gr = planarGraph' . toCycleRep n $ perm
-    n  = NonEmptyV.length theDartData
+    n  = V.length theDartData
 
     perm' :: g (NonEmpty (DartId s, e))
     perm' = toOrbit <$> adjM
@@ -170,6 +172,27 @@ fromAdjacencyLists adjM = gr&dartVector .~ theDartData
                           EQ -> [(Dart.Dart (Arc a) Positive, e), (Dart.Dart (Arc a) Negative, e)]
                           GT -> [(Dart.Dart (Arc a) Negative, e)]
 
+--------------------------------------------------------------------------------
+
+-- | Construct an undirected planar graph from a adjacency matrix. For every vertex, all
+-- vertices should be given in counter-clockwise order. We will combine the data of
+-- negative and positive darts into one using the given semigroup.
+--
+-- pre: No self-loops, and no multi-edges
+--
+-- running time: \(O(n)\).
+fromAdjacencyLists      :: forall s w v e g h.
+                           (Functor g, Foldable1 g, Foldable1 h, Functor h, Semigroup e)
+                        => g (VertexIdIn w s, v, h (VertexIdIn w s, e))
+                        -> CPlanarGraph w s v e ()
+fromAdjacencyLists adjM = let g  = directedFromAdjacencyLists adjM
+                              v  = g^.dartData
+                              v' = imap (\i x -> let d = toEnum i
+                                                 in if Dart.isPositive d
+                                                    then x <> v V.! (fromEnum $ Dart.twin d)
+                                                    else v' V.! (fromEnum $ Dart.twin d)
+                                        ) v
+                          in g&dartData .~ v'
 
 assignArcs   :: forall s w e. EdgeOracle w s e -> EdgeOracle w s (Int :+ e)
 assignArcs o = evalState (itraverseUndirected f o) 0

@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
+{-# LANGUAGE InstanceSigs #-}
 --------------------------------------------------------------------------------
 -- |
 -- Module      :  Hiraffe.PlanarGraph.Connected.Instance
@@ -14,11 +15,13 @@ module Hiraffe.PlanarGraph.Connected.Instance
   ) where
 
 import           Control.Lens
+import           Data.Coerce
 import qualified Data.Foldable as F
 import           Data.Foldable1
 import           Data.Functor.Apply (Apply)
 import qualified Data.Functor.Apply as Apply
 import qualified Data.List.NonEmpty as NonEmpty
+import           Data.Semigroup
 import           Data.Semigroup.Traversable
 import           Data.Vector.NonEmpty (NonEmptyVector)
 import qualified Data.Vector.NonEmpty as V
@@ -31,7 +34,6 @@ import qualified Hiraffe.PlanarGraph.Dart as Dart
 import qualified Hiraffe.PlanarGraph.IO as IO
 import           Hiraffe.PlanarGraph.World
 import           Witherable
-
 --------------------------------------------------------------------------------
 
 instance HasVertices' (CPlanarGraph w s v e f) where
@@ -159,7 +161,7 @@ instance ConstructableDiGraph_ (CPlanarGraph w s v e f) where
   type DiGraphFromAdjListExtraConstraints (CPlanarGraph w s v e f) h = (f ~ (), Foldable1 h)
 
   -- | The vertices are expected to have their adjacencies in CCW order.
-  diGraphFromAdjacencyLists = IO.fromAdjacencyLists
+  diGraphFromAdjacencyLists = IO.directedFromAdjacencyLists
 
 
 instance BidirGraph_ (CPlanarGraph w s v e f) where
@@ -184,10 +186,20 @@ instance Graph_ (CPlanarGraph w s v e f) where
   {-# INLINE incidentEdgesOf #-}
 
 instance ConstructableGraph_ (CPlanarGraph w s v e f) where
-  type GraphFromAdjListExtraConstraints (CPlanarGraph w s v e f) h = (f ~ (), Foldable1 h)
+  type GraphFromAdjListExtraConstraints (CPlanarGraph w s v e f) h =
+    ( f ~ (), Foldable1 h
+    )
 
   -- | The vertices are expected to have their adjacencies in CCW order.
-  fromAdjacencyLists = IO.fromAdjacencyLists
+  fromAdjacencyLists :: forall g h vi.
+                        ( Foldable1 g, Functor g, Foldable1 h, Functor h
+                        , vi ~ VertexIx (CPlanarGraph w s v e f)
+                        , f ~ ()
+                        ) => g (vi, v, h (vi, e)) -> CPlanarGraph w s v e f
+  fromAdjacencyLists = coerce @_ @(CPlanarGraph w s v e f)
+                     . IO.fromAdjacencyLists
+                     . fmap (\(vi,v,adjs) -> (vi,v, fmap (fmap First) adjs))
+                     -- TODO: it's a shame this can't just be coerce.
 
 instance PlanarGraph_ (CPlanarGraph w s v e f) where
   type DualGraphOf (CPlanarGraph w s v e f) = CPlanarGraph (DualOf w) s f e v
