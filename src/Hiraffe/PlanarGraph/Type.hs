@@ -11,8 +11,16 @@
 module Hiraffe.PlanarGraph.Type
   ( PlanarGraph(..)
   , Component
+  , components, rawDartData, rawFaceData
+  , component
+
   , fromConnected'
+  , asLocalD
+  , asLocalV
   ) where
+
+
+
 
 import           Control.Lens hiding (holes, holesOf, (.=))
 import           Data.Coerce
@@ -59,7 +67,9 @@ type Component w (s :: k) = CPlanarGraph w (Wrap s) (VertexId s) (Dart.Dart s) (
 -- the edges to the the holes, we store the global edgeId's rather than the
 -- 'local' edgeId (dart)'s.
 --
--- invariant: the outerface has faceId 0
+-- invariants:
+--    - the outerface has faceId 0
+--    - the local and global orientation of the darts is consistent
 data PlanarGraph (w :: World) (s   :: k) v e f = PlanarGraph
     { _components    :: NonEmptyVector (Component w s)
     , _rawVertexData :: NonEmptyVector (Raw s (VertexIx (Component w s)) v)
@@ -241,20 +251,26 @@ instance HasConnectedComponents (PlanarGraph w s v e f) (PlanarGraph w s v e f) 
 
 
 
-
-
 instance DiGraph_ (PlanarGraph w s v e f) where
 
+  -- the orientation between the global darts and the local darts may differ.
+  -- i.e. a 'Positive' local dart may be associated with a Negative global
+  -- dart
   tailOf d = ito $ \ps -> let (_,d',c) = asLocalD d ps
                               vi       = c^.tailOf d'
+                              -- vi       = if sameDirection d d'
+                              --              then c^.tailOf d' else c^.headOf d'
                           in (vi, ps^?!vertexAt vi)
     -- we look up the component c containing dart d. In this component d is actually known as d'.
     -- so we can use c^.tailOf d' to find the global index of the vertex we are looking for.
     -- we then simply look up this vertex
   headOf d = ito $ \ps -> let (_,d',c) = asLocalD d ps
                               vi       = c^.headOf d'
+                              -- vi       = if sameDirection d d'
+                              --            then c^.headOf d' else c^.tailOf d'
                           in (vi, ps^?!vertexAt vi)
     -- see tailOf; we use the same, except we use head rather than tail
+
 
   -- | All outgoing darts incident to vertex v, in counterclockwise order around v.
   outgoingDartsOf u = conjoined theFold theiFold

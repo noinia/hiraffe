@@ -37,7 +37,6 @@ spec = describe "PlanarGraph spec" $ do
     forM_ (myGraph^..darts.withIndex) $ \(d,x) ->
       x `shouldBe` (myGraph^?!dartAt (myGraph^.twinOf d))
 
-
   it "outNeighboursOf" $ do
     let theVertices = (\u -> (u,) <$> toListOf (outNeighboursOf u.asIndex) myGraph)
                        <$> toListOf (vertices.asIndex) myGraph
@@ -53,6 +52,10 @@ spec = describe "PlanarGraph spec" $ do
                           in Text.pack $ "edge" <> show (u,v)
                          )
 
+  it "local and global orientation of darts consistent" $
+    forM_ (myDiGraph^..darts.asIndex) $ \d ->
+      let (_,d',_) = asLocalD d myDiGraph
+      in (d^.Dart.direction) `shouldBe` (d'^.Dart.direction)
 
   it "dart endpoints ok 1" $ do
       forM_ (myDiGraph^..darts.asIndex) $ \d ->
@@ -60,10 +63,16 @@ spec = describe "PlanarGraph spec" $ do
                                              in Text.pack $ "edge" <> show (u,v)
                                             )
 
-  it "dart endpoints ok" $ do
+  it "CDigraph, dart endpoints ok 1" $ do
+      forM_ (myCDiGraph^..darts.asIndex) $ \d ->
+         (myCDiGraph^?!dartAt d) `shouldBe` (let (VertexId u,VertexId v) = endPoints myCDiGraph d
+                                             in Text.pack $ "edge" <> show (u,v)
+                                            )
+
+  it "directed dart endpoints ok" $ do
     let theVertices = (\(u,x) -> ( u
                                  , x
-                                 , (\(d,v) -> (v, myGraph^?!dartAt d))
+                                 , (\(d,v) -> (v, myDiGraph^?!dartAt d))
                                      <$> toListOf (outNeighboursOfByDart u . asIndex) myDiGraph
                                  )
                       ) <$> toListOf (vertices.withIndex) myDiGraph
@@ -78,7 +87,8 @@ spec = describe "PlanarGraph spec" $ do
   it "neighboursOfByEdge" $ do
     let (_:(u,x):_) = myGraph^..vertices.withIndex -- take the second vertex
     show (x, myGraph^..neighboursOfByEdge u.withIndex) `shouldBe`
-      ""
+      "(1,[((Dart (Arc 0) +1,VertexId 1),1),((Dart (Arc 1) +1,VertexId 2),2),((Dart (Arc 2) +1,VertexId 4),4)])"
+
   -- it "neighboursOfByEdge" $ do
   --   let (_:(u,x):_) = myGraph^..vertices.withIndex -- take the second vertex
   --   show (x, myGraph^..neighboursOfByEdge u.withIndex) `shouldBe`

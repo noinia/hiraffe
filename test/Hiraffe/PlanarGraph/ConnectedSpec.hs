@@ -35,9 +35,14 @@ import           Test.Hspec.QuickCheck
 import           Test.QuickCheck
 
 --------------------------------------------------------------------------------
+
+
 data TestG
 
 type Vertex = VertexId TestG
+
+
+
 
 instance ToYAML () where
   toYAML _ = toYAML ([] :: [Int])
@@ -76,6 +81,7 @@ spec = describe "PlanarGraph.Connected spec" $ do
                          <$> toListOf (vertices.asIndex) myGraph'
       theVertices `shouldBe` ((\(u,_,adj) -> (\(v,_) -> (u,v)) <$> F.toList adj)
                                <$> F.toList testEdges)
+
 
     it "dart endpoints ok" $ do
       forM_ (myDiGraph'^..darts.asIndex) $ \d ->

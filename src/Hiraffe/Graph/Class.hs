@@ -124,7 +124,7 @@ class ( HasVertices graph graph
 
   -- | Get the endpoints (origin, destination) of a dart
   endPoints     :: graph -> DartIx graph -> (VertexIx graph, VertexIx graph)
-  endPoints g d = (g^.headOf d.asIndex, g^.tailOf d.asIndex)
+  endPoints g d = (g^.tailOf d.asIndex, g^.headOf d.asIndex)
   {-# INLINE endPoints #-}
 
   -- | Given a dart, produce an indexed getter to access the endpoints (u,v) of the dart.
