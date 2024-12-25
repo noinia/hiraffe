@@ -66,15 +66,14 @@ instance (FromJSON v, FromJSON f) => FromJSON (Gr v f)
 
 -- | A vertex, represented by an id, its adjacencies, and its data.
 data Vtx v e = Vtx { id    :: {-# UNPACK #-} !Int
-                   , adj   :: [(Int,e)] -- ^ adjacent vertices + data
-                                        -- on the edge. Some
-                                        -- functions, like
-                                        -- 'fromAdjRep' may assume
-                                        -- that the adjacencies are
-                                        -- given in counterclockwise
-                                        -- order around the
-                                        -- vertices. This is not (yet)
-                                        -- enforced by the data type.
+                   , adj   :: [(Int,e)]
+                     -- ^ adjacent vertices + data on the edge. Some functions, like
+                     -- 'fromAdjRep' may assume that the adjacencies are given in
+                     -- counterclockwise order around the vertices. This is not (yet)
+                     -- enforced by the data type.
+                     --
+                     -- Note that this data type allows the edges (u,v) and (v,u) to store
+                     -- different data.
                    , vData :: !v
                    } deriving (Generic, Show, Eq,Functor,Foldable,Traversable)
 

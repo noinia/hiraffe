@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
+{-# LANGUAGE InstanceSigs #-}
 --------------------------------------------------------------------------------
 -- |
 -- Module      :  Hiraffe.PlanarGraph.Connected.Instance
@@ -14,11 +15,13 @@ module Hiraffe.PlanarGraph.Connected.Instance
   ) where
 
 import           Control.Lens
+import           Data.Coerce
 import qualified Data.Foldable as F
 import           Data.Foldable1
 import           Data.Functor.Apply (Apply)
 import qualified Data.Functor.Apply as Apply
 import qualified Data.List.NonEmpty as NonEmpty
+import           Data.Semigroup
 import           Data.Semigroup.Traversable
 import           Data.Vector.NonEmpty (NonEmptyVector)
 import qualified Data.Vector.NonEmpty as V
@@ -26,11 +29,11 @@ import           Hiraffe.Graph.Class
 import           Hiraffe.PlanarGraph.Class
 import           Hiraffe.PlanarGraph.Connected.Core (CPlanarGraph, VertexIdIn, FaceIdIn)
 import qualified Hiraffe.PlanarGraph.Connected.Core as Core
-import qualified Hiraffe.PlanarGraph.Dart as Dart
 import qualified Hiraffe.PlanarGraph.Connected.Dual as Dual
+import qualified Hiraffe.PlanarGraph.Dart as Dart
 import qualified Hiraffe.PlanarGraph.IO as IO
 import           Hiraffe.PlanarGraph.World
-
+import           Witherable
 --------------------------------------------------------------------------------
 
 instance HasVertices' (CPlanarGraph w s v e f) where
@@ -141,18 +144,15 @@ instance HasFaces (CPlanarGraph w s v e f) (CPlanarGraph w s v e f') where
 instance DiGraph_ (CPlanarGraph w s v e f) where
   endPoints = flip Core.endPoints
 
-  outNeighboursOf u = conjoined asFold asIFold
-    where
-      asFold  :: Fold (CPlanarGraph w s v e f) v
-      asFold  = folding  $ \g -> (\v ->     g^?! vertexAt v)  <$> Core.neighboursOf u g
-      asIFold = ifolding $ \g -> (\v -> (v, g^?! vertexAt v)) <$> Core.neighboursOf u g
-  {-# INLINE outNeighboursOf #-}
-
   outgoingDartsOf u = conjoined asFold asIFold
     where
       asFold  :: Fold (CPlanarGraph w s v e f) e
-      asFold  = folding  $ \g -> (\d ->     g^?! edgeAt d)  <$> Core.outgoingEdges u g
-      asIFold = ifolding $ \g -> (\d -> (d, g^?! edgeAt d)) <$> Core.outgoingEdges u g
+      asFold  = folding  $ \g -> mapMaybe (\d -> if Core.tailOf d g == u
+                                                 then g^? dartAt d else Nothing
+                                          ) $ F.toList (Core.incidentEdges u g)
+      asIFold = ifolding $ \g -> mapMaybe (\d -> if Core.tailOf d g == u
+                                                 then g^? dartAt d.withIndex else Nothing
+                                          ) $ F.toList (Core.incidentEdges u g)
   {-# INLINE outgoingDartsOf#-}
 
   twinDartOf d = twinOf d . to Just
@@ -161,7 +161,7 @@ instance ConstructableDiGraph_ (CPlanarGraph w s v e f) where
   type DiGraphFromAdjListExtraConstraints (CPlanarGraph w s v e f) h = (f ~ (), Foldable1 h)
 
   -- | The vertices are expected to have their adjacencies in CCW order.
-  diGraphFromAdjacencyLists = IO.fromAdjacencyLists
+  diGraphFromAdjacencyLists = IO.directedFromAdjacencyLists
 
 
 instance BidirGraph_ (CPlanarGraph w s v e f) where
@@ -169,12 +169,14 @@ instance BidirGraph_ (CPlanarGraph w s v e f) where
   getPositiveDart _ = id
 
 instance Graph_ (CPlanarGraph w s v e f) where
-  neighboursOf u = conjoined asFold asIFold
+  neighboursOfByEdge u = conjoined asFold asIFold
     where
       asFold  :: Fold (CPlanarGraph w s v e f) v
-      asFold  = folding  $ \g -> (\v ->     g^?! vertexAt v)  <$> Core.neighboursOf u g
-      asIFold = ifolding $ \g -> (\v -> (v, g^?! vertexAt v)) <$> Core.neighboursOf u g
-  {-# INLINE neighboursOf #-}
+      asFold =  folding  $ \pg -> (\v ->    pg^?! vertexAt v)  <$> Core.neighboursOf  u pg
+      asIFold = ifolding $ \pg -> (\d -> let v = Core.headOf d pg
+                                         in ((d,v), pg^?! vertexAt v)
+                                  )                            <$> Core.outgoingEdges u pg
+  {-# INLINE neighboursOfByEdge #-}
 
   incidentEdgesOf u = conjoined asFold asIFold
     where
@@ -184,16 +186,29 @@ instance Graph_ (CPlanarGraph w s v e f) where
   {-# INLINE incidentEdgesOf #-}
 
 instance ConstructableGraph_ (CPlanarGraph w s v e f) where
-  type GraphFromAdjListExtraConstraints (CPlanarGraph w s v e f) h = (f ~ (), Foldable1 h)
+  type GraphFromAdjListExtraConstraints (CPlanarGraph w s v e f) h =
+    ( f ~ (), Foldable1 h
+    )
 
   -- | The vertices are expected to have their adjacencies in CCW order.
-  fromAdjacencyLists = IO.fromAdjacencyLists
+  fromAdjacencyLists :: forall g h vi.
+                        ( Foldable1 g, Functor g, Foldable1 h, Functor h
+                        , vi ~ VertexIx (CPlanarGraph w s v e f)
+                        , f ~ ()
+                        ) => g (vi, v, h (vi, e)) -> CPlanarGraph w s v e f
+  fromAdjacencyLists = coerce @_ @(CPlanarGraph w s v e f)
+                     . IO.fromAdjacencyLists
+                     . fmap (\(vi,v,adjs) -> (vi,v, fmap (fmap First) adjs))
+                     -- TODO: it's a shame this can't just be coerce.
 
 instance PlanarGraph_ (CPlanarGraph w s v e f) where
   type DualGraphOf (CPlanarGraph w s v e f) = CPlanarGraph (DualOf w) s f e v
   type WorldOf     (CPlanarGraph w s v e f) = w
 
   dualGraph = view Core.dual
+
+  _DualFaceIx   _ = coerced
+  _DualVertexIx _ = coerced
 
   leftFaceOf d = \paFb gr -> let fi = Dual.leftFace d gr
                              in singular (faceAt fi) paFb gr

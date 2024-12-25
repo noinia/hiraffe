@@ -16,7 +16,7 @@ module Hiraffe.PlanarGraph.Component
   , FaceData(FaceData)
   , holes, fData
 
-  , Wrap, Wrap'
+  , Wrap
   , ComponentId(..)
   , Raw(Raw), dataVal
   , RawFace(RawFace), faceIdx, faceDataVal
@@ -25,7 +25,6 @@ module Hiraffe.PlanarGraph.Component
 
 import           Control.Lens hiding (holes)
 import           Data.Aeson
-import           Data.Kind (Type)
 import qualified Data.Sequence as Seq
 import           GHC.Generics (Generic)
 import           Hiraffe.Graph.Component
@@ -73,10 +72,15 @@ instance (ToJSON h, ToJSON f)     => ToJSON (FaceData h f) where
 --------------------------------------------------------------------------------
 -- * Helper for storing information about multiple components
 
--- | Helper data type and type family to Wrap a proxy type.
-type data Wrap' (s :: k)
-type family Wrap (s :: k) :: Type where
-  Wrap s = Wrap' s
+
+
+type data Wrap (s :: k)
+
+
+-- -- | Helper data type and type family to Wrap a proxy type.
+-- type data Wrap (s :: k) :: WrapK
+-- -- type family Wrap (s :: k) :: Type where
+--   Wrap s = Wrap' s
 
 --------------------------------------------------------------------------------
 
@@ -107,9 +111,9 @@ dataVal = lens (\(Raw _ _ x) -> x) (\(Raw c i _) y -> Raw c i y)
 -- faceId of it.  If not, this face must be the outer face (and thus
 -- we can find all the face id's it correponds to through the
 -- FaceData).
-data RawFace s f = RawFace { _faceIdx     :: !(Maybe (ComponentId s, FaceId (Wrap s)))
-                           , _faceDataVal :: !(FaceData (Dart s) f)
-                           } deriving (Eq,Show,Functor,Foldable,Traversable,Generic)
+data RawFace (s :: k) f = RawFace { _faceIdx     :: !(Maybe (ComponentId s, FaceId (Wrap s)))
+                                  , _faceDataVal :: !(FaceData (Dart s) f)
+                                  } deriving (Eq,Show,Functor,Foldable,Traversable,Generic)
 
 -- TODO: use unpacked/strict values for the faceIdx
 

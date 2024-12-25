@@ -54,9 +54,18 @@ class HasFaces' graph => HasFaces graph graph' where
 class ( Graph_   planarGraph
       , HasFaces planarGraph planarGraph
       -- , PlanarGraph_ (DualGraphOf planarGraph)
+
+
+      --   -- these conditions may be too strict
+      -- , VertexIx (DualGraphOf planarGraph) ~ FaceIx planarGraph
+      -- , Vertex   (DualGraphOf planarGraph) ~ Face   planarGraph
+      -- , FaceIx (DualGraphOf planarGraph) ~ VertexIx planarGraph
+      -- , Face   (DualGraphOf planarGraph) ~ Vertex   planarGraph
+
       ) => PlanarGraph_ planarGraph where
 
   {-# MINIMAL dualGraph, (incidentFaceOf|leftFaceOf)
+            , _DualFaceIx, _DualVertexIx
             , rightFaceOf, prevDartOf, nextDartOf, boundaryDartOf, boundaryDartOf, boundaryDarts
     #-}
 
@@ -68,6 +77,21 @@ class ( Graph_   planarGraph
 
   -- | The dual of this graph
   dualGraph :: planarGraph -> DualGraphOf planarGraph
+
+  -- | Convert from a VertexIx in the primal graph to a FaceIx in the
+  -- dual graph.
+  --
+  -- (Likely this will just be the identiy function or a simple coercion)
+  _DualFaceIx   :: proxy planarGraph
+                -> Iso' (VertexIx planarGraph) (FaceIx (DualGraphOf planarGraph))
+
+  -- | Convert from a FaceIx in the primal graph to a VertexIx in the
+  -- dual graph.
+  --
+  -- (Likely this will just be the identiy function or a simple coercion)
+  _DualVertexIx :: proxy planarGraph
+                -> Iso' (FaceIx planarGraph) (VertexIx (DualGraphOf planarGraph))
+
 
   -- | The face to the left of the dart
   incidentFaceOf :: DartIx planarGraph
