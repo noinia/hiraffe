@@ -94,18 +94,19 @@ spec = describe "PlanarGraph.Connected spec" $ do
           gr = fromAdjacencyLists testEdges
       in (2 * lengthOf edges gr) `shouldBe` lengthOf darts gr
 
-    sameGraphs "testEdges" (fromAdjacencyLists testEdges) (fromAdjacencyListsOld $ simplify testEdges)
+    sameGraphs "testEdges" (fromAdjacencyLists testEdges)
+                           (fromAdjacencyListsOld $ simplify testEdges)
     prop "quickheck Dart:  (toEnum (fromEnum d)) = d" $
       \(d :: DartId TestG) -> toEnum (fromEnum d) `shouldBe` d
     prop "quickheck Dart: fromEnum (toEnum i) = i" $
       \(NonNegative i) -> fromEnum ((toEnum i) :: DartId TestG) `shouldBe` i
     it "encode yaml test" $ do
       b <- File.readFile' [osp|data/PlanarGraph/myGraph.yaml|]
-      encodeYAML (fromAdjacencyLists testEdges) `shouldBe` b
+      encodeYAML myDiGraph' `shouldBe` b
     it "decode yaml test" $ do
       (decodeYAMLFile [osp|data/PlanarGraph/myGraph.yaml|])
       `shouldReturn`
-      (Right $ fromAdjacencyLists testEdges)
+      (Right myDiGraph')
 
 
 -- test :: IO (PlanarGraph TestG PlanarGraph.Primal Int Text.Text ())

@@ -148,10 +148,10 @@ instance DiGraph_ (CPlanarGraph w s v e f) where
     where
       asFold  :: Fold (CPlanarGraph w s v e f) e
       asFold  = folding  $ \g -> mapMaybe (\d -> if Core.tailOf d g == u
-                                                 then g^? edgeAt d else Nothing
+                                                 then g^? dartAt d else Nothing
                                           ) $ F.toList (Core.incidentEdges u g)
       asIFold = ifolding $ \g -> mapMaybe (\d -> if Core.tailOf d g == u
-                                                 then g^? edgeAt d.withIndex else Nothing
+                                                 then g^? dartAt d.withIndex else Nothing
                                           ) $ F.toList (Core.incidentEdges u g)
   {-# INLINE outgoingDartsOf#-}
 
