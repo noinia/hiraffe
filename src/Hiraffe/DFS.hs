@@ -16,25 +16,13 @@ module Hiraffe.DFS
 import           Control.Lens
 import           Control.Monad.ST (ST, runST)
 import           Data.Maybe (fromJust)
--- import           Data.Tree
 import qualified Data.Vector.Unboxed.Mutable as UMV
+import           HGeometry.Sequence.KV
+import           HGeometry.Trie
 import           Hiraffe.Graph
 import           Witherable
 
 --------------------------------------------------------------------------------
-
-data TrieF f e v = Node v (f e (TrieF f e v))
-
--- data DFSTreeF f v e = DFSTree v (f e (DSTreeF f v e))
---   deriving (Show,Eq)
-
--- | An 'f' of key value pairs
-newtype KV f k v = KV (f (k,v))
-
--- deriving instance (Eq (f (k,v))) => Eq (KV f k v)
-
-
-
 
 -- | Depth first Search (DFS) to discover all components in the graph.
 --
@@ -79,20 +67,6 @@ dfsFrom g start bv = go start
 
     visit   u = UMV.write bv (fromEnum u) True
     visited u = UMV.read  bv (fromEnum u)
-
-
--- neighboursOfWithEdge   :: VertexIx graph -> IndexedFold (EdgeIx graph) graph (VertexIx graph)
--- neighboursOfWithEdge u = theFold
---   where
---     theFold paFa graph = (incidentEdgesOf u . asIndex) otherVertexIx graph
---       where
---         otherVtx e     = indexed paFa e $ otherVertexIx e
---         otherVertexIx  = snd . endPoints graph
-
-
-
-
-
 
 -- | Initialize the vector with visited marks
 intitialize   :: Int -> ST s (UMV.MVector s Bool)
