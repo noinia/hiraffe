@@ -221,12 +221,13 @@ linkNegatives g = g&darts %@~ \(u,v) x -> if u <= v then fromJust' x
 
 instance Ord i => DiGraph_ (GGraph f i v e) where
   endPoints _ = id
-  outNeighboursOf u = conjoined asFold asIFold
+  outNeighboursOfByDart u = conjoined asFold asIFold
     where
       asFold  :: Fold (GGraph f i v e) v
       asFold  = folding  $ \g -> g^..incidentEdges' u.asIndex.to (\v -> g^?! vertexAt v)
-      asIFold = ifolding $ \g -> g^..incidentEdges' u.asIndex.to (\v -> (v, g^?! vertexAt v))
-  {-# INLINE outNeighboursOf #-}
+      asIFold = ifolding $ \g -> g^..incidentEdges' u.asIndex.to (\v -> (((u,v),v)
+                                                                        , g^?! vertexAt v))
+  {-# INLINE outNeighboursOfByDart #-}
 
   twinDartOf (u,v) = to $ \g -> g^?dartAt (v,u).asIndex
     -- just look up the dart v,u
@@ -249,12 +250,14 @@ instance Ord i => BidirGraph_ (GGraph f i v e) where
   -- we use the dart oriented from small to large as the positive one.
 
 instance Ord i => Graph_ (GGraph f i v e) where
-  neighboursOf u = conjoined asFold asIFold
+  neighboursOfByEdge u = conjoined asFold asIFold
     where
       asFold  :: Fold (GGraph f i v e) v
       asFold  = folding  $ \g -> g^..incidentEdges' u.asIndex.to (\v -> g^?! vertexAt v)
-      asIFold = ifolding $ \g -> g^..incidentEdges' u.asIndex.to (\v -> (v, g^?! vertexAt v))
-  {-# INLINE neighboursOf #-}
+      asIFold = ifolding $ \g -> g^..incidentEdges' u.asIndex.to (\v -> ( ((u,v),v)
+                                                                        , g^?! vertexAt v)
+                                                                 )
+  {-# INLINE neighboursOfByEdge #-}
 
   incidentEdgesOf u = reindexed (u,) (incidentEdges' u)
 
