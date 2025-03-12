@@ -96,7 +96,7 @@ import           Hiraffe.PlanarGraph.World
 -- This represents the following graph. Note that the graph is undirected, the
 -- arrows are just to indicate what the Positive direction of the darts is.
 --
--- ![myGraph](docs/Data/PlanarGraph/Connected/testG.png)
+-- ![myGraph](docs/Hiraffe/PlanarGraph/Connected/testG.png)
 
 --------------------------------------------------------------------------------
 -- * VertexId's

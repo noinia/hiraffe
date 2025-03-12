@@ -66,7 +66,7 @@ class ( Graph_   planarGraph
 
   {-# MINIMAL dualGraph, (incidentFaceOf|leftFaceOf)
             , _DualFaceIx, _DualVertexIx
-            , rightFaceOf, prevDartOf, nextDartOf, boundaryDartOf, boundaryDartOf, boundaryDarts
+            , rightFaceOf, prevDartOf, nextDartOf, boundaryDartOf, boundaryDarts
     #-}
 
   type DualGraphOf planarGraph
