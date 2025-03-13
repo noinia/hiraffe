@@ -17,7 +17,7 @@ module Hiraffe.PlanarGraph.Connected.Core
   , dartVector
 
   , traverseVertices, traverseDarts, traverseFaces
-  , planarGraph', planarGraph
+  , cPlanarGraph', cPlanarGraph
   , toAdjacencyLists
 
   , numVertices, numDarts, numEdges, numFaces
@@ -85,7 +85,7 @@ import           Hiraffe.PlanarGraph.World
 --                             ]
 --                           ]
 --     myGraph :: CPlanarGraph Primal String String String String
---     myGraph = planarGraph adjacencies
+--     myGraph = cPlanarGraph adjacencies
 --                    & vertexData .~ V.unsafeFromList ["u","v","w","x"]
 --                    & faceData   .~ V.unsafeFromList ["f_3", "f_infty","f_1","f_2"]
 --     showWithData     :: HasDataOf s i => s -> i -> (i, DataOf s i)
@@ -360,8 +360,8 @@ traverseFaces f = itraverseOf (faceData.traversed1) (\i -> f (FaceId $ VertexId 
 -- | Construct a planar graph
 --
 -- running time: \(O(n)\).
-planarGraph'      :: Permutation (DartId s) -> CPlanarGraph w s () () ()
-planarGraph' perm = pg
+cPlanarGraph'      :: Permutation (DartId s) -> CPlanarGraph w s () () ()
+cPlanarGraph' perm = pg
   where
     pg = CPlanarGraph perm vData eData fData (computeDual pg)
         -- note the lazy calculation of computeDual that refers to pg itself
@@ -378,8 +378,8 @@ planarGraph' perm = pg
 -- vertex.
 --
 -- running time: \(O(n)\).
-planarGraph    :: NonEmpty (NonEmpty (DartId s,e)) -> CPlanarGraph Primal s () e ()
-planarGraph ds = planarGraph' perm & dartVector .~ V.fromNonEmpty (sconcat ds)
+cPlanarGraph    :: NonEmpty (NonEmpty (DartId s,e)) -> CPlanarGraph Primal s () e ()
+cPlanarGraph ds = cPlanarGraph' perm & dartVector .~ V.fromNonEmpty (sconcat ds)
   where
     n     = sum . fmap length $ ds
     perm  = toCycleRep n $ fmap (fmap fst) ds

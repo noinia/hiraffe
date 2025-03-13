@@ -5,7 +5,7 @@
 -- License     :  see the LICENSE file
 -- Maintainer  :  Frank Staals
 --
--- Data type for representing connected planar graphs
+-- Data type for representing planar graphs
 --------------------------------------------------------------------------------
 module Hiraffe.PlanarGraph
   ( module Hiraffe.PlanarGraph.Connected

@@ -56,7 +56,7 @@ import           Hiraffe.PlanarGraph.Dart
 --                             ]
 --                           ]
 --     myGraph :: CPlanarGraph Primal () String String String
---     myGraph = planarGraph adjacencies
+--     myGraph = cPlanarGraph adjacencies
 --                     & vertexData .~ V.unsafeFromList ["u","v","w","x"]
 --                     & faceData   .~ V.unsafeFromList ["f_3", "f_infty","f_1","f_2"]
 --     showWithData     :: HasDataOf s i => s -> i -> (i, DataOf s i)

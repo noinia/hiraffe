@@ -23,7 +23,7 @@ module Hiraffe.PlanarGraph.Connected
   , Dart.Direction(..), Dart.rev
 
   -- * Building a planar graph
-  , planarGraph, Core.planarGraph'
+  , cPlanarGraph, Core.cPlanarGraph'
   , fromAdjRep
   , fromAdjacencyRep
 
@@ -72,7 +72,7 @@ import           Hiraffe.PlanarGraph.Connected.Core ( CPlanarGraph
                                                     , VertexIdIn(..), VertexId
                                                     , FaceIdIn(..), FaceId
                                                     )
-import           Hiraffe.PlanarGraph.Connected.Core (planarGraph, vertexData, faceData, dartData)
+import           Hiraffe.PlanarGraph.Connected.Core (cPlanarGraph, vertexData, faceData, dartData)
 import qualified Hiraffe.PlanarGraph.Connected.Core as Core
 import qualified Hiraffe.PlanarGraph.Dart as Dart
 import           Hiraffe.PlanarGraph.Connected.Dual
@@ -109,7 +109,7 @@ import           Hiraffe.PlanarGraph.World
 --                             ]
 --                           ]
 --     myGraph :: CPlanarGraph Primal String String String String
---     myGraph = planarGraph  adjacencies
+--     myGraph = cPlanarGraph  adjacencies
 --                  & vertexData .~ V.unsafeFromList ["u","v","w","x"]
 --                  & faceData   .~ V.unsafeFromList ["f_3", "f_infty","f_1","f_2"]
 -- :}
@@ -147,7 +147,7 @@ import           Hiraffe.PlanarGraph.World
 -- data Test
 
 -- testG :: PlanarGraph Test Primal () String ()
--- testG = planarGraph [ [ (Dart aA Negative, "a-")
+-- testG = cPlanarGraph [ [ (Dart aA Negative, "a-")
 --                       , (Dart aC Positive, "c+")
 --                       , (Dart aB Positive, "b+")
 --                       , (Dart aA Positive, "a+")
@@ -196,7 +196,7 @@ import           Hiraffe.PlanarGraph.World
 -- \(O(n\log n)\)
 fromAdjacencyRep             :: (Ord i, Foldable1 f)
                              => proxy s -> GGraph f i v e -> CPlanarGraph Primal s v e ()
-fromAdjacencyRep _ (Graph m) = (planarGraph theDarts)&vertexData .~ vtxData
+fromAdjacencyRep _ (Graph m) = (cPlanarGraph theDarts)&vertexData .~ vtxData
   where
     vtxData = (\(VertexData x _ _) -> x) <$> fromFoldable1 m
     --  a non-empty list of vertices, with for each vertex the darts in order around the vertex
