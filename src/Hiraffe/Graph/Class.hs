@@ -264,12 +264,13 @@ class ( BidirGraph_ graph
   {-# MINIMAL neighboursOfByEdge, incidentEdgesOf #-}
 
 
+-- | Class expressing that we can construct a graph from its adjacency list
+-- representation.
 class ( Graph_ graph
       ) => ConstructableGraph_ graph where
   {-# MINIMAL fromAdjacencyLists #-}
 
-
-  -- | Possible additional constraints for constructing a DirGraph
+  -- | Possible additional constraints for constructing a Graph
   type GraphFromAdjListExtraConstraints graph (h :: Type -> Type)  :: Constraint
   type GraphFromAdjListExtraConstraints graph h = ()
 
@@ -279,12 +280,12 @@ class ( Graph_ graph
   -- that itself does not appear in the adjacencylist, we may drop
   -- it. In other words if u has a neighbour v, then v better have a
   -- specification of its neighbours somewhere.
-  fromAdjacencyLists :: ( Foldable1 f, Functor f, Foldable h, Functor h
+  fromAdjacencyLists :: ( Foldable1 nonEmpty, Functor nonEmpty, Foldable h, Functor h
                         , vi ~ VertexIx graph
                         , v ~ Vertex graph
                         , e ~ Edge graph
                         , GraphFromAdjListExtraConstraints graph h
-                        ) => f (vi, v, h (vi, e)) -> graph
+                        ) => nonEmpty (vi, v, h (vi, e)) -> graph
 
 --------------------------------------------------------------------------------
 -- Instances for Data.Graph
