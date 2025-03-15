@@ -11,9 +11,9 @@ author:              Frank Staals
 maintainer:          frank@fstaals.net
 
 tested-with:
-    GHC == 9.10.1
+    GHC == 9.12.2
+  , GHC == 9.10.1
   , GHC == 9.8.2
-  , GHC == 9.6.5
 
 category:            Graphs
 build-type:          Simple
