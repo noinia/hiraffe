@@ -1,5 +1,6 @@
  100% ( 49 / 49) in 'Hiraffe.PlanarGraph.Connected'
  100% ( 13 / 13) in 'Hiraffe.PlanarGraph'
+ 100% ( 12 / 12) in 'Hiraffe.Graph.Class'
  100% ( 11 / 11) in 'Hiraffe.PlanarGraph.Dart'
  100% (  9 /  9) in 'Hiraffe.PlanarGraph.EdgeOracle'
  100% (  7 /  7) in 'Hiraffe.PlanarGraph.IO'
@@ -16,5 +17,4 @@
  100% (  1 /  1) in 'Hiraffe.Instances'
  100% (  1 /  1) in 'Hiraffe'
   92% ( 12 / 13) in 'Hiraffe.PlanarGraph.Component'
-  91% ( 11 / 12) in 'Hiraffe.Graph.Class'
   66% (  2 /  3) in 'Hiraffe.BFS.Pure'

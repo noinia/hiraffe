@@ -1954,23 +1954,23 @@ IndexedTraversal Int (IntMap e) (IntMap e) e e
 </span><a href="file:///home/runner/.cabal/store/ghc-9.6.1/lens-5.3.4-2ac956d37a344f4669ce7bae42b04f44b9488ff9fa8be39f54fa803047e35442/share/doc/html/src/Control.Lens.Indexed.html#itraversed"><span class="hs-identifier hs-var">itraversed</span></a></span><span>
 </span><span id="line-230"></span><span>
 </span><span id="line-231"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679213496"><span id="local-6989586621679213497"><span id="local-6989586621679213498"><span class="annot"><a href="file:///home/runner/.cabal/store/ghc-9.6.1/hgeometry-combinatorial-1.0.0.0-bcd53f2cd81eb19b164a9d43a7c8d1ea38a33a733743209336018556a800a28d/share/doc/html/src/HGeometry.Foldable.Util.html#HasFromFoldable"><span class="hs-identifier hs-type">HasFromFoldable</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679213496"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Hiraffe.Graph.Class.html#ConstructableGraph_"><span class="hs-identifier hs-type">ConstructableGraph_</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Hiraffe.AdjacencyListRep.html#GGraph"><span class="hs-identifier hs-type">GGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679213496"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679213497"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679213498"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-232"></span><span>  </span><span id="local-6989586621679214537"><span class="annot"><span class="annottext">fromAdjacencyLists :: forall (f :: * -&gt; *) (h :: * -&gt; *) vi v e.
-(Foldable1 f, Functor f, Foldable h, Functor h,
+</span><span id="line-232"></span><span>  </span><span id="local-6989586621679214537"><span class="annot"><span class="annottext">fromAdjacencyLists :: forall (nonEmpty :: * -&gt; *) (h :: * -&gt; *) vi v e.
+(Foldable1 nonEmpty, Functor nonEmpty, Foldable h, Functor h,
  vi ~ VertexIx (GGraph f v e), v ~ Vertex (GGraph f v e),
  e ~ Edge (GGraph f v e),
  GraphFromAdjListExtraConstraints (GGraph f v e) h) =&gt;
-f (vi, v, h (vi, e)) -&gt; GGraph f v e
+nonEmpty (vi, v, h (vi, e)) -&gt; GGraph f v e
 </span><a href="#local-6989586621679214537"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromAdjacencyLists</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-233"></span><span>    </span><span class="annot"><span class="annottext">IntMap (VertexData f v e) -&gt; GGraph f v e
 forall (f :: * -&gt; *) v e. IntMap (VertexData f v e) -&gt; GGraph f v e
 </span><a href="Hiraffe.AdjacencyListRep.html#Graph"><span class="hs-identifier hs-var">Graph</span></a></span><span> </span><span class="annot"><span class="annottext">(IntMap (VertexData f v e) -&gt; GGraph f v e)
--&gt; (f (vi, v, h (vi, e)) -&gt; IntMap (VertexData f v e))
--&gt; f (vi, v, h (vi, e))
+-&gt; (nonEmpty (vi, v, h (vi, e)) -&gt; IntMap (VertexData f v e))
+-&gt; nonEmpty (vi, v, h (vi, e))
 -&gt; GGraph f v e
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">((vi, v, h (vi, e)) -&gt; IntMap (VertexData f v e))
--&gt; f (vi, v, h (vi, e)) -&gt; IntMap (VertexData f v e)
-forall m a. Monoid m =&gt; (a -&gt; m) -&gt; f a -&gt; m
+-&gt; nonEmpty (vi, v, h (vi, e)) -&gt; IntMap (VertexData f v e)
+forall m a. Monoid m =&gt; (a -&gt; m) -&gt; nonEmpty a -&gt; m
 forall (t :: * -&gt; *) m a.
 (Foldable t, Monoid m) =&gt;
 (a -&gt; m) -&gt; t a -&gt; m
