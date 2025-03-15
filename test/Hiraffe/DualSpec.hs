@@ -59,28 +59,35 @@ dart s = fromMaybe (error "dart not found") $ lookup s ds
     ds = map swap $ myGraph^..darts.withIndex
 
 myGraph :: CPlanarGraph Primal MyWorld String String String
-myGraph = planarGraph adjacencies
-                    & vertexData .~ V.unsafeFromList ["u","v","w","x"]
+myGraph = cPlanarGraph adjacencies
                     & faceData   .~ V.unsafeFromList ["f_3", "f_infty","f_1","f_2"]
   where
     (aA:aB:aC:aD:aE:aG:_) = take 6 [Dart.Arc 0..]
-    adjacencies = NonEmpty.fromList . fmap NonEmpty.fromList $
-                          [ [ (Dart.Dart aA Negative, "a-")
-                            , (Dart.Dart aC Positive, "c+")
-                            , (Dart.Dart aB Positive, "b+")
-                            , (Dart.Dart aA Positive, "a+")
-                            ]
-                          , [ (Dart.Dart aE Negative, "e-")
-                            , (Dart.Dart aB Negative, "b-")
-                            , (Dart.Dart aD Negative, "d-")
-                            , (Dart.Dart aG Positive, "g+")
-                            ]
-                          , [ (Dart.Dart aE Positive, "e+")
-                            , (Dart.Dart aD Positive, "d+")
-                            , (Dart.Dart aC Negative, "c-")
-                            ]
-                          , [ (Dart.Dart aG Negative, "g-")
-                            ]
+    adjacencies = NonEmpty.fromList . fmap (fmap NonEmpty.fromList) $
+                          [ ("u"
+                            , [ (Dart.Dart aA Negative, "a-")
+                              , (Dart.Dart aC Positive, "c+")
+                              , (Dart.Dart aB Positive, "b+")
+                              , (Dart.Dart aA Positive, "a+")
+                              ]
+                            )
+                          , ("v"
+                            , [ (Dart.Dart aE Negative, "e-")
+                              , (Dart.Dart aB Negative, "b-")
+                              , (Dart.Dart aD Negative, "d-")
+                              , (Dart.Dart aG Positive, "g+")
+                              ]
+                            )
+                          , ("w"
+                            , [ (Dart.Dart aE Positive, "e+")
+                              , (Dart.Dart aD Positive, "d+")
+                              , (Dart.Dart aC Negative, "c-")
+                              ]
+                            )
+                          , ("x"
+                            , [ (Dart.Dart aG Negative, "g-")
+                              ]
+                            )
                           ]
 
 -- showWithData     :: HasDataOf s i => s -> i -> (i, DataOf s i)

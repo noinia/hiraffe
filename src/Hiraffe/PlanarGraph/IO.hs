@@ -142,7 +142,7 @@ directedFromAdjacencyLists      :: forall s w v e g h.
 directedFromAdjacencyLists adjM = gr&dartVector .~ theDartData
                                     &vertexData .~ reorder theVertexData _unVertexId
   where
-    gr = planarGraph' . toCycleRep n $ perm
+    gr = cPlanarGraph' . toCycleRep n $ perm
     n  = V.length theDartData
 
     perm' :: g (NonEmpty (DartId s, e))

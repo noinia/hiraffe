@@ -3,7 +3,7 @@
 module Hiraffe.PlanarGraph.ConnectedSpec where
 
 import           Control.Lens ( view,_3,ifoldMapOf,(^..), asIndex, lengthOf, toListOf
-                              , withIndex, (^.), (^?!)
+                              , withIndex, (^?!)
                               )
 import           Control.Monad
 import qualified Data.Foldable as F
@@ -18,7 +18,7 @@ import           HGeometry.Permutation (toCycleRep)
 import           HGeometry.YAML
 import           Hiraffe.Instances ()
 import           Hiraffe.PlanarGraph ( CPlanarGraph, VertexId, DartId, VertexIdIn(..)
-                                     , neighboursOf, planarGraph', vertices
+                                     , neighboursOf, cPlanarGraph', vertices
                                      , darts, edges
                                      , outNeighboursOf
                                      , outgoingDartsOf
@@ -166,7 +166,7 @@ type STR' s b = STR (SM.Map (VertexId s,VertexId s) Int) Int b
 fromAdjacencyListsOld      :: forall s f.(Foldable f, Functor f)
                         => [(VertexId s, f (VertexId s))]
                         -> CPlanarGraph PlanarGraph.Primal s () () ()
-fromAdjacencyListsOld adjM = planarGraph' . toCycleRep n $ perm
+fromAdjacencyListsOld adjM = cPlanarGraph' . toCycleRep n $ perm
   where
     n    = sum . fmap length $ perm
     perm = NonEmpty.fromList

@@ -23,7 +23,7 @@ module Hiraffe.PlanarGraph.Connected
   , Dart.Direction(..), Dart.rev
 
   -- * Building a planar graph
-  , planarGraph, Core.planarGraph'
+  , cPlanarGraph, Core.cPlanarGraph'
   , fromAdjRep
   , fromAdjacencyRep
 
@@ -72,7 +72,7 @@ import           Hiraffe.PlanarGraph.Connected.Core ( CPlanarGraph
                                                     , VertexIdIn(..), VertexId
                                                     , FaceIdIn(..), FaceId
                                                     )
-import           Hiraffe.PlanarGraph.Connected.Core (planarGraph, vertexData, faceData, dartData)
+import           Hiraffe.PlanarGraph.Connected.Core (cPlanarGraph, vertexData, faceData, dartData)
 import qualified Hiraffe.PlanarGraph.Connected.Core as Core
 import qualified Hiraffe.PlanarGraph.Dart as Dart
 import           Hiraffe.PlanarGraph.Connected.Dual
@@ -90,27 +90,34 @@ import           Hiraffe.PlanarGraph.World
 -- >>> :{
 -- let dart i s = Dart (Arc i) (read s)
 --     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]
---     adjacencies = NonEmpty.fromList . fmap NonEmpty.fromList $
---                           [ [ (Dart aA Negative, "a-")
---                             , (Dart aC Positive, "c+")
---                             , (Dart aB Positive, "b+")
---                             , (Dart aA Positive, "a+")
---                             ]
---                           , [ (Dart aE Negative, "e-")
---                             , (Dart aB Negative, "b-")
---                             , (Dart aD Negative, "d-")
---                             , (Dart aG Positive, "g+")
---                             ]
---                           , [ (Dart aE Positive, "e+")
---                             , (Dart aD Positive, "d+")
---                             , (Dart aC Negative, "c-")
---                             ]
---                           , [ (Dart aG Negative, "g-")
---                             ]
+--     adjacencies = NonEmpty.fromList . fmap (fmap NonEmpty.fromList) $
+--                           [ ("u"
+--                             , [ (Dart.Dart aA Negative, "a-")
+--                               , (Dart.Dart aC Positive, "c+")
+--                               , (Dart.Dart aB Positive, "b+")
+--                               , (Dart.Dart aA Positive, "a+")
+--                               ]
+--                             )
+--                           , ("v"
+--                             , [ (Dart.Dart aE Negative, "e-")
+--                               , (Dart.Dart aB Negative, "b-")
+--                               , (Dart.Dart aD Negative, "d-")
+--                               , (Dart.Dart aG Positive, "g+")
+--                               ]
+--                             )
+--                           , ("w"
+--                             , [ (Dart.Dart aE Positive, "e+")
+--                               , (Dart.Dart aD Positive, "d+")
+--                               , (Dart.Dart aC Negative, "c-")
+--                               ]
+--                             )
+--                           , ("x"
+--                             , [ (Dart.Dart aG Negative, "g-")
+--                               ]
+--                             )
 --                           ]
 --     myGraph :: CPlanarGraph Primal String String String String
---     myGraph = planarGraph  adjacencies
---                  & vertexData .~ V.unsafeFromList ["u","v","w","x"]
+--     myGraph = cPlanarGraph  adjacencies
 --                  & faceData   .~ V.unsafeFromList ["f_3", "f_infty","f_1","f_2"]
 -- :}
 --
@@ -147,7 +154,7 @@ import           Hiraffe.PlanarGraph.World
 -- data Test
 
 -- testG :: PlanarGraph Test Primal () String ()
--- testG = planarGraph [ [ (Dart aA Negative, "a-")
+-- testG = cPlanarGraph [ [ (Dart aA Negative, "a-")
 --                       , (Dart aC Positive, "c+")
 --                       , (Dart aB Positive, "b+")
 --                       , (Dart aA Positive, "a+")
@@ -196,13 +203,15 @@ import           Hiraffe.PlanarGraph.World
 -- \(O(n\log n)\)
 fromAdjacencyRep             :: (Ord i, Foldable1 f)
                              => proxy s -> GGraph f i v e -> CPlanarGraph Primal s v e ()
-fromAdjacencyRep _ (Graph m) = (planarGraph theDarts)&vertexData .~ vtxData
+fromAdjacencyRep _ (Graph m) = (cPlanarGraph theDarts)&vertexData .~ vtxData
   where
     vtxData = (\(VertexData x _ _) -> x) <$> fromFoldable1 m
+
     --  a non-empty list of vertices, with for each vertex the darts in order around the vertex
-    theDarts  = evalState (sequence' theDarts') (0 :+ Map.empty)
+    theDarts  = ((),) <$> evalState (sequence' theDarts') (0 :+ Map.empty)
     theDarts' = toNonEmpty $ NEMap.mapWithKey toIncidentDarts m
     -- turn the outgoing edges of u into darts
+
     toIncidentDarts u (VertexData _ neighMap neighOrder) =
       (\v -> (toDart u v, neighMap Map.! u)) <$> toNonEmpty neighOrder
     -- create the dart corresponding to vertices u and v

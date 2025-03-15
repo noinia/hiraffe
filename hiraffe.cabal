@@ -83,6 +83,7 @@ common setup
               , filepath                >= 1.4.100   &&  < 2
               , file-io                 >= 0.1       &&  < 1
               , data-default-class      >= 0.1       &&  < 1
+              , vector-builder          >= 0.3.8     &&  < 0.4
 
 
 common quickcheck-setup

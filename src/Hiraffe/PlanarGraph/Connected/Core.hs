@@ -17,7 +17,7 @@ module Hiraffe.PlanarGraph.Connected.Core
   , dartVector
 
   , traverseVertices, traverseDarts, traverseFaces
-  , planarGraph', planarGraph
+  , cPlanarGraph', cPlanarGraph
   , toAdjacencyLists
 
   , numVertices, numDarts, numEdges, numFaces
@@ -47,6 +47,7 @@ import qualified Data.Foldable as F
 import           Data.Foldable1
 import           Data.Functor.Apply (Apply)
 import           Data.List.NonEmpty (NonEmpty(..))
+import qualified Data.List.NonEmpty as NonEmpty
 import           Data.Semigroup
 import           Data.Traversable
 import           Data.Type.Equality (gcastWith)
@@ -58,6 +59,8 @@ import           HGeometry.Permutation
 import           HGeometry.Vector.NonEmpty.Util ()
 import qualified Hiraffe.PlanarGraph.Dart as Dart
 import           Hiraffe.PlanarGraph.World
+import qualified VectorBuilder.Builder as Builder
+import qualified VectorBuilder.Vector as Builder
 
 --------------------------------------------------------------------------------
 -- $setup
@@ -66,27 +69,34 @@ import           Hiraffe.PlanarGraph.World
 -- >>> :{
 -- let dart i s = Dart (Arc i) (read s)
 --     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]
---     adjacencies = NonEmpty.fromList . fmap NonEmpty.fromList $
---                            [ [ (Dart aA Negative, "a-")
---                             , (Dart aC Positive, "c+")
---                             , (Dart aB Positive, "b+")
---                             , (Dart aA Positive, "a+")
---                             ]
---                           , [ (Dart aE Negative, "e-")
---                             , (Dart aB Negative, "b-")
---                             , (Dart aD Negative, "d-")
---                             , (Dart aG Positive, "g+")
---                             ]
---                           , [ (Dart aE Positive, "e+")
---                             , (Dart aD Positive, "d+")
---                             , (Dart aC Negative, "c-")
---                             ]
---                           , [ (Dart aG Negative, "g-")
---                             ]
+--     adjacencies = NonEmpty.fromList . fmap (fmap NonEmpty.fromList) $
+--                           [ ("u"
+--                             , [ (Dart.Dart aA Negative, "a-")
+--                               , (Dart.Dart aC Positive, "c+")
+--                               , (Dart.Dart aB Positive, "b+")
+--                               , (Dart.Dart aA Positive, "a+")
+--                               ]
+--                             )
+--                           , ("v"
+--                             , [ (Dart.Dart aE Negative, "e-")
+--                               , (Dart.Dart aB Negative, "b-")
+--                               , (Dart.Dart aD Negative, "d-")
+--                               , (Dart.Dart aG Positive, "g+")
+--                               ]
+--                             )
+--                           , ("w"
+--                             , [ (Dart.Dart aE Positive, "e+")
+--                               , (Dart.Dart aD Positive, "d+")
+--                               , (Dart.Dart aC Negative, "c-")
+--                               ]
+--                             )
+--                           , ("x"
+--                             , [ (Dart.Dart aG Negative, "g-")
+--                               ]
+--                             )
 --                           ]
 --     myGraph :: CPlanarGraph Primal String String String String
---     myGraph = planarGraph adjacencies
---                    & vertexData .~ V.unsafeFromList ["u","v","w","x"]
+--     myGraph = cPlanarGraph adjacencies
 --                    & faceData   .~ V.unsafeFromList ["f_3", "f_infty","f_1","f_2"]
 --     showWithData     :: HasDataOf s i => s -> i -> (i, DataOf s i)
 --     showWithData g i = (i, g^.dataOf i)
@@ -360,8 +370,8 @@ traverseFaces f = itraverseOf (faceData.traversed1) (\i -> f (FaceId $ VertexId 
 -- | Construct a planar graph
 --
 -- running time: \(O(n)\).
-planarGraph'      :: Permutation (DartId s) -> CPlanarGraph w s () () ()
-planarGraph' perm = pg
+cPlanarGraph'      :: Permutation (DartId s) -> CPlanarGraph w s () () ()
+cPlanarGraph' perm = pg
   where
     pg = CPlanarGraph perm vData eData fData (computeDual pg)
         -- note the lazy calculation of computeDual that refers to pg itself
@@ -378,11 +388,14 @@ planarGraph' perm = pg
 -- vertex.
 --
 -- running time: \(O(n)\).
-planarGraph    :: NonEmpty (NonEmpty (DartId s,e)) -> CPlanarGraph Primal s () e ()
-planarGraph ds = planarGraph' perm & dartVector .~ V.fromNonEmpty (sconcat ds)
+cPlanarGraph    :: Foldable1 nonEmpty
+                => nonEmpty (v, NonEmpty (DartId s,e)) -> CPlanarGraph Primal s v e ()
+cPlanarGraph xs = cPlanarGraph' perm & dartVector .~ V.fromNonEmpty (sconcat ds)
+                                     & vertexData .~ V.unsafeFromVector (Builder.build vs)
   where
-    n     = sum . fmap length $ ds
-    perm  = toCycleRep n $ fmap (fmap fst) ds
+    (vs,ds) = foldMap1 (\(v, adjs) -> (Builder.singleton v, NonEmpty.singleton adjs)) xs
+    n       = sum . fmap length $ ds
+    perm    = toCycleRep n $ fmap (fmap fst) ds
 
 
 -- | Produces the adjacencylists for all vertices in the graph. For every vertex, the

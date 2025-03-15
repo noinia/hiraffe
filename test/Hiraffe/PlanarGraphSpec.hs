@@ -7,23 +7,13 @@ import           Control.Monad
 import qualified Data.Foldable as F
 import           Data.List.NonEmpty (NonEmpty(..))
 import qualified Data.List.NonEmpty as NonEmpty
-import qualified Data.Map.Strict as SM
-import qualified Data.Set as S
 import qualified Data.Text as Text
-import           Data.YAML
-import           HGeometry.Combinatorial.Util
-import           HGeometry.Permutation (toCycleRep)
-import           HGeometry.YAML
 import           Hiraffe.Instances ()
 import qualified Hiraffe.PlanarGraph as PlanarGraph
 import qualified Hiraffe.PlanarGraph.Dart as Dart
 -- import           Hiraffe.PlanarGraph.IO
 import           Hiraffe.PlanarGraph
-import qualified System.File.OsPath as File
-import           System.OsPath
 import           Test.Hspec
-import           Test.Hspec.QuickCheck
-import           Test.QuickCheck
 
 --------------------------------------------------------------------------------
 data TestG
@@ -85,9 +75,12 @@ spec = describe "PlanarGraph spec" $ do
     let u = myGraph^?!vertices.asIndex -- take the first vertex
     myGraph^..neighboursOfByEdge u `shouldBe` myCGraph^..neighboursOfByEdge u
   it "neighboursOfByEdge" $ do
-    let (_:(u,x):_) = myGraph^..vertices.withIndex -- take the second vertex
-    show (x, myGraph^..neighboursOfByEdge u.withIndex) `shouldBe`
-      "(1,[((Dart (Arc 0) +1,VertexId 1),1),((Dart (Arc 1) +1,VertexId 2),2),((Dart (Arc 2) +1,VertexId 4),4)])"
+    case myGraph^..vertices.withIndex of
+      -- take the second vertex
+      (_:(u,x):_) -> show (x, myGraph^..neighboursOfByEdge u.withIndex)
+                     `shouldBe`
+                     "(1,[((Dart (Arc 0) +1,VertexId 1),1),((Dart (Arc 1) +1,VertexId 2),2),((Dart (Arc 2) +1,VertexId 4),4)])"
+      _           -> fail "neighboursOfbyEdge"
 
   -- it "neighboursOfByEdge" $ do
   --   let (_:(u,x):_) = myGraph^..vertices.withIndex -- take the second vertex
