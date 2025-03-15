@@ -180,6 +180,13 @@ linkNegatives g = g&darts %@~ \(u,v) x -> if u <= v then fromJust' x
 
 instance HasFromFoldable f => DiGraph_ (GGraph f v e) where
   endPoints _ = id
+  outNeighboursOfByDart u = conjoined (outNeighboursOf u) asIFold
+    where
+      asIFold = ifolding $ \g -> g^..incidentEdges' u.asIndex.to (\v -> ( ((u,v),v)
+                                                                        , g^?! vertexAt v)
+                                                                 )
+  {-# INLINE outNeighboursOfByDart #-}
+
   outNeighboursOf u = conjoined asFold asIFold
     where
       asFold  :: Fold (GGraph f v e) v
@@ -208,6 +215,11 @@ instance HasFromFoldable f => BidirGraph_ (GGraph f v e) where
   -- we use the dart oriented from small to large as the positive one.
 
 instance HasFromFoldable f => Graph_ (GGraph f v e) where
+  neighboursOfByEdge u = conjoined (neighboursOf u) asIFold
+    where
+      asIFold = ifolding $ \g -> g^..incidentEdges' u.asIndex.to (\v -> ( ((u,v),v)
+                                                                        , g^?! vertexAt v)
+                                                                 )
   neighboursOf u = conjoined asFold asIFold
     where
       asFold  :: Fold (GGraph f v e) v
