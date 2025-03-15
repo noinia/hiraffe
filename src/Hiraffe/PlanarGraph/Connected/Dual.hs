@@ -37,27 +37,34 @@ import           Hiraffe.PlanarGraph.Dart
 --         arc' = fromMaybe (error "invalid arc") . lookup arcC $ zip "abcdefg" [0..]
 --     dart _ = error "myDart"
 --     (aA:aB:aC:aD:aE:aG:_) = take 6 [Arc 0..]
---     adjacencies = NonEmpty.fromList . fmap NonEmpty.fromList $
---                           [ [ (Dart aA Negative, "a-")
---                             , (Dart aC Positive, "c+")
---                             , (Dart aB Positive, "b+")
---                             , (Dart aA Positive, "a+")
---                             ]
---                           , [ (Dart aE Negative, "e-")
---                             , (Dart aB Negative, "b-")
---                             , (Dart aD Negative, "d-")
---                             , (Dart aG Positive, "g+")
---                             ]
---                           , [ (Dart aE Positive, "e+")
---                             , (Dart aD Positive, "d+")
---                             , (Dart aC Negative, "c-")
---                             ]
---                           , [ (Dart aG Negative, "g-")
---                             ]
+--     adjacencies = NonEmpty.fromList . fmap (fmap NonEmpty.fromList) $
+--                           [ ("u"
+--                             , [ (Dart aA Negative, "a-")
+--                               , (Dart aC Positive, "c+")
+--                               , (Dart aB Positive, "b+")
+--                               , (Dart aA Positive, "a+")
+--                               ]
+--                             )
+--                           , ("v"
+--                             , [ (Dart aE Negative, "e-")
+--                               , (Dart aB Negative, "b-")
+--                               , (Dart aD Negative, "d-")
+--                               , (Dart aG Positive, "g+")
+--                               ]
+--                             )
+--                           , ("w"
+--                             , [ (Dart aE Positive, "e+")
+--                               , (Dart aD Positive, "d+")
+--                               , (Dart aC Negative, "c-")
+--                               ]
+--                             )
+--                           , ("x"
+--                             , [ (Dart aG Negative, "g-")
+--                               ]
+--                             )
 --                           ]
 --     myGraph :: CPlanarGraph Primal () String String String
 --     myGraph = cPlanarGraph adjacencies
---                     & vertexData .~ V.unsafeFromList ["u","v","w","x"]
 --                     & faceData   .~ V.unsafeFromList ["f_3", "f_infty","f_1","f_2"]
 --     showWithData     :: HasDataOf s i => s -> i -> (i, DataOf s i)
 --     showWithData g i = (i, g^.dataOf i)
