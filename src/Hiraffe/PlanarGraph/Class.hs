@@ -66,7 +66,7 @@ class ( Graph_   planarGraph
 
   {-# MINIMAL dualGraph, (incidentFaceOf|leftFaceOf)
             , _DualFaceIx, _DualVertexIx
-            , rightFaceOf, prevDartOf, nextDartOf, boundaryDartOf, boundaryDarts
+            , prevDartOf, nextDartOf, boundaryDartOf, boundaryDarts
     #-}
 
   type DualGraphOf planarGraph
@@ -104,8 +104,9 @@ class ( Graph_   planarGraph
   leftFaceOf = incidentFaceOf
 
   -- | The face to the right of the dart
-  rightFaceOf :: DartIx planarGraph
-              -> IndexedLens' (FaceIx planarGraph) planarGraph (Face planarGraph)
+  rightFaceOf   :: DartIx planarGraph
+                -> IndexedLens' (FaceIx planarGraph) planarGraph (Face planarGraph)
+  rightFaceOf d = \l gr -> leftFaceOf (gr^.twinOf d) l gr
 
   -- | Get the previous edge in order along the face (so ccw for internal faces, and cw
   -- for external faces) that is to the left of this dart.
