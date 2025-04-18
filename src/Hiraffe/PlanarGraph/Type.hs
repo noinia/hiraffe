@@ -215,41 +215,28 @@ instance HasFaces (PlanarGraph w s v e f) (PlanarGraph w s v e f')  where
   faces = reindexed (coerce :: Int -> FaceIx (PlanarGraph w s v e f))
         $ rawFaceData .> traversed1 <. faceDataVal.fData
 
-{-
+----------------------------------------
 
-instance HasConnectedComponents' (PlanarGraph w s v e f) where
-  -- TODO: Hmm, should this return an actual component, i.e. in which
-  -- the vertices store .s.t of value v? darts of value e etc. ?
-  type ConnectedComponent   (PlanarGraph w s v e f) = s v e f
-  type ConnectedComponentIx (PlanarGraph w s v e f) =
-  -- connectedComponentAt pg =
-  numConnectedComponents pg = NonEmptyV.length . _components
+instance HasConnectedComponents' (PlanarGraph w s vertex e f) where
+  type ConnectedComponentIx (PlanarGraph w s vertex e f) = ComponentId s
+  type ConnectedComponent   (PlanarGraph w s vertex e f) = Component w s
+  connectedComponentAt i = components .> iix' i
+    where
+      iix'   :: ComponentId s
+             -> IndexedTraversal' (ComponentId s)
+                                  (NonEmptyVector (Component w s)) (Component w s)
+      iix' i = reindexed (ComponentId :: Int -> ComponentId s) $ iix (coerce i)
 
--- hmm, I guess this thing cannot be type changing in our case?
-instance HasConnectedComponents (PlanarGraph w s v e f) (PlanarGraph w s v e f) where
-  connectedComponents =
+  numConnectedComponents = NonEmptyV.length . view components
 
--}
+instance HasConnectedComponents (PlanarGraph w s vertex e f)
+                                (PlanarGraph w s vertex e f) where
+  connectedComponents = components .>
+                        reindexed (ComponentId :: Int -> ComponentId s) traversed1
+
+
 
 --------------------------------------------------------------------------------
-
-
--- DartIx
---                              (pg
---                                 (Hiraffe.PlanarGraph.Component.Wrap s)
---                                 (VertexId s)
---                                 (Dart.Dart s)
---                                 (FaceId s))
---                      with:
-
--- type IsComponent s = ( DartIx   (Component s) ~ Dart.Dart (Wrap s)
---                         , VertexIx (Component s) ~ VertexId (Wrap s)
---                         , Dart     (Component s) ~ Dart.Dart s
---                         , Vertex   (Component s) ~ VertexId s
---                         -- , FaceId (Component s) ~ FaceId s
---                         )
-
-
 
 instance DiGraph_ (PlanarGraph w s v e f) where
 
