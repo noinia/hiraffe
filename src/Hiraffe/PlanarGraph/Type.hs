@@ -11,7 +11,7 @@
 module Hiraffe.PlanarGraph.Type
   ( PlanarGraph(..)
   , Component
-  , components, rawDartData, rawFaceData
+  , components, rawDartData, rawVertexData, rawFaceData
   , component
 
   , fromConnected'
@@ -225,7 +225,7 @@ instance HasConnectedComponents' (PlanarGraph w s vertex e f) where
       iix'   :: ComponentId s
              -> IndexedTraversal' (ComponentId s)
                                   (NonEmptyVector (Component w s)) (Component w s)
-      iix' i = reindexed (ComponentId :: Int -> ComponentId s) $ iix (coerce i)
+      iix' j = reindexed (ComponentId :: Int -> ComponentId s) $ iix (coerce j)
 
   numConnectedComponents = NonEmptyV.length . view components
 
