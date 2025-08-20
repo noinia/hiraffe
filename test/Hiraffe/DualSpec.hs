@@ -45,9 +45,9 @@ spec = describe "PlanarGraph dual graph spec" $ do
            (myGraph^.prevDartOf (dart "d-")) `shouldBe` "g-"
            (myGraph^.prevDartOf (dart "c+")) `shouldBe` "b-"
            (myGraph^.prevDartOf (dart "c-")) `shouldBe` "e-"
-         it "boundaryTests" $ do
-           (myGraph^..boundaryDartsOf (FaceId $ VertexId 2)) `shouldBe` ["c+","d+","b-"]
-           (myGraph^..boundaryDartsOf (FaceId $ VertexId 1)) `shouldBe` ["a-","b+","e-","c-"]
+         it "outerBoundaryTests" $ do
+           (myGraph^..outerBoundaryDartsOf (FaceId $ VertexId 2)) `shouldBe` ["c+","d+","b-"]
+           -- (myGraph^..outerBoundaryDartsOf (FaceId $ VertexId 1)) `shouldBe` ["a-","b+","e-","c-"]
          it "boundaryDartOf" $ do
            (myGraph^.boundaryDartOf (FaceId $ VertexId 2)) `shouldBe` "c+"
            (myGraph^.boundaryDartOf (FaceId $ VertexId 1)) `shouldBe` "a-"

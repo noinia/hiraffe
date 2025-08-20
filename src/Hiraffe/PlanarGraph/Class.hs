@@ -13,6 +13,8 @@
 module Hiraffe.PlanarGraph.Class
   ( PlanarGraph_(..)
   , HasFaces(..), HasFaces'(..)
+  , HasOuterBoundaryOf(..)
+  -- , HasBoundary(..)
   ) where
 
 
@@ -66,7 +68,7 @@ class ( Graph_   planarGraph
 
   {-# MINIMAL dualGraph, (incidentFaceOf|leftFaceOf)
             , _DualFaceIx, _DualVertexIx
-            , prevDartOf, nextDartOf, boundaryDartOf, boundaryDarts
+            , prevDartOf, nextDartOf, boundaryDartOf
     #-}
 
   type DualGraphOf planarGraph
@@ -123,11 +125,66 @@ class ( Graph_   planarGraph
   boundaryDartOf :: FaceIx planarGraph
                  -> IndexedLens' (DartIx planarGraph) planarGraph (Dart planarGraph)
 
+-- | A class for things that have a boundary.
+class ( DiGraph_ planarGraph
+      , HasFaces planarGraph planarGraph
+      ) => HasOuterBoundaryOf planarGraph where
+  {-# MINIMAL outerBoundaryDarts  #-}
+
+  -- | The darts on the outer boundary of this face, in counter clockwise order along the
+  -- boundary.
+  --
+  -- pre: faceIx /= outerFaceIx
+  --
+  -- running time: \(O(k)\), where \(k\) is the output size.
+  outerBoundaryDarts :: FaceIx planarGraph -> planarGraph -> NonEmptyVector (DartIx planarGraph)
+
+  -- | The darts on the outer boundary of the face, in counter clockwise order along the
+  -- boundary.
+  --
+  -- pre: faceIx /= outerFaceIx
+  --
+  -- running time: \(O(k)\), where \(k\) is the output size.
+  outerBoundaryDartsOf    :: FaceIx planarGraph
+                          -> IndexedFold1 (DartIx planarGraph) planarGraph (Dart planarGraph)
+  outerBoundaryDartsOf fi = ifolding1 $ \g ->
+                              (\d -> g^?!dartAt d.withIndex) <$> outerBoundaryDarts fi g
+
+  -- | The vertices on the outer boundary of the face, in counter clockwise order along the
+  -- boundary.
+  --
+  -- pre: faceIx /= outerFaceIx
+  --
+  -- running time: \(O(k)\), where \(k\) is the output size.
+  outerBoundaryVertices      :: FaceIx planarGraph -> planarGraph
+                             -> NonEmptyVector (VertexIx planarGraph)
+  outerBoundaryVertices fi g = (\d -> g^.tailOf d.asIndex) <$> outerBoundaryDarts fi g
+
+  -- | The vertices on the outer boundary of the face, in counter clockwise order along
+  -- the boundary.
+  --
+  -- running time: \(O(k)\), where \(k\) is the output size.
+  outerBoundaryVerticesOf    :: FaceIx planarGraph
+                             -> IndexedFold1 (VertexIx planarGraph) planarGraph (Vertex planarGraph)
+  outerBoundaryVerticesOf fi = ifolding1 $ \g ->
+                                 (\d -> g^.tailOf d.withIndex) <$> outerBoundaryDarts fi g
+
+
+
+-- | A class for things that have a boundary.
+class ( DiGraph_ planarGraph
+      , HasFaces planarGraph planarGraph
+      ) => HasBoundary planarGraph where
+  {-# MINIMAL boundaryDarts  #-}
+
+  -- TODO: this is underspecified; do we want only the outer boundary? Or also the inner boundaries?
 
   -- | The darts bounding this face. The darts are reported in order
   -- along the face. This means that for internal faces the darts are
   -- reported in *counter clockwise* order along the boundary, whereas for the
   -- outer face the darts are reported in clockwise order.
+  --
+  --
   --
   -- running time: \(O(k)\), where \(k\) is the output size.
   boundaryDarts :: FaceIx planarGraph -> planarGraph -> NonEmptyVector (DartIx planarGraph)
