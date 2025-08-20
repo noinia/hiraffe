@@ -17,6 +17,8 @@ module Hiraffe.PlanarGraph.Type
   , fromConnected'
   , asLocalD
   , asLocalV
+
+  , itraverseEdges1
   ) where
 
 
