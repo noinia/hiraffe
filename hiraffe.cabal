@@ -130,6 +130,7 @@ library
     Hiraffe.PlanarGraph.Dart
     Hiraffe.PlanarGraph.EdgeOracle
     Hiraffe.PlanarGraph.IO
+    Hiraffe.PlanarGraph.Type
 
     Hiraffe.ShortestPath.FloydWarshall
 
@@ -140,7 +141,6 @@ library
     Hiraffe.PlanarGraph.Connected.Dual
     Hiraffe.PlanarGraph.Connected.Instance
     Hiraffe.PlanarGraph.World
-    Hiraffe.PlanarGraph.Type
     -- Hiraffe.PlanarGraph.Build
 
 --------------------------------------------------------------------------------
