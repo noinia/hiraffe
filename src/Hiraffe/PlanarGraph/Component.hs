@@ -28,7 +28,7 @@ import           Data.Aeson
 import qualified Data.Sequence as Seq
 import           GHC.Generics (Generic)
 import           Hiraffe.Graph.Component
-import           Hiraffe.PlanarGraph.Connected (FaceId)
+import           Hiraffe.PlanarGraph.Connected (FaceIdIn)
 import           Hiraffe.PlanarGraph.Dart (Dart)
 
 --------------------------------------------------------------------------------
@@ -111,18 +111,20 @@ dataVal = lens (\(Raw _ _ x) -> x) (\(Raw c i _) y -> Raw c i y)
 -- faceId of it.  If not, this face must be the outer face (and thus
 -- we can find all the face id's it correponds to through the
 -- FaceData).
-data RawFace (s :: k) f = RawFace { _faceIdx     :: !(Maybe (ComponentId s, FaceId (Wrap s)))
-                                  , _faceDataVal :: !(FaceData (Dart s) f)
-                                  } deriving (Eq,Show,Functor,Foldable,Traversable,Generic)
+data RawFace w (s :: k) f =
+  RawFace { _faceIdx     :: !(Maybe (ComponentId s, FaceIdIn w (Wrap s)))
+          , _faceDataVal :: !(FaceData (Dart s) f)
+          } deriving (Eq,Show,Functor,Foldable,Traversable,Generic)
 
 -- TODO: use unpacked/strict values for the faceIdx
 
 -- | Lens to access the faceIx (if it exists)
-faceIdx :: Lens' (RawFace s f) (Maybe (ComponentId s, FaceId (Wrap s)))
+faceIdx :: Lens' (RawFace w s f) (Maybe (ComponentId s, FaceIdIn w (Wrap s)))
 faceIdx = lens _faceIdx (\rf x -> rf { _faceIdx = x })
 {-# INLINE faceIdx #-}
 
 -- | Lens to access the face data
-faceDataVal :: Lens (RawFace s f)  (RawFace s f') (FaceData (Dart s) f) (FaceData (Dart s) f')
+faceDataVal :: Lens (RawFace w s f)  (RawFace w s f')
+                    (FaceData (Dart s) f) (FaceData (Dart s) f')
 faceDataVal = lens _faceDataVal (\rf x -> rf { _faceDataVal = x })
 {-# INLINE faceDataVal #-}

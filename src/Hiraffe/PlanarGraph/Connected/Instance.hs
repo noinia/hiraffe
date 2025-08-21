@@ -226,4 +226,6 @@ instance PlanarGraph_ (CPlanarGraph w s v e f) where
   boundaryDartOf d = \paFb gr -> let d' = Dual.boundaryDart d gr
                                  in singular (dartAt d') paFb gr
 
-  boundaryDarts = Dual.boundary
+instance HasOuterBoundaryOf (CPlanarGraph w s v e f) where
+  outerBoundaryDarts = Dual.boundary
+  -- this actually also works for the outer face, but we don't have to care about that.

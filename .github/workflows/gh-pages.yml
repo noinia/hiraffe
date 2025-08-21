@@ -49,6 +49,7 @@ jobs:
         run: |
           mkdir --parents pages
           cp -r haddocks pages
+          cp -r docs pages/haddocks/hiraffe/
           cp haddock.txt pages/
           cp haddock_badge.json pages/
 
