@@ -76,7 +76,7 @@ data PlanarGraph (w :: World) (s   :: k) v e f = PlanarGraph
     { _components    :: NonEmptyVector (Component w s)
     , _rawVertexData :: NonEmptyVector (Raw s (VertexIx (Component w s)) v)
     , _rawDartData   :: NonEmptyVector (Raw s (DartIx   (Component w s)) e)
-    , _rawFaceData   :: NonEmptyVector (RawFace s f)
+    , _rawFaceData   :: NonEmptyVector (RawFace w s f)
     } deriving (Functor,Generic,Show,Eq)
 
 
@@ -100,7 +100,7 @@ rawDartData = lens _rawDartData (\ps vxd -> ps { _rawDartData = vxd })
 
 -- | Access the raw face data
 rawFaceData :: Lens (PlanarGraph w s v e f) (PlanarGraph w s v e f')
-                    (NonEmptyVector (RawFace s f))    (NonEmptyVector (RawFace s f'))
+                    (NonEmptyVector (RawFace w s f))    (NonEmptyVector (RawFace w s f'))
 rawFaceData = lens _rawFaceData (\ps vxd -> ps { _rawFaceData = vxd })
 
 -- | Lens to access a particular component of the planar subdivision.
