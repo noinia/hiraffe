@@ -237,6 +237,13 @@ instance HasConnectedComponents (PlanarGraph w s vertex e f)
                         reindexed (ComponentId :: Int -> ComponentId s) traversed1
 
 
+--------------------------------------------------------------------------------
+
+instance HasOuterBoundaryOf (PlanarGraph w s v e f) where
+  outerBoundaryDarts f gr = case gr^?!rawFaceData.ix (coerce f).faceIdx of
+    Nothing      -> error "outerBoundarydarts: precondition failed; called on the outer face"
+    Just (ci,f') -> let c = gr^?!connectedComponentAt ci
+                    in (\d' -> c^?!dartAt d') <$> outerBoundaryDarts f' c
 
 --------------------------------------------------------------------------------
 
