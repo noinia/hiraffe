@@ -14,7 +14,8 @@ module Hiraffe.PlanarGraph.Class
   ( PlanarGraph_(..)
   , HasFaces(..), HasFaces'(..)
   , HasOuterBoundaryOf(..)
-  -- , HasBoundary(..)
+       -- , HasBoundary(..)
+  , HasOuterFace(..)
   ) where
 
 
@@ -23,6 +24,7 @@ import Data.Vector.NonEmpty (NonEmptyVector)
 import HGeometry.Lens.Util
 import Hiraffe.Graph.Class
 import Hiraffe.PlanarGraph.World
+import Data.Functor.Apply
 
 --------------------------------------------------------------------------------
 -- * Faces
@@ -171,47 +173,41 @@ class ( DiGraph_ planarGraph
 
 
 
--- | A class for things that have a boundary.
-class ( DiGraph_ planarGraph
-      , HasFaces planarGraph planarGraph
-      ) => HasBoundary planarGraph where
-  {-# MINIMAL boundaryDarts  #-}
 
-  -- TODO: this is underspecified; do we want only the outer boundary? Or also the inner boundaries?
 
-  -- | The darts bounding this face. The darts are reported in order
-  -- along the face. This means that for internal faces the darts are
-  -- reported in *counter clockwise* order along the boundary, whereas for the
-  -- outer face the darts are reported in clockwise order.
-  --
-  --
-  --
-  -- running time: \(O(k)\), where \(k\) is the output size.
-  boundaryDarts :: FaceIx planarGraph -> planarGraph -> NonEmptyVector (DartIx planarGraph)
+-- | A class for graphs that have an outer face (and conversely, that have inner faces).
+class ( PlanarGraph_ planeGraph
+      ) => HasOuterFace planeGraph where
+  {-# MINIMAL outerFaceId | outerFaceDart #-}
+  -- | Getter to access the outer face
+  outerFace :: Eq (FaceIx planeGraph)
+            => IndexedLens' (FaceIx planeGraph) planeGraph (Face planeGraph)
+  outerFace = singular theLens
+    where
+      theLens pFaceFFace g = faceAt theOuterFaceId pFaceFFace g
+        where
+          theOuterFaceId = outerFaceId g
 
-  -- | The darts are reported in order along the face. This means that for internal faces
-  -- the darts are reported in *counter clockwise* order along the boundary, whereas for the
-  -- outer face the darts are reported in clockwise order.
-  --
-  -- running time: \(O(k)\), where \(k\) is the output size.
-  boundaryDartsOf    :: FaceIx planarGraph
-                     -> IndexedFold1 (DartIx planarGraph) planarGraph (Dart planarGraph)
-  boundaryDartsOf fi = ifolding1 $ \g ->
-                                  (\d -> g^?!dartAt d.withIndex) <$> boundaryDarts fi g
+  -- | Traversal of all interior faces in the graph
+  interiorFaces :: (Eq (FaceIx planeGraph))
+                => IndexedTraversal' (FaceIx planeGraph) planeGraph (Face planeGraph)
+  interiorFaces = theTraversal
+    where
+      theTraversal :: (Applicative f, Indexable (FaceIx planeGraph) p)
+                   => p (Face planeGraph) (f (Face planeGraph)) -> planeGraph -> f planeGraph
+      theTraversal pFaceFFace g = unwrapApplicative
+                                $ (faces.ifiltered (\i _ -> i /= theOuterFaceId))
+                                                   (rmap WrapApplicative pFaceFFace)
+                                                   g
+        where
+          theOuterFaceId = outerFaceId g
 
-  -- | The vertices bounding this face, for internal faces in counter clockwise
-  -- order, for the outer face in clockwise order.
+  -- | gets the id of the outer face
   --
-  -- running time: \(O(k)\), where \(k\) is the output size.
-  boundaryVertices      :: FaceIx planarGraph -> planarGraph
-                        -> NonEmptyVector (VertexIx planarGraph)
-  boundaryVertices fi g = (\d -> g^.tailOf d.asIndex) <$> boundaryDarts fi g
+  outerFaceId    :: planeGraph -> FaceIx planeGraph
+  outerFaceId ps = ps^.leftFaceOf (outerFaceDart ps).asIndex
 
-  -- | The vertices bounding this face, for internal faces in counter clockwise
-  -- order, for the outer face in clockwise order.
-  --
-  -- running time: \(O(k)\), where \(k\) is the output size.
-  boundaryVerticesOf    :: FaceIx planarGraph
-                        -> IndexedFold1 (VertexIx planarGraph) planarGraph (Vertex planarGraph)
-  boundaryVerticesOf fi = ifolding1 $ \g ->
-                            (\d -> g^.tailOf d.withIndex) <$> boundaryDarts fi g
+  -- | gets a dart incident to the outer face (in particular, that has the
+  -- outerface on its left)
+  outerFaceDart    :: planeGraph -> DartIx planeGraph
+  outerFaceDart gr = gr^.boundaryDartOf (outerFaceId gr).asIndex

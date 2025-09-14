@@ -237,6 +237,16 @@ instance HasConnectedComponents (PlanarGraph w s vertex e f)
                         reindexed (ComponentId :: Int -> ComponentId s) traversed1
 
 
+--------------------------------------------------------------------------------
+
+instance HasOuterFace (PlanarGraph w s v e f) where
+  outerFaceId _ = coerce @Int @(FaceId s) 0
+
+instance HasOuterBoundaryOf (PlanarGraph w s v e f) where
+  outerBoundaryDarts f gr = case gr^?!rawFaceData.ix (coerce f).faceIdx of
+    Nothing      -> error "outerBoundarydarts: precondition failed; called on the outer face"
+    Just (ci,f') -> let c = gr^?!connectedComponentAt ci
+                    in (\d' -> c^?!dartAt d') <$> outerBoundaryDarts f' c
 
 --------------------------------------------------------------------------------
 
@@ -419,18 +429,14 @@ instance ( -- PlanarGraph_ (Component s)
 
 --------------------------------------------------------------------------------
 
-{-
--- | Constructs a PlanarGraph from a connected planar graph (i.e. a single component graph)
---
--- runningTime: \(O(n)\)
-fromConnected   :: forall s v e f. (Ord r, Num r)
-                => CPlanarGraph w s v e f -> PlanarGraph w s v e f
-fromConnected g = fromConnected' g (PG.outerFaceDart g)
-
- -}
+-- -- | Constructs a PlanarGraph from a connected planar graph (i.e. a single component graph)
+-- --
+-- -- runningTime: \(O(n)\)
+-- fromConnected   :: forall s v e f. CPlanarGraph w s v e f -> PlanarGraph w s v e f
+-- fromConnected g = fromConnected' g (outerFaceDart g)
 
 -- | Given a (connected) PlanarGraph and a dart that has the outerface on its left
--- | Constructs a planarsubdivision
+-- | Constructs a PlanarGraph
 --
 -- runningTime: \(O(n)\)
 fromConnected'        :: forall w s v e f.
@@ -473,3 +479,106 @@ fromConnected' g ofD = PlanarGraph (NonEmptyV.singleton $ Core.unsafeChangeS g')
     flipID i | i == 0           = (coerce oF)
              | i == (coerce oF) = 0
              | otherwise        = i
+
+--------------------------------------------------------------------------------
+-- * The Planargraph_ instance
+
+instance ( -- PlanarGraph_ (Component s)
+         -- , IsComponent s
+         -- , EdgeIx   (Component s) ~ Dart.Dart (Wrap s)
+         -- , Edge     (Component s) ~ Dart.Dart s
+         ) => PlanarGraph_ (PlanarGraph w s v e f) where
+  type DualGraphOf (PlanarGraph w s v e f) = DualGraph w s v e f
+  type WorldOf     (PlanarGraph w s v e f) = w
+
+  dualGraph = DualGraph
+  -- TODO: this does not really do anything useful yet
+
+  _DualFaceIx     _ = coerced
+  _DualVertexIx   _ = coerced
+
+  incidentFaceOf  d = \pF gr -> let (_,d', c) = asLocalD d gr
+                                    fi        = c^.incidentFaceOf d'
+                                in singular (faceAt fi) pF gr
+
+
+  prevDartOf      d = \pF gr -> let (_,d', c) = asLocalD d gr
+                                    prevD     = c^.prevDartOf d'
+                                in singular (dartAt prevD) pF gr
+
+  nextDartOf      d = \pF gr -> let (_,d', c) = asLocalD d gr
+                                    nextD     = c^.nextDartOf d'
+                                in singular (dartAt nextD) pF gr
+
+  boundaryDartOf fi = \pF gr -> let d = computeD gr in singular (dartAt d) pF gr
+    where
+      computeD    :: PlanarGraph w s v e f -> DartIx (PlanarGraph w s v e f)
+      computeD gr = let RawFace theFaceIdx fd = gr^?!rawFaceData.ix (coerce fi)
+                    in case theFaceIdx of
+                         Nothing      -> fd^?!holes._head
+                         Just (c,fi') -> gr^?!connectedComponentAt c.boundaryDartOf fi'
+
+
+----------------------------------------
+-- * Our temporary type for representing a dual graph.
+
+-- | FIXME: This should do something useful rather than just wrap the original graph.
+newtype DualGraph w s v e f = DualGraph (PlanarGraph w s v e f)
+
+_DualGraph :: Iso (DualGraph w s v e f)   (DualGraph   w' s' v' e' f')
+                  (PlanarGraph w s v e f) (PlanarGraph w' s' v' e' f')
+_DualGraph = coerced
+
+instance HasVertices' (DualGraph w s v e f) where
+  type VertexIx (DualGraph w s v e f) = FaceIx (PlanarGraph w s v e f)
+  type Vertex   (DualGraph w s v e f) = Face   (PlanarGraph w s v e f)
+  vertexAt f = _DualGraph.faceAt f
+  numVertices (DualGraph gr) = numVertices gr
+
+instance HasFaces' (DualGraph w s v e f) where
+  type FaceIx (DualGraph w s v e f) = VertexIx (PlanarGraph w s v e f)
+  type Face   (DualGraph w s v e f) = Vertex   (PlanarGraph w s v e f)
+  faceAt v = _DualGraph.vertexAt v
+  numFaces (DualGraph gr) = numFaces gr
+
+{-
+
+data DualGraph w s v e f =
+  DualGraph { _dualGraph :: MapRep.Graph (FaceIx (PlanarGraph w s v e f))
+                                         f
+                                         (DartIx (PlanarGraph w s v e f),e)
+            , _primalGraph :: PlanarGraph w s v e f
+            } deriving (Show,Eq)
+
+-}
+
+----------------------------------------
+-- * Computing an actual dual graph.
+
+{- TODO: This is a partial implementation; the main issue is sthat we don't quite know
+-- how to represent it all that well
+
+-- | Computes the dual graph. Every edge in the primal corresponds to an edge in this dual graph.
+--
+computeDualGraph    :: forall w s v e f. PlanarGraph w s v e f
+                    -> MapRep.Graph (FaceIx (PlanarGraph w s v e f))
+                                    f
+                                    (DartIx (PlanarGraph w s v e f),e)
+computeDualGraph ps = g
+  where
+    g = fromAdjacencyLists
+      . NonEmptyV.imap (\i -> fromFace (coerce i)) $ _rawFaceData ps
+    fromFace :: FaceIx (PlanarGraph w s v e f) -> RawFace w s f
+             -> ( FaceIx (PlanarGraph w s v e f)
+                , f
+                -- , NonEmpty (FaceIx (PlanarGraph w s v e f), e)
+                , [_]
+                )
+    fromFace fi rawFace = (fi, rawFace^.faceDataVal.fData, boundaryDarts)
+      where
+        boundaryDarts = case rawFace^.faceIdx of
+          Nothing          -> []
+          Just (c,localFi) -> []
+          -- TODO; some fold over the holes + the outer boundary
+
+-}
