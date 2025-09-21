@@ -16,7 +16,7 @@ module Hiraffe.PlanarGraph.Class
   , HasOuterBoundaryOf(..)
        -- , HasBoundary(..)
   , HasOuterFace(..)
-  , HasInnerComponent(..)
+  , HasInnerComponents(..)
   ) where
 
 
@@ -142,7 +142,7 @@ class ( Graph_   planarGraph
 
 
 -- | Class stating that some type can report the inner components of a face.
-class HasInnerComponent planarGraph where
+class HasInnerComponents planarGraph where
   -- | Given a faceIx fi get a Fold of the inner components of the
   -- face; i.e.  we are given one dart for every inner component.  the
   -- dart has the face with index fi to its left.

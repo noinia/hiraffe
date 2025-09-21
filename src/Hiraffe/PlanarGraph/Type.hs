@@ -239,6 +239,12 @@ instance HasConnectedComponents (PlanarGraph w s vertex e f)
 
 --------------------------------------------------------------------------------
 
+instance HasInnerComponents (PlanarGraph Primal s v e f) where
+  innerComponentsAt fi = ifolding $ \gr ->
+    (\d -> (d,gr^?!dartAt d)) <$> gr^?!rawFaceData.ix (coerce fi).faceDataVal.holes
+
+--------------------------------------------------------------------------------
+
 instance HasOuterFace (PlanarGraph w s v e f) where
   outerFaceId _ = coerce @Int @(FaceId s) 0
 
@@ -426,6 +432,9 @@ instance ( -- PlanarGraph_ (Component s)
 
 -- instance PlanarGraph_ component_ (PlanarGraph  component  s v e f) v where
 -- type DualGraphOf (CPlanarGraph w s v e f) = CPlanarGraph (DualOf w) s f e v
+
+
+
 
 --------------------------------------------------------------------------------
 
