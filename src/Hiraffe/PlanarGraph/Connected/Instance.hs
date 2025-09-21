@@ -34,6 +34,8 @@ import qualified Hiraffe.PlanarGraph.Dart as Dart
 import qualified Hiraffe.PlanarGraph.IO as IO
 import           Hiraffe.PlanarGraph.World
 import           Witherable
+import           HGeometry.Lens.Util
+
 --------------------------------------------------------------------------------
 
 instance HasVertices' (CPlanarGraph w s v e f) where
@@ -225,6 +227,9 @@ instance PlanarGraph_ (CPlanarGraph w s v e f) where
 
   boundaryDartOf d = \paFb gr -> let d' = Dual.boundaryDart d gr
                                  in singular (dartAt d') paFb gr
+
+  boundaryDartsFrom d = ifolding1 $ \gr ->
+                          (\d' -> gr^?!dartAt d'.withIndex) <$> Dual.boundary' d gr
 
 instance HasOuterBoundaryOf (CPlanarGraph w s v e f) where
   outerBoundaryDarts = Dual.boundary
