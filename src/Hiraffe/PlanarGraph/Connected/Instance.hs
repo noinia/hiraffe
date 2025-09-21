@@ -234,3 +234,7 @@ instance PlanarGraph_ (CPlanarGraph w s v e f) where
 instance HasOuterBoundaryOf (CPlanarGraph w s v e f) where
   outerBoundaryDarts = Dual.boundary
   -- this actually also works for the outer face, but we don't have to care about that.
+
+instance HasInnerComponents (CPlanarGraph Primal s v e f) where
+  innerComponentsAt _ = \_ gr -> pure gr
+  -- faces don't  have inner componenets in CPlanarGraphs
