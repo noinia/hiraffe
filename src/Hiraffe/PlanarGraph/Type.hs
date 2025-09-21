@@ -38,7 +38,6 @@ import           Data.Vector.NonEmpty (NonEmptyVector)
 import qualified Data.Vector.NonEmpty as NonEmptyV
 import           GHC.Generics (Generic)
 import           Hiraffe.Graph.Class
--- import           Hiraffe.Graph.Component
 import           Hiraffe.PlanarGraph.Class
 import           Hiraffe.PlanarGraph.Component
 import           Hiraffe.PlanarGraph.Connected ( CPlanarGraph
@@ -49,6 +48,7 @@ import qualified Hiraffe.PlanarGraph.Connected.Core as Core
 import           Hiraffe.PlanarGraph.Connected.Instance ()
 import qualified Hiraffe.PlanarGraph.Dart as Dart
 import           Hiraffe.PlanarGraph.World
+import           HGeometry.Lens.Util
 
 --------------------------------------------------------------------------------
 
@@ -518,6 +518,10 @@ instance ( -- PlanarGraph_ (Component s)
                          Nothing      -> fd^?!holes._head
                          Just (c,fi') -> gr^?!connectedComponentAt c.boundaryDartOf fi'
 
+  boundaryDartsFrom d = ifolding1 $ \gr ->
+                           let (_,dLocal, c) = asLocalD d gr
+                           in (\d' -> gr^?!dartAt d'.withIndex) <$>
+                              toNonEmptyVectorOf (boundaryDartsFrom dLocal) c
 
 ----------------------------------------
 -- * Our temporary type for representing a dual graph.

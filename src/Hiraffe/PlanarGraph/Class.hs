@@ -16,6 +16,7 @@ module Hiraffe.PlanarGraph.Class
   , HasOuterBoundaryOf(..)
        -- , HasBoundary(..)
   , HasOuterFace(..)
+  , HasInnerComponent(..)
   ) where
 
 
@@ -71,6 +72,7 @@ class ( Graph_   planarGraph
   {-# MINIMAL dualGraph, (incidentFaceOf|leftFaceOf)
             , _DualFaceIx, _DualVertexIx
             , prevDartOf, nextDartOf, boundaryDartOf
+            , boundaryDartsFrom
     #-}
 
   type DualGraphOf planarGraph
@@ -127,7 +129,28 @@ class ( Graph_   planarGraph
   boundaryDartOf :: FaceIx planarGraph
                  -> IndexedLens' (DartIx planarGraph) planarGraph (Dart planarGraph)
 
--- | A class for things that have a boundary.
+  -- | Given some dart d, compute the darts along the face containing d
+  -- (starting with d).  I.e. we iterate 'nextDartOf' until we are back
+  -- at the starting dart.
+  --
+  -- Note that
+  -- - if the dart is on the outerBoundary of a face, this reports the darts in CCW order
+  -- - if the dart is on an an inner component, this means we report the darts in CW order.
+  --
+  boundaryDartsFrom :: DartIx planarGraph
+                    -> IndexedFold1 (DartIx planarGraph) planarGraph (Dart planarGraph)
+
+
+-- | Class stating that some type can report the inner components of a face.
+class HasInnerComponent planarGraph where
+  -- | Given a faceIx fi get a Fold of the inner components of the
+  -- face; i.e.  we are given one dart for every inner component.  the
+  -- dart has the face with index fi to its left.
+  innerComponentsAt :: FaceIx planarGraph
+                    -> IndexedFold (DartIx planarGraph) planarGraph (Dart planarGraph)
+
+
+-- | A class for planar graphs for which we can report the outer boundary of a face.
 class ( DiGraph_ planarGraph
       , HasFaces planarGraph planarGraph
       ) => HasOuterBoundaryOf planarGraph where
