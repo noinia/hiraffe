@@ -35,7 +35,6 @@ import           Data.Maybe (fromMaybe)
 import           Data.Semigroup.Traversable
 import qualified Data.Sequence as Seq
 import           Data.Vector.NonEmpty (NonEmptyVector)
-import           Data.Vector (Vector)
 import qualified Data.Vector.NonEmpty as NonEmptyV
 import           GHC.Generics (Generic)
 import           Hiraffe.Graph.Class
