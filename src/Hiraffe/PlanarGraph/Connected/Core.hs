@@ -137,7 +137,8 @@ instance Default (VertexIdIn w s) where
 
 -- | The type to represent FaceId's
 newtype FaceIdIn w (s :: k) = FaceId { _unFaceId :: VertexIdIn (DualOf w) s }
-                            deriving (Eq,Ord,Enum,ToJSON,FromJSON)
+                            deriving (Eq,Ord,Enum,ToJSON,FromJSON,Generic)
+                            deriving newtype (NFData)
 
 -- | Shorthand for FaceId's in the primal.
 type FaceId = FaceIdIn Primal
@@ -229,7 +230,7 @@ instance (Eq v, Eq e, Eq f) => Eq (CPlanarGraph w s v e f) where
                                                          && r == r' && f == f'
   {-# INLINE (==) #-}
 
-
+instance (NFData v, NFData e, NFData f) => NFData (CPlanarGraph w s v e f)
 
 -- ** lenses and getters
 
