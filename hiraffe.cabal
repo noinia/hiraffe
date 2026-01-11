@@ -204,3 +204,4 @@ test-suite hspec
     Hiraffe.DualSpec
     Hiraffe.BFSSpec
     Hiraffe.ShortestPathSpec
+    Hiraffe.DijkstraSpec

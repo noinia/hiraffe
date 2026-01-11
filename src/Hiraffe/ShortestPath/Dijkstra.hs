@@ -20,7 +20,7 @@ import Data.Function (on)
 import Data.PSQueue (Binding(..))
 import Data.PSQueue qualified as PSQueue
 import Data.Semigroup
-import HGeometry.UnBounded
+import HGeometry.Unbounded
 
 --------------------------------------------------------------------------------
 
@@ -89,27 +89,3 @@ instance (Monoid r, Monoid (f v)) => Monoid (WithPath f v r) where
 
 
 --------------------------------------------------------------------------------
-
-shortestPaths'         :: (Ord v, Monoid r, Ord r) => v -> WeightedGraph v r -> [(v, Top r)]
-shortestPaths' s graph =  shortestPaths (weightF graph) s (dropWeights graph)
-
-type WeightedGraph v r = [(v,[(v,r)])]
-
-
-weightF           :: Eq v => WeightedGraph v r -> v -> v -> Top r
-weightF graph u v = review _TopMaybe $ lookup u graph >>= lookup v
-
-dropWeights :: WeightedGraph v r -> [(v,[v])]
-dropWeights = map (\(v,vs) -> (v,map fst vs))
-
-testGraph :: WeightedGraph Char (Sum Int)
-testGraph = coerce $
-            [ ('s', [('a',5 :: Int),('b',10)])
-            , ('a', [('s',5),('b',1),('c',6)])
-            , ('b', [('s',10),('a',1),('c',4)])
-            , ('c', [('a',6),('b',4)])
-            ]
-
-test1 = shortestPaths' 's' testGraph
-
-test2 = shortestPaths' 's' testGraph
