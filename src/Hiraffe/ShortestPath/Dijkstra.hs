@@ -13,45 +13,45 @@ module Hiraffe.ShortestPath.Dijkstra
   , WithPath(..)
   ) where
 
-import Control.Lens
-import Data.Coerce
-import Data.Foldable qualified as F
+-- import Control.Lens
+
+import Data.Foldable
 import Data.Function (on)
 import Data.PSQueue (Binding(..))
 import Data.PSQueue qualified as PSQueue
-import Data.Semigroup
 import HGeometry.Unbounded
 
 --------------------------------------------------------------------------------
 
 -- | Dijkstra's algorithm for computing the shortest paths from the
 -- given source node to all other nodes in the unweighted graph
-shortestPaths           :: forall f g v w. (Foldable f, Foldable g
-                                           , Ord v
-                                           , Ord w, Monoid w)
+--
+-- O(V\log V + E\log V)
+shortestPaths           :: forall graph adjs v w.
+                           ( Foldable graph, Foldable adjs, Ord v, Ord w, Monoid w)
                         => (v -> v -> Top w) -- ^ weight function
                         -> v -- ^ source
-                        -> f (v, g v)    -- ^ adjacency graph
+                        -> graph (v, adjs v)    -- ^ adjacency graph
                         -> [(v, Top w)]
 shortestPaths weight s graph = go . initializeQueue $ graph
   where
-    initializeQueue :: f (v, g v) -> Queue g v w
+    initializeQueue :: graph (v, adjs v) -> Queue adjs v w
     initializeQueue = PSQueue.adjust (fmap (const mempty)) s
                     . PSQueue.fromList
                     . map (\(u,ns) -> u :-> WithNeighbours Top ns)
-                    . F.toList
+                    . toList
 
-    go       :: Queue g v w -> [(v,Top w)]
+    go       :: Queue adjs v w -> [(v,Top w)]
     go queue = case PSQueue.minView queue of
       Nothing                                      -> []
       Just (u :-> WithNeighbours du neighs,queue') -> (u, du) : go (relaxAll u du queue' neighs)
 
-    relaxAll      :: v -> Top w -> Queue g v w -> g v -> Queue g v w
+    relaxAll      :: v -> Top w -> Queue adjs v w -> adjs v -> Queue adjs v w
     relaxAll u du = foldr (\v -> decreasePrio v $ du <> weight u v)
 
 --------------------------------------------------------------------------------
 
-type Queue g v r = PSQueue.PSQ v (WithNeighbours (g v) (Top r))
+type Queue adjs v r = PSQueue.PSQ v (WithNeighbours (adjs v) (Top r))
 
 -- | Decrease the key
 decreasePrio     :: (Ord k, Ord p, Functor f, Ord (f p)) => k -> p

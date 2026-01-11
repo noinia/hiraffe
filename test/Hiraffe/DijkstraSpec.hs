@@ -12,6 +12,9 @@ import Test.QuickCheck
 import Witherable
 import Hiraffe.ShortestPathSpec (gridGraph, l1Distance, l1Distance')
 import Hiraffe.ShortestPath.Dijkstra qualified as Dijkstra
+import Data.Semigroup
+import HGeometry.Unbounded
+import Data.Coerce
 
 --------------------------------------------------------------------------------
 
@@ -23,11 +26,14 @@ spec = describe "Dijkstra" $ do
            [] -- this is nonsense
 
 
+           -- [('a',Top),('b',ValT Sum {getSum = 1}),('c',ValT Sum {getSum = 5}),('s',ValT Sum {getSum = 5})] -- this does not look correct
+
+
 type WeightedGraph v r = [(v,[(v,r)])]
 
 
 shortestPaths'         :: (Ord v, Monoid r, Ord r) => v -> WeightedGraph v r -> [(v, Top r)]
-shortestPaths' s graph =  shortestPaths (weightF graph) s (dropWeights graph)
+shortestPaths' s graph =  Dijkstra.shortestPaths (weightF graph) s (dropWeights graph)
 
 weightF           :: Eq v => WeightedGraph v r -> v -> v -> Top r
 weightF graph u v = review _TopMaybe $ lookup u graph >>= lookup v
