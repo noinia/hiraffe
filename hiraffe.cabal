@@ -84,7 +84,7 @@ common setup
               , file-io                 >= 0.1       &&  < 1
               , data-default-class      >= 0.1       &&  < 1
               , vector-builder          >= 0.3.8     &&  < 0.4
-
+              , PSQueue                 >= 1.2       && < 1.3
 
 common quickcheck-setup
     build-depends:
@@ -132,6 +132,7 @@ library
     Hiraffe.PlanarGraph.IO
     Hiraffe.PlanarGraph.Type
 
+    Hiraffe.ShortestPath.Dijkstra
     Hiraffe.ShortestPath.FloydWarshall
 
     Hiraffe.Tree
