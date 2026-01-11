@@ -18,5 +18,4 @@
  100% (  1 /  1) in 'Hiraffe.Instances'
  100% (  1 /  1) in 'Hiraffe'
   92% ( 12 / 13) in 'Hiraffe.PlanarGraph.Component'
-  66% (  2 /  3) in 'Hiraffe.ShortestPath.Dijkstra'
   66% (  2 /  3) in 'Hiraffe.BFS.Pure'

@@ -1,47 +1,47 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679414058"><span id="local-6989586621679414059"><span id="local-6989586621679414060"></span></span></span><span class="hs-pragma">{-# LANGUAGE DeriveDataTypeable #-}</span><span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679505308"><span id="local-6989586621679505309"><span id="local-6989586621679505310"></span></span></span><span class="hs-pragma">{-# LANGUAGE DeriveDataTypeable #-}</span><span>
 </span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE DeriveGeneric #-}</span><span>
-</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Distribution.SPDX.License</span><span> </span><span class="hs-special">(</span><span>
-</span><span id="line-4"></span><span>    </span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier">License</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-5"></span><span>    </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-6"></span><span>
-</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../base-4.18.0.0/src/Prelude.html#/Prelude.html"><span class="hs-identifier">Prelude</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-3"></span><span>
+</span><span id="line-4"></span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Distribution.SPDX.License.html"><span class="hs-identifier">Distribution.SPDX.License</span></a></span><span>
+</span><span id="line-5"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier">License</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
 </span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Compat.Prelude.html"><span class="hs-identifier">Distribution.Compat.Prelude</span></a></span><span>
-</span><span id="line-9"></span><span>
-</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Pretty.html"><span class="hs-identifier">Distribution.Pretty</span></a></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../base-4.21.0.0-ae91/src/Prelude.html"><span class="hs-identifier">Prelude</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span>
 </span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Parsec.html"><span class="hs-identifier">Distribution.Parsec</span></a></span><span>
-</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.SPDX.LicenseExpression.html"><span class="hs-identifier">Distribution.SPDX.LicenseExpression</span></a></span><span>
-</span><span id="line-13"></span><span>
-</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Distribution.Compat.CharParsing.html"><span class="hs-identifier">Distribution.Compat.CharParsing</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">P</span></span><span>
-</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="../../pretty-1.1.3.6/src/Text.PrettyPrint.html#/Text.PrettyPrint.html"><span class="hs-identifier">Text.PrettyPrint</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Disp</span></span><span>
-</span><span id="line-16"></span><span>
-</span><span id="line-17"></span><span class="hs-comment">-- | Declared license.</span><span>
-</span><span id="line-18"></span><span class="hs-comment">-- See [section 3.15 of SPDX Specification 2.1](https://spdx.org/spdx-specification-21-web-version#h.1hmsyys)</span><span>
-</span><span id="line-19"></span><span class="hs-comment">--</span><span>
-</span><span id="line-20"></span><span class="hs-comment">-- /Note:/ the NOASSERTION case is omitted.</span><span>
-</span><span id="line-21"></span><span class="hs-comment">--</span><span>
-</span><span id="line-22"></span><span class="hs-comment">-- Old 'License' can be migrated using following rules:</span><span>
-</span><span id="line-23"></span><span class="hs-comment">--</span><span>
-</span><span id="line-24"></span><span class="hs-comment">-- * @AllRightsReserved@ and @UnspecifiedLicense@ to 'NONE'.</span><span>
-</span><span id="line-25"></span><span class="hs-comment">--   No license specified which legally defaults to /All Rights Reserved/.</span><span>
-</span><span id="line-26"></span><span class="hs-comment">--   The package may not be legally modified or redistributed by anyone but</span><span>
-</span><span id="line-27"></span><span class="hs-comment">--   the rightsholder.</span><span>
-</span><span id="line-28"></span><span class="hs-comment">--</span><span>
-</span><span id="line-29"></span><span class="hs-comment">-- * @OtherLicense@ can be converted to 'LicenseRef' pointing to the file</span><span>
-</span><span id="line-30"></span><span class="hs-comment">--   in the package.</span><span>
-</span><span id="line-31"></span><span class="hs-comment">--</span><span>
-</span><span id="line-32"></span><span class="hs-comment">-- * @UnknownLicense@ i.e. other licenses of the form @name-x.y@, should be</span><span>
-</span><span id="line-33"></span><span class="hs-comment">--   covered by SPDX license list, otherwise use 'LicenseRef'.</span><span>
-</span><span id="line-34"></span><span class="hs-comment">--</span><span>
-</span><span id="line-35"></span><span class="hs-comment">-- * @PublicDomain@ isn't covered. Consider using CC0.</span><span>
-</span><span id="line-36"></span><span class="hs-comment">--   See &lt;https://wiki.spdx.org/view/Legal_Team/Decisions/Dealing_with_Public_Domain_within_SPDX_Files&gt;</span><span>
-</span><span id="line-37"></span><span class="hs-comment">--   for more information.</span><span>
-</span><span id="line-38"></span><span class="hs-comment">--</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Pretty.html"><span class="hs-identifier">Distribution.Pretty</span></a></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.SPDX.LicenseExpression.html"><span class="hs-identifier">Distribution.SPDX.LicenseExpression</span></a></span><span>
+</span><span id="line-14"></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Distribution.Compat.CharParsing.html"><span class="hs-identifier">Distribution.Compat.CharParsing</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">P</span></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="../../pretty-1.1.3.6-fe44/src/Text.PrettyPrint.html"><span class="hs-identifier">Text.PrettyPrint</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Disp</span></span><span>
+</span><span id="line-17"></span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- | Declared license.</span><span>
+</span><span id="line-19"></span><span class="hs-comment">-- See [section 3.15 of SPDX Specification 2.1](https://spdx.org/spdx-specification-21-web-version#h.1hmsyys)</span><span>
+</span><span id="line-20"></span><span class="hs-comment">--</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- /Note:/ the NOASSERTION case is omitted.</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- Old 'License' can be migrated using following rules:</span><span>
+</span><span id="line-24"></span><span class="hs-comment">--</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- * @AllRightsReserved@ and @UnspecifiedLicense@ to 'NONE'.</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--   No license specified which legally defaults to /All Rights Reserved/.</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--   The package may not be legally modified or redistributed by anyone but</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--   the rightsholder.</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- * @OtherLicense@ can be converted to 'LicenseRef' pointing to the file</span><span>
+</span><span id="line-31"></span><span class="hs-comment">--   in the package.</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- * @UnknownLicense@ i.e. other licenses of the form @name-x.y@, should be</span><span>
+</span><span id="line-34"></span><span class="hs-comment">--   covered by SPDX license list, otherwise use 'LicenseRef'.</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- * @PublicDomain@ isn't covered. Consider using CC0.</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--   See &lt;https://wiki.spdx.org/view/Legal_Team/Decisions/Dealing_with_Public_Domain_within_SPDX_Files&gt;</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--   for more information.</span><span>
 </span><span id="line-39"></span><span class="hs-keyword">data</span><span> </span><span id="License"><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-var">License</span></a></span></span><span>
-</span><span id="line-40"></span><span>    </span><span class="hs-glyph">=</span><span> </span><span id="NONE"><span class="annot"><a href="Distribution.SPDX.License.html#NONE"><span class="hs-identifier hs-var">NONE</span></a></span></span><span>
-</span><span id="line-41"></span><span>      </span><span class="annot"><span class="hs-comment">-- ^ if the package contains no license information whatsoever; or</span></span><span>
-</span><span id="line-42"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span id="License"><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-var">License</span></a></span></span><span> </span><span class="annot"><a href="Distribution.SPDX.LicenseExpression.html#LicenseExpression"><span class="hs-identifier hs-type">LicenseExpression</span></a></span><span>
-</span><span id="line-43"></span><span>      </span><span class="annot"><span class="hs-comment">-- ^ A valid SPDX License Expression as defined in Appendix IV.</span></span><span>
-</span><span id="line-44"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679414064"><span id="local-6989586621679414070"><span id="local-6989586621679414074"><span class="annot"><span class="annottext">Int -&gt; License -&gt; ShowS
+</span><span id="line-40"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-comment">-- | if the package contains no license information whatsoever; or</span></span><span>
+</span><span id="line-41"></span><span>    </span><span id="NONE"><span class="annot"><a href="Distribution.SPDX.License.html#NONE"><span class="hs-identifier hs-var">NONE</span></a></span></span><span>
+</span><span id="line-42"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-comment">-- | A valid SPDX License Expression as defined in Appendix IV.</span></span><span>
+</span><span id="line-43"></span><span>    </span><span id="License"><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-var">License</span></a></span></span><span> </span><span class="annot"><a href="Distribution.SPDX.LicenseExpression.html#LicenseExpression"><span class="hs-identifier hs-type">LicenseExpression</span></a></span><span>
+</span><span id="line-44"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679505314"><span id="local-6989586621679505320"><span id="local-6989586621679505324"><span class="annot"><span class="annottext">Int -&gt; License -&gt; ShowS
 [License] -&gt; ShowS
 License -&gt; String
 (Int -&gt; License -&gt; ShowS)
@@ -54,7 +54,7 @@ $cshow :: License -&gt; String
 show :: License -&gt; String
 $cshowList :: [License] -&gt; ShowS
 showList :: [License] -&gt; ShowS
-</span><a href="../../base-4.18.0.0/src/GHC.Show.html#Show/GHC.Show.html#Show"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></a></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679414078"><span id="local-6989586621679414082"><span id="local-6989586621679414085"><span id="local-6989586621679414095"><span class="annot"><span class="annottext">ReadPrec [License]
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679505329"><span id="local-6989586621679505333"><span id="local-6989586621679505336"><span id="local-6989586621679505346"><span class="annot"><span class="annottext">ReadPrec [License]
 ReadPrec License
 Int -&gt; ReadS License
 ReadS [License]
@@ -74,7 +74,7 @@ $creadPrec :: ReadPrec License
 readPrec :: ReadPrec License
 $creadListPrec :: ReadPrec [License]
 readListPrec :: ReadPrec [License]
-</span><a href="../../base-4.18.0.0/src/GHC.Read.html#Read/GHC.Read.html#Read"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></a></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679414099"><span id="local-6989586621679414103"><span class="annot"><span class="annottext">License -&gt; License -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679505353"><span id="local-6989586621679505360"><span class="annot"><span class="annottext">License -&gt; License -&gt; Bool
 (License -&gt; License -&gt; Bool)
 -&gt; (License -&gt; License -&gt; Bool) -&gt; Eq License
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
@@ -82,7 +82,7 @@ $c== :: License -&gt; License -&gt; Bool
 == :: License -&gt; License -&gt; Bool
 $c/= :: License -&gt; License -&gt; Bool
 /= :: License -&gt; License -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679414110"><span id="local-6989586621679414114"><span id="local-6989586621679414117"><span id="local-6989586621679414121"><span id="local-6989586621679414124"><span id="local-6989586621679414127"><span id="local-6989586621679414130"><span class="annot"><span class="annottext">Eq License
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679505367"><span id="local-6989586621679505371"><span id="local-6989586621679505374"><span id="local-6989586621679505378"><span id="local-6989586621679505381"><span id="local-6989586621679505384"><span id="local-6989586621679505387"><span class="annot"><span class="annottext">Eq License
 Eq License =&gt;
 (License -&gt; License -&gt; Ordering)
 -&gt; (License -&gt; License -&gt; Bool)
@@ -119,7 +119,7 @@ $cmax :: License -&gt; License -&gt; License
 max :: License -&gt; License -&gt; License
 $cmin :: License -&gt; License -&gt; License
 min :: License -&gt; License -&gt; License
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="../../base-4.18.0.0/src/Data.Typeable.Internal.html#Typeable/Data.Typeable.Internal.html#Typeable"><span class="hs-identifier hs-type">Typeable</span></a></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679414136"><span id="local-6989586621679414140"><span id="local-6989586621679414143"><span id="local-6989586621679414145"><span id="local-6989586621679414147"><span id="local-6989586621679414153"><span id="local-6989586621679414158"><span id="local-6989586621679414161"><span id="local-6989586621679414164"><span id="local-6989586621679414167"><span id="local-6989586621679414170"><span id="local-6989586621679414173"><span id="local-6989586621679414178"><span id="local-6989586621679414183"><span class="annot"><span class="annottext">Typeable License
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679505397"><span id="local-6989586621679505401"><span id="local-6989586621679505404"><span id="local-6989586621679505406"><span id="local-6989586621679505408"><span id="local-6989586621679505414"><span id="local-6989586621679505419"><span id="local-6989586621679505422"><span id="local-6989586621679505425"><span id="local-6989586621679505428"><span id="local-6989586621679505431"><span id="local-6989586621679505434"><span id="local-6989586621679505439"><span id="local-6989586621679505444"><span class="annot"><span class="annottext">Typeable License
 Typeable License =&gt;
 (forall (c :: * -&gt; *).
  (forall d b. Data d =&gt; c (d -&gt; b) -&gt; d -&gt; c b)
@@ -280,7 +280,7 @@ MonadPlus m =&gt;
 gmapMo :: forall (m :: * -&gt; *).
 MonadPlus m =&gt;
 (forall d. Data d =&gt; d -&gt; m d) -&gt; License -&gt; m License
-</span><a href="../../base-4.18.0.0/src/Data.Data.html#Data/Data.Data.html#Data"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Data</span></a></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679414189"><span id="local-6989586621679414191"><span class="annot"><span class="annottext">(forall x. License -&gt; Rep License x)
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Data</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679505454"><span id="local-6989586621679505456"><span class="annot"><span class="annottext">(forall x. License -&gt; Rep License x)
 -&gt; (forall x. Rep License x -&gt; License) -&gt; Generic License
 forall x. Rep License x -&gt; License
 forall x. License -&gt; Rep License x
@@ -290,32 +290,32 @@ $cfrom :: forall x. License -&gt; Rep License x
 from :: forall x. License -&gt; Rep License x
 $cto :: forall x. Rep License x -&gt; License
 to :: forall x. Rep License x -&gt; License
-</span><a href="../../base-4.18.0.0/src/GHC.Generics.html#Generic/GHC.Generics.html#Generic"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Generic</span></a></span></span></span><span class="hs-special">)</span><span>
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Generic</span></span></span></span><span class="hs-special">)</span><span>
 </span><span id="line-45"></span><span>
-</span><span id="line-46"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679414195"><span id="local-6989586621679414202"><span id="local-6989586621679414208"><span class="annot"><a href="../../binary-0.8.9.1/src/Data.Binary.Class.html#Binary/Data.Binary.Class.html#Binary"><span class="hs-identifier hs-type">Binary</span></a></span><span> </span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-type">License</span></a></span></span></span></span><span>
-</span><span id="line-47"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679414244"><span id="local-6989586621679414251"><span class="annot"><a href="Distribution.Utils.Structured.html#Structured"><span class="hs-identifier hs-type">Structured</span></a></span><span> </span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-type">License</span></a></span></span></span><span>
+</span><span id="line-46"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679505462"><span id="local-6989586621679505469"><span id="local-6989586621679505475"><span class="annot"><a href="../../binary-0.8.9.3-25e5/src/Data.Binary.Class.html#Binary"><span class="hs-identifier hs-type">Binary</span></a></span><span> </span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-type">License</span></a></span></span></span></span><span>
+</span><span id="line-47"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679505511"><span id="local-6989586621679505518"><span class="annot"><a href="Distribution.Utils.Structured.html#Structured"><span class="hs-identifier hs-type">Structured</span></a></span><span> </span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-type">License</span></a></span></span></span><span>
 </span><span id="line-48"></span><span>
-</span><span id="line-49"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="../../deepseq-1.4.8.1/src/Control.DeepSeq.html#NFData/Control.DeepSeq.html#NFData"><span class="hs-identifier hs-type">NFData</span></a></span><span> </span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-type">License</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-50"></span><span>    </span><span id="local-6989586621679414290"><span class="annot"><span class="annottext">rnf :: License -&gt; ()
-</span><a href="#local-6989586621679414290"><span class="hs-identifier hs-var hs-var hs-var hs-var">rnf</span></a></span></span><span> </span><span class="annot"><span class="annottext">License
-</span><a href="Distribution.SPDX.License.html#NONE"><span class="hs-identifier hs-var">NONE</span></a></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-51"></span><span>    </span><span class="annot"><a href="../../deepseq-1.4.8.1/src/Control.DeepSeq.html#rnf/Control.DeepSeq.html#rnf"><span class="hs-identifier hs-var">rnf</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-type">License</span></a></span><span> </span><span id="local-6989586621679414292"><span class="annot"><span class="annottext">LicenseExpression
-</span><a href="#local-6989586621679414292"><span class="hs-identifier hs-var">l</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LicenseExpression -&gt; ()
+</span><span id="line-49"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="../../deepseq-1.5.1.0-6837/src/Control.DeepSeq.html#NFData"><span class="hs-identifier hs-type">NFData</span></a></span><span> </span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-type">License</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-50"></span><span>  </span><span id="local-6989586621679505557"><span class="annot"><span class="annottext">rnf :: License -&gt; ()
+</span><a href="#local-6989586621679505557"><span class="hs-identifier hs-var hs-var hs-var">rnf</span></a></span></span><span> </span><span class="annot"><span class="annottext">License
+</span><a href="Distribution.SPDX.License.html#NONE"><span class="hs-identifier hs-var">NONE</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span>  </span><span class="annot"><a href="../../deepseq-1.5.1.0-6837/src/Control.DeepSeq.html#rnf"><span class="hs-identifier hs-var">rnf</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-type">License</span></a></span><span> </span><span id="local-6989586621679505559"><span class="annot"><span class="annottext">LicenseExpression
+</span><a href="#local-6989586621679505559"><span class="hs-identifier hs-var">l</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LicenseExpression -&gt; ()
 forall a. NFData a =&gt; a -&gt; ()
-</span><a href="../../deepseq-1.4.8.1/src/Control.DeepSeq.html#rnf/Control.DeepSeq.html#rnf"><span class="hs-identifier hs-var">rnf</span></a></span><span> </span><span class="annot"><span class="annottext">LicenseExpression
-</span><a href="#local-6989586621679414292"><span class="hs-identifier hs-var">l</span></a></span><span>
+</span><a href="../../deepseq-1.5.1.0-6837/src/Control.DeepSeq.html#rnf"><span class="hs-identifier hs-var">rnf</span></a></span><span> </span><span class="annot"><span class="annottext">LicenseExpression
+</span><a href="#local-6989586621679505559"><span class="hs-identifier hs-var">l</span></a></span><span>
 </span><span id="line-52"></span><span>
-</span><span id="line-53"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679414295"><span class="annot"><a href="Distribution.Pretty.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-type">License</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-54"></span><span>    </span><span id="local-6989586621679414301"><span class="annot"><span class="annottext">pretty :: License -&gt; Doc
-</span><a href="#local-6989586621679414301"><span class="hs-identifier hs-var hs-var hs-var hs-var">pretty</span></a></span></span><span> </span><span class="annot"><span class="annottext">License
-</span><a href="Distribution.SPDX.License.html#NONE"><span class="hs-identifier hs-var">NONE</span></a></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Doc
-</span><a href="../../pretty-1.1.3.6/src/Text.PrettyPrint.HughesPJ.html#text/Text.PrettyPrint.HughesPJ.html#text"><span class="hs-identifier hs-var">Disp.text</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><span id="line-53"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679505562"><span class="annot"><a href="Distribution.Pretty.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-type">License</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-54"></span><span>  </span><span id="local-6989586621679505568"><span class="annot"><span class="annottext">pretty :: License -&gt; Doc
+</span><a href="#local-6989586621679505568"><span class="hs-identifier hs-var hs-var hs-var">pretty</span></a></span></span><span> </span><span class="annot"><span class="annottext">License
+</span><a href="Distribution.SPDX.License.html#NONE"><span class="hs-identifier hs-var">NONE</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Doc
+</span><a href="../../pretty-1.1.3.6-fe44/src/Text.PrettyPrint.HughesPJ.html#text"><span class="hs-identifier hs-var">Disp.text</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;NONE&quot;</span></span><span>
-</span><span id="line-55"></span><span>    </span><span class="annot"><a href="Distribution.Pretty.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-type">License</span></a></span><span> </span><span id="local-6989586621679414304"><span class="annot"><span class="annottext">LicenseExpression
-</span><a href="#local-6989586621679414304"><span class="hs-identifier hs-var">l</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LicenseExpression -&gt; Doc
+</span><span id="line-55"></span><span>  </span><span class="annot"><a href="Distribution.Pretty.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-type">License</span></a></span><span> </span><span id="local-6989586621679505571"><span class="annot"><span class="annottext">LicenseExpression
+</span><a href="#local-6989586621679505571"><span class="hs-identifier hs-var">l</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LicenseExpression -&gt; Doc
 forall a. Pretty a =&gt; a -&gt; Doc
 </span><a href="Distribution.Pretty.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">LicenseExpression
-</span><a href="#local-6989586621679414304"><span class="hs-identifier hs-var">l</span></a></span><span>
+</span><a href="#local-6989586621679505571"><span class="hs-identifier hs-var">l</span></a></span><span>
 </span><span id="line-56"></span><span>
 </span><span id="line-57"></span><span class="hs-comment">-- |</span><span>
 </span><span id="line-58"></span><span class="hs-comment">-- &gt;&gt;&gt; eitherParsec &quot;BSD-3-Clause AND MIT&quot; :: Either String License</span><span>
@@ -323,14 +323,13 @@ forall a. Pretty a =&gt; a -&gt; Doc
 </span><span id="line-60"></span><span class="hs-comment">--</span><span>
 </span><span id="line-61"></span><span class="hs-comment">-- &gt;&gt;&gt; eitherParsec &quot;NONE&quot; :: Either String License</span><span>
 </span><span id="line-62"></span><span class="hs-comment">-- Right NONE</span><span>
-</span><span id="line-63"></span><span class="hs-comment">--</span><span>
-</span><span id="line-64"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Distribution.Parsec.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-type">License</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-65"></span><span>    </span><span id="local-6989586621679414329"><span class="annot"><span class="annottext">parsec :: forall (m :: * -&gt; *). CabalParsing m =&gt; m License
-</span><a href="#local-6989586621679414329"><span class="hs-identifier hs-var hs-var hs-var hs-var">parsec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">License
+</span><span id="line-63"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Distribution.Parsec.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-type">License</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-64"></span><span>  </span><span id="local-6989586621679505596"><span class="annot"><span class="annottext">parsec :: forall (m :: * -&gt; *). CabalParsing m =&gt; m License
+</span><a href="#local-6989586621679505596"><span class="hs-identifier hs-var hs-var hs-var">parsec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">License
 </span><a href="Distribution.SPDX.License.html#NONE"><span class="hs-identifier hs-var">NONE</span></a></span><span> </span><span class="annot"><span class="annottext">License -&gt; m String -&gt; m License
 forall a b. a -&gt; m b -&gt; m a
 forall (f :: * -&gt; *) a b. Functor f =&gt; a -&gt; f b -&gt; f a
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%3C%24/GHC.Base.html#%3C%24"><span class="hs-operator hs-var">&lt;$</span></a></span><span> </span><span class="annot"><span class="annottext">m String -&gt; m String
+</span><span class="hs-operator hs-var">&lt;$</span></span><span> </span><span class="annot"><span class="annottext">m String -&gt; m String
 forall a. m a -&gt; m a
 forall (m :: * -&gt; *) a. Parsing m =&gt; m a -&gt; m a
 </span><a href="Distribution.Compat.Parsing.html#try"><span class="hs-identifier hs-var">P.try</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; m String
@@ -339,11 +338,11 @@ forall (m :: * -&gt; *). CharParsing m =&gt; String -&gt; m String
 </span><span class="hs-string">&quot;NONE&quot;</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">m License -&gt; m License -&gt; m License
 forall a. m a -&gt; m a -&gt; m a
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%3C%7C%3E/GHC.Base.html#%3C%7C%3E"><span class="hs-operator hs-var">&lt;|&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">LicenseExpression -&gt; License
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">LicenseExpression -&gt; License
 </span><a href="Distribution.SPDX.License.html#License"><span class="hs-identifier hs-var">License</span></a></span><span> </span><span class="annot"><span class="annottext">(LicenseExpression -&gt; License) -&gt; m LicenseExpression -&gt; m License
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
-</span><a href="../../base-4.18.0.0/src/Data.Functor.html#%3C%24%3E/Data.Functor.html#%3C%24%3E"><span class="hs-operator hs-var">&lt;$&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">m LicenseExpression
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">m LicenseExpression
 forall a (m :: * -&gt; *). (Parsec a, CabalParsing m) =&gt; m a
 forall (m :: * -&gt; *). CabalParsing m =&gt; m LicenseExpression
 </span><a href="Distribution.Parsec.html#parsec"><span class="hs-identifier hs-var">parsec</span></a></span><span>
-</span><span id="line-66"></span></pre></body></html>
+</span><span id="line-65"></span></pre></body></html>
