@@ -11,9 +11,9 @@ author:              Frank Staals
 maintainer:          frank@fstaals.net
 
 tested-with:
-    GHC == 9.12.1
+    GHC == 9.14.1
+  , GHC == 9.12.1
   , GHC == 9.10.1
-  , GHC == 9.8.2
 
 category:            Graphs
 build-type:          Simple
@@ -63,7 +63,7 @@ common setup
               , hgeometry-combinatorial >= 1.0.0.0   &&  < 2
               -- , hgeometry:point         >= 1.0.0.0   &&  < 2
               , bytestring              >= 0.10      &&  < 1
-              , containers              >= 0.5.9     &&  < 1
+              , containers              >= 0.8       &&  < 1
               , nonempty-containers     >= 0.3.4.5   &&  < 0.4
               , lens                    >= 5.0       &&  < 6
               , semigroupoids           >= 6.0.0.1   && < 7
@@ -182,9 +182,9 @@ test-suite hiraffe-doctest
     main-is:          doctests.hs
     build-tool-depends:  doctest-driver-gen:doctest-driver-gen
     build-depends:
-       doctest              >= 0.8  && < 1
-     , QuickCheck           >= 2.14 && < 3
-     , quickcheck-instances >= 0.1  && < 1
+       doctest              >= 0.24.3  && < 1
+     , QuickCheck           >= 2.14    && < 3
+     , quickcheck-instances >= 0.1     && < 1
 
 test-suite hspec
   import: setup, test-setup
