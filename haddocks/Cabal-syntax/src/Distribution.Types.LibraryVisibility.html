@@ -1,29 +1,30 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679490157"><span id="local-6989586621679490158"><span id="local-6989586621679490159"></span></span></span><span class="hs-pragma">{-# LANGUAGE DeriveDataTypeable #-}</span><span>
-</span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE DeriveGeneric #-}</span><span>
-</span><span id="line-3"></span><span class="hs-pragma">{-# LANGUAGE OverloadedStrings #-}</span><span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679401883"><span id="local-6989586621679401884"><span id="local-6989586621679401885"></span></span></span><span class="hs-pragma">{-# LANGUAGE DeriveDataTypeable #-}</span><span>
+</span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE DeriveGeneric      #-}</span><span>
+</span><span id="line-3"></span><span class="hs-pragma">{-# LANGUAGE OverloadedStrings  #-}</span><span>
 </span><span id="line-4"></span><span>
-</span><span id="line-5"></span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html"><span class="hs-identifier">Distribution.Types.LibraryVisibility</span></a></span><span>
-</span><span id="line-6"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier">LibraryVisibility</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
-</span><span id="line-7"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-5"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Distribution.Types.LibraryVisibility</span><span class="hs-special">(</span><span>
+</span><span id="line-6"></span><span>    </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier">LibraryVisibility</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-7"></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-8"></span><span>
 </span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Compat.Prelude.html"><span class="hs-identifier">Distribution.Compat.Prelude</span></a></span><span>
-</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../base-4.21.0.0-ae91/src/Prelude.html"><span class="hs-identifier">Prelude</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../base-4.18.0.0/src/Prelude.html#/Prelude.html"><span class="hs-identifier">Prelude</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-11"></span><span>
 </span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Parsec.html"><span class="hs-identifier">Distribution.Parsec</span></a></span><span>
 </span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Pretty.html"><span class="hs-identifier">Distribution.Pretty</span></a></span><span>
 </span><span id="line-14"></span><span>
 </span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Distribution.Compat.CharParsing.html"><span class="hs-identifier">Distribution.Compat.CharParsing</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">P</span></span><span>
-</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="../../pretty-1.1.3.6-fe44/src/Text.PrettyPrint.html"><span class="hs-identifier">Text.PrettyPrint</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Disp</span></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="../../pretty-1.1.3.6/src/Text.PrettyPrint.html#/Text.PrettyPrint.html"><span class="hs-identifier">Text.PrettyPrint</span></a></span><span>                </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Disp</span></span><span>
 </span><span id="line-17"></span><span>
 </span><span id="line-18"></span><span class="hs-comment">-- | Multi-lib visibility</span><span>
 </span><span id="line-19"></span><span class="hs-comment">--</span><span>
 </span><span id="line-20"></span><span class="hs-comment">-- @since 3.0.0.0</span><span>
-</span><span id="line-21"></span><span class="hs-keyword">data</span><span> </span><span id="LibraryVisibility"><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-var">LibraryVisibility</span></a></span></span><span>
-</span><span id="line-22"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-comment">-- | Can be used as a dependency for other packages</span></span><span>
-</span><span id="line-23"></span><span>    </span><span id="LibraryVisibilityPublic"><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibilityPublic"><span class="hs-identifier hs-var">LibraryVisibilityPublic</span></a></span></span><span>
-</span><span id="line-24"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-comment">-- | Internal library, default</span></span><span>
-</span><span id="line-25"></span><span>    </span><span id="LibraryVisibilityPrivate"><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibilityPrivate"><span class="hs-identifier hs-var">LibraryVisibilityPrivate</span></a></span></span><span>
-</span><span id="line-26"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679490163"><span id="local-6989586621679490165"><span class="annot"><span class="annottext">(forall x. LibraryVisibility -&gt; Rep LibraryVisibility x)
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">data</span><span> </span><span id="LibraryVisibility"><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-var">LibraryVisibility</span></a></span></span><span>
+</span><span id="line-23"></span><span>      </span><span class="annot"><span class="hs-comment">-- | Can be used as a dependency for other packages</span></span><span>
+</span><span id="line-24"></span><span>    </span><span class="hs-glyph">=</span><span> </span><span id="LibraryVisibilityPublic"><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibilityPublic"><span class="hs-identifier hs-var">LibraryVisibilityPublic</span></a></span></span><span>
+</span><span id="line-25"></span><span>      </span><span class="annot"><span class="hs-comment">-- | Internal library, default</span></span><span>
+</span><span id="line-26"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span id="LibraryVisibilityPrivate"><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibilityPrivate"><span class="hs-identifier hs-var">LibraryVisibilityPrivate</span></a></span></span><span>
+</span><span id="line-27"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679401889"><span id="local-6989586621679401891"><span class="annot"><span class="annottext">(forall x. LibraryVisibility -&gt; Rep LibraryVisibility x)
 -&gt; (forall x. Rep LibraryVisibility x -&gt; LibraryVisibility)
 -&gt; Generic LibraryVisibility
 forall x. Rep LibraryVisibility x -&gt; LibraryVisibility
@@ -34,7 +35,7 @@ $cfrom :: forall x. LibraryVisibility -&gt; Rep LibraryVisibility x
 from :: forall x. LibraryVisibility -&gt; Rep LibraryVisibility x
 $cto :: forall x. Rep LibraryVisibility x -&gt; LibraryVisibility
 to :: forall x. Rep LibraryVisibility x -&gt; LibraryVisibility
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Generic</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679490171"><span id="local-6989586621679490173"><span id="local-6989586621679490177"><span class="annot"><span class="annottext">Int -&gt; LibraryVisibility -&gt; ShowS
+</span><a href="../../base-4.18.0.0/src/GHC.Generics.html#Generic/GHC.Generics.html#Generic"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Generic</span></a></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679401895"><span id="local-6989586621679401897"><span id="local-6989586621679401901"><span class="annot"><span class="annottext">Int -&gt; LibraryVisibility -&gt; ShowS
 [LibraryVisibility] -&gt; ShowS
 LibraryVisibility -&gt; String
 (Int -&gt; LibraryVisibility -&gt; ShowS)
@@ -49,7 +50,7 @@ $cshow :: LibraryVisibility -&gt; String
 show :: LibraryVisibility -&gt; String
 $cshowList :: [LibraryVisibility] -&gt; ShowS
 showList :: [LibraryVisibility] -&gt; ShowS
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679490182"><span id="local-6989586621679490186"><span id="local-6989586621679490189"><span id="local-6989586621679490194"><span class="annot"><span class="annottext">ReadPrec [LibraryVisibility]
+</span><a href="../../base-4.18.0.0/src/GHC.Show.html#Show/GHC.Show.html#Show"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></a></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679401905"><span id="local-6989586621679401909"><span id="local-6989586621679401912"><span id="local-6989586621679401917"><span class="annot"><span class="annottext">ReadPrec [LibraryVisibility]
 ReadPrec LibraryVisibility
 Int -&gt; ReadS LibraryVisibility
 ReadS [LibraryVisibility]
@@ -69,7 +70,7 @@ $creadPrec :: ReadPrec LibraryVisibility
 readPrec :: ReadPrec LibraryVisibility
 $creadListPrec :: ReadPrec [LibraryVisibility]
 readListPrec :: ReadPrec [LibraryVisibility]
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679490201"><span id="local-6989586621679490206"><span class="annot"><span class="annottext">LibraryVisibility -&gt; LibraryVisibility -&gt; Bool
+</span><a href="../../base-4.18.0.0/src/GHC.Read.html#Read/GHC.Read.html#Read"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></a></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679401921"><span id="local-6989586621679401923"><span class="annot"><span class="annottext">LibraryVisibility -&gt; LibraryVisibility -&gt; Bool
 (LibraryVisibility -&gt; LibraryVisibility -&gt; Bool)
 -&gt; (LibraryVisibility -&gt; LibraryVisibility -&gt; Bool)
 -&gt; Eq LibraryVisibility
@@ -78,7 +79,7 @@ $c== :: LibraryVisibility -&gt; LibraryVisibility -&gt; Bool
 == :: LibraryVisibility -&gt; LibraryVisibility -&gt; Bool
 $c/= :: LibraryVisibility -&gt; LibraryVisibility -&gt; Bool
 /= :: LibraryVisibility -&gt; LibraryVisibility -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679490213"><span id="local-6989586621679490215"><span id="local-6989586621679490217"><span id="local-6989586621679490221"><span id="local-6989586621679490224"><span id="local-6989586621679490227"><span id="local-6989586621679490230"><span class="annot"><span class="annottext">Eq LibraryVisibility
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679401930"><span id="local-6989586621679401932"><span id="local-6989586621679401934"><span id="local-6989586621679401938"><span id="local-6989586621679401941"><span id="local-6989586621679401944"><span id="local-6989586621679401947"><span class="annot"><span class="annottext">Eq LibraryVisibility
 Eq LibraryVisibility =&gt;
 (LibraryVisibility -&gt; LibraryVisibility -&gt; Ordering)
 -&gt; (LibraryVisibility -&gt; LibraryVisibility -&gt; Bool)
@@ -115,7 +116,7 @@ $cmax :: LibraryVisibility -&gt; LibraryVisibility -&gt; LibraryVisibility
 max :: LibraryVisibility -&gt; LibraryVisibility -&gt; LibraryVisibility
 $cmin :: LibraryVisibility -&gt; LibraryVisibility -&gt; LibraryVisibility
 min :: LibraryVisibility -&gt; LibraryVisibility -&gt; LibraryVisibility
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679490240"><span id="local-6989586621679490242"><span id="local-6989586621679490244"><span id="local-6989586621679490246"><span id="local-6989586621679490248"><span id="local-6989586621679490254"><span id="local-6989586621679490259"><span id="local-6989586621679490262"><span id="local-6989586621679490265"><span id="local-6989586621679490268"><span id="local-6989586621679490271"><span id="local-6989586621679490274"><span id="local-6989586621679490279"><span id="local-6989586621679490284"><span class="annot"><span class="annottext">Typeable LibraryVisibility
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="../../base-4.18.0.0/src/Data.Typeable.Internal.html#Typeable/Data.Typeable.Internal.html#Typeable"><span class="hs-identifier hs-type">Typeable</span></a></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679401953"><span id="local-6989586621679401955"><span id="local-6989586621679401957"><span id="local-6989586621679401959"><span id="local-6989586621679401961"><span id="local-6989586621679401967"><span id="local-6989586621679401972"><span id="local-6989586621679401975"><span id="local-6989586621679401978"><span id="local-6989586621679401981"><span id="local-6989586621679401984"><span id="local-6989586621679401987"><span id="local-6989586621679401992"><span id="local-6989586621679401997"><span class="annot"><span class="annottext">Typeable LibraryVisibility
 Typeable LibraryVisibility =&gt;
 (forall (c :: * -&gt; *).
  (forall d b. Data d =&gt; c (d -&gt; b) -&gt; d -&gt; c b)
@@ -302,75 +303,77 @@ gmapMo :: forall (m :: * -&gt; *).
 MonadPlus m =&gt;
 (forall d. Data d =&gt; d -&gt; m d)
 -&gt; LibraryVisibility -&gt; m LibraryVisibility
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Data</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-27"></span><span>
-</span><span id="line-28"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679490295"><span class="annot"><a href="Distribution.Pretty.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-type">LibraryVisibility</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-29"></span><span>  </span><span id="local-6989586621679490299"><span class="annot"><span class="annottext">pretty :: LibraryVisibility -&gt; Doc
-</span><a href="#local-6989586621679490299"><span class="hs-identifier hs-var hs-var hs-var">pretty</span></a></span></span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
-</span><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibilityPublic"><span class="hs-identifier hs-var">LibraryVisibilityPublic</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Doc
-</span><a href="../../pretty-1.1.3.6-fe44/src/Text.PrettyPrint.HughesPJ.html#text"><span class="hs-identifier hs-var">Disp.text</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="../../base-4.18.0.0/src/Data.Data.html#Data/Data.Data.html#Data"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Data</span></a></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span>
+</span><span id="line-29"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679402004"><span class="annot"><a href="Distribution.Pretty.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-type">LibraryVisibility</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-30"></span><span>    </span><span id="local-6989586621679402008"><span class="annot"><span class="annottext">pretty :: LibraryVisibility -&gt; Doc
+</span><a href="#local-6989586621679402008"><span class="hs-identifier hs-var hs-var hs-var hs-var">pretty</span></a></span></span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
+</span><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibilityPublic"><span class="hs-identifier hs-var">LibraryVisibilityPublic</span></a></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Doc
+</span><a href="../../pretty-1.1.3.6/src/Text.PrettyPrint.HughesPJ.html#text/Text.PrettyPrint.HughesPJ.html#text"><span class="hs-identifier hs-var">Disp.text</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;public&quot;</span></span><span>
-</span><span id="line-30"></span><span>  </span><span class="annot"><a href="Distribution.Pretty.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
+</span><span id="line-31"></span><span>    </span><span class="annot"><a href="Distribution.Pretty.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
 </span><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibilityPrivate"><span class="hs-identifier hs-var">LibraryVisibilityPrivate</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Doc
-</span><a href="../../pretty-1.1.3.6-fe44/src/Text.PrettyPrint.HughesPJ.html#text"><span class="hs-identifier hs-var">Disp.text</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="../../pretty-1.1.3.6/src/Text.PrettyPrint.HughesPJ.html#text/Text.PrettyPrint.HughesPJ.html#text"><span class="hs-identifier hs-var">Disp.text</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;private&quot;</span></span><span>
-</span><span id="line-31"></span><span>
-</span><span id="line-32"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Distribution.Parsec.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-type">LibraryVisibility</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-33"></span><span>  </span><span id="local-6989586621679490328"><span class="annot"><span class="annottext">parsec :: forall (m :: * -&gt; *). CabalParsing m =&gt; m LibraryVisibility
-</span><a href="#local-6989586621679490328"><span class="hs-identifier hs-var hs-var hs-var">parsec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-34"></span><span>    </span><span id="local-6989586621679490330"><span class="annot"><a href="#local-6989586621679490330"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; m String
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Distribution.Parsec.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-type">LibraryVisibility</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-34"></span><span>  </span><span id="local-6989586621679402038"><span class="annot"><span class="annottext">parsec :: forall (m :: * -&gt; *). CabalParsing m =&gt; m LibraryVisibility
+</span><a href="#local-6989586621679402038"><span class="hs-identifier hs-var hs-var hs-var hs-var">parsec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-35"></span><span>    </span><span id="local-6989586621679402040"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679402040"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; m String
 forall (m :: * -&gt; *). CharParsing m =&gt; (Char -&gt; Bool) -&gt; m String
 </span><a href="Distribution.Compat.CharParsing.html#munch1"><span class="hs-identifier hs-var">P.munch1</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><span class="hs-identifier hs-var">isAlpha</span></span><span>
-</span><span id="line-35"></span><span>    </span><span class="hs-keyword">case</span><span> </span><span class="annot"><a href="#local-6989586621679490330"><span class="hs-identifier hs-type">name</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-36"></span><span>      </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;public&quot;</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">LibraryVisibility -&gt; m LibraryVisibility
+</span><a href="../../base-4.18.0.0/src/GHC.Unicode.html#isAlpha/GHC.Unicode.html#isAlpha"><span class="hs-identifier hs-var">isAlpha</span></a></span><span>
+</span><span id="line-36"></span><span>    </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679402040"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-37"></span><span>      </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;public&quot;</span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">LibraryVisibility -&gt; m LibraryVisibility
 forall a. a -&gt; m a
 forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
-</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
+</span><a href="../../base-4.18.0.0/src/GHC.Base.html#return/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
 </span><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibilityPublic"><span class="hs-identifier hs-var">LibraryVisibilityPublic</span></a></span><span>
-</span><span id="line-37"></span><span>      </span><span class="annot"><span class="annottext">String
+</span><span id="line-38"></span><span>      </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;private&quot;</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">LibraryVisibility -&gt; m LibraryVisibility
 forall a. a -&gt; m a
 forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
-</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
+</span><a href="../../base-4.18.0.0/src/GHC.Base.html#return/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
 </span><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibilityPrivate"><span class="hs-identifier hs-var">LibraryVisibilityPrivate</span></a></span><span>
-</span><span id="line-38"></span><span>      </span><span class="annot"><span class="annottext">String
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; m LibraryVisibility
+</span><span id="line-39"></span><span>      </span><span class="annot"><span class="annottext">String
+</span><span class="hs-identifier">_</span></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; m LibraryVisibility
 forall a. String -&gt; m a
 forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
-</span><span class="hs-identifier hs-var">fail</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; m LibraryVisibility) -&gt; String -&gt; m LibraryVisibility
+</span><a href="../../base-4.18.0.0/src/Control.Monad.Fail.html#fail/Control.Monad.Fail.html#fail"><span class="hs-identifier hs-var">fail</span></a></span><span> </span><span class="annot"><span class="annottext">(String -&gt; m LibraryVisibility) -&gt; String -&gt; m LibraryVisibility
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%24/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;Unknown visibility: &quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
 forall a. [a] -&gt; [a] -&gt; [a]
-</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679490330"><span class="hs-identifier hs-var">name</span></a></span><span>
-</span><span id="line-39"></span><span>
-</span><span id="line-40"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679490334"><span id="local-6989586621679490341"><span id="local-6989586621679490347"><span class="annot"><a href="../../binary-0.8.9.3-25e5/src/Data.Binary.Class.html#Binary"><span class="hs-identifier hs-type">Binary</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-type">LibraryVisibility</span></a></span></span></span></span><span>
-</span><span id="line-41"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679490374"><span id="local-6989586621679490381"><span class="annot"><a href="Distribution.Utils.Structured.html#Structured"><span class="hs-identifier hs-type">Structured</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-type">LibraryVisibility</span></a></span></span></span><span>
-</span><span id="line-42"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="../../deepseq-1.5.1.0-6837/src/Control.DeepSeq.html#NFData"><span class="hs-identifier hs-type">NFData</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-type">LibraryVisibility</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679490422"><span class="annot"><span class="annottext">rnf :: LibraryVisibility -&gt; ()
-</span><a href="#local-6989586621679490422"><span class="hs-identifier hs-var hs-var hs-var">rnf</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LibraryVisibility -&gt; ()
+</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%2B%2B/GHC.Base.html#%2B%2B"><span class="hs-operator hs-var">++</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679402040"><span class="hs-identifier hs-var">name</span></a></span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679402044"><span id="local-6989586621679402051"><span id="local-6989586621679402057"><span class="annot"><a href="../../binary-0.8.9.1/src/Data.Binary.Class.html#Binary/Data.Binary.Class.html#Binary"><span class="hs-identifier hs-type">Binary</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-type">LibraryVisibility</span></a></span></span></span></span><span>
+</span><span id="line-42"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679402084"><span id="local-6989586621679402091"><span class="annot"><a href="Distribution.Utils.Structured.html#Structured"><span class="hs-identifier hs-type">Structured</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-type">LibraryVisibility</span></a></span></span></span><span>
+</span><span id="line-43"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="../../deepseq-1.4.8.1/src/Control.DeepSeq.html#NFData/Control.DeepSeq.html#NFData"><span class="hs-identifier hs-type">NFData</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-type">LibraryVisibility</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679402132"><span class="annot"><span class="annottext">rnf :: LibraryVisibility -&gt; ()
+</span><a href="#local-6989586621679402132"><span class="hs-identifier hs-var hs-var hs-var hs-var">rnf</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LibraryVisibility -&gt; ()
 forall a. (Generic a, GNFData (Rep a)) =&gt; a -&gt; ()
 </span><a href="Distribution.Compat.Prelude.html#genericRnf"><span class="hs-identifier hs-var">genericRnf</span></a></span><span>
-</span><span id="line-43"></span><span>
-</span><span id="line-44"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679490427"><span id="local-6989586621679490431"><span class="annot"><span class="hs-identifier hs-type">Semigroup</span></span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-type">LibraryVisibility</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-45"></span><span>  </span><span class="annot"><span class="annottext">LibraryVisibility
-</span><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibilityPrivate"><span class="hs-identifier hs-var">LibraryVisibilityPrivate</span></a></span><span> </span><span id="local-6989586621679490436"><span class="annot"><span class="annottext">&lt;&gt; :: LibraryVisibility -&gt; LibraryVisibility -&gt; LibraryVisibility
-</span><span class="hs-operator hs-var hs-var hs-var">&lt;&gt;</span></span></span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
+</span><span id="line-44"></span><span>
+</span><span id="line-45"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679402137"><span id="local-6989586621679402141"><span class="annot"><a href="../../base-4.18.0.0/src/GHC.Base.html#Semigroup/GHC.Base.html#Semigroup"><span class="hs-identifier hs-type">Semigroup</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-type">LibraryVisibility</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-46"></span><span>    </span><span class="annot"><span class="annottext">LibraryVisibility
+</span><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibilityPrivate"><span class="hs-identifier hs-var">LibraryVisibilityPrivate</span></a></span><span> </span><span id="local-6989586621679402146"><span class="annot"><span class="annottext">&lt;&gt; :: LibraryVisibility -&gt; LibraryVisibility -&gt; LibraryVisibility
+</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%3C%3E/GHC.Base.html#%3C%3E"><span class="hs-operator hs-var hs-var hs-var hs-var">&lt;&gt;</span></a></span></span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
 </span><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibilityPrivate"><span class="hs-identifier hs-var">LibraryVisibilityPrivate</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
 </span><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibilityPrivate"><span class="hs-identifier hs-var">LibraryVisibilityPrivate</span></a></span><span>
-</span><span id="line-46"></span><span>  </span><span class="annot"><span class="annottext">LibraryVisibility
-</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
+</span><span id="line-47"></span><span>    </span><span class="annot"><span class="annottext">LibraryVisibility
+</span><span class="hs-identifier">_</span></span><span>                        </span><span class="annot"><a href="../../base-4.18.0.0/src/GHC.Base.html#%3C%3E/GHC.Base.html#%3C%3E"><span class="hs-operator hs-var">&lt;&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
+</span><span class="hs-identifier">_</span></span><span>                        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
 </span><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibilityPublic"><span class="hs-identifier hs-var">LibraryVisibilityPublic</span></a></span><span>
-</span><span id="line-47"></span><span>
-</span><span id="line-48"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679490442"><span class="annot"><span class="hs-identifier hs-type">Monoid</span></span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-type">LibraryVisibility</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-49"></span><span>  </span><span id="local-6989586621679490446"><span class="annot"><span class="annottext">mempty :: LibraryVisibility
-</span><span class="hs-identifier hs-var hs-var hs-var">mempty</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
+</span><span id="line-48"></span><span>
+</span><span id="line-49"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679402152"><span class="annot"><a href="../../base-4.18.0.0/src/GHC.Base.html#Monoid/GHC.Base.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibility"><span class="hs-identifier hs-type">LibraryVisibility</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-50"></span><span>    </span><span id="local-6989586621679402156"><span class="annot"><span class="annottext">mempty :: LibraryVisibility
+</span><a href="../../base-4.18.0.0/src/GHC.Base.html#mempty/GHC.Base.html#mempty"><span class="hs-identifier hs-var hs-var hs-var hs-var">mempty</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LibraryVisibility
 </span><a href="Distribution.Types.LibraryVisibility.html#LibraryVisibilityPrivate"><span class="hs-identifier hs-var">LibraryVisibilityPrivate</span></a></span><span>
-</span><span id="line-50"></span><span>  </span><span id="local-6989586621679490448"><span class="annot"><span class="annottext">mappend :: LibraryVisibility -&gt; LibraryVisibility -&gt; LibraryVisibility
-</span><span class="hs-identifier hs-var hs-var hs-var">mappend</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LibraryVisibility -&gt; LibraryVisibility -&gt; LibraryVisibility
+</span><span id="line-51"></span><span>    </span><span id="local-6989586621679402158"><span class="annot"><span class="annottext">mappend :: LibraryVisibility -&gt; LibraryVisibility -&gt; LibraryVisibility
+</span><a href="../../base-4.18.0.0/src/GHC.Base.html#mappend/GHC.Base.html#mappend"><span class="hs-identifier hs-var hs-var hs-var hs-var">mappend</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LibraryVisibility -&gt; LibraryVisibility -&gt; LibraryVisibility
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
-</span><span class="hs-operator hs-var">(&lt;&gt;)</span></span><span>
-</span><span id="line-51"></span></pre></body></html>
+</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%3C%3E/GHC.Base.html#%3C%3E"><span class="hs-operator hs-var">(&lt;&gt;)</span></a></span><span>
+</span><span id="line-52"></span></pre></body></html>

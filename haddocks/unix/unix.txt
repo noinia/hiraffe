@@ -10,7 +10,7 @@
 --   
 --   The package is not supported under Windows.
 @package unix
-@version 2.8.6.0
+@version 2.8.1.0
 
 
 -- | Internal stuff: support for ByteString FilePaths
@@ -55,6 +55,81 @@ throwErrnoPathIfMinus1_ :: (Eq a, Num a) => String -> RawFilePath -> IO a -> IO 
 throwErrnoTwoPathsIfMinus1_ :: (Eq a, Num a) => String -> RawFilePath -> RawFilePath -> IO a -> IO ()
 
 
+-- | String-based POSIX directory support
+module System.Posix.Directory.ByteString
+
+-- | <tt>createDirectory dir mode</tt> calls <tt>mkdir</tt> to create a new
+--   directory, <tt>dir</tt>, with permissions based on <tt>mode</tt>.
+createDirectory :: RawFilePath -> FileMode -> IO ()
+removeDirectory :: RawFilePath -> IO ()
+data DirStream
+
+-- | <tt>openDirStream dir</tt> calls <tt>opendir</tt> to obtain a
+--   directory stream for <tt>dir</tt>.
+openDirStream :: RawFilePath -> IO DirStream
+
+-- | <tt>readDirStream dp</tt> calls <tt>readdir</tt> to obtain the next
+--   directory entry (<tt>struct dirent</tt>) for the open directory stream
+--   <tt>dp</tt>, and returns the <tt>d_name</tt> member of that structure.
+--   
+--   Note that this function returns an empty filepath if the end of the
+--   directory stream is reached. For a safer alternative use
+--   <a>readDirStreamMaybe</a>.
+readDirStream :: DirStream -> IO RawFilePath
+
+-- | <tt>readDirStreamMaybe dp</tt> calls <tt>readdir</tt> to obtain the
+--   next directory entry (<tt>struct dirent</tt>) for the open directory
+--   stream <tt>dp</tt>. It returns the <tt>d_name</tt> member of that
+--   structure wrapped in a <tt>Just d_name</tt> if an entry was read and
+--   <tt>Nothing</tt> if the end of the directory stream was reached.
+readDirStreamMaybe :: DirStream -> IO (Maybe RawFilePath)
+
+-- | <tt>rewindDirStream dp</tt> calls <tt>rewinddir</tt> to reposition the
+--   directory stream <tt>dp</tt> at the beginning of the directory.
+rewindDirStream :: DirStream -> IO ()
+
+-- | <tt>closeDirStream dp</tt> calls <tt>closedir</tt> to close the
+--   directory stream <tt>dp</tt>.
+closeDirStream :: DirStream -> IO ()
+data DirStreamOffset
+tellDirStream :: DirStream -> IO DirStreamOffset
+seekDirStream :: DirStream -> DirStreamOffset -> IO ()
+
+-- | <tt>getWorkingDirectory</tt> calls <tt>getcwd</tt> to obtain the name
+--   of the current working directory.
+getWorkingDirectory :: IO RawFilePath
+
+-- | <tt>changeWorkingDirectory dir</tt> calls <tt>chdir</tt> to change the
+--   current working directory to <tt>dir</tt>.
+changeWorkingDirectory :: RawFilePath -> IO ()
+changeWorkingDirectoryFd :: Fd -> IO ()
+
+module System.Posix.Directory.Fd
+
+-- | Call <tt>fdopendir</tt> to obtain a directory stream for <tt>fd</tt>.
+--   <tt>fd</tt> must not be otherwise used after this.
+--   
+--   On success, it is owned by the returned <a>DirStream</a>, which should
+--   be closed via <a>closeDirStream</a> when no longer needed. On error,
+--   the file descriptor is automatically closed and then an exception is
+--   thrown. There is no code path in which the file descriptor remains
+--   open and yet not owned by a returned <a>DirStream</a>.
+--   
+--   The input file descriptor must not have been used with
+--   <tt>threadWaitRead</tt> or <tt>threadWaitWrite</tt>.
+unsafeOpenDirStreamFd :: Fd -> IO DirStream
+
+
+-- | POSIX directory support (internal module, no PVP guarantees)
+module System.Posix.Directory.Internals
+newtype DirStream
+DirStream :: Ptr CDir -> DirStream
+data {-# CTYPE "DIR" #-} CDir
+data {-# CTYPE "struct dirent" #-} CDirent
+newtype DirStreamOffset
+DirStreamOffset :: COff -> DirStreamOffset
+
+
 -- | <tt>dlopen(3)</tt> and friends Derived from <tt>GModule.chs</tt> by
 --   M.Weber &amp; M.Chakravarty which is part of c2hs. I left the API more
 --   or less the same, mostly the flags are different.
@@ -97,9 +172,9 @@ Null :: DL
 Next :: DL
 Default :: DL
 DLHandle :: Ptr () -> DL
-instance GHC.Internal.Read.Read System.Posix.DynamicLinker.Prim.RTLDFlags
-instance GHC.Internal.Show.Show System.Posix.DynamicLinker.Prim.DL
-instance GHC.Internal.Show.Show System.Posix.DynamicLinker.Prim.RTLDFlags
+instance GHC.Read.Read System.Posix.DynamicLinker.Prim.RTLDFlags
+instance GHC.Show.Show System.Posix.DynamicLinker.Prim.RTLDFlags
+instance GHC.Show.Show System.Posix.DynamicLinker.Prim.DL
 
 
 -- | Dynamic linker support through dlopen()
@@ -312,16 +387,84 @@ getArgs :: IO [PosixString]
 
 -- | POSIX error support
 module System.Posix.Error
+
+-- | as <a>throwErrno</a>, but exceptions include the given path when
+--   appropriate.
 throwErrnoPath :: String -> FilePath -> IO a
+
+-- | as <a>throwErrnoIf</a>, but exceptions include the given path when
+--   appropriate.
 throwErrnoPathIf :: (a -> Bool) -> String -> FilePath -> IO a -> IO a
+
+-- | as <a>throwErrnoIf_</a>, but exceptions include the given path when
+--   appropriate.
 throwErrnoPathIf_ :: (a -> Bool) -> String -> FilePath -> IO a -> IO ()
 throwErrnoPathIfRetry :: (a -> Bool) -> String -> FilePath -> IO a -> IO a
+
+-- | as <a>throwErrnoIfNull</a>, but exceptions include the given path when
+--   appropriate.
 throwErrnoPathIfNull :: String -> FilePath -> IO (Ptr a) -> IO (Ptr a)
 throwErrnoPathIfNullRetry :: String -> FilePath -> IO (Ptr a) -> IO (Ptr a)
+
+-- | as <a>throwErrnoIfMinus1</a>, but exceptions include the given path
+--   when appropriate.
 throwErrnoPathIfMinus1 :: (Eq a, Num a) => String -> FilePath -> IO a -> IO a
+
+-- | as <a>throwErrnoIfMinus1_</a>, but exceptions include the given path
+--   when appropriate.
 throwErrnoPathIfMinus1_ :: (Eq a, Num a) => String -> FilePath -> IO a -> IO ()
 throwErrnoPathIfMinus1Retry :: (Eq a, Num a) => String -> FilePath -> IO a -> IO a
 throwErrnoPathIfMinus1Retry_ :: (Eq a, Num a) => String -> FilePath -> IO a -> IO ()
+
+
+-- | String-based POSIX directory support
+module System.Posix.Directory
+
+-- | <tt>createDirectory dir mode</tt> calls <tt>mkdir</tt> to create a new
+--   directory, <tt>dir</tt>, with permissions based on <tt>mode</tt>.
+createDirectory :: FilePath -> FileMode -> IO ()
+removeDirectory :: FilePath -> IO ()
+data DirStream
+
+-- | <tt>openDirStream dir</tt> calls <tt>opendir</tt> to obtain a
+--   directory stream for <tt>dir</tt>.
+openDirStream :: FilePath -> IO DirStream
+
+-- | <tt>readDirStream dp</tt> calls <tt>readdir</tt> to obtain the next
+--   directory entry (<tt>struct dirent</tt>) for the open directory stream
+--   <tt>dp</tt>, and returns the <tt>d_name</tt> member of that structure.
+--   
+--   Note that this function returns an empty filepath if the end of the
+--   directory stream is reached. For a safer alternative use
+--   <a>readDirStreamMaybe</a>.
+readDirStream :: DirStream -> IO FilePath
+
+-- | <tt>readDirStreamMaybe dp</tt> calls <tt>readdir</tt> to obtain the
+--   next directory entry (<tt>struct dirent</tt>) for the open directory
+--   stream <tt>dp</tt>. It returns the <tt>d_name</tt> member of that
+--   structure wrapped in a <tt>Just d_name</tt> if an entry was read and
+--   <tt>Nothing</tt> if the end of the directory stream was reached.
+readDirStreamMaybe :: DirStream -> IO (Maybe FilePath)
+
+-- | <tt>rewindDirStream dp</tt> calls <tt>rewinddir</tt> to reposition the
+--   directory stream <tt>dp</tt> at the beginning of the directory.
+rewindDirStream :: DirStream -> IO ()
+
+-- | <tt>closeDirStream dp</tt> calls <tt>closedir</tt> to close the
+--   directory stream <tt>dp</tt>.
+closeDirStream :: DirStream -> IO ()
+data DirStreamOffset
+tellDirStream :: DirStream -> IO DirStreamOffset
+seekDirStream :: DirStream -> DirStreamOffset -> IO ()
+
+-- | <tt>getWorkingDirectory</tt> calls <tt>getcwd</tt> to obtain the name
+--   of the current working directory.
+getWorkingDirectory :: IO FilePath
+
+-- | <tt>changeWorkingDirectory dir</tt> calls <tt>chdir</tt> to change the
+--   current working directory to <tt>dir</tt>.
+changeWorkingDirectory :: FilePath -> IO ()
+changeWorkingDirectoryFd :: Fd -> IO ()
 
 
 -- | POSIX file control support
@@ -588,256 +731,6 @@ fileBlockSize :: FileStatus -> Maybe CBlkSize
 --   Returns <tt>Nothing</tt> if <tt>st_blocks</tt> is not supported on
 --   this platform.
 fileBlocks :: FileStatus -> Maybe CBlkCnt
-newtype ExtendedFileStatus
-
--- | The constructor is considered internal and may change.
-ExtendedFileStatus :: ForeignPtr CStatx -> ExtendedFileStatus
-newtype CAttributes
-CAttributes :: Word64 -> CAttributes
-
--- | Whether <tt>statx</tt> is available on this platform and
---   <tt>getExtendedFileStatus</tt> and related functions will work.
-haveStatx :: Bool
-
--- | Gets extended file status information.
---   
---   The target file to open is identified in one of the following ways:
---   
---   <ul>
---   <li>If <tt>pathname</tt> begins with a slash, then it is an absolute
---   pathname that identifies the target file. In this case, <tt>dirfd</tt>
---   is ignored</li>
---   <li>If <tt>pathname</tt> is a string that begins with a character
---   other than a slash and <tt>dirfd</tt> is a file descriptor that refers
---   to a directory, then pathname is a relative pathname that is
---   interpreted relative to the directory referred to by dirfd. (See
---   <tt>openat(2)</tt> for an explanation of why this is useful.)</li>
---   <li>If <tt>pathname</tt> is an empty string and the <a>EmptyPath</a>
---   flag is specified in flags (see below), then the target file is the
---   one referred to by the file descriptor <tt>dirfd</tt>.</li>
---   </ul>
---   
---   Note: calls <tt>statx</tt>.
-getExtendedFileStatus :: Maybe Fd -> RawFilePath -> StatxFlags -> StatxMask -> IO ExtendedFileStatus
-
--- | Statx flags.
---   
---   See the pattern synonyms for possible flags. These are combined via
---   <a>(&lt;&gt;)</a>. Flags can be tested via <a>(.&amp;.)</a>.
---   
---   The following flags influence pathname-based lookup:
---   
---   <ul>
---   <li><a>EmptyPath</a></li>
---   <li><a>NoAutoMount</a></li>
---   <li><a>SymlinkNoFollow</a></li>
---   </ul>
---   
---   The following flags can be used to control what sort of
---   synchronization the kernel will do when querying a file on a remote
---   filesystem:
---   
---   <ul>
---   <li><a>SyncAsStat</a></li>
---   <li><a>ForceSync</a></li>
---   <li><a>DontSync</a></li>
---   </ul>
-newtype StatxFlags
-StatxFlags :: CInt -> StatxFlags
-defaultStatxFlags :: StatxFlags
-
--- | If pathname to <tt>getExtendedFileStatus</tt> is an empty string,
---   operate on the file referred to by the 'Maybe Fd' argument.
---   
---   In this case, it can refer to any type of file, not just a directory.
-pattern EmptyPath :: StatxFlags
-
--- | Don't automount the terminal ("basename") component of pathname if it
---   is a directory that is an automount point. This allows the caller to
---   gather attributes of an automount point (rather than the location it
---   would mount). This flag can be used in tools that scan directories to
---   prevent mass-automounting of a directory of automount points. This
---   flag has no effect if the mount point has already been mounted over.
-pattern NoAutoMount :: StatxFlags
-
--- | If pathname is a symbolic link, do not dereference it: instead return
---   information about the link itself, like <tt>lstat(2)</tt>.
-pattern SymlinkNoFollow :: StatxFlags
-
--- | Do whatever <tt>stat(2)</tt> does. This is the default and is very
---   much filesystem-specific.
-pattern SyncAsStat :: StatxFlags
-
--- | Force the attributes to be synchronized with the server. This may
---   require that a network filesystem perform a data writeback to get the
---   timestamps correct.
-pattern ForceSync :: StatxFlags
-
--- | Don't synchronize anything, but rather just take whatever the system
---   has cached if possible. This may mean that the information returned is
---   approximate, but, on a network filesystem, it may not involve a round
---   trip to the server - even if no lease is held.
-pattern DontSync :: StatxFlags
-
--- | Mask argument to <tt>statx</tt>. It's used to tell the kernel which
---   fields the caller is interested in.
---   
---   See the pattern synonyms for possible masks. These are combined via
---   <tt>(&lt;&gt;)</tt>. Masks can be tested via <a>(.&amp;.)</a>.
-newtype StatxMask
-StatxMask :: CInt -> StatxMask
-defaultStatxMask :: StatxMask
-
--- | Want <tt>stx_mode &amp; S_IFMT</tt>.
-pattern StatxType :: StatxMask
-
--- | Want <tt>stx_mode &amp; ~S_IFMT</tt>.
-pattern StatxMode :: StatxMask
-
--- | Want <tt>stx_nlink</tt>.
-pattern StatxNlink :: StatxMask
-
--- | Want <tt>stx_uid</tt>.
-pattern StatxUid :: StatxMask
-
--- | Want <tt>stx_gid</tt>.
-pattern StatxGid :: StatxMask
-
--- | Want <tt>stx_atime</tt>.
-pattern StatxAtime :: StatxMask
-
--- | Want <tt>stx_mtime</tt>.
-pattern StatxMtime :: StatxMask
-
--- | Want <tt>stx_ctime</tt>.
-pattern StatxCtime :: StatxMask
-
--- | Want <tt>stx_ino</tt>.
-pattern StatxIno :: StatxMask
-
--- | Want <tt>stx_size</tt>.
-pattern StatxSize :: StatxMask
-
--- | Want <tt>stx_blocks</tt>.
-pattern StatxBlocks :: StatxMask
-
--- | Want all of the above.
-pattern StatxBasicStats :: StatxMask
-
--- | Want <tt>stx_btime</tt>.
-pattern StatxBtime :: StatxMask
-
--- | Want <tt>stx_mnt_id</tt>.
-pattern StatxMntId :: StatxMask
-
--- | Want all currently available fields.
-pattern StatxAll :: StatxMask
-
--- | The "preferred" block size for efficient filesystem I/O. (Writing to a
---   file in smaller chunks may cause an inefficient read-mod‐ify-rewrite.)
-fileBlockSizeX :: ExtendedFileStatus -> CBlkSize
-
--- | The number of hard links on a file.
-linkCountX :: ExtendedFileStatus -> CNlink
-
--- | Te user ID of the owner of the file.
-fileOwnerX :: ExtendedFileStatus -> UserID
-
--- | The ID of the group owner of the file.
-fileGroupX :: ExtendedFileStatus -> GroupID
-
--- | The file type and mode. See <tt>inode(7)</tt> for details.
-fileModeX :: ExtendedFileStatus -> FileMode
-
--- | The inode number of the file.
-fileIDX :: ExtendedFileStatus -> FileID
-
--- | The size of the file (if it is a regular file or a symbolic link) in
---   bytes. The size of a symbolic link is the length of the pathname it
---   contains, without a terminating null byte.
-fileSizeX :: ExtendedFileStatus -> Word64
-
--- | The number of blocks allocated to the file on the medium, in 512-byte
---   units. (This may be smaller than stx_size/512 when the file has
---   holes.)
-fileBlocksX :: ExtendedFileStatus -> Word64
-
--- | The file's last access timestamp.
-accessTimeHiResX :: ExtendedFileStatus -> POSIXTime
-
--- | The file's creation timestamp.
-creationTimeHiResX :: ExtendedFileStatus -> POSIXTime
-
--- | The file's last status change timestamp.
-statusChangeTimeHiResX :: ExtendedFileStatus -> POSIXTime
-
--- | The file's last modification timestamp.
-modificationTimeHiResX :: ExtendedFileStatus -> POSIXTime
-
--- | ID of the device on which this file resides.
-deviceIDX :: ExtendedFileStatus -> DeviceID
-
--- | Describes the device that this file represents.
-specialDeviceIDX :: ExtendedFileStatus -> DeviceID
-
--- | The mount ID of the mount containing the file. This is the same number
---   reported by name_to_handle_at(2) and corresponds to the number in the
---   first field in one of the records in <i>proc</i>self/mountinfo.
-mountIDX :: ExtendedFileStatus -> Word64
-
--- | The file is compressed by the filesystem and may take extra resources
---   to access. This is an extended attribute.
-fileCompressedX :: ExtendedFileStatus -> Bool
-
--- | The file cannot be modified: it cannot be deleted or renamed, no hard
---   links can be created to this file and no data can be written to it.
---   See <tt>chattr(1)</tt>. This is an extended attribute.
-fileImmutableX :: ExtendedFileStatus -> Bool
-
--- | The file can only be opened in append mode for writing. Random access
---   writing is not permitted. See <tt>chattr(1)</tt>. This is an extended
---   attribute.
-fileAppendX :: ExtendedFileStatus -> Bool
-
--- | File is not a candidate for backup when a backup program such as
---   <tt>dump(8)</tt> is run. See <tt>chattr(1)</tt>. This is an extended
---   attribute.
-fileNoDumpX :: ExtendedFileStatus -> Bool
-
--- | A key is required for the file to be encrypted by the filesystem. This
---   is an extended attribute.
-fileEncryptedX :: ExtendedFileStatus -> Bool
-
--- | The file has fs-verity enabled. It cannot be written to, and all reads
---   from it will be verified against a cryptographic hash that covers the
---   entire file (e.g., via a Merkle tree). This is an extended attribute.
---   Since Linux 5.5.
-fileVerityX :: ExtendedFileStatus -> Bool
-
--- | The file is in the DAX (cpu direct access) state. This is an extended
---   attribute. Since Linux 5.8.
-fileDaxX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a block device.
-isBlockDeviceX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a character device.
-isCharacterDeviceX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a named pipe device.
-isNamedPipeX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a regular file device.
-isRegularFileX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a directory device.
-isDirectoryX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a symbolic link device.
-isSymbolicLinkX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a socket device.
-isSocketX :: ExtendedFileStatus -> Bool
 
 -- | <tt>createNamedPipe fifo mode</tt> creates a new named pipe,
 --   <tt>fifo</tt>, with permissions based on <tt>mode</tt>. May fail with
@@ -1263,256 +1156,6 @@ fileBlockSize :: FileStatus -> Maybe CBlkSize
 --   Returns <tt>Nothing</tt> if <tt>st_blocks</tt> is not supported on
 --   this platform.
 fileBlocks :: FileStatus -> Maybe CBlkCnt
-newtype ExtendedFileStatus
-
--- | The constructor is considered internal and may change.
-ExtendedFileStatus :: ForeignPtr CStatx -> ExtendedFileStatus
-newtype CAttributes
-CAttributes :: Word64 -> CAttributes
-
--- | Whether <tt>statx</tt> is available on this platform and
---   <tt>getExtendedFileStatus</tt> and related functions will work.
-haveStatx :: Bool
-
--- | Gets extended file status information.
---   
---   The target file to open is identified in one of the following ways:
---   
---   <ul>
---   <li>If <tt>pathname</tt> begins with a slash, then it is an absolute
---   pathname that identifies the target file. In this case, <tt>dirfd</tt>
---   is ignored</li>
---   <li>If <tt>pathname</tt> is a string that begins with a character
---   other than a slash and <tt>dirfd</tt> is a file descriptor that refers
---   to a directory, then pathname is a relative pathname that is
---   interpreted relative to the directory referred to by dirfd. (See
---   <tt>openat(2)</tt> for an explanation of why this is useful.)</li>
---   <li>If <tt>pathname</tt> is an empty string and the <a>EmptyPath</a>
---   flag is specified in flags (see below), then the target file is the
---   one referred to by the file descriptor <tt>dirfd</tt>.</li>
---   </ul>
---   
---   Note: calls <tt>statx</tt>.
-getExtendedFileStatus :: Maybe Fd -> FilePath -> StatxFlags -> StatxMask -> IO ExtendedFileStatus
-
--- | Statx flags.
---   
---   See the pattern synonyms for possible flags. These are combined via
---   <a>(&lt;&gt;)</a>. Flags can be tested via <a>(.&amp;.)</a>.
---   
---   The following flags influence pathname-based lookup:
---   
---   <ul>
---   <li><a>EmptyPath</a></li>
---   <li><a>NoAutoMount</a></li>
---   <li><a>SymlinkNoFollow</a></li>
---   </ul>
---   
---   The following flags can be used to control what sort of
---   synchronization the kernel will do when querying a file on a remote
---   filesystem:
---   
---   <ul>
---   <li><a>SyncAsStat</a></li>
---   <li><a>ForceSync</a></li>
---   <li><a>DontSync</a></li>
---   </ul>
-newtype StatxFlags
-StatxFlags :: CInt -> StatxFlags
-defaultStatxFlags :: StatxFlags
-
--- | If pathname to <tt>getExtendedFileStatus</tt> is an empty string,
---   operate on the file referred to by the 'Maybe Fd' argument.
---   
---   In this case, it can refer to any type of file, not just a directory.
-pattern EmptyPath :: StatxFlags
-
--- | Don't automount the terminal ("basename") component of pathname if it
---   is a directory that is an automount point. This allows the caller to
---   gather attributes of an automount point (rather than the location it
---   would mount). This flag can be used in tools that scan directories to
---   prevent mass-automounting of a directory of automount points. This
---   flag has no effect if the mount point has already been mounted over.
-pattern NoAutoMount :: StatxFlags
-
--- | If pathname is a symbolic link, do not dereference it: instead return
---   information about the link itself, like <tt>lstat(2)</tt>.
-pattern SymlinkNoFollow :: StatxFlags
-
--- | Do whatever <tt>stat(2)</tt> does. This is the default and is very
---   much filesystem-specific.
-pattern SyncAsStat :: StatxFlags
-
--- | Force the attributes to be synchronized with the server. This may
---   require that a network filesystem perform a data writeback to get the
---   timestamps correct.
-pattern ForceSync :: StatxFlags
-
--- | Don't synchronize anything, but rather just take whatever the system
---   has cached if possible. This may mean that the information returned is
---   approximate, but, on a network filesystem, it may not involve a round
---   trip to the server - even if no lease is held.
-pattern DontSync :: StatxFlags
-
--- | Mask argument to <tt>statx</tt>. It's used to tell the kernel which
---   fields the caller is interested in.
---   
---   See the pattern synonyms for possible masks. These are combined via
---   <tt>(&lt;&gt;)</tt>. Masks can be tested via <a>(.&amp;.)</a>.
-newtype StatxMask
-StatxMask :: CInt -> StatxMask
-defaultStatxMask :: StatxMask
-
--- | Want <tt>stx_mode &amp; S_IFMT</tt>.
-pattern StatxType :: StatxMask
-
--- | Want <tt>stx_mode &amp; ~S_IFMT</tt>.
-pattern StatxMode :: StatxMask
-
--- | Want <tt>stx_nlink</tt>.
-pattern StatxNlink :: StatxMask
-
--- | Want <tt>stx_uid</tt>.
-pattern StatxUid :: StatxMask
-
--- | Want <tt>stx_gid</tt>.
-pattern StatxGid :: StatxMask
-
--- | Want <tt>stx_atime</tt>.
-pattern StatxAtime :: StatxMask
-
--- | Want <tt>stx_mtime</tt>.
-pattern StatxMtime :: StatxMask
-
--- | Want <tt>stx_ctime</tt>.
-pattern StatxCtime :: StatxMask
-
--- | Want <tt>stx_ino</tt>.
-pattern StatxIno :: StatxMask
-
--- | Want <tt>stx_size</tt>.
-pattern StatxSize :: StatxMask
-
--- | Want <tt>stx_blocks</tt>.
-pattern StatxBlocks :: StatxMask
-
--- | Want all of the above.
-pattern StatxBasicStats :: StatxMask
-
--- | Want <tt>stx_btime</tt>.
-pattern StatxBtime :: StatxMask
-
--- | Want <tt>stx_mnt_id</tt>.
-pattern StatxMntId :: StatxMask
-
--- | Want all currently available fields.
-pattern StatxAll :: StatxMask
-
--- | The "preferred" block size for efficient filesystem I/O. (Writing to a
---   file in smaller chunks may cause an inefficient read-mod‐ify-rewrite.)
-fileBlockSizeX :: ExtendedFileStatus -> CBlkSize
-
--- | The number of hard links on a file.
-linkCountX :: ExtendedFileStatus -> CNlink
-
--- | Te user ID of the owner of the file.
-fileOwnerX :: ExtendedFileStatus -> UserID
-
--- | The ID of the group owner of the file.
-fileGroupX :: ExtendedFileStatus -> GroupID
-
--- | The file type and mode. See <tt>inode(7)</tt> for details.
-fileModeX :: ExtendedFileStatus -> FileMode
-
--- | The inode number of the file.
-fileIDX :: ExtendedFileStatus -> FileID
-
--- | The size of the file (if it is a regular file or a symbolic link) in
---   bytes. The size of a symbolic link is the length of the pathname it
---   contains, without a terminating null byte.
-fileSizeX :: ExtendedFileStatus -> Word64
-
--- | The number of blocks allocated to the file on the medium, in 512-byte
---   units. (This may be smaller than stx_size/512 when the file has
---   holes.)
-fileBlocksX :: ExtendedFileStatus -> Word64
-
--- | The file's last access timestamp.
-accessTimeHiResX :: ExtendedFileStatus -> POSIXTime
-
--- | The file's creation timestamp.
-creationTimeHiResX :: ExtendedFileStatus -> POSIXTime
-
--- | The file's last status change timestamp.
-statusChangeTimeHiResX :: ExtendedFileStatus -> POSIXTime
-
--- | The file's last modification timestamp.
-modificationTimeHiResX :: ExtendedFileStatus -> POSIXTime
-
--- | ID of the device on which this file resides.
-deviceIDX :: ExtendedFileStatus -> DeviceID
-
--- | Describes the device that this file represents.
-specialDeviceIDX :: ExtendedFileStatus -> DeviceID
-
--- | The mount ID of the mount containing the file. This is the same number
---   reported by name_to_handle_at(2) and corresponds to the number in the
---   first field in one of the records in <i>proc</i>self/mountinfo.
-mountIDX :: ExtendedFileStatus -> Word64
-
--- | The file is compressed by the filesystem and may take extra resources
---   to access. This is an extended attribute.
-fileCompressedX :: ExtendedFileStatus -> Bool
-
--- | The file cannot be modified: it cannot be deleted or renamed, no hard
---   links can be created to this file and no data can be written to it.
---   See <tt>chattr(1)</tt>. This is an extended attribute.
-fileImmutableX :: ExtendedFileStatus -> Bool
-
--- | The file can only be opened in append mode for writing. Random access
---   writing is not permitted. See <tt>chattr(1)</tt>. This is an extended
---   attribute.
-fileAppendX :: ExtendedFileStatus -> Bool
-
--- | File is not a candidate for backup when a backup program such as
---   <tt>dump(8)</tt> is run. See <tt>chattr(1)</tt>. This is an extended
---   attribute.
-fileNoDumpX :: ExtendedFileStatus -> Bool
-
--- | A key is required for the file to be encrypted by the filesystem. This
---   is an extended attribute.
-fileEncryptedX :: ExtendedFileStatus -> Bool
-
--- | The file has fs-verity enabled. It cannot be written to, and all reads
---   from it will be verified against a cryptographic hash that covers the
---   entire file (e.g., via a Merkle tree). This is an extended attribute.
---   Since Linux 5.5.
-fileVerityX :: ExtendedFileStatus -> Bool
-
--- | The file is in the DAX (cpu direct access) state. This is an extended
---   attribute. Since Linux 5.8.
-fileDaxX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a block device.
-isBlockDeviceX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a character device.
-isCharacterDeviceX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a named pipe device.
-isNamedPipeX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a regular file device.
-isRegularFileX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a directory device.
-isDirectoryX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a symbolic link device.
-isSymbolicLinkX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a socket device.
-isSocketX :: ExtendedFileStatus -> Bool
 
 -- | <tt>createNamedPipe fifo mode</tt> creates a new named pipe,
 --   <tt>fifo</tt>, with permissions based on <tt>mode</tt>. May fail with
@@ -1702,256 +1345,6 @@ getPathVar :: FilePath -> PathVar -> IO Limit
 --   
 --   Note: calls <tt>fpathconf</tt>.
 getFdPathVar :: Fd -> PathVar -> IO Limit
-
-
--- | POSIX directory support (internal module, no PVP guarantees)
-module System.Posix.Directory.Internals
-newtype DirStream
-DirStream :: Ptr CDir -> DirStream
-data CDir
-data CDirent
-newtype DirStreamOffset
-DirStreamOffset :: COff -> DirStreamOffset
-
-newtype DirStreamWithPath a
-DirStreamWithPath :: (a, Ptr CDir) -> DirStreamWithPath a
-
--- | Convert a <a>DirStreamWithPath</a> to a <a>DirStream</a>. Note that
---   the underlying pointer is shared by both values, hence any
---   modification to the resulting <a>DirStream</a> will also modify the
---   original <a>DirStreamWithPath</a>.
-fromDirStreamWithPath :: DirStreamWithPath a -> DirStream
-
--- | Construct a <a>DirStreamWithPath</a> from a <a>DirStream</a>. Note
---   that the underlying pointer is shared by both values, hence any
---   modification to the pointer of the resulting <a>DirStreamWithPath</a>
---   will also modify the original <a>DirStream</a>.
-toDirStreamWithPath :: a -> DirStream -> DirStreamWithPath a
-
-newtype DirEnt
-DirEnt :: Ptr CDirent -> DirEnt
-
-dirEntName :: DirEnt -> IO CString
-
-dirEntType :: DirEnt -> IO DirType
-
--- | The value of the <tt>d_type</tt> field of a <tt>dirent</tt> struct.
---   Note that the possible values of that type depend on the filesystem
---   that is queried. From <tt>readdir(3)</tt>:
---   
---   <pre>
---   Currently, only some filesystems (among them: Btrfs, ext2, ext3, and ext4)
---   have full support for returning the file type in d_type. All applications
---   must properly handle a return of DT_UNKNOWN.
---   </pre>
---   
---   For example, JFS is a filesystem that does not support
---   <tt>d_type</tt>; See
---   <a>https://github.com/haskell/ghcup-hs/issues/766</a>
---   
---   Furthermore, <tt>dirent</tt> or the constants represented by the
---   associated pattern synonyms of this type may not be provided by the
---   underlying platform. In that case none of those patterns will match
---   and the application must handle that case accordingly.
-newtype DirType
-DirType :: CChar -> DirType
-
--- | The <a>DirType</a> refers to an entry of unknown type.
-pattern UnknownType :: DirType
-
--- | The <a>DirType</a> refers to an entry that is a named pipe.
-pattern NamedPipeType :: DirType
-
--- | The <a>DirType</a> refers to an entry that is a character device.
-pattern CharacterDeviceType :: DirType
-
--- | The <a>DirType</a> refers to an entry that is a directory.
-pattern DirectoryType :: DirType
-
--- | The <a>DirType</a> refers to an entry that is a block device.
-pattern BlockDeviceType :: DirType
-
--- | The <a>DirType</a> refers to an entry that is a regular file.
-pattern RegularFileType :: DirType
-
--- | The <a>DirType</a> refers to an entry that is a symbolic link.
-pattern SymbolicLinkType :: DirType
-
--- | The <a>DirType</a> refers to an entry that is a socket.
-pattern SocketType :: DirType
-
--- | The <a>DirType</a> refers to an entry that is a whiteout.
-pattern WhiteoutType :: DirType
-
--- | Checks if this <a>DirType</a> refers to an entry of unknown type.
-isUnknownType :: DirType -> Bool
-
--- | Checks if this <a>DirType</a> refers to a named pipe entry.
-isNamedPipeType :: DirType -> Bool
-
--- | Checks if this <a>DirType</a> refers to a character device entry.
-isCharacterDeviceType :: DirType -> Bool
-
--- | Checks if this <a>DirType</a> refers to a directory entry.
-isDirectoryType :: DirType -> Bool
-
--- | Checks if this <a>DirType</a> refers to a block device entry.
-isBlockDeviceType :: DirType -> Bool
-
--- | Checks if this <a>DirType</a> refers to a regular file entry.
-isRegularFileType :: DirType -> Bool
-
--- | Checks if this <a>DirType</a> refers to a symbolic link entry.
-isSymbolicLinkType :: DirType -> Bool
-
--- | Checks if this <a>DirType</a> refers to a socket entry.
-isSocketType :: DirType -> Bool
-
--- | Checks if this <a>DirType</a> refers to a whiteout entry.
-isWhiteoutType :: DirType -> Bool
-
-getRealDirType :: IO FileStatus -> DirType -> IO DirType
-
--- | <tt>readDirStreamWith f dp</tt> calls <tt>readdir</tt> to obtain the
---   next directory entry (<tt>struct dirent</tt>) for the open directory
---   stream <tt>dp</tt>. If an entry is read, it passes the pointer to that
---   structure to the provided function <tt>f</tt> for processing. It
---   returns the result of that function call wrapped in a <tt>Just</tt> if
---   an entry was read and <tt>Nothing</tt> if the end of the directory
---   stream was reached.
---   
---   <b>NOTE:</b> The lifetime of the pointer wrapped in the <a>DirEnt</a>
---   is limited to invocation of the callback and it will be freed
---   automatically after. Do not pass it to the outside world!
-readDirStreamWith :: (DirEnt -> IO a) -> DirStream -> IO (Maybe a)
-
--- | A version of <a>readDirStreamWith</a> that takes a pre-allocated
---   pointer in addition to the other arguments. This pointer is used to
---   store the pointer to the next directory entry, if there is any. This
---   function is intended for use cases where you need to read a lot of
---   directory entries and want to reuse the pointer for each of them.
---   Using for example <tt>readDirStream</tt> or <a>readDirStreamWith</a>
---   in this scenario would allocate a new pointer for each call of these
---   functions.
---   
---   <b>NOTE</b>: You are responsible for releasing the pointer after you
---   are done.
-readDirStreamWithPtr :: Ptr DirEnt -> (DirEnt -> IO a) -> DirStream -> IO (Maybe a)
-
-module System.Posix.Directory.Fd
-
--- | Call <tt>fdopendir</tt> to obtain a directory stream for <tt>fd</tt>.
---   <tt>fd</tt> must not be otherwise used after this.
---   
---   On success, it is owned by the returned <a>DirStream</a>, which should
---   be closed via <a>closeDirStream</a> when no longer needed. On error,
---   the file descriptor is automatically closed and then an exception is
---   thrown. There is no code path in which the file descriptor remains
---   open and yet not owned by a returned <a>DirStream</a>.
---   
---   The input file descriptor must not have been used with
---   <tt>threadWaitRead</tt> or <tt>threadWaitWrite</tt>.
-unsafeOpenDirStreamFd :: Fd -> IO DirStream
-
-
--- | String-based POSIX directory support
-module System.Posix.Directory.ByteString
-
--- | <tt>createDirectory dir mode</tt> calls <tt>mkdir</tt> to create a new
---   directory, <tt>dir</tt>, with permissions based on <tt>mode</tt>.
-createDirectory :: RawFilePath -> FileMode -> IO ()
-removeDirectory :: RawFilePath -> IO ()
-data DirStream
-
--- | <tt>openDirStream dir</tt> calls <tt>opendir</tt> to obtain a
---   directory stream for <tt>dir</tt>.
-openDirStream :: RawFilePath -> IO DirStream
-
--- | <tt>readDirStream dp</tt> calls <tt>readdir</tt> to obtain the next
---   directory entry (<tt>struct dirent</tt>) for the open directory stream
---   <tt>dp</tt>, and returns the <tt>d_name</tt> member of that structure.
---   
---   Note that this function returns an empty filepath if the end of the
---   directory stream is reached. For a safer alternative use
---   <a>readDirStreamMaybe</a>.
-readDirStream :: DirStream -> IO RawFilePath
-
--- | <tt>readDirStreamMaybe dp</tt> calls <tt>readdir</tt> to obtain the
---   next directory entry (<tt>struct dirent</tt>) for the open directory
---   stream <tt>dp</tt>. It returns the <tt>d_name</tt> member of that
---   structure wrapped in a <tt>Just d_name</tt> if an entry was read and
---   <tt>Nothing</tt> if the end of the directory stream was reached.
-readDirStreamMaybe :: DirStream -> IO (Maybe RawFilePath)
-
--- | <tt>rewindDirStream dp</tt> calls <tt>rewinddir</tt> to reposition the
---   directory stream <tt>dp</tt> at the beginning of the directory.
-rewindDirStream :: DirStream -> IO ()
-
--- | <tt>closeDirStream dp</tt> calls <tt>closedir</tt> to close the
---   directory stream <tt>dp</tt>.
-closeDirStream :: DirStream -> IO ()
-data DirStreamOffset
-tellDirStream :: DirStream -> IO DirStreamOffset
-seekDirStream :: DirStream -> DirStreamOffset -> IO ()
-
--- | <tt>getWorkingDirectory</tt> calls <tt>getcwd</tt> to obtain the name
---   of the current working directory.
-getWorkingDirectory :: IO RawFilePath
-
--- | <tt>changeWorkingDirectory dir</tt> calls <tt>chdir</tt> to change the
---   current working directory to <tt>dir</tt>.
-changeWorkingDirectory :: RawFilePath -> IO ()
-changeWorkingDirectoryFd :: Fd -> IO ()
-
-
--- | String-based POSIX directory support
-module System.Posix.Directory
-
--- | <tt>createDirectory dir mode</tt> calls <tt>mkdir</tt> to create a new
---   directory, <tt>dir</tt>, with permissions based on <tt>mode</tt>.
-createDirectory :: FilePath -> FileMode -> IO ()
-removeDirectory :: FilePath -> IO ()
-data DirStream
-
--- | <tt>openDirStream dir</tt> calls <tt>opendir</tt> to obtain a
---   directory stream for <tt>dir</tt>.
-openDirStream :: FilePath -> IO DirStream
-
--- | <tt>readDirStream dp</tt> calls <tt>readdir</tt> to obtain the next
---   directory entry (<tt>struct dirent</tt>) for the open directory stream
---   <tt>dp</tt>, and returns the <tt>d_name</tt> member of that structure.
---   
---   Note that this function returns an empty filepath if the end of the
---   directory stream is reached. For a safer alternative use
---   <a>readDirStreamMaybe</a>.
-readDirStream :: DirStream -> IO FilePath
-
--- | <tt>readDirStreamMaybe dp</tt> calls <tt>readdir</tt> to obtain the
---   next directory entry (<tt>struct dirent</tt>) for the open directory
---   stream <tt>dp</tt>. It returns the <tt>d_name</tt> member of that
---   structure wrapped in a <tt>Just d_name</tt> if an entry was read and
---   <tt>Nothing</tt> if the end of the directory stream was reached.
-readDirStreamMaybe :: DirStream -> IO (Maybe FilePath)
-
--- | <tt>rewindDirStream dp</tt> calls <tt>rewinddir</tt> to reposition the
---   directory stream <tt>dp</tt> at the beginning of the directory.
-rewindDirStream :: DirStream -> IO ()
-
--- | <tt>closeDirStream dp</tt> calls <tt>closedir</tt> to close the
---   directory stream <tt>dp</tt>.
-closeDirStream :: DirStream -> IO ()
-data DirStreamOffset
-tellDirStream :: DirStream -> IO DirStreamOffset
-seekDirStream :: DirStream -> DirStreamOffset -> IO ()
-
--- | <tt>getWorkingDirectory</tt> calls <tt>getcwd</tt> to obtain the name
---   of the current working directory.
-getWorkingDirectory :: IO FilePath
-
--- | <tt>changeWorkingDirectory dir</tt> calls <tt>chdir</tt> to change the
---   current working directory to <tt>dir</tt>.
-changeWorkingDirectory :: FilePath -> IO ()
-changeWorkingDirectoryFd :: Fd -> IO ()
 
 
 -- | POSIX IO support. These types and functions correspond to the unix
@@ -2716,256 +2109,6 @@ isSymbolicLink :: FileStatus -> Bool
 
 -- | Checks if this file is a socket device.
 isSocket :: FileStatus -> Bool
-newtype ExtendedFileStatus
-
--- | The constructor is considered internal and may change.
-ExtendedFileStatus :: ForeignPtr CStatx -> ExtendedFileStatus
-newtype CAttributes
-CAttributes :: Word64 -> CAttributes
-
--- | Whether <tt>statx</tt> is available on this platform and
---   <tt>getExtendedFileStatus</tt> and related functions will work.
-haveStatx :: Bool
-
--- | Gets extended file status information.
---   
---   The target file to open is identified in one of the following ways:
---   
---   <ul>
---   <li>If <tt>pathname</tt> begins with a slash, then it is an absolute
---   pathname that identifies the target file. In this case, <tt>dirfd</tt>
---   is ignored</li>
---   <li>If <tt>pathname</tt> is a string that begins with a character
---   other than a slash and <tt>dirfd</tt> is a file descriptor that refers
---   to a directory, then pathname is a relative pathname that is
---   interpreted relative to the directory referred to by dirfd. (See
---   <tt>openat(2)</tt> for an explanation of why this is useful.)</li>
---   <li>If <tt>pathname</tt> is an empty string and the <a>EmptyPath</a>
---   flag is specified in flags (see below), then the target file is the
---   one referred to by the file descriptor <tt>dirfd</tt>.</li>
---   </ul>
---   
---   Note: calls <tt>statx</tt>.
-getExtendedFileStatus :: Maybe Fd -> PosixPath -> StatxFlags -> StatxMask -> IO ExtendedFileStatus
-
--- | Statx flags.
---   
---   See the pattern synonyms for possible flags. These are combined via
---   <a>(&lt;&gt;)</a>. Flags can be tested via <a>(.&amp;.)</a>.
---   
---   The following flags influence pathname-based lookup:
---   
---   <ul>
---   <li><a>EmptyPath</a></li>
---   <li><a>NoAutoMount</a></li>
---   <li><a>SymlinkNoFollow</a></li>
---   </ul>
---   
---   The following flags can be used to control what sort of
---   synchronization the kernel will do when querying a file on a remote
---   filesystem:
---   
---   <ul>
---   <li><a>SyncAsStat</a></li>
---   <li><a>ForceSync</a></li>
---   <li><a>DontSync</a></li>
---   </ul>
-newtype StatxFlags
-StatxFlags :: CInt -> StatxFlags
-defaultStatxFlags :: StatxFlags
-
--- | If pathname to <tt>getExtendedFileStatus</tt> is an empty string,
---   operate on the file referred to by the 'Maybe Fd' argument.
---   
---   In this case, it can refer to any type of file, not just a directory.
-pattern EmptyPath :: StatxFlags
-
--- | Don't automount the terminal ("basename") component of pathname if it
---   is a directory that is an automount point. This allows the caller to
---   gather attributes of an automount point (rather than the location it
---   would mount). This flag can be used in tools that scan directories to
---   prevent mass-automounting of a directory of automount points. This
---   flag has no effect if the mount point has already been mounted over.
-pattern NoAutoMount :: StatxFlags
-
--- | If pathname is a symbolic link, do not dereference it: instead return
---   information about the link itself, like <tt>lstat(2)</tt>.
-pattern SymlinkNoFollow :: StatxFlags
-
--- | Do whatever <tt>stat(2)</tt> does. This is the default and is very
---   much filesystem-specific.
-pattern SyncAsStat :: StatxFlags
-
--- | Force the attributes to be synchronized with the server. This may
---   require that a network filesystem perform a data writeback to get the
---   timestamps correct.
-pattern ForceSync :: StatxFlags
-
--- | Don't synchronize anything, but rather just take whatever the system
---   has cached if possible. This may mean that the information returned is
---   approximate, but, on a network filesystem, it may not involve a round
---   trip to the server - even if no lease is held.
-pattern DontSync :: StatxFlags
-
--- | Mask argument to <tt>statx</tt>. It's used to tell the kernel which
---   fields the caller is interested in.
---   
---   See the pattern synonyms for possible masks. These are combined via
---   <tt>(&lt;&gt;)</tt>. Masks can be tested via <a>(.&amp;.)</a>.
-newtype StatxMask
-StatxMask :: CInt -> StatxMask
-defaultStatxMask :: StatxMask
-
--- | Want <tt>stx_mode &amp; S_IFMT</tt>.
-pattern StatxType :: StatxMask
-
--- | Want <tt>stx_mode &amp; ~S_IFMT</tt>.
-pattern StatxMode :: StatxMask
-
--- | Want <tt>stx_nlink</tt>.
-pattern StatxNlink :: StatxMask
-
--- | Want <tt>stx_uid</tt>.
-pattern StatxUid :: StatxMask
-
--- | Want <tt>stx_gid</tt>.
-pattern StatxGid :: StatxMask
-
--- | Want <tt>stx_atime</tt>.
-pattern StatxAtime :: StatxMask
-
--- | Want <tt>stx_mtime</tt>.
-pattern StatxMtime :: StatxMask
-
--- | Want <tt>stx_ctime</tt>.
-pattern StatxCtime :: StatxMask
-
--- | Want <tt>stx_ino</tt>.
-pattern StatxIno :: StatxMask
-
--- | Want <tt>stx_size</tt>.
-pattern StatxSize :: StatxMask
-
--- | Want <tt>stx_blocks</tt>.
-pattern StatxBlocks :: StatxMask
-
--- | Want all of the above.
-pattern StatxBasicStats :: StatxMask
-
--- | Want <tt>stx_btime</tt>.
-pattern StatxBtime :: StatxMask
-
--- | Want <tt>stx_mnt_id</tt>.
-pattern StatxMntId :: StatxMask
-
--- | Want all currently available fields.
-pattern StatxAll :: StatxMask
-
--- | The "preferred" block size for efficient filesystem I/O. (Writing to a
---   file in smaller chunks may cause an inefficient read-mod‐ify-rewrite.)
-fileBlockSizeX :: ExtendedFileStatus -> CBlkSize
-
--- | The number of hard links on a file.
-linkCountX :: ExtendedFileStatus -> CNlink
-
--- | Te user ID of the owner of the file.
-fileOwnerX :: ExtendedFileStatus -> UserID
-
--- | The ID of the group owner of the file.
-fileGroupX :: ExtendedFileStatus -> GroupID
-
--- | The file type and mode. See <tt>inode(7)</tt> for details.
-fileModeX :: ExtendedFileStatus -> FileMode
-
--- | The inode number of the file.
-fileIDX :: ExtendedFileStatus -> FileID
-
--- | The size of the file (if it is a regular file or a symbolic link) in
---   bytes. The size of a symbolic link is the length of the pathname it
---   contains, without a terminating null byte.
-fileSizeX :: ExtendedFileStatus -> Word64
-
--- | The number of blocks allocated to the file on the medium, in 512-byte
---   units. (This may be smaller than stx_size/512 when the file has
---   holes.)
-fileBlocksX :: ExtendedFileStatus -> Word64
-
--- | The file's last access timestamp.
-accessTimeHiResX :: ExtendedFileStatus -> POSIXTime
-
--- | The file's creation timestamp.
-creationTimeHiResX :: ExtendedFileStatus -> POSIXTime
-
--- | The file's last status change timestamp.
-statusChangeTimeHiResX :: ExtendedFileStatus -> POSIXTime
-
--- | The file's last modification timestamp.
-modificationTimeHiResX :: ExtendedFileStatus -> POSIXTime
-
--- | ID of the device on which this file resides.
-deviceIDX :: ExtendedFileStatus -> DeviceID
-
--- | Describes the device that this file represents.
-specialDeviceIDX :: ExtendedFileStatus -> DeviceID
-
--- | The mount ID of the mount containing the file. This is the same number
---   reported by name_to_handle_at(2) and corresponds to the number in the
---   first field in one of the records in <i>proc</i>self/mountinfo.
-mountIDX :: ExtendedFileStatus -> Word64
-
--- | The file is compressed by the filesystem and may take extra resources
---   to access. This is an extended attribute.
-fileCompressedX :: ExtendedFileStatus -> Bool
-
--- | The file cannot be modified: it cannot be deleted or renamed, no hard
---   links can be created to this file and no data can be written to it.
---   See <tt>chattr(1)</tt>. This is an extended attribute.
-fileImmutableX :: ExtendedFileStatus -> Bool
-
--- | The file can only be opened in append mode for writing. Random access
---   writing is not permitted. See <tt>chattr(1)</tt>. This is an extended
---   attribute.
-fileAppendX :: ExtendedFileStatus -> Bool
-
--- | File is not a candidate for backup when a backup program such as
---   <tt>dump(8)</tt> is run. See <tt>chattr(1)</tt>. This is an extended
---   attribute.
-fileNoDumpX :: ExtendedFileStatus -> Bool
-
--- | A key is required for the file to be encrypted by the filesystem. This
---   is an extended attribute.
-fileEncryptedX :: ExtendedFileStatus -> Bool
-
--- | The file has fs-verity enabled. It cannot be written to, and all reads
---   from it will be verified against a cryptographic hash that covers the
---   entire file (e.g., via a Merkle tree). This is an extended attribute.
---   Since Linux 5.5.
-fileVerityX :: ExtendedFileStatus -> Bool
-
--- | The file is in the DAX (cpu direct access) state. This is an extended
---   attribute. Since Linux 5.8.
-fileDaxX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a block device.
-isBlockDeviceX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a character device.
-isCharacterDeviceX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a named pipe device.
-isNamedPipeX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a regular file device.
-isRegularFileX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a directory device.
-isDirectoryX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a symbolic link device.
-isSymbolicLinkX :: ExtendedFileStatus -> Bool
-
--- | Checks if this file is a socket device.
-isSocketX :: ExtendedFileStatus -> Bool
 
 -- | <tt>createNamedPipe fifo mode</tt> creates a new named pipe,
 --   <tt>fifo</tt>, with permissions based on <tt>mode</tt>. May fail with
@@ -3159,18 +2302,7 @@ openDirStream :: PosixPath -> IO DirStream
 -- | <tt>readDirStream dp</tt> calls <tt>readdir</tt> to obtain the next
 --   directory entry (<tt>struct dirent</tt>) for the open directory stream
 --   <tt>dp</tt>, and returns the <tt>d_name</tt> member of that structure.
---   
---   Note that this function returns an empty filepath if the end of the
---   directory stream is reached. For a safer alternative use
---   <a>readDirStreamMaybe</a>.
 readDirStream :: DirStream -> IO PosixPath
-
--- | <tt>readDirStreamMaybe dp</tt> calls <tt>readdir</tt> to obtain the
---   next directory entry (<tt>struct dirent</tt>) for the open directory
---   stream <tt>dp</tt>. It returns the <tt>d_name</tt> member of that
---   structure wrapped in a <tt>Just d_name</tt> if an entry was read and
---   <tt>Nothing</tt> if the end of the directory stream was reached.
-readDirStreamMaybe :: DirStream -> IO (Maybe PosixPath)
 
 -- | <tt>rewindDirStream dp</tt> calls <tt>rewinddir</tt> to reposition the
 --   directory stream <tt>dp</tt> at the beginning of the directory.
@@ -3210,9 +2342,9 @@ Terminated :: Signal -> Bool -> ProcessStatus
 
 -- | the process was stopped by a signal
 Stopped :: Signal -> ProcessStatus
-instance GHC.Classes.Eq System.Posix.Process.Internals.ProcessStatus
+instance GHC.Show.Show System.Posix.Process.Internals.ProcessStatus
 instance GHC.Classes.Ord System.Posix.Process.Internals.ProcessStatus
-instance GHC.Internal.Show.Show System.Posix.Process.Internals.ProcessStatus
+instance GHC.Classes.Eq System.Posix.Process.Internals.ProcessStatus
 
 
 -- | POSIX process support. See also the System.Cmd and System.Process
@@ -3242,7 +2374,7 @@ forkProcess :: IO () -> IO ProcessID
 
 -- | Variant of <a>forkProcess</a> in the style of
 --   <tt>forkIOWithUnmask</tt>.
-forkProcessWithUnmask :: ((forall a. () => IO a -> IO a) -> IO ()) -> IO ProcessID
+forkProcessWithUnmask :: ((forall a. IO a -> IO a) -> IO ()) -> IO ProcessID
 
 -- | <tt><a>executeFile</a> cmd args env</tt> calls one of the
 --   <tt>execv*</tt> family, depending on whether or not the current PATH
@@ -3413,7 +2545,7 @@ forkProcess :: IO () -> IO ProcessID
 
 -- | Variant of <a>forkProcess</a> in the style of
 --   <tt>forkIOWithUnmask</tt>.
-forkProcessWithUnmask :: ((forall a. () => IO a -> IO a) -> IO ()) -> IO ProcessID
+forkProcessWithUnmask :: ((forall a. IO a -> IO a) -> IO ()) -> IO ProcessID
 
 -- | <tt><a>executeFile</a> cmd args env</tt> calls one of the
 --   <tt>execv*</tt> family, depending on whether or not the current PATH
@@ -3584,7 +2716,7 @@ forkProcess :: IO () -> IO ProcessID
 
 -- | Variant of <a>forkProcess</a> in the style of
 --   <tt>forkIOWithUnmask</tt>.
-forkProcessWithUnmask :: ((forall a. () => IO a -> IO a) -> IO ()) -> IO ProcessID
+forkProcessWithUnmask :: ((forall a. IO a -> IO a) -> IO ()) -> IO ProcessID
 
 -- | <tt><a>executeFile</a> cmd args env</tt> calls one of the
 --   <tt>execv*</tt> family, depending on whether or not the current PATH
@@ -3735,9 +2867,8 @@ ResourceLimitInfinity :: ResourceLimit
 ResourceLimitUnknown :: ResourceLimit
 ResourceLimit :: Integer -> ResourceLimit
 data ResourceLimits
-ResourceLimits :: ResourceLimit -> ResourceLimit -> ResourceLimits
-[softLimit] :: ResourceLimits -> ResourceLimit
-[hardLimit] :: ResourceLimits -> ResourceLimit
+ResourceLimits :: ResourceLimit -> ResourceLimits
+[softLimit, hardLimit] :: ResourceLimits -> ResourceLimit
 data Resource
 ResourceCoreFileSize :: Resource
 ResourceCPUTime :: Resource
@@ -3748,12 +2879,12 @@ ResourceStackSize :: Resource
 ResourceTotalMemory :: Resource
 getResourceLimit :: Resource -> IO ResourceLimits
 setResourceLimit :: Resource -> ResourceLimits -> IO ()
+instance GHC.Show.Show System.Posix.Resource.Resource
 instance GHC.Classes.Eq System.Posix.Resource.Resource
+instance GHC.Show.Show System.Posix.Resource.ResourceLimit
 instance GHC.Classes.Eq System.Posix.Resource.ResourceLimit
+instance GHC.Show.Show System.Posix.Resource.ResourceLimits
 instance GHC.Classes.Eq System.Posix.Resource.ResourceLimits
-instance GHC.Internal.Show.Show System.Posix.Resource.Resource
-instance GHC.Internal.Show.Show System.Posix.Resource.ResourceLimit
-instance GHC.Internal.Show.Show System.Posix.Resource.ResourceLimits
 
 
 -- | POSIX named semaphore support.
@@ -4395,20 +3526,14 @@ BaudRate :: CSpeed -> BaudRate
 -- | Hang up
 pattern B0 :: BaudRate
 
--- | 1000000 baud, non-POSIX system-dependent extension
-pattern B1000000 :: BaudRate
+-- | 50 baud
+pattern B50 :: BaudRate
+
+-- | 75 baud
+pattern B75 :: BaudRate
 
 -- | 110 baud
 pattern B110 :: BaudRate
-
--- | 115200 baud, non-POSIX system-dependent extension
-pattern B115200 :: BaudRate
-
--- | 1152000 baud, non-POSIX system-dependent extension
-pattern B1152000 :: BaudRate
-
--- | 1200 baud
-pattern B1200 :: BaudRate
 
 -- | <ol>
 --   <li>5 baud</li>
@@ -4418,32 +3543,71 @@ pattern B134 :: BaudRate
 -- | 150 baud
 pattern B150 :: BaudRate
 
--- | 1500000 baud, non-POSIX system-dependent extension
-pattern B1500000 :: BaudRate
+-- | 200 baud
+pattern B200 :: BaudRate
+
+-- | 300 baud
+pattern B300 :: BaudRate
+
+-- | 600 baud
+pattern B600 :: BaudRate
+
+-- | 1200 baud
+pattern B1200 :: BaudRate
 
 -- | 1800 baud
 pattern B1800 :: BaudRate
 
+-- | 2400 baud
+pattern B2400 :: BaudRate
+
+-- | 4800 baud
+pattern B4800 :: BaudRate
+
+-- | 9600 baud
+pattern B9600 :: BaudRate
+
 -- | 19200 baud
 pattern B19200 :: BaudRate
 
--- | 200 baud
-pattern B200 :: BaudRate
+-- | 38400 baud
+pattern B38400 :: BaudRate
 
--- | 2000000 baud, non-POSIX system-dependent extension
-pattern B2000000 :: BaudRate
+-- | 57600 baud, non-POSIX system-dependent extension
+pattern B57600 :: BaudRate
+
+-- | 115200 baud, non-POSIX system-dependent extension
+pattern B115200 :: BaudRate
 
 -- | 230400 baud, non-POSIX system-dependent extension
 pattern B230400 :: BaudRate
 
--- | 2400 baud
-pattern B2400 :: BaudRate
+-- | 460800 baud, non-POSIX system-dependent extension
+pattern B460800 :: BaudRate
+
+-- | 500000 baud, non-POSIX system-dependent extension
+pattern B500000 :: BaudRate
+
+-- | 576000 baud, non-POSIX system-dependent extension
+pattern B576000 :: BaudRate
+
+-- | 921600 baud, non-POSIX system-dependent extension
+pattern B921600 :: BaudRate
+
+-- | 1000000 baud, non-POSIX system-dependent extension
+pattern B1000000 :: BaudRate
+
+-- | 1152000 baud, non-POSIX system-dependent extension
+pattern B1152000 :: BaudRate
+
+-- | 1500000 baud, non-POSIX system-dependent extension
+pattern B1500000 :: BaudRate
+
+-- | 2000000 baud, non-POSIX system-dependent extension
+pattern B2000000 :: BaudRate
 
 -- | 2500000 baud, non-POSIX system-dependent extension
 pattern B2500000 :: BaudRate
-
--- | 300 baud
-pattern B300 :: BaudRate
 
 -- | 3000000 baud, non-POSIX system-dependent extension
 pattern B3000000 :: BaudRate
@@ -4451,41 +3615,8 @@ pattern B3000000 :: BaudRate
 -- | 3500000 baud, non-POSIX system-dependent extension
 pattern B3500000 :: BaudRate
 
--- | 38400 baud
-pattern B38400 :: BaudRate
-
 -- | 4000000 baud, non-POSIX system-dependent extension
 pattern B4000000 :: BaudRate
-
--- | 460800 baud, non-POSIX system-dependent extension
-pattern B460800 :: BaudRate
-
--- | 4800 baud
-pattern B4800 :: BaudRate
-
--- | 50 baud
-pattern B50 :: BaudRate
-
--- | 500000 baud, non-POSIX system-dependent extension
-pattern B500000 :: BaudRate
-
--- | 57600 baud, non-POSIX system-dependent extension
-pattern B57600 :: BaudRate
-
--- | 576000 baud, non-POSIX system-dependent extension
-pattern B576000 :: BaudRate
-
--- | 600 baud
-pattern B600 :: BaudRate
-
--- | 75 baud
-pattern B75 :: BaudRate
-
--- | 921600 baud, non-POSIX system-dependent extension
-pattern B921600 :: BaudRate
-
--- | 9600 baud
-pattern B9600 :: BaudRate
 inputSpeed :: TerminalAttributes -> BaudRate
 withInputSpeed :: TerminalAttributes -> BaudRate -> TerminalAttributes
 outputSpeed :: TerminalAttributes -> BaudRate
@@ -4736,20 +3867,14 @@ BaudRate :: CSpeed -> BaudRate
 -- | Hang up
 pattern B0 :: BaudRate
 
--- | 1000000 baud, non-POSIX system-dependent extension
-pattern B1000000 :: BaudRate
+-- | 50 baud
+pattern B50 :: BaudRate
+
+-- | 75 baud
+pattern B75 :: BaudRate
 
 -- | 110 baud
 pattern B110 :: BaudRate
-
--- | 115200 baud, non-POSIX system-dependent extension
-pattern B115200 :: BaudRate
-
--- | 1152000 baud, non-POSIX system-dependent extension
-pattern B1152000 :: BaudRate
-
--- | 1200 baud
-pattern B1200 :: BaudRate
 
 -- | <ol>
 --   <li>5 baud</li>
@@ -4759,32 +3884,71 @@ pattern B134 :: BaudRate
 -- | 150 baud
 pattern B150 :: BaudRate
 
--- | 1500000 baud, non-POSIX system-dependent extension
-pattern B1500000 :: BaudRate
+-- | 200 baud
+pattern B200 :: BaudRate
+
+-- | 300 baud
+pattern B300 :: BaudRate
+
+-- | 600 baud
+pattern B600 :: BaudRate
+
+-- | 1200 baud
+pattern B1200 :: BaudRate
 
 -- | 1800 baud
 pattern B1800 :: BaudRate
 
+-- | 2400 baud
+pattern B2400 :: BaudRate
+
+-- | 4800 baud
+pattern B4800 :: BaudRate
+
+-- | 9600 baud
+pattern B9600 :: BaudRate
+
 -- | 19200 baud
 pattern B19200 :: BaudRate
 
--- | 200 baud
-pattern B200 :: BaudRate
+-- | 38400 baud
+pattern B38400 :: BaudRate
 
--- | 2000000 baud, non-POSIX system-dependent extension
-pattern B2000000 :: BaudRate
+-- | 57600 baud, non-POSIX system-dependent extension
+pattern B57600 :: BaudRate
+
+-- | 115200 baud, non-POSIX system-dependent extension
+pattern B115200 :: BaudRate
 
 -- | 230400 baud, non-POSIX system-dependent extension
 pattern B230400 :: BaudRate
 
--- | 2400 baud
-pattern B2400 :: BaudRate
+-- | 460800 baud, non-POSIX system-dependent extension
+pattern B460800 :: BaudRate
+
+-- | 500000 baud, non-POSIX system-dependent extension
+pattern B500000 :: BaudRate
+
+-- | 576000 baud, non-POSIX system-dependent extension
+pattern B576000 :: BaudRate
+
+-- | 921600 baud, non-POSIX system-dependent extension
+pattern B921600 :: BaudRate
+
+-- | 1000000 baud, non-POSIX system-dependent extension
+pattern B1000000 :: BaudRate
+
+-- | 1152000 baud, non-POSIX system-dependent extension
+pattern B1152000 :: BaudRate
+
+-- | 1500000 baud, non-POSIX system-dependent extension
+pattern B1500000 :: BaudRate
+
+-- | 2000000 baud, non-POSIX system-dependent extension
+pattern B2000000 :: BaudRate
 
 -- | 2500000 baud, non-POSIX system-dependent extension
 pattern B2500000 :: BaudRate
-
--- | 300 baud
-pattern B300 :: BaudRate
 
 -- | 3000000 baud, non-POSIX system-dependent extension
 pattern B3000000 :: BaudRate
@@ -4792,41 +3956,8 @@ pattern B3000000 :: BaudRate
 -- | 3500000 baud, non-POSIX system-dependent extension
 pattern B3500000 :: BaudRate
 
--- | 38400 baud
-pattern B38400 :: BaudRate
-
 -- | 4000000 baud, non-POSIX system-dependent extension
 pattern B4000000 :: BaudRate
-
--- | 460800 baud, non-POSIX system-dependent extension
-pattern B460800 :: BaudRate
-
--- | 4800 baud
-pattern B4800 :: BaudRate
-
--- | 50 baud
-pattern B50 :: BaudRate
-
--- | 500000 baud, non-POSIX system-dependent extension
-pattern B500000 :: BaudRate
-
--- | 57600 baud, non-POSIX system-dependent extension
-pattern B57600 :: BaudRate
-
--- | 576000 baud, non-POSIX system-dependent extension
-pattern B576000 :: BaudRate
-
--- | 600 baud
-pattern B600 :: BaudRate
-
--- | 75 baud
-pattern B75 :: BaudRate
-
--- | 921600 baud, non-POSIX system-dependent extension
-pattern B921600 :: BaudRate
-
--- | 9600 baud
-pattern B9600 :: BaudRate
 inputSpeed :: TerminalAttributes -> BaudRate
 withInputSpeed :: TerminalAttributes -> BaudRate -> TerminalAttributes
 outputSpeed :: TerminalAttributes -> BaudRate
@@ -5077,20 +4208,14 @@ BaudRate :: CSpeed -> BaudRate
 -- | Hang up
 pattern B0 :: BaudRate
 
--- | 1000000 baud, non-POSIX system-dependent extension
-pattern B1000000 :: BaudRate
+-- | 50 baud
+pattern B50 :: BaudRate
+
+-- | 75 baud
+pattern B75 :: BaudRate
 
 -- | 110 baud
 pattern B110 :: BaudRate
-
--- | 115200 baud, non-POSIX system-dependent extension
-pattern B115200 :: BaudRate
-
--- | 1152000 baud, non-POSIX system-dependent extension
-pattern B1152000 :: BaudRate
-
--- | 1200 baud
-pattern B1200 :: BaudRate
 
 -- | <ol>
 --   <li>5 baud</li>
@@ -5100,32 +4225,71 @@ pattern B134 :: BaudRate
 -- | 150 baud
 pattern B150 :: BaudRate
 
--- | 1500000 baud, non-POSIX system-dependent extension
-pattern B1500000 :: BaudRate
+-- | 200 baud
+pattern B200 :: BaudRate
+
+-- | 300 baud
+pattern B300 :: BaudRate
+
+-- | 600 baud
+pattern B600 :: BaudRate
+
+-- | 1200 baud
+pattern B1200 :: BaudRate
 
 -- | 1800 baud
 pattern B1800 :: BaudRate
 
+-- | 2400 baud
+pattern B2400 :: BaudRate
+
+-- | 4800 baud
+pattern B4800 :: BaudRate
+
+-- | 9600 baud
+pattern B9600 :: BaudRate
+
 -- | 19200 baud
 pattern B19200 :: BaudRate
 
--- | 200 baud
-pattern B200 :: BaudRate
+-- | 38400 baud
+pattern B38400 :: BaudRate
 
--- | 2000000 baud, non-POSIX system-dependent extension
-pattern B2000000 :: BaudRate
+-- | 57600 baud, non-POSIX system-dependent extension
+pattern B57600 :: BaudRate
+
+-- | 115200 baud, non-POSIX system-dependent extension
+pattern B115200 :: BaudRate
 
 -- | 230400 baud, non-POSIX system-dependent extension
 pattern B230400 :: BaudRate
 
--- | 2400 baud
-pattern B2400 :: BaudRate
+-- | 460800 baud, non-POSIX system-dependent extension
+pattern B460800 :: BaudRate
+
+-- | 500000 baud, non-POSIX system-dependent extension
+pattern B500000 :: BaudRate
+
+-- | 576000 baud, non-POSIX system-dependent extension
+pattern B576000 :: BaudRate
+
+-- | 921600 baud, non-POSIX system-dependent extension
+pattern B921600 :: BaudRate
+
+-- | 1000000 baud, non-POSIX system-dependent extension
+pattern B1000000 :: BaudRate
+
+-- | 1152000 baud, non-POSIX system-dependent extension
+pattern B1152000 :: BaudRate
+
+-- | 1500000 baud, non-POSIX system-dependent extension
+pattern B1500000 :: BaudRate
+
+-- | 2000000 baud, non-POSIX system-dependent extension
+pattern B2000000 :: BaudRate
 
 -- | 2500000 baud, non-POSIX system-dependent extension
 pattern B2500000 :: BaudRate
-
--- | 300 baud
-pattern B300 :: BaudRate
 
 -- | 3000000 baud, non-POSIX system-dependent extension
 pattern B3000000 :: BaudRate
@@ -5133,41 +4297,8 @@ pattern B3000000 :: BaudRate
 -- | 3500000 baud, non-POSIX system-dependent extension
 pattern B3500000 :: BaudRate
 
--- | 38400 baud
-pattern B38400 :: BaudRate
-
 -- | 4000000 baud, non-POSIX system-dependent extension
 pattern B4000000 :: BaudRate
-
--- | 460800 baud, non-POSIX system-dependent extension
-pattern B460800 :: BaudRate
-
--- | 4800 baud
-pattern B4800 :: BaudRate
-
--- | 50 baud
-pattern B50 :: BaudRate
-
--- | 500000 baud, non-POSIX system-dependent extension
-pattern B500000 :: BaudRate
-
--- | 57600 baud, non-POSIX system-dependent extension
-pattern B57600 :: BaudRate
-
--- | 576000 baud, non-POSIX system-dependent extension
-pattern B576000 :: BaudRate
-
--- | 600 baud
-pattern B600 :: BaudRate
-
--- | 75 baud
-pattern B75 :: BaudRate
-
--- | 921600 baud, non-POSIX system-dependent extension
-pattern B921600 :: BaudRate
-
--- | 9600 baud
-pattern B9600 :: BaudRate
 inputSpeed :: TerminalAttributes -> BaudRate
 withInputSpeed :: TerminalAttributes -> BaudRate -> TerminalAttributes
 outputSpeed :: TerminalAttributes -> BaudRate
@@ -5580,7 +4711,7 @@ setGroups :: [GroupID] -> IO ()
 module System.Posix.PosixString
 
 -- | Commonly used Posix string as uninterpreted <tt>char[]</tt> array.
-data PosixString
+data () => PosixString
 
 -- | Filepaths are <tt>char[]</tt> data on unix as passed to syscalls.
 type PosixPath = PosixString
@@ -5603,27 +4734,41 @@ module System.Posix.ByteString
 
 -- | A literal POSIX file path
 type RawFilePath = ByteString
+
+-- | Flags for <a>dlopen</a>.
+data RTLDFlags
+RTLD_LAZY :: RTLDFlags
+RTLD_NOW :: RTLDFlags
+RTLD_GLOBAL :: RTLDFlags
+RTLD_LOCAL :: RTLDFlags
+
+-- | Flags for <a>dlsym</a>. Notice that <a>Next</a> might not be available
+--   on your particular platform! Use <a>haveRtldNext</a>.
+--   
+--   If <tt>RTLD_DEFAULT</tt> is not defined on your platform,
+--   <a>packDL</a> <a>Default</a> reduces to <a>nullPtr</a>.
+data DL
+Null :: DL
+Next :: DL
+DLHandle :: Ptr () -> DL
 dlopen :: RawFilePath -> [RTLDFlags] -> IO DL
-withDL :: RawFilePath -> [RTLDFlags] -> (DL -> IO a) -> IO a
-withDL_ :: RawFilePath -> [RTLDFlags] -> (DL -> IO a) -> IO ()
-dlclose :: DL -> IO ()
-dlerror :: IO String
 
 -- | <a>dlsym</a> returns the address binding of the symbol described in
 --   <tt>symbol</tt>, as it occurs in the shared object identified by
 --   <tt>source</tt>.
 dlsym :: DL -> String -> IO (FunPtr a)
+dlerror :: IO String
+dlclose :: DL -> IO ()
+withDL :: RawFilePath -> [RTLDFlags] -> (DL -> IO a) -> IO a
+withDL_ :: RawFilePath -> [RTLDFlags] -> (DL -> IO a) -> IO ()
 
 -- | <a>undl</a> obtains the raw handle. You mustn't do something like
 --   <tt>withDL mod flags $ liftM undl &gt;&gt;= p -&gt; use p</tt>
 undl :: DL -> Ptr ()
-c_dlclose :: Ptr () -> IO CInt
-c_dlerror :: IO CString
 c_dlopen :: CString -> CInt -> IO (Ptr ())
 c_dlsym :: Ptr () -> CString -> IO (FunPtr a)
-
--- | <i>Deprecated: defaults to True</i>
-haveRtldLocal :: Bool
+c_dlerror :: IO CString
+c_dlclose :: Ptr () -> IO CInt
 
 -- | On some hosts (e.g. SuSe and Ubuntu Linux) <tt>RTLD_NEXT</tt> (and
 --   <tt>RTLD_DEFAULT</tt>) are not visible without setting the macro
@@ -5635,50 +4780,50 @@ haveRtldLocal :: Bool
 --   If you fail to test the flag and use it although it is undefined,
 --   <a>packDL</a> will throw an error.
 haveRtldNext :: Bool
-packDL :: DL -> Ptr ()
+
+-- | <i>Deprecated: defaults to True</i>
+haveRtldLocal :: Bool
 packRTLDFlags :: [RTLDFlags] -> CInt
-
--- | Flags for <a>dlsym</a>. Notice that <a>Next</a> might not be available
---   on your particular platform! Use <a>haveRtldNext</a>.
---   
---   If <tt>RTLD_DEFAULT</tt> is not defined on your platform,
---   <a>packDL</a> <a>Default</a> reduces to <a>nullPtr</a>.
-data DL
-Null :: DL
-Next :: DL
-DLHandle :: Ptr () -> DL
-
--- | Flags for <a>dlopen</a>.
-data RTLDFlags
-RTLD_LAZY :: RTLDFlags
-RTLD_NOW :: RTLDFlags
-RTLD_GLOBAL :: RTLDFlags
-RTLD_LOCAL :: RTLDFlags
+packDL :: DL -> Ptr ()
 
 
 -- | <a>POSIX.1-2008</a> support
 module System.Posix
+
+-- | Flags for <a>dlopen</a>.
+data RTLDFlags
+RTLD_LAZY :: RTLDFlags
+RTLD_NOW :: RTLDFlags
+RTLD_GLOBAL :: RTLDFlags
+RTLD_LOCAL :: RTLDFlags
+
+-- | Flags for <a>dlsym</a>. Notice that <a>Next</a> might not be available
+--   on your particular platform! Use <a>haveRtldNext</a>.
+--   
+--   If <tt>RTLD_DEFAULT</tt> is not defined on your platform,
+--   <a>packDL</a> <a>Default</a> reduces to <a>nullPtr</a>.
+data DL
+Null :: DL
+Next :: DL
+DLHandle :: Ptr () -> DL
 dlopen :: FilePath -> [RTLDFlags] -> IO DL
-withDL :: FilePath -> [RTLDFlags] -> (DL -> IO a) -> IO a
-withDL_ :: FilePath -> [RTLDFlags] -> (DL -> IO a) -> IO ()
-dlclose :: DL -> IO ()
-dlerror :: IO String
 
 -- | <a>dlsym</a> returns the address binding of the symbol described in
 --   <tt>symbol</tt>, as it occurs in the shared object identified by
 --   <tt>source</tt>.
 dlsym :: DL -> String -> IO (FunPtr a)
+dlerror :: IO String
+dlclose :: DL -> IO ()
+withDL :: FilePath -> [RTLDFlags] -> (DL -> IO a) -> IO a
+withDL_ :: FilePath -> [RTLDFlags] -> (DL -> IO a) -> IO ()
 
 -- | <a>undl</a> obtains the raw handle. You mustn't do something like
 --   <tt>withDL mod flags $ liftM undl &gt;&gt;= p -&gt; use p</tt>
 undl :: DL -> Ptr ()
-c_dlclose :: Ptr () -> IO CInt
-c_dlerror :: IO CString
 c_dlopen :: CString -> CInt -> IO (Ptr ())
 c_dlsym :: Ptr () -> CString -> IO (FunPtr a)
-
--- | <i>Deprecated: defaults to True</i>
-haveRtldLocal :: Bool
+c_dlerror :: IO CString
+c_dlclose :: Ptr () -> IO CInt
 
 -- | On some hosts (e.g. SuSe and Ubuntu Linux) <tt>RTLD_NEXT</tt> (and
 --   <tt>RTLD_DEFAULT</tt>) are not visible without setting the macro
@@ -5690,22 +4835,8 @@ haveRtldLocal :: Bool
 --   If you fail to test the flag and use it although it is undefined,
 --   <a>packDL</a> will throw an error.
 haveRtldNext :: Bool
-packDL :: DL -> Ptr ()
+
+-- | <i>Deprecated: defaults to True</i>
+haveRtldLocal :: Bool
 packRTLDFlags :: [RTLDFlags] -> CInt
-
--- | Flags for <a>dlsym</a>. Notice that <a>Next</a> might not be available
---   on your particular platform! Use <a>haveRtldNext</a>.
---   
---   If <tt>RTLD_DEFAULT</tt> is not defined on your platform,
---   <a>packDL</a> <a>Default</a> reduces to <a>nullPtr</a>.
-data DL
-Null :: DL
-Next :: DL
-DLHandle :: Ptr () -> DL
-
--- | Flags for <a>dlopen</a>.
-data RTLDFlags
-RTLD_LAZY :: RTLDFlags
-RTLD_NOW :: RTLDFlags
-RTLD_GLOBAL :: RTLDFlags
-RTLD_LOCAL :: RTLDFlags
+packDL :: DL -> Ptr ()

@@ -1,16 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679502646"><span id="local-6989586621679502647"><span id="local-6989586621679502648"><span id="local-6989586621679502649"></span></span></span></span><span class="hs-pragma">{-# LANGUAGE DeriveDataTypeable #-}</span><span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679345574"><span id="local-6989586621679345575"><span id="local-6989586621679345576"><span id="local-6989586621679345577"></span></span></span></span><span class="hs-pragma">{-# LANGUAGE DeriveDataTypeable #-}</span><span>
 </span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE DeriveGeneric #-}</span><span>
-</span><span id="line-3"></span><span>
-</span><span id="line-4"></span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Distribution.Verbosity.Internal.html"><span class="hs-identifier">Distribution.Verbosity.Internal</span></a></span><span>
-</span><span id="line-5"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityLevel"><span class="hs-identifier">VerbosityLevel</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
-</span><span id="line-6"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityFlag"><span class="hs-identifier">VerbosityFlag</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
-</span><span id="line-7"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-8"></span><span>
-</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../Cabal-syntax-3.14.1.0-ebb2/src/Distribution.Compat.Prelude.html"><span class="hs-identifier">Distribution.Compat.Prelude</span></a></span><span>
-</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../base-4.21.0.0-ae91/src/Prelude.html"><span class="hs-identifier">Prelude</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-11"></span><span>
-</span><span id="line-12"></span><span class="hs-keyword">data</span><span> </span><span id="VerbosityLevel"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityLevel"><span class="hs-identifier hs-var">VerbosityLevel</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Silent"><span class="annot"><a href="Distribution.Verbosity.Internal.html#Silent"><span class="hs-identifier hs-var">Silent</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="Normal"><span class="annot"><a href="Distribution.Verbosity.Internal.html#Normal"><span class="hs-identifier hs-var">Normal</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="Verbose"><span class="annot"><a href="Distribution.Verbosity.Internal.html#Verbose"><span class="hs-identifier hs-var">Verbose</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="Deafening"><span class="annot"><a href="Distribution.Verbosity.Internal.html#Deafening"><span class="hs-identifier hs-var">Deafening</span></a></span></span><span>
-</span><span id="line-13"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679502655"><span id="local-6989586621679502657"><span class="annot"><span class="annottext">(forall x. VerbosityLevel -&gt; Rep VerbosityLevel x)
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Distribution.Verbosity.Internal</span><span>
+</span><span id="line-4"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityLevel"><span class="hs-identifier">VerbosityLevel</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityFlag"><span class="hs-identifier">VerbosityFlag</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../base-4.18.0.0/src/Prelude.html#/Prelude.html"><span class="hs-identifier">Prelude</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../Cabal-syntax-3.10.1.0/src/Distribution.Compat.Prelude.html#/Distribution.Compat.Prelude.html"><span class="hs-identifier">Distribution.Compat.Prelude</span></a></span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">data</span><span> </span><span id="VerbosityLevel"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityLevel"><span class="hs-identifier hs-var">VerbosityLevel</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Silent"><span class="annot"><a href="Distribution.Verbosity.Internal.html#Silent"><span class="hs-identifier hs-var">Silent</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="Normal"><span class="annot"><a href="Distribution.Verbosity.Internal.html#Normal"><span class="hs-identifier hs-var">Normal</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="Verbose"><span class="annot"><a href="Distribution.Verbosity.Internal.html#Verbose"><span class="hs-identifier hs-var">Verbose</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="Deafening"><span class="annot"><a href="Distribution.Verbosity.Internal.html#Deafening"><span class="hs-identifier hs-var">Deafening</span></a></span></span><span>
+</span><span id="line-12"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679345583"><span id="local-6989586621679345585"><span class="annot"><span class="annottext">(forall x. VerbosityLevel -&gt; Rep VerbosityLevel x)
 -&gt; (forall x. Rep VerbosityLevel x -&gt; VerbosityLevel)
 -&gt; Generic VerbosityLevel
 forall x. Rep VerbosityLevel x -&gt; VerbosityLevel
@@ -21,7 +20,7 @@ $cfrom :: forall x. VerbosityLevel -&gt; Rep VerbosityLevel x
 from :: forall x. VerbosityLevel -&gt; Rep VerbosityLevel x
 $cto :: forall x. Rep VerbosityLevel x -&gt; VerbosityLevel
 to :: forall x. Rep VerbosityLevel x -&gt; VerbosityLevel
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Generic</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679502663"><span id="local-6989586621679502665"><span id="local-6989586621679502669"><span class="annot"><span class="annottext">Int -&gt; VerbosityLevel -&gt; ShowS
+</span><a href="../../base-4.18.0.0/src/GHC.Generics.html#Generic/GHC.Generics.html#Generic"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Generic</span></a></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679345589"><span id="local-6989586621679345591"><span id="local-6989586621679345595"><span class="annot"><span class="annottext">Int -&gt; VerbosityLevel -&gt; ShowS
 [VerbosityLevel] -&gt; ShowS
 VerbosityLevel -&gt; String
 (Int -&gt; VerbosityLevel -&gt; ShowS)
@@ -36,7 +35,7 @@ $cshow :: VerbosityLevel -&gt; String
 show :: VerbosityLevel -&gt; String
 $cshowList :: [VerbosityLevel] -&gt; ShowS
 showList :: [VerbosityLevel] -&gt; ShowS
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679502674"><span id="local-6989586621679502678"><span id="local-6989586621679502681"><span id="local-6989586621679502688"><span class="annot"><span class="annottext">ReadPrec [VerbosityLevel]
+</span><a href="../../base-4.18.0.0/src/GHC.Show.html#Show/GHC.Show.html#Show"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></a></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679345599"><span id="local-6989586621679345603"><span id="local-6989586621679345606"><span id="local-6989586621679345613"><span class="annot"><span class="annottext">ReadPrec [VerbosityLevel]
 ReadPrec VerbosityLevel
 Int -&gt; ReadS VerbosityLevel
 ReadS [VerbosityLevel]
@@ -56,7 +55,7 @@ $creadPrec :: ReadPrec VerbosityLevel
 readPrec :: ReadPrec VerbosityLevel
 $creadListPrec :: ReadPrec [VerbosityLevel]
 readListPrec :: ReadPrec [VerbosityLevel]
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679502695"><span id="local-6989586621679502700"><span class="annot"><span class="annottext">VerbosityLevel -&gt; VerbosityLevel -&gt; Bool
+</span><a href="../../base-4.18.0.0/src/GHC.Read.html#Read/GHC.Read.html#Read"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></a></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679345617"><span id="local-6989586621679345619"><span class="annot"><span class="annottext">VerbosityLevel -&gt; VerbosityLevel -&gt; Bool
 (VerbosityLevel -&gt; VerbosityLevel -&gt; Bool)
 -&gt; (VerbosityLevel -&gt; VerbosityLevel -&gt; Bool) -&gt; Eq VerbosityLevel
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
@@ -64,7 +63,7 @@ $c== :: VerbosityLevel -&gt; VerbosityLevel -&gt; Bool
 == :: VerbosityLevel -&gt; VerbosityLevel -&gt; Bool
 $c/= :: VerbosityLevel -&gt; VerbosityLevel -&gt; Bool
 /= :: VerbosityLevel -&gt; VerbosityLevel -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679502707"><span id="local-6989586621679502711"><span id="local-6989586621679502715"><span id="local-6989586621679502719"><span id="local-6989586621679502722"><span id="local-6989586621679502725"><span id="local-6989586621679502728"><span class="annot"><span class="annottext">Eq VerbosityLevel
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679345626"><span id="local-6989586621679345628"><span id="local-6989586621679345630"><span id="local-6989586621679345634"><span id="local-6989586621679345637"><span id="local-6989586621679345640"><span id="local-6989586621679345643"><span class="annot"><span class="annottext">Eq VerbosityLevel
 Eq VerbosityLevel =&gt;
 (VerbosityLevel -&gt; VerbosityLevel -&gt; Ordering)
 -&gt; (VerbosityLevel -&gt; VerbosityLevel -&gt; Bool)
@@ -101,7 +100,7 @@ $cmax :: VerbosityLevel -&gt; VerbosityLevel -&gt; VerbosityLevel
 max :: VerbosityLevel -&gt; VerbosityLevel -&gt; VerbosityLevel
 $cmin :: VerbosityLevel -&gt; VerbosityLevel -&gt; VerbosityLevel
 min :: VerbosityLevel -&gt; VerbosityLevel -&gt; VerbosityLevel
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679502736"><span id="local-6989586621679502743"><span id="local-6989586621679502748"><span id="local-6989586621679502754"><span id="local-6989586621679502757"><span id="local-6989586621679502762"><span id="local-6989586621679502769"><span id="local-6989586621679502773"><span class="annot"><span class="annottext">Int -&gt; VerbosityLevel
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679345647"><span id="local-6989586621679345655"><span id="local-6989586621679345661"><span id="local-6989586621679345671"><span id="local-6989586621679345673"><span id="local-6989586621679345677"><span id="local-6989586621679345681"><span id="local-6989586621679345685"><span class="annot"><span class="annottext">Int -&gt; VerbosityLevel
 VerbosityLevel -&gt; Int
 VerbosityLevel -&gt; [VerbosityLevel]
 VerbosityLevel -&gt; VerbosityLevel
@@ -146,28 +145,27 @@ $cenumFromThenTo :: VerbosityLevel
 -&gt; VerbosityLevel -&gt; VerbosityLevel -&gt; [VerbosityLevel]
 enumFromThenTo :: VerbosityLevel
 -&gt; VerbosityLevel -&gt; VerbosityLevel -&gt; [VerbosityLevel]
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Enum</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679502781"><span id="local-6989586621679502783"><span class="annot"><span class="annottext">VerbosityLevel
+</span><a href="../../base-4.18.0.0/src/GHC.Enum.html#Enum/GHC.Enum.html#Enum"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Enum</span></a></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679345689"><span id="local-6989586621679345691"><span class="annot"><span class="annottext">VerbosityLevel
 VerbosityLevel -&gt; VerbosityLevel -&gt; Bounded VerbosityLevel
 forall a. a -&gt; a -&gt; Bounded a
 $cminBound :: VerbosityLevel
 minBound :: VerbosityLevel
 $cmaxBound :: VerbosityLevel
 maxBound :: VerbosityLevel
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Bounded</span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">)</span><span>
-</span><span id="line-14"></span><span>
-</span><span id="line-15"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679502789"><span id="local-6989586621679502796"><span id="local-6989586621679502802"><span class="annot"><span class="hs-identifier hs-type">Binary</span></span><span> </span><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityLevel"><span class="hs-identifier hs-type">VerbosityLevel</span></a></span></span></span></span><span>
-</span><span id="line-16"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679502848"><span id="local-6989586621679502855"><span class="annot"><a href="../../Cabal-syntax-3.14.1.0-ebb2/src/Distribution.Utils.Structured.html#Structured"><span class="hs-identifier hs-type">Structured</span></a></span><span> </span><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityLevel"><span class="hs-identifier hs-type">VerbosityLevel</span></a></span></span></span><span>
-</span><span id="line-17"></span><span>
-</span><span id="line-18"></span><span class="hs-keyword">data</span><span> </span><span id="VerbosityFlag"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityFlag"><span class="hs-identifier hs-var">VerbosityFlag</span></a></span></span><span>
-</span><span id="line-19"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="VCallStack"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VCallStack"><span class="hs-identifier hs-var">VCallStack</span></a></span></span><span>
-</span><span id="line-20"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="VCallSite"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VCallSite"><span class="hs-identifier hs-var">VCallSite</span></a></span></span><span>
-</span><span id="line-21"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="VNoWrap"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VNoWrap"><span class="hs-identifier hs-var">VNoWrap</span></a></span></span><span>
-</span><span id="line-22"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="VMarkOutput"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VMarkOutput"><span class="hs-identifier hs-var">VMarkOutput</span></a></span></span><span>
-</span><span id="line-23"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="VTimestamp"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VTimestamp"><span class="hs-identifier hs-var">VTimestamp</span></a></span></span><span>
-</span><span id="line-24"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-comment">-- | @since 3.4.0.0</span></span><span>
-</span><span id="line-25"></span><span>    </span><span id="VStderr"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VStderr"><span class="hs-identifier hs-var">VStderr</span></a></span></span><span>
-</span><span id="line-26"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="VNoWarn"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VNoWarn"><span class="hs-identifier hs-var">VNoWarn</span></a></span></span><span>
-</span><span id="line-27"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679502901"><span id="local-6989586621679502903"><span class="annot"><span class="annottext">(forall x. VerbosityFlag -&gt; Rep VerbosityFlag x)
+</span><a href="../../base-4.18.0.0/src/GHC.Enum.html#Bounded/GHC.Enum.html#Bounded"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Bounded</span></a></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="../../base-4.18.0.0/src/Data.Typeable.Internal.html#Typeable/Data.Typeable.Internal.html#Typeable"><span class="hs-identifier hs-type">Typeable</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679345695"><span id="local-6989586621679345702"><span id="local-6989586621679345708"><span class="annot"><span class="hs-identifier hs-type">Binary</span></span><span> </span><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityLevel"><span class="hs-identifier hs-type">VerbosityLevel</span></a></span></span></span></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679345754"><span id="local-6989586621679345761"><span class="annot"><a href="../../Cabal-syntax-3.10.1.0/src/Distribution.Utils.Structured.html#Structured/Distribution.Utils.Structured.html#Structured"><span class="hs-identifier hs-type">Structured</span></a></span><span> </span><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityLevel"><span class="hs-identifier hs-type">VerbosityLevel</span></a></span></span></span><span>
+</span><span id="line-16"></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">data</span><span> </span><span id="VerbosityFlag"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityFlag"><span class="hs-identifier hs-var">VerbosityFlag</span></a></span></span><span>
+</span><span id="line-18"></span><span>    </span><span class="hs-glyph">=</span><span> </span><span id="VCallStack"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VCallStack"><span class="hs-identifier hs-var">VCallStack</span></a></span></span><span>
+</span><span id="line-19"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span id="VCallSite"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VCallSite"><span class="hs-identifier hs-var">VCallSite</span></a></span></span><span>
+</span><span id="line-20"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span id="VNoWrap"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VNoWrap"><span class="hs-identifier hs-var">VNoWrap</span></a></span></span><span>
+</span><span id="line-21"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span id="VMarkOutput"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VMarkOutput"><span class="hs-identifier hs-var">VMarkOutput</span></a></span></span><span>
+</span><span id="line-22"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span id="VTimestamp"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VTimestamp"><span class="hs-identifier hs-var">VTimestamp</span></a></span></span><span>
+</span><span id="line-23"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span id="VStderr"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VStderr"><span class="hs-identifier hs-var">VStderr</span></a></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @since 3.4.0.0</span></span><span>
+</span><span id="line-24"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span id="VNoWarn"><span class="annot"><a href="Distribution.Verbosity.Internal.html#VNoWarn"><span class="hs-identifier hs-var">VNoWarn</span></a></span></span><span>
+</span><span id="line-25"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679345807"><span id="local-6989586621679345809"><span class="annot"><span class="annottext">(forall x. VerbosityFlag -&gt; Rep VerbosityFlag x)
 -&gt; (forall x. Rep VerbosityFlag x -&gt; VerbosityFlag)
 -&gt; Generic VerbosityFlag
 forall x. Rep VerbosityFlag x -&gt; VerbosityFlag
@@ -178,7 +176,7 @@ $cfrom :: forall x. VerbosityFlag -&gt; Rep VerbosityFlag x
 from :: forall x. VerbosityFlag -&gt; Rep VerbosityFlag x
 $cto :: forall x. Rep VerbosityFlag x -&gt; VerbosityFlag
 to :: forall x. Rep VerbosityFlag x -&gt; VerbosityFlag
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Generic</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679502906"><span id="local-6989586621679502908"><span id="local-6989586621679502912"><span class="annot"><span class="annottext">Int -&gt; VerbosityFlag -&gt; ShowS
+</span><a href="../../base-4.18.0.0/src/GHC.Generics.html#Generic/GHC.Generics.html#Generic"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Generic</span></a></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679345812"><span id="local-6989586621679345814"><span id="local-6989586621679345818"><span class="annot"><span class="annottext">Int -&gt; VerbosityFlag -&gt; ShowS
 [VerbosityFlag] -&gt; ShowS
 VerbosityFlag -&gt; String
 (Int -&gt; VerbosityFlag -&gt; ShowS)
@@ -193,7 +191,7 @@ $cshow :: VerbosityFlag -&gt; String
 show :: VerbosityFlag -&gt; String
 $cshowList :: [VerbosityFlag] -&gt; ShowS
 showList :: [VerbosityFlag] -&gt; ShowS
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679502915"><span id="local-6989586621679502919"><span id="local-6989586621679502922"><span id="local-6989586621679502931"><span class="annot"><span class="annottext">ReadPrec [VerbosityFlag]
+</span><a href="../../base-4.18.0.0/src/GHC.Show.html#Show/GHC.Show.html#Show"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></a></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679345821"><span id="local-6989586621679345825"><span id="local-6989586621679345828"><span id="local-6989586621679345837"><span class="annot"><span class="annottext">ReadPrec [VerbosityFlag]
 ReadPrec VerbosityFlag
 Int -&gt; ReadS VerbosityFlag
 ReadS [VerbosityFlag]
@@ -213,7 +211,7 @@ $creadPrec :: ReadPrec VerbosityFlag
 readPrec :: ReadPrec VerbosityFlag
 $creadListPrec :: ReadPrec [VerbosityFlag]
 readListPrec :: ReadPrec [VerbosityFlag]
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679502934"><span id="local-6989586621679502938"><span class="annot"><span class="annottext">VerbosityFlag -&gt; VerbosityFlag -&gt; Bool
+</span><a href="../../base-4.18.0.0/src/GHC.Read.html#Read/GHC.Read.html#Read"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></a></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679345840"><span id="local-6989586621679345842"><span class="annot"><span class="annottext">VerbosityFlag -&gt; VerbosityFlag -&gt; Bool
 (VerbosityFlag -&gt; VerbosityFlag -&gt; Bool)
 -&gt; (VerbosityFlag -&gt; VerbosityFlag -&gt; Bool) -&gt; Eq VerbosityFlag
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
@@ -221,7 +219,7 @@ $c== :: VerbosityFlag -&gt; VerbosityFlag -&gt; Bool
 == :: VerbosityFlag -&gt; VerbosityFlag -&gt; Bool
 $c/= :: VerbosityFlag -&gt; VerbosityFlag -&gt; Bool
 /= :: VerbosityFlag -&gt; VerbosityFlag -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679502944"><span id="local-6989586621679502948"><span id="local-6989586621679502952"><span id="local-6989586621679502956"><span id="local-6989586621679502959"><span id="local-6989586621679502962"><span id="local-6989586621679502965"><span class="annot"><span class="annottext">Eq VerbosityFlag
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679345848"><span id="local-6989586621679345850"><span id="local-6989586621679345852"><span id="local-6989586621679345856"><span id="local-6989586621679345859"><span id="local-6989586621679345862"><span id="local-6989586621679345865"><span class="annot"><span class="annottext">Eq VerbosityFlag
 Eq VerbosityFlag =&gt;
 (VerbosityFlag -&gt; VerbosityFlag -&gt; Ordering)
 -&gt; (VerbosityFlag -&gt; VerbosityFlag -&gt; Bool)
@@ -258,7 +256,7 @@ $cmax :: VerbosityFlag -&gt; VerbosityFlag -&gt; VerbosityFlag
 max :: VerbosityFlag -&gt; VerbosityFlag -&gt; VerbosityFlag
 $cmin :: VerbosityFlag -&gt; VerbosityFlag -&gt; VerbosityFlag
 min :: VerbosityFlag -&gt; VerbosityFlag -&gt; VerbosityFlag
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679502968"><span id="local-6989586621679502973"><span id="local-6989586621679502978"><span id="local-6989586621679502982"><span id="local-6989586621679502985"><span id="local-6989586621679502989"><span id="local-6989586621679502995"><span id="local-6989586621679502999"><span class="annot"><span class="annottext">Int -&gt; VerbosityFlag
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679345868"><span id="local-6989586621679345874"><span id="local-6989586621679345880"><span id="local-6989586621679345888"><span id="local-6989586621679345890"><span id="local-6989586621679345893"><span id="local-6989586621679345897"><span id="local-6989586621679345901"><span class="annot"><span class="annottext">Int -&gt; VerbosityFlag
 VerbosityFlag -&gt; Int
 VerbosityFlag -&gt; [VerbosityFlag]
 VerbosityFlag -&gt; VerbosityFlag
@@ -300,15 +298,15 @@ $cenumFromTo :: VerbosityFlag -&gt; VerbosityFlag -&gt; [VerbosityFlag]
 enumFromTo :: VerbosityFlag -&gt; VerbosityFlag -&gt; [VerbosityFlag]
 $cenumFromThenTo :: VerbosityFlag -&gt; VerbosityFlag -&gt; VerbosityFlag -&gt; [VerbosityFlag]
 enumFromThenTo :: VerbosityFlag -&gt; VerbosityFlag -&gt; VerbosityFlag -&gt; [VerbosityFlag]
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Enum</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679503002"><span id="local-6989586621679503004"><span class="annot"><span class="annottext">VerbosityFlag
+</span><a href="../../base-4.18.0.0/src/GHC.Enum.html#Enum/GHC.Enum.html#Enum"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Enum</span></a></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679345904"><span id="local-6989586621679345906"><span class="annot"><span class="annottext">VerbosityFlag
 VerbosityFlag -&gt; VerbosityFlag -&gt; Bounded VerbosityFlag
 forall a. a -&gt; a -&gt; Bounded a
 $cminBound :: VerbosityFlag
 minBound :: VerbosityFlag
 $cmaxBound :: VerbosityFlag
 maxBound :: VerbosityFlag
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Bounded</span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">)</span><span>
-</span><span id="line-28"></span><span>
-</span><span id="line-29"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679503007"><span id="local-6989586621679503014"><span id="local-6989586621679503020"><span class="annot"><span class="hs-identifier hs-type">Binary</span></span><span> </span><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityFlag"><span class="hs-identifier hs-type">VerbosityFlag</span></a></span></span></span></span><span>
-</span><span id="line-30"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679503077"><span id="local-6989586621679503084"><span class="annot"><a href="../../Cabal-syntax-3.14.1.0-ebb2/src/Distribution.Utils.Structured.html#Structured"><span class="hs-identifier hs-type">Structured</span></a></span><span> </span><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityFlag"><span class="hs-identifier hs-type">VerbosityFlag</span></a></span></span></span><span>
-</span><span id="line-31"></span></pre></body></html>
+</span><a href="../../base-4.18.0.0/src/GHC.Enum.html#Bounded/GHC.Enum.html#Bounded"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Bounded</span></a></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="../../base-4.18.0.0/src/Data.Typeable.Internal.html#Typeable/Data.Typeable.Internal.html#Typeable"><span class="hs-identifier hs-type">Typeable</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span>
+</span><span id="line-27"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679345909"><span id="local-6989586621679345916"><span id="local-6989586621679345922"><span class="annot"><span class="hs-identifier hs-type">Binary</span></span><span> </span><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityFlag"><span class="hs-identifier hs-type">VerbosityFlag</span></a></span></span></span></span><span>
+</span><span id="line-28"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679345979"><span id="local-6989586621679345986"><span class="annot"><a href="../../Cabal-syntax-3.10.1.0/src/Distribution.Utils.Structured.html#Structured/Distribution.Utils.Structured.html#Structured"><span class="hs-identifier hs-type">Structured</span></a></span><span> </span><span class="annot"><a href="Distribution.Verbosity.Internal.html#VerbosityFlag"><span class="hs-identifier hs-type">VerbosityFlag</span></a></span></span></span><span>
+</span><span id="line-29"></span></pre></body></html>
