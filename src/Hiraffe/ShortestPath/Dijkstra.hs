@@ -27,16 +27,17 @@ import HGeometry.Unbounded
 -- given source node to all other nodes in the unweighted graph
 --
 -- O(V\log V + E\log V)
-shortestPaths           :: forall graph adjs v w.
-                           ( Foldable graph, Foldable adjs, Ord v, Ord w, Monoid w)
-                        => (v -> v -> Top w) -- ^ weight function
-                        -> v -- ^ source
-                        -> graph (v, adjs v)    -- ^ adjacency graph
-                        -> [(v, Top w)]
-shortestPaths weight s graph = go . initializeQueue $ graph
+shortestPaths          :: forall graph adjs v w.
+                          ( Foldable graph, Foldable adjs, Ord v, Ord w, Monoid w
+                          )
+                       => (v -> v -> Top w) -- ^ weight function
+                       -> v -- ^ source
+                       -> graph (v, adjs v)    -- ^ adjacency graph
+                       -> [(v, Top w)]
+shortestPaths weight s = go . initializeQueue
   where
     initializeQueue :: graph (v, adjs v) -> Queue adjs v w
-    initializeQueue = PSQueue.adjust (fmap (const mempty)) s
+    initializeQueue = PSQueue.adjust (\ns -> ns { thePrio = ValT mempty}) s
                     . PSQueue.fromList
                     . map (\(u,ns) -> u :-> WithNeighbours Top ns)
                     . toList
