@@ -1,34 +1,36 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679443709"><span id="local-6989586621679443710"></span></span><span class="hs-pragma">{-# LANGUAGE DeriveDataTypeable #-}</span><span>
-</span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE DeriveGeneric #-}</span><span>
-</span><span id="line-3"></span><span>
-</span><span id="line-4"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Distribution.Types.Executable</span><span> </span><span class="hs-special">(</span><span>
-</span><span id="line-5"></span><span>    </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier">Executable</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-6"></span><span>    </span><span class="annot"><a href="Distribution.Types.Executable.html#emptyExecutable"><span class="hs-identifier">emptyExecutable</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-7"></span><span>    </span><span class="annot"><a href="Distribution.Types.Executable.html#exeModules"><span class="hs-identifier">exeModules</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-8"></span><span>    </span><span class="annot"><a href="Distribution.Types.Executable.html#exeModulesAutogen"><span class="hs-identifier">exeModulesAutogen</span></a></span><span>
-</span><span id="line-9"></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-10"></span><span>
-</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../base-4.18.0.0/src/Prelude.html#/Prelude.html"><span class="hs-identifier">Prelude</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679539821"><span id="local-6989586621679539822"></span></span><span class="hs-pragma">{-# LANGUAGE DataKinds #-}</span><span>
+</span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE DeriveDataTypeable #-}</span><span>
+</span><span id="line-3"></span><span class="hs-pragma">{-# LANGUAGE DeriveGeneric #-}</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html"><span class="hs-identifier">Distribution.Types.Executable</span></a></span><span>
+</span><span id="line-6"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier">Executable</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#emptyExecutable"><span class="hs-identifier">emptyExecutable</span></a></span><span>
+</span><span id="line-8"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#exeModules"><span class="hs-identifier">exeModules</span></a></span><span>
+</span><span id="line-9"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#exeModulesAutogen"><span class="hs-identifier">exeModulesAutogen</span></a></span><span>
+</span><span id="line-10"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-11"></span><span>
 </span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Compat.Prelude.html"><span class="hs-identifier">Distribution.Compat.Prelude</span></a></span><span>
-</span><span id="line-13"></span><span>
-</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Types.BuildInfo.html"><span class="hs-identifier">Distribution.Types.BuildInfo</span></a></span><span>
-</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Types.UnqualComponentName.html"><span class="hs-identifier">Distribution.Types.UnqualComponentName</span></a></span><span>
-</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Types.ExecutableScope.html"><span class="hs-identifier">Distribution.Types.ExecutableScope</span></a></span><span>
-</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.ModuleName.html"><span class="hs-identifier">Distribution.ModuleName</span></a></span><span>
-</span><span id="line-18"></span><span>
-</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Distribution.Types.BuildInfo.Lens.html"><span class="hs-identifier">Distribution.Types.BuildInfo.Lens</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">L</span></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../base-4.21.0.0-ae91/src/Prelude.html"><span class="hs-identifier">Prelude</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.ModuleName.html"><span class="hs-identifier">Distribution.ModuleName</span></a></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Types.BuildInfo.html"><span class="hs-identifier">Distribution.Types.BuildInfo</span></a></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Types.ExecutableScope.html"><span class="hs-identifier">Distribution.Types.ExecutableScope</span></a></span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Types.UnqualComponentName.html"><span class="hs-identifier">Distribution.Types.UnqualComponentName</span></a></span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Utils.Path.html"><span class="hs-identifier">Distribution.Utils.Path</span></a></span><span>
 </span><span id="line-20"></span><span>
-</span><span id="line-21"></span><span class="hs-keyword">data</span><span> </span><span id="Executable"><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-var">Executable</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Executable"><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-var">Executable</span></a></span></span><span> </span><span class="hs-special">{</span><span>
-</span><span id="line-22"></span><span>        </span><span id="exeName"><span class="annot"><span class="annottext">Executable -&gt; UnqualComponentName
-</span><a href="Distribution.Types.Executable.html#exeName"><span class="hs-identifier hs-var hs-var">exeName</span></a></span></span><span>    </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Distribution.Types.UnqualComponentName.html#UnqualComponentName"><span class="hs-identifier hs-type">UnqualComponentName</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-23"></span><span>        </span><span id="modulePath"><span class="annot"><span class="annottext">Executable -&gt; FilePath
-</span><a href="Distribution.Types.Executable.html#modulePath"><span class="hs-identifier hs-var hs-var">modulePath</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base-4.18.0.0/src/GHC.IO.html#FilePath/GHC.IO.html#FilePath"><span class="hs-identifier hs-type">FilePath</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-24"></span><span>        </span><span id="exeScope"><span class="annot"><span class="annottext">Executable -&gt; ExecutableScope
-</span><a href="Distribution.Types.Executable.html#exeScope"><span class="hs-identifier hs-var hs-var">exeScope</span></a></span></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Distribution.Types.ExecutableScope.html#ExecutableScope"><span class="hs-identifier hs-type">ExecutableScope</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-25"></span><span>        </span><span id="buildInfo"><span class="annot"><span class="annottext">Executable -&gt; BuildInfo
-</span><a href="Distribution.Types.Executable.html#buildInfo"><span class="hs-identifier hs-var hs-var">buildInfo</span></a></span></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Distribution.Types.BuildInfo.html#BuildInfo"><span class="hs-identifier hs-type">BuildInfo</span></a></span><span>
-</span><span id="line-26"></span><span>    </span><span class="hs-special">}</span><span>
-</span><span id="line-27"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679443722"><span id="local-6989586621679443724"><span class="annot"><span class="annottext">(forall x. Executable -&gt; Rep Executable x)
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Distribution.Types.BuildInfo.Lens.html"><span class="hs-identifier">Distribution.Types.BuildInfo.Lens</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">L</span></span><span>
+</span><span id="line-22"></span><span>
+</span><span id="line-23"></span><span class="hs-keyword">data</span><span> </span><span id="Executable"><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-var">Executable</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Executable"><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-var">Executable</span></a></span></span><span>
+</span><span id="line-24"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="exeName"><span class="annot"><span class="annottext">Executable -&gt; UnqualComponentName
+</span><a href="Distribution.Types.Executable.html#exeName"><span class="hs-identifier hs-var hs-var">exeName</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Distribution.Types.UnqualComponentName.html#UnqualComponentName"><span class="hs-identifier hs-type">UnqualComponentName</span></a></span><span>
+</span><span id="line-25"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="modulePath"><span class="annot"><span class="annottext">Executable -&gt; RelativePath Source 'File
+</span><a href="Distribution.Types.Executable.html#modulePath"><span class="hs-identifier hs-var hs-var">modulePath</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Distribution.Utils.Path.html#RelativePath"><span class="hs-identifier hs-type">RelativePath</span></a></span><span> </span><span class="annot"><a href="Distribution.Utils.Path.html#Source"><span class="hs-identifier hs-type">Source</span></a></span><span> </span><span class="annot"><a href="Distribution.Utils.Path.html#File"><span class="hs-identifier hs-type">File</span></a></span><span>
+</span><span id="line-26"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="exeScope"><span class="annot"><span class="annottext">Executable -&gt; ExecutableScope
+</span><a href="Distribution.Types.Executable.html#exeScope"><span class="hs-identifier hs-var hs-var">exeScope</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Distribution.Types.ExecutableScope.html#ExecutableScope"><span class="hs-identifier hs-type">ExecutableScope</span></a></span><span>
+</span><span id="line-27"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="buildInfo"><span class="annot"><span class="annottext">Executable -&gt; BuildInfo
+</span><a href="Distribution.Types.Executable.html#buildInfo"><span class="hs-identifier hs-var hs-var">buildInfo</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Distribution.Types.BuildInfo.html#BuildInfo"><span class="hs-identifier hs-type">BuildInfo</span></a></span><span>
+</span><span id="line-28"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-29"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679539834"><span id="local-6989586621679539836"><span class="annot"><span class="annottext">(forall x. Executable -&gt; Rep Executable x)
 -&gt; (forall x. Rep Executable x -&gt; Executable) -&gt; Generic Executable
 forall x. Rep Executable x -&gt; Executable
 forall x. Executable -&gt; Rep Executable x
@@ -38,22 +40,22 @@ $cfrom :: forall x. Executable -&gt; Rep Executable x
 from :: forall x. Executable -&gt; Rep Executable x
 $cto :: forall x. Rep Executable x -&gt; Executable
 to :: forall x. Rep Executable x -&gt; Executable
-</span><a href="../../base-4.18.0.0/src/GHC.Generics.html#Generic/GHC.Generics.html#Generic"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Generic</span></a></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679443728"><span id="local-6989586621679443741"><span id="local-6989586621679443745"><span class="annot"><span class="annottext">Int -&gt; Executable -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Generic</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679539842"><span id="local-6989586621679539854"><span id="local-6989586621679539858"><span class="annot"><span class="annottext">Int -&gt; Executable -&gt; ShowS
 [Executable] -&gt; ShowS
-Executable -&gt; FilePath
+Executable -&gt; String
 (Int -&gt; Executable -&gt; ShowS)
--&gt; (Executable -&gt; FilePath)
+-&gt; (Executable -&gt; String)
 -&gt; ([Executable] -&gt; ShowS)
 -&gt; Show Executable
 forall a.
-(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; FilePath) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
 $cshowsPrec :: Int -&gt; Executable -&gt; ShowS
 showsPrec :: Int -&gt; Executable -&gt; ShowS
-$cshow :: Executable -&gt; FilePath
-show :: Executable -&gt; FilePath
+$cshow :: Executable -&gt; String
+show :: Executable -&gt; String
 $cshowList :: [Executable] -&gt; ShowS
 showList :: [Executable] -&gt; ShowS
-</span><a href="../../base-4.18.0.0/src/GHC.Show.html#Show/GHC.Show.html#Show"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></a></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679443750"><span id="local-6989586621679443754"><span id="local-6989586621679443757"><span id="local-6989586621679443780"><span class="annot"><span class="annottext">ReadPrec [Executable]
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679539863"><span id="local-6989586621679539867"><span id="local-6989586621679539870"><span id="local-6989586621679539892"><span class="annot"><span class="annottext">ReadPrec [Executable]
 ReadPrec Executable
 Int -&gt; ReadS Executable
 ReadS [Executable]
@@ -73,7 +75,7 @@ $creadPrec :: ReadPrec Executable
 readPrec :: ReadPrec Executable
 $creadListPrec :: ReadPrec [Executable]
 readListPrec :: ReadPrec [Executable]
-</span><a href="../../base-4.18.0.0/src/GHC.Read.html#Read/GHC.Read.html#Read"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></a></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679443785"><span id="local-6989586621679443796"><span class="annot"><span class="annottext">Executable -&gt; Executable -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679539899"><span id="local-6989586621679539909"><span class="annot"><span class="annottext">Executable -&gt; Executable -&gt; Bool
 (Executable -&gt; Executable -&gt; Bool)
 -&gt; (Executable -&gt; Executable -&gt; Bool) -&gt; Eq Executable
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
@@ -81,7 +83,7 @@ $c== :: Executable -&gt; Executable -&gt; Bool
 == :: Executable -&gt; Executable -&gt; Bool
 $c/= :: Executable -&gt; Executable -&gt; Bool
 /= :: Executable -&gt; Executable -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679443804"><span id="local-6989586621679443815"><span id="local-6989586621679443822"><span id="local-6989586621679443826"><span id="local-6989586621679443829"><span id="local-6989586621679443832"><span id="local-6989586621679443835"><span class="annot"><span class="annottext">Eq Executable
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679539916"><span id="local-6989586621679539926"><span id="local-6989586621679539932"><span id="local-6989586621679539936"><span id="local-6989586621679539939"><span id="local-6989586621679539942"><span id="local-6989586621679539945"><span class="annot"><span class="annottext">Eq Executable
 Eq Executable =&gt;
 (Executable -&gt; Executable -&gt; Ordering)
 -&gt; (Executable -&gt; Executable -&gt; Bool)
@@ -118,7 +120,7 @@ $cmax :: Executable -&gt; Executable -&gt; Executable
 max :: Executable -&gt; Executable -&gt; Executable
 $cmin :: Executable -&gt; Executable -&gt; Executable
 min :: Executable -&gt; Executable -&gt; Executable
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="../../base-4.18.0.0/src/Data.Typeable.Internal.html#Typeable/Data.Typeable.Internal.html#Typeable"><span class="hs-identifier hs-type">Typeable</span></a></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679443842"><span id="local-6989586621679443853"><span id="local-6989586621679443860"><span id="local-6989586621679443862"><span id="local-6989586621679443864"><span id="local-6989586621679443870"><span id="local-6989586621679443875"><span id="local-6989586621679443878"><span id="local-6989586621679443881"><span id="local-6989586621679443884"><span id="local-6989586621679443887"><span id="local-6989586621679443890"><span id="local-6989586621679443895"><span id="local-6989586621679443900"><span class="annot"><span class="annottext">Typeable Executable
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679539955"><span id="local-6989586621679539968"><span id="local-6989586621679539977"><span id="local-6989586621679539979"><span id="local-6989586621679539981"><span id="local-6989586621679539987"><span id="local-6989586621679539992"><span id="local-6989586621679539995"><span id="local-6989586621679539998"><span id="local-6989586621679540001"><span id="local-6989586621679540004"><span id="local-6989586621679540007"><span id="local-6989586621679540012"><span id="local-6989586621679540017"><span class="annot"><span class="annottext">Typeable Executable
 Typeable Executable =&gt;
 (forall (c :: * -&gt; *).
  (forall d b. Data d =&gt; c (d -&gt; b) -&gt; d -&gt; c b)
@@ -281,143 +283,144 @@ MonadPlus m =&gt;
 gmapMo :: forall (m :: * -&gt; *).
 MonadPlus m =&gt;
 (forall d. Data d =&gt; d -&gt; m d) -&gt; Executable -&gt; m Executable
-</span><a href="../../base-4.18.0.0/src/Data.Data.html#Data/Data.Data.html#Data"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Data</span></a></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-28"></span><span>
-</span><span id="line-29"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679443908"><span id="local-6989586621679443914"><span id="local-6989586621679443919"><span id="local-6989586621679443924"><span id="local-6989586621679443929"><span id="local-6989586621679443934"><span id="local-6989586621679443939"><span id="local-6989586621679443944"><span id="local-6989586621679443949"><span id="local-6989586621679443954"><span id="local-6989586621679443959"><span id="local-6989586621679443964"><span id="local-6989586621679443969"><span id="local-6989586621679443974"><span id="local-6989586621679443979"><span id="local-6989586621679443984"><span id="local-6989586621679443989"><span id="local-6989586621679443994"><span id="local-6989586621679443999"><span id="local-6989586621679444004"><span id="local-6989586621679444009"><span id="local-6989586621679444014"><span id="local-6989586621679444019"><span id="local-6989586621679444024"><span id="local-6989586621679444029"><span id="local-6989586621679444034"><span id="local-6989586621679444039"><span id="local-6989586621679444044"><span id="local-6989586621679444049"><span id="local-6989586621679444054"><span id="local-6989586621679444059"><span id="local-6989586621679444064"><span id="local-6989586621679444069"><span id="local-6989586621679444074"><span id="local-6989586621679444079"><span id="local-6989586621679444084"><span id="local-6989586621679444089"><span id="local-6989586621679444094"><span id="local-6989586621679444099"><span id="local-6989586621679444104"><span id="local-6989586621679444109"><span id="local-6989586621679444114"><span id="local-6989586621679444119"><span id="local-6989586621679444124"><span id="local-6989586621679444129"><span id="local-6989586621679444134"><span class="annot"><a href="Distribution.Types.BuildInfo.Lens.html#HasBuildInfo"><span class="hs-identifier hs-type">L.HasBuildInfo</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-30"></span><span>    </span><span id="local-6989586621679444141"><span class="annot"><span class="annottext">buildInfo :: Lens' Executable BuildInfo
-</span><a href="#local-6989586621679444141"><span class="hs-identifier hs-var hs-var hs-var hs-var">buildInfo</span></a></span></span><span> </span><span id="local-6989586621679444143"><span class="annot"><span class="annottext">BuildInfo -&gt; f BuildInfo
-</span><a href="#local-6989586621679444143"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679444144"><span class="annot"><span class="annottext">Executable
-</span><a href="#local-6989586621679444144"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679444145"><span class="annot"><span class="annottext">BuildInfo
-</span><a href="#local-6989586621679444145"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Executable
-</span><a href="#local-6989586621679444144"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#buildInfo"><span class="hs-identifier hs-var">buildInfo</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="#local-6989586621679444145"><span class="hs-identifier hs-type">x</span></a></span><span> </span><span class="hs-special">}</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(BuildInfo -&gt; Executable) -&gt; f BuildInfo -&gt; f Executable
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Data</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span>
+</span><span id="line-31"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679540028"><span id="local-6989586621679540034"><span id="local-6989586621679540039"><span id="local-6989586621679540044"><span id="local-6989586621679540049"><span id="local-6989586621679540054"><span id="local-6989586621679540059"><span id="local-6989586621679540064"><span id="local-6989586621679540069"><span id="local-6989586621679540074"><span id="local-6989586621679540079"><span id="local-6989586621679540084"><span id="local-6989586621679540089"><span id="local-6989586621679540094"><span id="local-6989586621679540099"><span id="local-6989586621679540104"><span id="local-6989586621679540109"><span id="local-6989586621679540114"><span id="local-6989586621679540119"><span id="local-6989586621679540124"><span id="local-6989586621679540129"><span id="local-6989586621679540134"><span id="local-6989586621679540139"><span id="local-6989586621679540144"><span id="local-6989586621679540149"><span id="local-6989586621679540154"><span id="local-6989586621679540159"><span id="local-6989586621679540164"><span id="local-6989586621679540169"><span id="local-6989586621679540174"><span id="local-6989586621679540179"><span id="local-6989586621679540184"><span id="local-6989586621679540189"><span id="local-6989586621679540194"><span id="local-6989586621679540199"><span id="local-6989586621679540204"><span id="local-6989586621679540209"><span id="local-6989586621679540214"><span id="local-6989586621679540219"><span id="local-6989586621679540224"><span id="local-6989586621679540229"><span id="local-6989586621679540234"><span id="local-6989586621679540239"><span id="local-6989586621679540244"><span id="local-6989586621679540249"><span id="local-6989586621679540254"><span id="local-6989586621679540259"><span class="annot"><a href="Distribution.Types.BuildInfo.Lens.html#HasBuildInfo"><span class="hs-identifier hs-type">L.HasBuildInfo</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-32"></span><span>  </span><span id="local-6989586621679540266"><span class="annot"><span class="annottext">buildInfo :: Lens' Executable BuildInfo
+</span><a href="#local-6989586621679540266"><span class="hs-identifier hs-var hs-var hs-var">buildInfo</span></a></span></span><span> </span><span id="local-6989586621679540268"><span class="annot"><span class="annottext">BuildInfo -&gt; f BuildInfo
+</span><a href="#local-6989586621679540268"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679540269"><span class="annot"><span class="annottext">Executable
+</span><a href="#local-6989586621679540269"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679540270"><span class="annot"><span class="annottext">BuildInfo
+</span><a href="#local-6989586621679540270"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Executable
+</span><a href="#local-6989586621679540269"><span class="hs-identifier hs-var">l</span></a></span><span class="hs-special">{</span><span class="annot"><a href="Distribution.Types.Executable.html#buildInfo"><span class="hs-identifier hs-var">buildInfo</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="#local-6989586621679540270"><span class="hs-identifier hs-type">x</span></a></span><span class="hs-special">}</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(BuildInfo -&gt; Executable) -&gt; f BuildInfo -&gt; f Executable
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
-</span><a href="../../base-4.18.0.0/src/Data.Functor.html#%3C%24%3E/Data.Functor.html#%3C%24%3E"><span class="hs-operator hs-var">&lt;$&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">BuildInfo -&gt; f BuildInfo
-</span><a href="#local-6989586621679444143"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Executable -&gt; BuildInfo
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">BuildInfo -&gt; f BuildInfo
+</span><a href="#local-6989586621679540268"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Executable -&gt; BuildInfo
 </span><a href="Distribution.Types.Executable.html#buildInfo"><span class="hs-identifier hs-var">buildInfo</span></a></span><span> </span><span class="annot"><span class="annottext">Executable
-</span><a href="#local-6989586621679444144"><span class="hs-identifier hs-var">l</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-31"></span><span>
-</span><span id="line-32"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679444148"><span id="local-6989586621679444155"><span id="local-6989586621679444161"><span class="annot"><a href="../../binary-0.8.9.1/src/Data.Binary.Class.html#Binary/Data.Binary.Class.html#Binary"><span class="hs-identifier hs-type">Binary</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span></span></span></span><span>
-</span><span id="line-33"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679444212"><span id="local-6989586621679444219"><span class="annot"><a href="Distribution.Utils.Structured.html#Structured"><span class="hs-identifier hs-type">Structured</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span></span></span><span>
-</span><span id="line-34"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="../../deepseq-1.4.8.1/src/Control.DeepSeq.html#NFData/Control.DeepSeq.html#NFData"><span class="hs-identifier hs-type">NFData</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679444299"><span class="annot"><span class="annottext">rnf :: Executable -&gt; ()
-</span><a href="#local-6989586621679444299"><span class="hs-identifier hs-var hs-var hs-var hs-var">rnf</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Executable -&gt; ()
+</span><a href="#local-6989586621679540269"><span class="hs-identifier hs-var">l</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679540273"><span id="local-6989586621679540280"><span id="local-6989586621679540286"><span class="annot"><a href="../../binary-0.8.9.3-25e5/src/Data.Binary.Class.html#Binary"><span class="hs-identifier hs-type">Binary</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span></span></span></span><span>
+</span><span id="line-35"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679540334"><span id="local-6989586621679540341"><span class="annot"><a href="Distribution.Utils.Structured.html#Structured"><span class="hs-identifier hs-type">Structured</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span></span></span><span>
+</span><span id="line-36"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="../../deepseq-1.5.1.0-6837/src/Control.DeepSeq.html#NFData"><span class="hs-identifier hs-type">NFData</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679540420"><span class="annot"><span class="annottext">rnf :: Executable -&gt; ()
+</span><a href="#local-6989586621679540420"><span class="hs-identifier hs-var hs-var hs-var">rnf</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Executable -&gt; ()
 forall a. (Generic a, GNFData (Rep a)) =&gt; a -&gt; ()
 </span><a href="Distribution.Compat.Prelude.html#genericRnf"><span class="hs-identifier hs-var">genericRnf</span></a></span><span>
-</span><span id="line-35"></span><span>
-</span><span id="line-36"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679444308"><span class="annot"><a href="../../base-4.18.0.0/src/GHC.Base.html#Monoid/GHC.Base.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-37"></span><span>  </span><span id="local-6989586621679444345"><span class="annot"><span class="annottext">mempty :: Executable
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#mempty/GHC.Base.html#mempty"><span class="hs-identifier hs-var hs-var hs-var hs-var">mempty</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Executable
-forall a. (Generic a, GMonoid (Rep a)) =&gt; a
-</span><a href="Distribution.Compat.Semigroup.html#gmempty"><span class="hs-identifier hs-var">gmempty</span></a></span><span>
-</span><span id="line-38"></span><span>  </span><span id="local-6989586621679444348"><span class="annot"><span class="annottext">mappend :: Executable -&gt; Executable -&gt; Executable
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#mappend/GHC.Base.html#mappend"><span class="hs-identifier hs-var hs-var hs-var hs-var">mappend</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Executable -&gt; Executable -&gt; Executable
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679540429"><span class="annot"><span class="hs-identifier hs-type">Monoid</span></span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-39"></span><span>  </span><span id="local-6989586621679540438"><span class="annot"><span class="annottext">mempty :: Executable
+</span><span class="hs-identifier hs-var hs-var hs-var">mempty</span></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-40"></span><span>    </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span><span>
+</span><span id="line-41"></span><span>      </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">exeName :: UnqualComponentName
+</span><a href="Distribution.Types.Executable.html#exeName"><span class="hs-identifier hs-var">exeName</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">UnqualComponentName
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span>
+</span><span id="line-42"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">modulePath :: RelativePath Source 'File
+</span><a href="Distribution.Types.Executable.html#modulePath"><span class="hs-identifier hs-var">modulePath</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; RelativePath Source 'File
+forall (allowAbs :: AllowAbsolute) from (to :: FileOrDir).
+String -&gt; SymbolicPathX allowAbs from to
+</span><a href="Distribution.Utils.Path.html#unsafeMakeSymbolicPath"><span class="hs-identifier hs-var">unsafeMakeSymbolicPath</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;&quot;</span></span><span>
+</span><span id="line-43"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">exeScope :: ExecutableScope
+</span><a href="Distribution.Types.Executable.html#exeScope"><span class="hs-identifier hs-var">exeScope</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ExecutableScope
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span>
+</span><span id="line-44"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">buildInfo :: BuildInfo
+</span><a href="Distribution.Types.Executable.html#buildInfo"><span class="hs-identifier hs-var">buildInfo</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">BuildInfo
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span>
+</span><span id="line-45"></span><span>      </span><span class="hs-special">}</span><span>
+</span><span id="line-46"></span><span>  </span><span id="local-6989586621679540441"><span class="annot"><span class="annottext">mappend :: Executable -&gt; Executable -&gt; Executable
+</span><span class="hs-identifier hs-var hs-var hs-var">mappend</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Executable -&gt; Executable -&gt; Executable
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%3C%3E/GHC.Base.html#%3C%3E"><span class="hs-operator hs-var">(&lt;&gt;)</span></a></span><span>
-</span><span id="line-39"></span><span>
-</span><span id="line-40"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679444351"><span id="local-6989586621679444354"><span class="annot"><a href="../../base-4.18.0.0/src/GHC.Base.html#Semigroup/GHC.Base.html#Semigroup"><span class="hs-identifier hs-type">Semigroup</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-41"></span><span>  </span><span id="local-6989586621679444362"><span class="annot"><span class="annottext">Executable
-</span><a href="#local-6989586621679444362"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span id="local-6989586621679444363"><span class="annot"><span class="annottext">&lt;&gt; :: Executable -&gt; Executable -&gt; Executable
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%3C%3E/GHC.Base.html#%3C%3E"><span class="hs-operator hs-var hs-var hs-var hs-var">&lt;&gt;</span></a></span></span><span> </span><span id="local-6989586621679444364"><span class="annot"><span class="annottext">Executable
-</span><a href="#local-6989586621679444364"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span><span class="hs-special">{</span><span>
-</span><span id="line-42"></span><span>    </span><span class="annot"><span class="annottext">exeName :: UnqualComponentName
-</span><a href="Distribution.Types.Executable.html#exeName"><span class="hs-identifier hs-var">exeName</span></a></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Executable -&gt; UnqualComponentName) -&gt; UnqualComponentName
-</span><a href="#local-6989586621679444365"><span class="hs-identifier hs-var">combine'</span></a></span><span> </span><span class="annot"><span class="annottext">Executable -&gt; UnqualComponentName
-</span><a href="Distribution.Types.Executable.html#exeName"><span class="hs-identifier hs-var">exeName</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-43"></span><span>    </span><span class="annot"><span class="annottext">modulePath :: FilePath
-</span><a href="Distribution.Types.Executable.html#modulePath"><span class="hs-identifier hs-var">modulePath</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Executable -&gt; FilePath) -&gt; FilePath
+</span><span class="hs-operator hs-var">(&lt;&gt;)</span></span><span>
+</span><span id="line-47"></span><span>
+</span><span id="line-48"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679540444"><span id="local-6989586621679540447"><span class="annot"><span class="hs-identifier hs-type">Semigroup</span></span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-49"></span><span>  </span><span id="local-6989586621679540467"><span class="annot"><span class="annottext">Executable
+</span><a href="#local-6989586621679540467"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span id="local-6989586621679540468"><span class="annot"><span class="annottext">&lt;&gt; :: Executable -&gt; Executable -&gt; Executable
+</span><span class="hs-operator hs-var hs-var hs-var">&lt;&gt;</span></span></span><span> </span><span id="local-6989586621679540469"><span class="annot"><span class="annottext">Executable
+</span><a href="#local-6989586621679540469"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-50"></span><span>    </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span><span>
+</span><span id="line-51"></span><span>      </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">exeName :: UnqualComponentName
+</span><a href="Distribution.Types.Executable.html#exeName"><span class="hs-identifier hs-var">exeName</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Executable
+-&gt; Executable
+-&gt; (Executable -&gt; UnqualComponentName)
+-&gt; String
+-&gt; UnqualComponentName
+forall b a.
+(Monoid b, Eq b, Show b) =&gt;
+a -&gt; a -&gt; (a -&gt; b) -&gt; String -&gt; b
+</span><a href="Distribution.Types.UnqualComponentName.html#combineNames"><span class="hs-identifier hs-var">combineNames</span></a></span><span> </span><span class="annot"><span class="annottext">Executable
+</span><a href="#local-6989586621679540467"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">Executable
+</span><a href="#local-6989586621679540469"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="annot"><span class="annottext">Executable -&gt; UnqualComponentName
+</span><a href="Distribution.Types.Executable.html#exeName"><span class="hs-identifier hs-var">exeName</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;executable&quot;</span></span><span>
+</span><span id="line-52"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">modulePath :: RelativePath Source 'File
+</span><a href="Distribution.Types.Executable.html#modulePath"><span class="hs-identifier hs-var">modulePath</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; RelativePath Source 'File
+forall (allowAbs :: AllowAbsolute) from (to :: FileOrDir).
+String -&gt; SymbolicPathX allowAbs from to
+</span><a href="Distribution.Utils.Path.html#unsafeMakeSymbolicPath"><span class="hs-identifier hs-var">unsafeMakeSymbolicPath</span></a></span><span> </span><span class="annot"><span class="annottext">(String -&gt; RelativePath Source 'File)
+-&gt; String -&gt; RelativePath Source 'File
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Executable -&gt; Executable -&gt; (Executable -&gt; String) -&gt; ShowS
+forall b a.
+(Monoid b, Eq b, Show b) =&gt;
+a -&gt; a -&gt; (a -&gt; b) -&gt; String -&gt; b
+</span><a href="Distribution.Types.UnqualComponentName.html#combineNames"><span class="hs-identifier hs-var">combineNames</span></a></span><span> </span><span class="annot"><span class="annottext">Executable
+</span><a href="#local-6989586621679540467"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">Executable
+</span><a href="#local-6989586621679540469"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">RelativePath Source 'File -&gt; String
+forall (allowAbsolute :: AllowAbsolute) from (to :: FileOrDir).
+SymbolicPathX allowAbsolute from to -&gt; String
+</span><a href="Distribution.Utils.Path.html#getSymbolicPath"><span class="hs-identifier hs-var">getSymbolicPath</span></a></span><span> </span><span class="annot"><span class="annottext">(RelativePath Source 'File -&gt; String)
+-&gt; (Executable -&gt; RelativePath Source 'File)
+-&gt; Executable
+-&gt; String
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Executable -&gt; RelativePath Source 'File
+</span><a href="Distribution.Types.Executable.html#modulePath"><span class="hs-identifier hs-var">modulePath</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;modulePath&quot;</span></span><span>
+</span><span id="line-53"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">exeScope :: ExecutableScope
+</span><a href="Distribution.Types.Executable.html#exeScope"><span class="hs-identifier hs-var">exeScope</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Executable -&gt; ExecutableScope) -&gt; ExecutableScope
 forall {a}. Monoid a =&gt; (Executable -&gt; a) -&gt; a
-</span><a href="#local-6989586621679444366"><span class="hs-identifier hs-var">combine</span></a></span><span> </span><span class="annot"><span class="annottext">Executable -&gt; FilePath
-</span><a href="Distribution.Types.Executable.html#modulePath"><span class="hs-identifier hs-var">modulePath</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-44"></span><span>    </span><span class="annot"><span class="annottext">exeScope :: ExecutableScope
-</span><a href="Distribution.Types.Executable.html#exeScope"><span class="hs-identifier hs-var">exeScope</span></a></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Executable -&gt; ExecutableScope) -&gt; ExecutableScope
+</span><a href="#local-6989586621679540473"><span class="hs-identifier hs-var">combine</span></a></span><span> </span><span class="annot"><span class="annottext">Executable -&gt; ExecutableScope
+</span><a href="Distribution.Types.Executable.html#exeScope"><span class="hs-identifier hs-var">exeScope</span></a></span><span>
+</span><span id="line-54"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">buildInfo :: BuildInfo
+</span><a href="Distribution.Types.Executable.html#buildInfo"><span class="hs-identifier hs-var">buildInfo</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Executable -&gt; BuildInfo) -&gt; BuildInfo
 forall {a}. Monoid a =&gt; (Executable -&gt; a) -&gt; a
-</span><a href="#local-6989586621679444366"><span class="hs-identifier hs-var">combine</span></a></span><span> </span><span class="annot"><span class="annottext">Executable -&gt; ExecutableScope
-</span><a href="Distribution.Types.Executable.html#exeScope"><span class="hs-identifier hs-var">exeScope</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-45"></span><span>    </span><span class="annot"><span class="annottext">buildInfo :: BuildInfo
-</span><a href="Distribution.Types.Executable.html#buildInfo"><span class="hs-identifier hs-var">buildInfo</span></a></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Executable -&gt; BuildInfo) -&gt; BuildInfo
-forall {a}. Monoid a =&gt; (Executable -&gt; a) -&gt; a
-</span><a href="#local-6989586621679444366"><span class="hs-identifier hs-var">combine</span></a></span><span> </span><span class="annot"><span class="annottext">Executable -&gt; BuildInfo
+</span><a href="#local-6989586621679540473"><span class="hs-identifier hs-var">combine</span></a></span><span> </span><span class="annot"><span class="annottext">Executable -&gt; BuildInfo
 </span><a href="Distribution.Types.Executable.html#buildInfo"><span class="hs-identifier hs-var">buildInfo</span></a></span><span>
-</span><span id="line-46"></span><span>  </span><span class="hs-special">}</span><span>
-</span><span id="line-47"></span><span>    </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679444366"><span class="annot"><span class="annottext">combine :: (Executable -&gt; a) -&gt; a
-</span><a href="#local-6989586621679444366"><span class="hs-identifier hs-var hs-var">combine</span></a></span></span><span> </span><span id="local-6989586621679444372"><span class="annot"><span class="annottext">Executable -&gt; a
-</span><a href="#local-6989586621679444372"><span class="hs-identifier hs-var">field</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Executable -&gt; a
-</span><a href="#local-6989586621679444372"><span class="hs-identifier hs-var">field</span></a></span><span> </span><span class="annot"><span class="annottext">Executable
-</span><a href="#local-6989586621679444362"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
+</span><span id="line-55"></span><span>      </span><span class="hs-special">}</span><span>
+</span><span id="line-56"></span><span>    </span><span class="hs-keyword">where</span><span>
+</span><span id="line-57"></span><span>      </span><span id="local-6989586621679540473"><span class="annot"><span class="annottext">combine :: (Executable -&gt; a) -&gt; a
+</span><a href="#local-6989586621679540473"><span class="hs-identifier hs-var hs-var">combine</span></a></span></span><span> </span><span id="local-6989586621679540479"><span class="annot"><span class="annottext">Executable -&gt; a
+</span><a href="#local-6989586621679540479"><span class="hs-identifier hs-var">field</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Executable -&gt; a
+</span><a href="#local-6989586621679540479"><span class="hs-identifier hs-var">field</span></a></span><span> </span><span class="annot"><span class="annottext">Executable
+</span><a href="#local-6989586621679540467"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
 forall a. Monoid a =&gt; a -&gt; a -&gt; a
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#mappend/GHC.Base.html#mappend"><span class="hs-operator hs-var">`mappend`</span></a></span><span> </span><span class="annot"><span class="annottext">Executable -&gt; a
-</span><a href="#local-6989586621679444372"><span class="hs-identifier hs-var">field</span></a></span><span> </span><span class="annot"><span class="annottext">Executable
-</span><a href="#local-6989586621679444364"><span class="hs-identifier hs-var">b</span></a></span><span>
-</span><span id="line-48"></span><span>          </span><span id="local-6989586621679444365"><span class="annot"><span class="annottext">combine' :: (Executable -&gt; UnqualComponentName) -&gt; UnqualComponentName
-</span><a href="#local-6989586621679444365"><span class="hs-identifier hs-var hs-var">combine'</span></a></span></span><span> </span><span id="local-6989586621679444375"><span class="annot"><span class="annottext">Executable -&gt; UnqualComponentName
-</span><a href="#local-6989586621679444375"><span class="hs-identifier hs-var">field</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="annottext">UnqualComponentName -&gt; FilePath
-</span><a href="Distribution.Types.UnqualComponentName.html#unUnqualComponentName"><span class="hs-identifier hs-var">unUnqualComponentName</span></a></span><span> </span><span class="annot"><span class="annottext">(UnqualComponentName -&gt; FilePath)
--&gt; UnqualComponentName -&gt; FilePath
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%24/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Executable -&gt; UnqualComponentName
-</span><a href="#local-6989586621679444375"><span class="hs-identifier hs-var">field</span></a></span><span> </span><span class="annot"><span class="annottext">Executable
-</span><a href="#local-6989586621679444362"><span class="hs-identifier hs-var">a</span></a></span><span>
-</span><span id="line-49"></span><span>                                </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">UnqualComponentName -&gt; FilePath
-</span><a href="Distribution.Types.UnqualComponentName.html#unUnqualComponentName"><span class="hs-identifier hs-var">unUnqualComponentName</span></a></span><span> </span><span class="annot"><span class="annottext">(UnqualComponentName -&gt; FilePath)
--&gt; UnqualComponentName -&gt; FilePath
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%24/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Executable -&gt; UnqualComponentName
-</span><a href="#local-6989586621679444375"><span class="hs-identifier hs-var">field</span></a></span><span> </span><span class="annot"><span class="annottext">Executable
-</span><a href="#local-6989586621679444364"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-50"></span><span>                      </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FilePath
-</span><span class="hs-string">&quot;&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">FilePath
-</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Executable -&gt; UnqualComponentName
-</span><a href="#local-6989586621679444375"><span class="hs-identifier hs-var">field</span></a></span><span> </span><span class="annot"><span class="annottext">Executable
-</span><a href="#local-6989586621679444364"><span class="hs-identifier hs-var">b</span></a></span><span>
-</span><span id="line-51"></span><span>                      </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FilePath
-</span><span class="hs-identifier">_</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">FilePath
-</span><span class="hs-string">&quot;&quot;</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Executable -&gt; UnqualComponentName
-</span><a href="#local-6989586621679444375"><span class="hs-identifier hs-var">field</span></a></span><span> </span><span class="annot"><span class="annottext">Executable
-</span><a href="#local-6989586621679444362"><span class="hs-identifier hs-var">a</span></a></span><span>
-</span><span id="line-52"></span><span>                      </span><span class="hs-special">(</span><span id="local-6989586621679444377"><span class="annot"><span class="annottext">FilePath
-</span><a href="#local-6989586621679444377"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679444378"><span class="annot"><span class="annottext">FilePath
-</span><a href="#local-6989586621679444378"><span class="hs-identifier hs-var">y</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">FilePath -&gt; UnqualComponentName
-forall a. HasCallStack =&gt; FilePath -&gt; a
-</span><a href="../../base-4.18.0.0/src/GHC.Err.html#error/GHC.Err.html#error"><span class="hs-identifier hs-var">error</span></a></span><span> </span><span class="annot"><span class="annottext">(FilePath -&gt; UnqualComponentName)
--&gt; FilePath -&gt; UnqualComponentName
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%24/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath
-</span><span class="hs-string">&quot;Ambiguous values for executable field: '&quot;</span></span><span>
-</span><span id="line-53"></span><span>                                  </span><span class="annot"><span class="annottext">FilePath -&gt; ShowS
-forall a. [a] -&gt; [a] -&gt; [a]
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%2B%2B/GHC.Base.html#%2B%2B"><span class="hs-operator hs-var">++</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath
-</span><a href="#local-6989586621679444377"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath -&gt; ShowS
-forall a. [a] -&gt; [a] -&gt; [a]
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%2B%2B/GHC.Base.html#%2B%2B"><span class="hs-operator hs-var">++</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath
-</span><span class="hs-string">&quot;' and '&quot;</span></span><span> </span><span class="annot"><span class="annottext">FilePath -&gt; ShowS
-forall a. [a] -&gt; [a] -&gt; [a]
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%2B%2B/GHC.Base.html#%2B%2B"><span class="hs-operator hs-var">++</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath
-</span><a href="#local-6989586621679444378"><span class="hs-identifier hs-var">y</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath -&gt; ShowS
-forall a. [a] -&gt; [a] -&gt; [a]
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%2B%2B/GHC.Base.html#%2B%2B"><span class="hs-operator hs-var">++</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath
-</span><span class="hs-string">&quot;'&quot;</span></span><span>
-</span><span id="line-54"></span><span>
-</span><span id="line-55"></span><span class="annot"><a href="Distribution.Types.Executable.html#emptyExecutable"><span class="hs-identifier hs-type">emptyExecutable</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span><span>
-</span><span id="line-56"></span><span id="emptyExecutable"><span class="annot"><span class="annottext">emptyExecutable :: Executable
+</span><span class="hs-operator hs-var">`mappend`</span></span><span> </span><span class="annot"><span class="annottext">Executable -&gt; a
+</span><a href="#local-6989586621679540479"><span class="hs-identifier hs-var">field</span></a></span><span> </span><span class="annot"><span class="annottext">Executable
+</span><a href="#local-6989586621679540469"><span class="hs-identifier hs-var">b</span></a></span><span>
+</span><span id="line-58"></span><span>
+</span><span id="line-59"></span><span class="annot"><a href="Distribution.Types.Executable.html#emptyExecutable"><span class="hs-identifier hs-type">emptyExecutable</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span><span>
+</span><span id="line-60"></span><span id="emptyExecutable"><span class="annot"><span class="annottext">emptyExecutable :: Executable
 </span><a href="Distribution.Types.Executable.html#emptyExecutable"><span class="hs-identifier hs-var hs-var">emptyExecutable</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Executable
 forall a. Monoid a =&gt; a
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#mempty/GHC.Base.html#mempty"><span class="hs-identifier hs-var">mempty</span></a></span><span>
-</span><span id="line-57"></span><span>
-</span><span id="line-58"></span><span class="annot"><span class="hs-comment">-- | Get all the module names from an exe</span></span><span>
-</span><span id="line-59"></span><span class="annot"><a href="Distribution.Types.Executable.html#exeModules"><span class="hs-identifier hs-type">exeModules</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Distribution.ModuleName.html#ModuleName"><span class="hs-identifier hs-type">ModuleName</span></a></span><span class="hs-special">]</span><span>
-</span><span id="line-60"></span><span id="exeModules"><span class="annot"><span class="annottext">exeModules :: Executable -&gt; [ModuleName]
-</span><a href="Distribution.Types.Executable.html#exeModules"><span class="hs-identifier hs-var hs-var">exeModules</span></a></span></span><span> </span><span id="local-6989586621679444380"><span class="annot"><span class="annottext">Executable
-</span><a href="#local-6989586621679444380"><span class="hs-identifier hs-var">exe</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">BuildInfo -&gt; [ModuleName]
+</span><span class="hs-identifier hs-var">mempty</span></span><span>
+</span><span id="line-61"></span><span>
+</span><span id="line-62"></span><span class="annot"><span class="hs-comment">-- | Get all the module names from an exe</span></span><span>
+</span><span id="line-63"></span><span class="annot"><a href="Distribution.Types.Executable.html#exeModules"><span class="hs-identifier hs-type">exeModules</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Distribution.ModuleName.html#ModuleName"><span class="hs-identifier hs-type">ModuleName</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-64"></span><span id="exeModules"><span class="annot"><span class="annottext">exeModules :: Executable -&gt; [ModuleName]
+</span><a href="Distribution.Types.Executable.html#exeModules"><span class="hs-identifier hs-var hs-var">exeModules</span></a></span></span><span> </span><span id="local-6989586621679540480"><span class="annot"><span class="annottext">Executable
+</span><a href="#local-6989586621679540480"><span class="hs-identifier hs-var">exe</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">BuildInfo -&gt; [ModuleName]
 </span><a href="Distribution.Types.BuildInfo.html#otherModules"><span class="hs-identifier hs-var">otherModules</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Executable -&gt; BuildInfo
 </span><a href="Distribution.Types.Executable.html#buildInfo"><span class="hs-identifier hs-var">buildInfo</span></a></span><span> </span><span class="annot"><span class="annottext">Executable
-</span><a href="#local-6989586621679444380"><span class="hs-identifier hs-var">exe</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-61"></span><span>
-</span><span id="line-62"></span><span class="hs-comment">-- | Get all the auto generated module names from an exe</span><span>
-</span><span id="line-63"></span><span class="hs-comment">-- This are a subset of 'exeModules'.</span><span>
-</span><span id="line-64"></span><span class="annot"><a href="Distribution.Types.Executable.html#exeModulesAutogen"><span class="hs-identifier hs-type">exeModulesAutogen</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Distribution.ModuleName.html#ModuleName"><span class="hs-identifier hs-type">ModuleName</span></a></span><span class="hs-special">]</span><span>
-</span><span id="line-65"></span><span id="exeModulesAutogen"><span class="annot"><span class="annottext">exeModulesAutogen :: Executable -&gt; [ModuleName]
-</span><a href="Distribution.Types.Executable.html#exeModulesAutogen"><span class="hs-identifier hs-var hs-var">exeModulesAutogen</span></a></span></span><span> </span><span id="local-6989586621679444382"><span class="annot"><span class="annottext">Executable
-</span><a href="#local-6989586621679444382"><span class="hs-identifier hs-var">exe</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">BuildInfo -&gt; [ModuleName]
+</span><a href="#local-6989586621679540480"><span class="hs-identifier hs-var">exe</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-65"></span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- | Get all the auto generated module names from an exe</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- This are a subset of 'exeModules'.</span><span>
+</span><span id="line-68"></span><span class="annot"><a href="Distribution.Types.Executable.html#exeModulesAutogen"><span class="hs-identifier hs-type">exeModulesAutogen</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Distribution.Types.Executable.html#Executable"><span class="hs-identifier hs-type">Executable</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Distribution.ModuleName.html#ModuleName"><span class="hs-identifier hs-type">ModuleName</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-69"></span><span id="exeModulesAutogen"><span class="annot"><span class="annottext">exeModulesAutogen :: Executable -&gt; [ModuleName]
+</span><a href="Distribution.Types.Executable.html#exeModulesAutogen"><span class="hs-identifier hs-var hs-var">exeModulesAutogen</span></a></span></span><span> </span><span id="local-6989586621679540482"><span class="annot"><span class="annottext">Executable
+</span><a href="#local-6989586621679540482"><span class="hs-identifier hs-var">exe</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">BuildInfo -&gt; [ModuleName]
 </span><a href="Distribution.Types.BuildInfo.html#autogenModules"><span class="hs-identifier hs-var">autogenModules</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Executable -&gt; BuildInfo
 </span><a href="Distribution.Types.Executable.html#buildInfo"><span class="hs-identifier hs-var">buildInfo</span></a></span><span> </span><span class="annot"><span class="annottext">Executable
-</span><a href="#local-6989586621679444382"><span class="hs-identifier hs-var">exe</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-66"></span></pre></body></html>
+</span><a href="#local-6989586621679540482"><span class="hs-identifier hs-var">exe</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-70"></span></pre></body></html>

@@ -1,30 +1,32 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679424101"><span id="local-6989586621679424102"></span></span><span class="hs-pragma">{-# LANGUAGE DeriveDataTypeable #-}</span><span>
-</span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE DeriveGeneric      #-}</span><span>
-</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Distribution.Types.LegacyExeDependency</span><span>
-</span><span id="line-4"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier">LegacyExeDependency</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
-</span><span id="line-5"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-6"></span><span>
-</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Compat.Prelude.html"><span class="hs-identifier">Distribution.Compat.Prelude</span></a></span><span>
-</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../base-4.18.0.0/src/Prelude.html#/Prelude.html"><span class="hs-identifier">Prelude</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-9"></span><span>
-</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Parsec.html"><span class="hs-identifier">Distribution.Parsec</span></a></span><span>
-</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Pretty.html"><span class="hs-identifier">Distribution.Pretty</span></a></span><span>
-</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Version.html"><span class="hs-identifier">Distribution.Version</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Distribution.Types.VersionRange.Internal.html#VersionRange"><span class="hs-identifier">VersionRange</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Distribution.Types.VersionRange.Internal.html#anyVersion"><span class="hs-identifier">anyVersion</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-13"></span><span>
-</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Distribution.Compat.CharParsing.html"><span class="hs-identifier">Distribution.Compat.CharParsing</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">P</span></span><span>
-</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="../../pretty-1.1.3.6/src/Text.PrettyPrint.html#/Text.PrettyPrint.html"><span class="hs-identifier">Text.PrettyPrint</span></a></span><span>                </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Disp</span></span><span>
-</span><span id="line-16"></span><span>
-</span><span id="line-17"></span><span class="hs-comment">-- | Describes a legacy `build-tools`-style dependency on an executable</span><span>
-</span><span id="line-18"></span><span class="hs-comment">--</span><span>
-</span><span id="line-19"></span><span class="hs-comment">-- It is &quot;legacy&quot; because we do not know what the build-tool referred to. It</span><span>
-</span><span id="line-20"></span><span class="hs-comment">-- could refer to a pkg-config executable (PkgconfigName), or an internal</span><span>
-</span><span id="line-21"></span><span class="hs-comment">-- executable (UnqualComponentName). Thus the name is stringly typed.</span><span>
-</span><span id="line-22"></span><span class="hs-comment">--</span><span>
-</span><span id="line-23"></span><span class="hs-comment">-- @since 2.0.0.2</span><span>
-</span><span id="line-24"></span><span class="hs-keyword">data</span><span> </span><span id="LegacyExeDependency"><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-var">LegacyExeDependency</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="LegacyExeDependency"><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-var">LegacyExeDependency</span></a></span></span><span>
-</span><span id="line-25"></span><span>                           </span><span class="annot"><a href="../../base-4.18.0.0/src/GHC.Base.html#String/GHC.Base.html#String"><span class="hs-identifier hs-type">String</span></a></span><span>
-</span><span id="line-26"></span><span>                           </span><span class="annot"><a href="Distribution.Types.VersionRange.Internal.html#VersionRange"><span class="hs-identifier hs-type">VersionRange</span></a></span><span>
-</span><span id="line-27"></span><span>                         </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679424106"><span id="local-6989586621679424108"><span class="annot"><span class="annottext">(forall x. LegacyExeDependency -&gt; Rep LegacyExeDependency x)
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679517703"><span id="local-6989586621679517704"></span></span><span class="hs-pragma">{-# LANGUAGE DeriveDataTypeable #-}</span><span>
+</span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE DeriveGeneric #-}</span><span>
+</span><span id="line-3"></span><span>
+</span><span id="line-4"></span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html"><span class="hs-identifier">Distribution.Types.LegacyExeDependency</span></a></span><span>
+</span><span id="line-5"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier">LegacyExeDependency</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Compat.Prelude.html"><span class="hs-identifier">Distribution.Compat.Prelude</span></a></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../base-4.21.0.0-ae91/src/Prelude.html"><span class="hs-identifier">Prelude</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Parsec.html"><span class="hs-identifier">Distribution.Parsec</span></a></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Pretty.html"><span class="hs-identifier">Distribution.Pretty</span></a></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Distribution.Version.html"><span class="hs-identifier">Distribution.Version</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Distribution.Types.VersionRange.Internal.html#VersionRange"><span class="hs-identifier">VersionRange</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Distribution.Types.VersionRange.Internal.html#anyVersion"><span class="hs-identifier">anyVersion</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Distribution.Compat.CharParsing.html"><span class="hs-identifier">Distribution.Compat.CharParsing</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">P</span></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="../../pretty-1.1.3.6-fe44/src/Text.PrettyPrint.html"><span class="hs-identifier">Text.PrettyPrint</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Disp</span></span><span>
+</span><span id="line-17"></span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- | Describes a legacy `build-tools`-style dependency on an executable</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- It is &quot;legacy&quot; because we do not know what the build-tool referred to. It</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- could refer to a pkg-config executable (PkgconfigName), or an internal</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- executable (UnqualComponentName). Thus the name is stringly typed.</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- @since 2.0.0.2</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">data</span><span> </span><span id="LegacyExeDependency"><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-var">LegacyExeDependency</span></a></span></span><span>
+</span><span id="line-26"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="LegacyExeDependency"><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-var">LegacyExeDependency</span></a></span></span><span>
+</span><span id="line-27"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-28"></span><span>      </span><span class="annot"><a href="Distribution.Types.VersionRange.Internal.html#VersionRange"><span class="hs-identifier hs-type">VersionRange</span></a></span><span>
+</span><span id="line-29"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679517708"><span id="local-6989586621679517710"><span class="annot"><span class="annottext">(forall x. LegacyExeDependency -&gt; Rep LegacyExeDependency x)
 -&gt; (forall x. Rep LegacyExeDependency x -&gt; LegacyExeDependency)
 -&gt; Generic LegacyExeDependency
 forall x. Rep LegacyExeDependency x -&gt; LegacyExeDependency
@@ -35,7 +37,7 @@ $cfrom :: forall x. LegacyExeDependency -&gt; Rep LegacyExeDependency x
 from :: forall x. LegacyExeDependency -&gt; Rep LegacyExeDependency x
 $cto :: forall x. Rep LegacyExeDependency x -&gt; LegacyExeDependency
 to :: forall x. Rep LegacyExeDependency x -&gt; LegacyExeDependency
-</span><a href="../../base-4.18.0.0/src/GHC.Generics.html#Generic/GHC.Generics.html#Generic"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Generic</span></a></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679424112"><span id="local-6989586621679424116"><span id="local-6989586621679424119"><span id="local-6989586621679424131"><span class="annot"><span class="annottext">ReadPrec [LegacyExeDependency]
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Generic</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679517716"><span id="local-6989586621679517720"><span id="local-6989586621679517723"><span id="local-6989586621679517735"><span class="annot"><span class="annottext">ReadPrec [LegacyExeDependency]
 ReadPrec LegacyExeDependency
 Int -&gt; ReadS LegacyExeDependency
 ReadS [LegacyExeDependency]
@@ -55,7 +57,7 @@ $creadPrec :: ReadPrec LegacyExeDependency
 readPrec :: ReadPrec LegacyExeDependency
 $creadListPrec :: ReadPrec [LegacyExeDependency]
 readListPrec :: ReadPrec [LegacyExeDependency]
-</span><a href="../../base-4.18.0.0/src/GHC.Read.html#Read/GHC.Read.html#Read"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></a></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679424136"><span id="local-6989586621679424145"><span id="local-6989586621679424149"><span class="annot"><span class="annottext">Int -&gt; LegacyExeDependency -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679517743"><span id="local-6989586621679517752"><span id="local-6989586621679517756"><span class="annot"><span class="annottext">Int -&gt; LegacyExeDependency -&gt; ShowS
 [LegacyExeDependency] -&gt; ShowS
 LegacyExeDependency -&gt; String
 (Int -&gt; LegacyExeDependency -&gt; ShowS)
@@ -70,7 +72,7 @@ $cshow :: LegacyExeDependency -&gt; String
 show :: LegacyExeDependency -&gt; String
 $cshowList :: [LegacyExeDependency] -&gt; ShowS
 showList :: [LegacyExeDependency] -&gt; ShowS
-</span><a href="../../base-4.18.0.0/src/GHC.Show.html#Show/GHC.Show.html#Show"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></a></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679424154"><span id="local-6989586621679424161"><span class="annot"><span class="annottext">LegacyExeDependency -&gt; LegacyExeDependency -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679517762"><span id="local-6989586621679517769"><span class="annot"><span class="annottext">LegacyExeDependency -&gt; LegacyExeDependency -&gt; Bool
 (LegacyExeDependency -&gt; LegacyExeDependency -&gt; Bool)
 -&gt; (LegacyExeDependency -&gt; LegacyExeDependency -&gt; Bool)
 -&gt; Eq LegacyExeDependency
@@ -79,7 +81,7 @@ $c== :: LegacyExeDependency -&gt; LegacyExeDependency -&gt; Bool
 == :: LegacyExeDependency -&gt; LegacyExeDependency -&gt; Bool
 $c/= :: LegacyExeDependency -&gt; LegacyExeDependency -&gt; Bool
 /= :: LegacyExeDependency -&gt; LegacyExeDependency -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679424169"><span id="local-6989586621679424176"><span id="local-6989586621679424181"><span id="local-6989586621679424185"><span id="local-6989586621679424188"><span id="local-6989586621679424191"><span id="local-6989586621679424194"><span class="annot"><span class="annottext">Eq LegacyExeDependency
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679517777"><span id="local-6989586621679517784"><span id="local-6989586621679517789"><span id="local-6989586621679517793"><span id="local-6989586621679517796"><span id="local-6989586621679517799"><span id="local-6989586621679517802"><span class="annot"><span class="annottext">Eq LegacyExeDependency
 Eq LegacyExeDependency =&gt;
 (LegacyExeDependency -&gt; LegacyExeDependency -&gt; Ordering)
 -&gt; (LegacyExeDependency -&gt; LegacyExeDependency -&gt; Bool)
@@ -118,7 +120,7 @@ $cmax :: LegacyExeDependency -&gt; LegacyExeDependency -&gt; LegacyExeDependency
 max :: LegacyExeDependency -&gt; LegacyExeDependency -&gt; LegacyExeDependency
 $cmin :: LegacyExeDependency -&gt; LegacyExeDependency -&gt; LegacyExeDependency
 min :: LegacyExeDependency -&gt; LegacyExeDependency -&gt; LegacyExeDependency
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="../../base-4.18.0.0/src/Data.Typeable.Internal.html#Typeable/Data.Typeable.Internal.html#Typeable"><span class="hs-identifier hs-type">Typeable</span></a></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679424201"><span id="local-6989586621679424208"><span id="local-6989586621679424213"><span id="local-6989586621679424215"><span id="local-6989586621679424217"><span id="local-6989586621679424223"><span id="local-6989586621679424228"><span id="local-6989586621679424231"><span id="local-6989586621679424234"><span id="local-6989586621679424237"><span id="local-6989586621679424240"><span id="local-6989586621679424243"><span id="local-6989586621679424248"><span id="local-6989586621679424253"><span class="annot"><span class="annottext">Typeable LegacyExeDependency
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679517813"><span id="local-6989586621679517820"><span id="local-6989586621679517825"><span id="local-6989586621679517827"><span id="local-6989586621679517829"><span id="local-6989586621679517835"><span id="local-6989586621679517840"><span id="local-6989586621679517843"><span id="local-6989586621679517846"><span id="local-6989586621679517849"><span id="local-6989586621679517852"><span id="local-6989586621679517855"><span id="local-6989586621679517860"><span id="local-6989586621679517865"><span class="annot"><span class="annottext">Typeable LegacyExeDependency
 Typeable LegacyExeDependency =&gt;
 (forall (c :: * -&gt; *).
  (forall d b. Data d =&gt; c (d -&gt; b) -&gt; d -&gt; c b)
@@ -314,115 +316,77 @@ gmapMo :: forall (m :: * -&gt; *).
 MonadPlus m =&gt;
 (forall d. Data d =&gt; d -&gt; m d)
 -&gt; LegacyExeDependency -&gt; m LegacyExeDependency
-</span><a href="../../base-4.18.0.0/src/Data.Data.html#Data/Data.Data.html#Data"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Data</span></a></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-28"></span><span>
-</span><span id="line-29"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679424260"><span id="local-6989586621679424267"><span id="local-6989586621679424273"><span class="annot"><a href="../../binary-0.8.9.1/src/Data.Binary.Class.html#Binary/Data.Binary.Class.html#Binary"><span class="hs-identifier hs-type">Binary</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-type">LegacyExeDependency</span></a></span></span></span></span><span>
-</span><span id="line-30"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679424306"><span id="local-6989586621679424313"><span class="annot"><a href="Distribution.Utils.Structured.html#Structured"><span class="hs-identifier hs-type">Structured</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-type">LegacyExeDependency</span></a></span></span></span><span>
-</span><span id="line-31"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="../../deepseq-1.4.8.1/src/Control.DeepSeq.html#NFData/Control.DeepSeq.html#NFData"><span class="hs-identifier hs-type">NFData</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-type">LegacyExeDependency</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679424369"><span class="annot"><span class="annottext">rnf :: LegacyExeDependency -&gt; ()
-</span><a href="#local-6989586621679424369"><span class="hs-identifier hs-var hs-var hs-var hs-var">rnf</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LegacyExeDependency -&gt; ()
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Data</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span>
+</span><span id="line-31"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679517876"><span id="local-6989586621679517883"><span id="local-6989586621679517889"><span class="annot"><a href="../../binary-0.8.9.3-25e5/src/Data.Binary.Class.html#Binary"><span class="hs-identifier hs-type">Binary</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-type">LegacyExeDependency</span></a></span></span></span></span><span>
+</span><span id="line-32"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679517922"><span id="local-6989586621679517929"><span class="annot"><a href="Distribution.Utils.Structured.html#Structured"><span class="hs-identifier hs-type">Structured</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-type">LegacyExeDependency</span></a></span></span></span><span>
+</span><span id="line-33"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="../../deepseq-1.5.1.0-6837/src/Control.DeepSeq.html#NFData"><span class="hs-identifier hs-type">NFData</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-type">LegacyExeDependency</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679517985"><span class="annot"><span class="annottext">rnf :: LegacyExeDependency -&gt; ()
+</span><a href="#local-6989586621679517985"><span class="hs-identifier hs-var hs-var hs-var">rnf</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LegacyExeDependency -&gt; ()
 forall a. (Generic a, GNFData (Rep a)) =&gt; a -&gt; ()
 </span><a href="Distribution.Compat.Prelude.html#genericRnf"><span class="hs-identifier hs-var">genericRnf</span></a></span><span>
-</span><span id="line-32"></span><span>
-</span><span id="line-33"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679424374"><span class="annot"><a href="Distribution.Pretty.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-type">LegacyExeDependency</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-34"></span><span>    </span><span id="local-6989586621679424380"><span class="annot"><span class="annottext">pretty :: LegacyExeDependency -&gt; Doc
-</span><a href="#local-6989586621679424380"><span class="hs-identifier hs-var hs-var hs-var hs-var">pretty</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-type">LegacyExeDependency</span></a></span><span> </span><span id="local-6989586621679424382"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679424382"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span id="local-6989586621679424383"><span class="annot"><span class="annottext">VersionRange
-</span><a href="#local-6989586621679424383"><span class="hs-identifier hs-var">ver</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-35"></span><span>        </span><span class="annot"><span class="annottext">String -&gt; Doc
-</span><a href="../../pretty-1.1.3.6/src/Text.PrettyPrint.HughesPJ.html#text/Text.PrettyPrint.HughesPJ.html#text"><span class="hs-identifier hs-var">Disp.text</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679424382"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">Doc -&gt; Doc -&gt; Doc
-</span><a href="../../pretty-1.1.3.6/src/Text.PrettyPrint.HughesPJ.html#%3C%2B%3E/Text.PrettyPrint.HughesPJ.html#%3C%2B%3E"><span class="hs-operator hs-var">&lt;+&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">VersionRange -&gt; Doc
+</span><span id="line-34"></span><span>
+</span><span id="line-35"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679517990"><span class="annot"><a href="Distribution.Pretty.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-type">LegacyExeDependency</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-36"></span><span>  </span><span id="local-6989586621679517996"><span class="annot"><span class="annottext">pretty :: LegacyExeDependency -&gt; Doc
+</span><a href="#local-6989586621679517996"><span class="hs-identifier hs-var hs-var hs-var">pretty</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-type">LegacyExeDependency</span></a></span><span> </span><span id="local-6989586621679517998"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679517998"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span id="local-6989586621679517999"><span class="annot"><span class="annottext">VersionRange
+</span><a href="#local-6989586621679517999"><span class="hs-identifier hs-var">ver</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-37"></span><span>    </span><span class="annot"><span class="annottext">String -&gt; Doc
+</span><a href="../../pretty-1.1.3.6-fe44/src/Text.PrettyPrint.HughesPJ.html#text"><span class="hs-identifier hs-var">Disp.text</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679517998"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">Doc -&gt; Doc -&gt; Doc
+</span><a href="../../pretty-1.1.3.6-fe44/src/Text.PrettyPrint.HughesPJ.html#%3C%2B%3E"><span class="hs-operator hs-var">&lt;+&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">VersionRange -&gt; Doc
 forall a. Pretty a =&gt; a -&gt; Doc
 </span><a href="Distribution.Pretty.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">VersionRange
-</span><a href="#local-6989586621679424383"><span class="hs-identifier hs-var">ver</span></a></span><span>
-</span><span id="line-36"></span><span>
-</span><span id="line-37"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Distribution.Parsec.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-type">LegacyExeDependency</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-38"></span><span>    </span><span id="local-6989586621679424418"><span class="annot"><span class="annottext">parsec :: forall (m :: * -&gt; *). CabalParsing m =&gt; m LegacyExeDependency
-</span><a href="#local-6989586621679424418"><span class="hs-identifier hs-var hs-var hs-var hs-var">parsec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-39"></span><span>        </span><span id="local-6989586621679424420"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679424420"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">m String -&gt; m String
+</span><a href="#local-6989586621679517999"><span class="hs-identifier hs-var">ver</span></a></span><span>
+</span><span id="line-38"></span><span>
+</span><span id="line-39"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Distribution.Parsec.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-type">LegacyExeDependency</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-40"></span><span>  </span><span id="local-6989586621679518034"><span class="annot"><span class="annottext">parsec :: forall (m :: * -&gt; *). CabalParsing m =&gt; m LegacyExeDependency
+</span><a href="#local-6989586621679518034"><span class="hs-identifier hs-var hs-var hs-var">parsec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-41"></span><span>    </span><span id="local-6989586621679518036"><span class="annot"><a href="#local-6989586621679518036"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">m String -&gt; m String
 forall (m :: * -&gt; *) a. CabalParsing m =&gt; m a -&gt; m a
 </span><a href="Distribution.Parsec.html#parsecMaybeQuoted"><span class="hs-identifier hs-var">parsecMaybeQuoted</span></a></span><span> </span><span class="annot"><span class="annottext">m String
-</span><a href="#local-6989586621679424422"><span class="hs-identifier hs-var">nameP</span></a></span><span>
-</span><span id="line-40"></span><span>        </span><span class="annot"><span class="annottext">m ()
-forall (m :: * -&gt; *). CharParsing m =&gt; m ()
-</span><a href="Distribution.Compat.CharParsing.html#spaces"><span class="hs-identifier hs-var">P.spaces</span></a></span><span>
-</span><span id="line-41"></span><span>        </span><span id="local-6989586621679424424"><span class="annot"><span class="annottext">VersionRange
-</span><a href="#local-6989586621679424424"><span class="hs-identifier hs-var">verRange</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">m VersionRange -&gt; m VersionRange
-forall (m :: * -&gt; *) a. CabalParsing m =&gt; m a -&gt; m a
-</span><a href="Distribution.Parsec.html#parsecMaybeQuoted"><span class="hs-identifier hs-var">parsecMaybeQuoted</span></a></span><span> </span><span class="annot"><span class="annottext">m VersionRange
-forall a (m :: * -&gt; *). (Parsec a, CabalParsing m) =&gt; m a
-forall (m :: * -&gt; *). CabalParsing m =&gt; m VersionRange
-</span><a href="Distribution.Parsec.html#parsec"><span class="hs-identifier hs-var">parsec</span></a></span><span> </span><span class="annot"><span class="annottext">m VersionRange -&gt; m VersionRange -&gt; m VersionRange
-forall a. m a -&gt; m a -&gt; m a
-forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%3C%7C%3E/GHC.Base.html#%3C%7C%3E"><span class="hs-operator hs-var">&lt;|&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">VersionRange -&gt; m VersionRange
-forall a. a -&gt; m a
-forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#pure/GHC.Base.html#pure"><span class="hs-identifier hs-var">pure</span></a></span><span> </span><span class="annot"><span class="annottext">VersionRange
-</span><a href="Distribution.Types.VersionRange.Internal.html#anyVersion"><span class="hs-identifier hs-var">anyVersion</span></a></span><span>
-</span><span id="line-42"></span><span>        </span><span class="annot"><span class="annottext">LegacyExeDependency -&gt; m LegacyExeDependency
-forall a. a -&gt; m a
-forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#pure/GHC.Base.html#pure"><span class="hs-identifier hs-var">pure</span></a></span><span> </span><span class="annot"><span class="annottext">(LegacyExeDependency -&gt; m LegacyExeDependency)
--&gt; LegacyExeDependency -&gt; m LegacyExeDependency
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#%24/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; VersionRange -&gt; LegacyExeDependency
-</span><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-var">LegacyExeDependency</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679424420"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">VersionRange
-</span><a href="#local-6989586621679424424"><span class="hs-identifier hs-var">verRange</span></a></span><span>
-</span><span id="line-43"></span><span>      </span><span class="hs-keyword">where</span><span>
-</span><span id="line-44"></span><span>        </span><span id="local-6989586621679424422"><span class="annot"><span class="annottext">nameP :: m String
-</span><a href="#local-6989586621679424422"><span class="hs-identifier hs-var hs-var">nameP</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; String
+</span><a href="#local-6989586621679518038"><span class="hs-identifier hs-var">nameP</span></a></span><span>
+</span><span id="line-42"></span><span>    </span><span class="annot"><a href="Distribution.Compat.CharParsing.html#spaces"><span class="hs-identifier hs-type">P.spaces</span></a></span><span>
+</span><span id="line-43"></span><span>    </span><span id="local-6989586621679518040"><span class="annot"><a href="#local-6989586621679518040"><span class="hs-identifier hs-var">verRange</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><a href="Distribution.Parsec.html#parsecMaybeQuoted"><span class="hs-identifier hs-type">parsecMaybeQuoted</span></a></span><span> </span><span class="annot"><a href="Distribution.Parsec.html#parsec"><span class="hs-identifier hs-type">parsec</span></a></span><span> </span><span class="annot"><span class="hs-operator hs-type">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">pure</span></span><span> </span><span class="annot"><a href="Distribution.Types.VersionRange.Internal.html#anyVersion"><span class="hs-identifier hs-type">anyVersion</span></a></span><span>
+</span><span id="line-44"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">pure</span></span><span> </span><span class="annot"><span class="hs-operator hs-type">$</span></span><span> </span><span class="annot"><a href="Distribution.Types.LegacyExeDependency.html#LegacyExeDependency"><span class="hs-identifier hs-type">LegacyExeDependency</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679518036"><span class="hs-identifier hs-type">name</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679518040"><span class="hs-identifier hs-type">verRange</span></a></span><span>
+</span><span id="line-45"></span><span>    </span><span class="hs-keyword">where</span><span>
+</span><span id="line-46"></span><span>      </span><span id="local-6989586621679518038"><span class="annot"><span class="annottext">nameP :: m String
+</span><a href="#local-6989586621679518038"><span class="hs-identifier hs-var hs-var">nameP</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; String
 forall a. [a] -&gt; [[a]] -&gt; [a]
-</span><a href="../../base-4.18.0.0/src/Data.OldList.html#intercalate/Data.OldList.html#intercalate"><span class="hs-identifier hs-var">intercalate</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-identifier hs-var">intercalate</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;-&quot;</span></span><span> </span><span class="annot"><span class="annottext">([String] -&gt; String)
 -&gt; (NonEmpty String -&gt; [String]) -&gt; NonEmpty String -&gt; String
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
-</span><a href="../../base-4.18.0.0/src/Data.Functor.html#%3C%24%3E/Data.Functor.html#%3C%24%3E"><span class="hs-operator hs-var">&lt;$&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">NonEmpty String -&gt; [String]
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">NonEmpty String -&gt; [String]
 forall a. NonEmpty a -&gt; [a]
 forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; [a]
-</span><a href="../../base-4.18.0.0/src/Data.Foldable.html#toList/Data.Foldable.html#toList"><span class="hs-identifier hs-var">toList</span></a></span><span> </span><span class="annot"><span class="annottext">(NonEmpty String -&gt; String) -&gt; m (NonEmpty String) -&gt; m String
+</span><span class="hs-identifier hs-var">toList</span></span><span> </span><span class="annot"><span class="annottext">(NonEmpty String -&gt; String) -&gt; m (NonEmpty String) -&gt; m String
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
-</span><a href="../../base-4.18.0.0/src/Data.Functor.html#%3C%24%3E/Data.Functor.html#%3C%24%3E"><span class="hs-operator hs-var">&lt;$&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">m String -&gt; m Char -&gt; m (NonEmpty String)
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">m String -&gt; m Char -&gt; m (NonEmpty String)
 forall (m :: * -&gt; *) a sep.
 Alternative m =&gt;
 m a -&gt; m sep -&gt; m (NonEmpty a)
 </span><a href="Distribution.Compat.Parsing.html#sepByNonEmpty"><span class="hs-identifier hs-var">P.sepByNonEmpty</span></a></span><span> </span><span class="annot"><span class="annottext">m String
-</span><a href="#local-6989586621679424443"><span class="hs-identifier hs-var">component</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; m Char
+</span><a href="#local-6989586621679518059"><span class="hs-identifier hs-var">component</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; m Char
 forall (m :: * -&gt; *). CharParsing m =&gt; Char -&gt; m Char
 </span><a href="Distribution.Compat.CharParsing.html#char"><span class="hs-identifier hs-var">P.char</span></a></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'-'</span></span><span class="hs-special">)</span><span>
-</span><span id="line-45"></span><span>        </span><span id="local-6989586621679424443"><span class="annot"><span class="annottext">component :: m String
-</span><a href="#local-6989586621679424443"><span class="hs-identifier hs-var hs-var">component</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-46"></span><span>            </span><span id="local-6989586621679424462"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679424462"><span class="hs-identifier hs-var">cs</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; m String
+</span><span id="line-47"></span><span>      </span><span id="local-6989586621679518059"><span class="annot"><span class="annottext">component :: m String
+</span><a href="#local-6989586621679518059"><span class="hs-identifier hs-var hs-var">component</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-48"></span><span>        </span><span id="local-6989586621679518078"><span class="annot"><a href="#local-6989586621679518078"><span class="hs-identifier hs-var">cs</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; m String
 forall (m :: * -&gt; *). CharParsing m =&gt; (Char -&gt; Bool) -&gt; m String
-</span><a href="Distribution.Compat.CharParsing.html#munch1"><span class="hs-identifier hs-var">P.munch1</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679424464"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679424464"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><a href="../../base-4.18.0.0/src/GHC.Unicode.html#isAlphaNum/GHC.Unicode.html#isAlphaNum"><span class="hs-identifier hs-var">isAlphaNum</span></a></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679424464"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><a href="Distribution.Compat.CharParsing.html#munch1"><span class="hs-identifier hs-var">P.munch1</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679518080"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679518080"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><span class="hs-identifier hs-var">isAlphaNum</span></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679518080"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679424464"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+</span><a href="#local-6989586621679518080"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'+'</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679424464"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+</span><a href="#local-6989586621679518080"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'_'</span></span><span class="hs-special">)</span><span>
-</span><span id="line-47"></span><span>            </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; String -&gt; Bool
-forall (t :: * -&gt; *) a. Foldable t =&gt; (a -&gt; Bool) -&gt; t a -&gt; Bool
-</span><a href="../../base-4.18.0.0/src/Data.Foldable.html#all/Data.Foldable.html#all"><span class="hs-identifier hs-var">all</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><a href="../../base-4.18.0.0/src/GHC.Unicode.html#isDigit/GHC.Unicode.html#isDigit"><span class="hs-identifier hs-var">isDigit</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679424462"><span class="hs-identifier hs-var">cs</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">String -&gt; m String
-forall a. String -&gt; m a
-forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
-</span><a href="../../base-4.18.0.0/src/Control.Monad.Fail.html#fail/Control.Monad.Fail.html#fail"><span class="hs-identifier hs-var">fail</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;invalid component&quot;</span></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">String -&gt; m String
-forall a. a -&gt; m a
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
-</span><a href="../../base-4.18.0.0/src/GHC.Base.html#return/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679424462"><span class="hs-identifier hs-var">cs</span></a></span><span>
-</span><span id="line-48"></span></pre></body></html>
+</span><span id="line-49"></span><span>        </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="hs-identifier hs-type">all</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">isDigit</span></span><span> </span><span class="annot"><a href="#local-6989586621679518078"><span class="hs-identifier hs-type">cs</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="hs-identifier hs-type">fail</span></span><span> </span><span class="annot"><span class="hs-string">&quot;invalid component&quot;</span></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="hs-identifier hs-type">return</span></span><span> </span><span class="annot"><a href="#local-6989586621679518078"><span class="hs-identifier hs-type">cs</span></a></span><span>
+</span><span id="line-50"></span></pre></body></html>
