@@ -132,12 +132,12 @@ traverseWithKey1'   :: Apply f => (Int -> v -> f v') -> IntMap.IntMap v -> f (In
 traverseWithKey1' f = go
   where
     go = \case
-      IntMapInternal.Tip k a       -> IntMapInternal.Tip k <$> f k a
-      IntMapInternal.Bin prf m l r -> case (l,r) of
-        (IntMapInternal.Nil,_) -> IntMapInternal.Bin prf m IntMapInternal.Nil             <$> go r
-        (_,IntMapInternal.Nil) -> (\l' -> IntMapInternal.Bin prf m l' IntMapInternal.Nil) <$> go l
-        _                      -> IntMapInternal.Bin prf m <$> go l Apply.<.> go r
-      IntMapInternal.Nil           -> error "Hiraffe.AdjacencyListREp.vertices: no vertices!"
+      IntMapInternal.Tip k a     -> IntMapInternal.Tip k <$> f k a
+      IntMapInternal.Bin prf l r -> case (l,r) of
+        (IntMapInternal.Nil,_) -> IntMapInternal.Bin prf IntMapInternal.Nil             <$> go r
+        (_,IntMapInternal.Nil) -> (\l' -> IntMapInternal.Bin prf l' IntMapInternal.Nil) <$> go l
+        _                      -> IntMapInternal.Bin prf <$> go l Apply.<.> go r
+      IntMapInternal.Nil         -> error "Hiraffe.AdjacencyListREp.vertices: no vertices!"
 {-# INLINE traverseWithKey1' #-}
 
 
