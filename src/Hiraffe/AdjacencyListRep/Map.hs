@@ -1,5 +1,4 @@
 {-# LANGUAGE UndecidableInstances #-}
-{-# LANGUAGE TemplateHaskell #-}
 --------------------------------------------------------------------------------
 -- |
 -- Module      :  Hiraffe.AdjacencyListRep.Map
@@ -43,7 +42,18 @@ data VertexData f i v e = VertexData { _vData      :: !v
                                      , _neighMap   :: Map.Map i e
                                      , _neighOrder :: f i
                                      } deriving (Generic,Functor,Foldable,Traversable)
-makeLenses ''VertexData
+
+-- | Lens to access the neighMap field
+neighMap :: Lens (VertexData f i v e) (VertexData f i v e') (Map.Map i e) (Map.Map i e')
+neighMap f_aesD (VertexData x1_aesE x2_aesF x3_aesG)
+  = fmap (\ y1_aesH -> VertexData x1_aesE y1_aesH x3_aesG) (f_aesD x2_aesF)
+{-# INLINE neighMap #-}
+
+-- | Lens to access the vData field
+vData :: Lens (VertexData f i v e) (VertexData f i v' e) v v'
+vData f_aesN (VertexData x1_aesO x2_aesP x3_aesQ)
+  = fmap (\ y1_aesR -> VertexData y1_aesR x2_aesP x3_aesQ) (f_aesN x1_aesO)
+{-# INLINE vData #-}
 
 
 instance ( Semigroup v, Semigroup e, Semigroup (f i), Ord i
