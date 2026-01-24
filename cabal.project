@@ -1,5 +1,5 @@
 write-ghc-environment-files: always
-tests: true
+tests: True
 multi-repl: True
 packages:
     .

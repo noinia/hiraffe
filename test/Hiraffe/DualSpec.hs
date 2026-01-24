@@ -62,8 +62,8 @@ myGraph :: CPlanarGraph Primal MyWorld String String String
 myGraph = cPlanarGraph adjacencies
                     & faceData   .~ V.unsafeFromList ["f_3", "f_infty","f_1","f_2"]
   where
-    (aA:aB:aC:aD:aE:aG:_) = take 6 [Dart.Arc 0..]
-    adjacencies = NonEmpty.fromList . fmap (fmap NonEmpty.fromList) $
+    adjacencies = case take 6 [Dart.Arc 0..] of
+      (aA:aB:aC:aD:aE:aG:_) -> NonEmpty.fromList . fmap (fmap NonEmpty.fromList) $
                           [ ("u"
                             , [ (Dart.Dart aA Negative, "a-")
                               , (Dart.Dart aC Positive, "c+")
@@ -89,6 +89,7 @@ myGraph = cPlanarGraph adjacencies
                               ]
                             )
                           ]
+      _ -> error "absurd"
 
 -- showWithData     :: HasDataOf s i => s -> i -> (i, DataOf s i)
 -- showWithData g i = (i, g^.dataOf i)
