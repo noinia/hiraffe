@@ -12,8 +12,7 @@ maintainer:          frank@fstaals.net
 
 tested-with:
     GHC == 9.14.1
-  , GHC == 9.12.1
-  , GHC == 9.10.1
+  , GHC == 9.12.4
 
 category:            Graphs
 build-type:          Simple
