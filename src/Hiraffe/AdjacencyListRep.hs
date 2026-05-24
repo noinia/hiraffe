@@ -1,4 +1,5 @@
 {-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE CPP #-}
 --------------------------------------------------------------------------------
 -- |
 -- Module      :  Hiraffe.AdjacencyListRep
@@ -131,6 +132,15 @@ instance HasVertices (GGraph f v e) (GGraph f v' e) where
 traverseWithKey1'   :: Apply f => (Int -> v -> f v') -> IntMap.IntMap v -> f (IntMap.IntMap v')
 traverseWithKey1' f = go
   where
+#if MIN_VERSION_containers(0,8,0)
+    go = \case
+      IntMapInternal.Tip k a     -> IntMapInternal.Tip k <$> f k a
+      IntMapInternal.Bin prf l r -> case (l,r) of
+        (IntMapInternal.Nil,_) -> IntMapInternal.Bin prf IntMapInternal.Nil             <$> go r
+        (_,IntMapInternal.Nil) -> (\l' -> IntMapInternal.Bin prf l' IntMapInternal.Nil) <$> go l
+        _                      -> IntMapInternal.Bin prf <$> go l Apply.<.> go r
+      IntMapInternal.Nil         -> error "Hiraffe.AdjacencyListREp.vertices: no vertices!"
+#else
     go = \case
       IntMapInternal.Tip k a       -> IntMapInternal.Tip k <$> f k a
       IntMapInternal.Bin prf m l r -> case (l,r) of
@@ -138,7 +148,10 @@ traverseWithKey1' f = go
         (_,IntMapInternal.Nil) -> (\l' -> IntMapInternal.Bin prf m l' IntMapInternal.Nil) <$> go l
         _                      -> IntMapInternal.Bin prf m <$> go l Apply.<.> go r
       IntMapInternal.Nil           -> error "Hiraffe.AdjacencyListREp.vertices: no vertices!"
+#endif
 {-# INLINE traverseWithKey1' #-}
+
+
 
 
 instance HasDarts' (GGraph f v e) where
