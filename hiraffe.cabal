@@ -62,7 +62,7 @@ common setup
               , hgeometry-combinatorial >= 1.0.0.0   &&  < 2
               -- , hgeometry:point         >= 1.0.0.0   &&  < 2
               , bytestring              >= 0.10      &&  < 1
-              , containers              >= 0.8       &&  < 1
+              , containers              >= 0.7       &&  < 1
               , nonempty-containers     >= 0.3.4.5   &&  < 0.4
               , lens                    >= 5.0       &&  < 6
               , semigroupoids           >= 6.0.0.1   && < 7
